@@ -1,0 +1,154 @@
+﻿/* Hide for mobile, show later */
+@import "base";
+
+.layoutBackground {
+    .fluid {
+        display: flex;
+        @w: 200px;
+        @c: @bg-color-backend;
+
+        .sidebar {
+            display: none;
+            width: @w;
+
+
+            @media screen and (min-width:@screen-sm) {
+                width: @w;
+                position: fixed;
+                top: 51px;
+                bottom: 0;
+                left: 0;
+                z-index: 1000;
+                display: block;
+                padding: 20px;
+                overflow-x: hidden;
+                overflow-y: auto;
+                background-color: #f5f5f5;
+                border-right: @border;
+            }
+
+            .nav-sidebar {
+                margin-right: -21px;
+                margin-bottom: 20px;
+                margin-left: -20px;
+
+                > li {
+                    > a {
+                        padding-right: 20px;
+                        padding-left: 20px;
+                        white-space: nowrap;
+                    }
+
+                    .badge {
+                        background-color: @c;
+                        float: right;
+                    }
+
+                    &.active {
+                        a {
+                            color: @font-col-white;
+                            background-color: @c;
+
+                            &:hover, &:focus {
+                                color: @font-col-white;
+                                background-color: @c;
+                            }
+                        }
+
+                        .badge {
+                            background-color: #fff;
+                            color: @c;
+                        }
+                    }
+                }
+            }
+        }
+
+        .main {
+            padding: 20px;
+            -ms-flex: 1;
+            -webkit-flex: 1;
+            flex: 1;
+            margin-left: @w;
+            position: relative;
+            margin-top: 50px;
+
+            @media (min-width: @screen-sm) {
+                padding-right: 40px;
+                padding-left: 40px;
+            }
+        }
+    }
+
+
+
+    .navbar {
+        > .container {
+            margin-left: 0;
+            margin-right: 0;
+            width: 100%;
+            max-width: none;
+
+            .navbar-right {
+                margin-right: 0;
+            }
+        }
+    }
+
+    &.layoutBackgroundM {
+        padding-top: 50px;
+    }
+}
+
+.navtop {
+    .clearfix();
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 34px;
+    background-color: @navtop-bg;
+    font-size: @font-size-1;
+    z-index: @z-index-top+ -100;
+
+    a {
+        .clean-a();
+
+        &:hover {
+            color: @font-col-main;
+        }
+    }
+
+    .navtop-left {
+        a {
+            padding: 0;
+            padding-right: 34px;
+            line-height: 34px;
+
+            &#loginLink {
+                color: @font-col-main;
+            }
+        }
+    }
+
+    .navtop-right {
+        ul {
+            .clean-ul();
+
+            li {
+                float: left;
+                padding: 0 20px;
+                line-height: 34px;
+                cursor: pointer;
+
+                &:hover {
+                    color: @font-col-main;
+                }
+
+                &:last-child {
+                    padding-right: 0;
+                }
+            }
+        }
+    }
+}

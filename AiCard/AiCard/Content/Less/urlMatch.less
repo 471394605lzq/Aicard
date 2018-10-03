@@ -1,0 +1,41 @@
+﻿@import "base";
+
+.urlMatch {
+    position: absolute;
+    z-index: 999;
+    background: #fff;
+    width: 70%;
+    margin-top: 5px;
+    .head {
+        background: #efefef;
+        padding: 5px;
+    }
+    .item{
+        cursor: pointer;
+    }
+    .searchResult {
+
+        table {
+            thead {
+
+                tr {
+                    display: table;
+                    width: 100%;
+                    table-layout: fixed;
+                }
+            }
+
+            tbody {
+                display: block;
+                max-height: 300px;
+                overflow-y: auto;
+
+                tr {
+                    display: table;
+                    width: 100%;
+                    table-layout: fixed;
+                }
+            }
+        }
+    }
+}

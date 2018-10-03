@@ -1,0 +1,111 @@
+﻿@import "base";
+
+.uploader {
+    .btnModal {
+        margin-bottom: 5px;
+    }
+
+    ul {
+        .clean-ul();
+        .clearfix();
+
+        li {
+            float: left;
+            @sp: 5px;
+            margin-right: @sp;
+            margin-bottom: @sp;
+            height: 70px;
+            max-width: 120px;
+            position: relative;
+
+
+            img {
+                max-height: 100%;
+                max-width: 100%;
+                border: @border;
+            }
+
+            span {
+                position: absolute;
+                top: 0;
+                right: 0;
+                color: #fff;
+                background-color: @brand-danger;
+                display: none;
+                font-size: 12px;
+                padding: 2px;
+            }
+
+            &:hover {
+                span {
+                    display: inline-block;
+                }
+            }
+        }
+    }
+
+    .uploader_modal {
+        .block-mid-2();
+        position: fixed;
+        z-index: @z-index-top+1;
+        width: 500px;
+        top: 150px;
+
+        .uploader_modal_close {
+            float: right;
+        }
+    }
+
+    .DragOver {
+        height: 150px;
+        text-align: center;
+        border: dashed 1px #ddd;
+        color: #ddd;
+        padding-top: 40px;
+        margin-bottom: 5px;
+    }
+
+    .filename {
+        max-width: 270px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-bottom: 5px;
+    }
+
+    @img-size: 45px;
+
+    .preview {
+        max-width: @img-size;
+        max-height: @img-size;
+    }
+
+    .fileList {
+        @h: 62px;
+        max-height: @h*5;
+        overflow-y: auto;
+
+        .table {
+
+            tr {
+                td {
+                    height: @h;
+
+                    &:nth-child(1) {
+                        width: @img-size;
+                        vertical-align: middle;
+                    }
+
+                    &:nth-child(3) {
+                        width: 100px;
+                        vertical-align: middle;
+                    }
+                }
+            }
+        }
+    }
+    
+    .progress {
+        margin-bottom: 0;
+    }
+}

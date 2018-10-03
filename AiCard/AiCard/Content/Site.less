@@ -1,0 +1,83 @@
+﻿@import "Less/base";
+@import "Less/bootstrapEx";
+@import "Less/imageResizeUploader";
+@import "Less/layoutBackground";
+@import "Less/uploader";
+@import "Less/urlMatch";
+
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+    font-family: @font-family !important;
+}
+
+body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+//遮罩
+.mask {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: @z-index-top+-1;
+
+    &.style02 {
+        z-index: @z-index-bottom+100;
+    }
+}
+
+
+.alertList {
+    top: 1px;
+    z-index: @z-index-top;
+    .block-mid-2();
+    text-align: center;
+    width: 500px;
+
+    .alert {
+        margin-bottom: -1px;
+        border-radius: 0;
+    }
+
+    button {
+        margin-left: 10px;
+    }
+
+    &.fixed-ckeditor-max {
+        position: fixed;
+        width: 500px;
+    }
+}
+
+.clearfix {
+    .clearfix();
+}
+
+.textOverflow {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

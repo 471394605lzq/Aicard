@@ -1,0 +1,125 @@
+﻿@import "base";
+
+.table {
+    .input(@border-color: @border-color,@bc: #fff) {
+        input[type=text], input[type=number], input[type=email], input[type=date], input[type=datetime] {
+            border: 1px solid @border-color;
+            background-color: @bc;
+            width: 100%;
+        }
+    }
+
+    &.table-edit {
+        tr {
+            .input(@t,@t);
+
+            &:hover {
+                .input();
+            }
+        }
+    }
+
+    tr {
+        .input();
+    }
+
+    &.table-add {
+        tbody {
+            tr {
+                &:nth-child(1) {
+                    .input();
+                }
+            }
+        }
+    }
+
+    &.table-add-last {
+        tbody {
+            tr {
+                &:last-child {
+                    .input();
+                }
+            }
+        }
+    }
+
+    &.table-autowidth {
+        width: auto;
+    }
+
+    .table-img {
+        float: left;
+        height: 23px;
+        position: relative;
+        .clean-a();
+
+        > img:nth-child(1) {
+            height: 23px;
+
+            &:hover {
+                & + img {
+                    display: block;
+                }
+            }
+        }
+
+        > img:nth-child(2) {
+            position: absolute;
+            top: 23px;
+            left: 0;
+            height: 120px;
+            display: none;
+            z-index: @z-index-bottom;
+        }
+    }
+}
+
+.container.body-content {
+    margin-top: 50px;
+}
+
+.panel {
+    &.panel-modal {
+        .clearfix();
+        .block-mid-2();
+        position: fixed;
+        z-index: @z-index-top+1;
+        width: 500px;
+        top: 50px;
+
+        .panel-heading {
+            span {
+                float: right;
+            }
+        }
+
+
+
+        .panel-body {
+            position: relative;
+        }
+    }
+
+
+    .panel-footer {
+        .clearfix();
+    }
+}
+
+.pagenav {
+
+
+    .total {
+        vertical-align: top;
+        display: inline-block;
+        margin: 20px;
+        padding: 6px 0;
+    }
+}
+
+.form-horizontal {
+    .checkbox-inline {
+        margin-right: 10px;
+        margin-left: 0;
+    }
+}
