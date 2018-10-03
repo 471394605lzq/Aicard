@@ -84,7 +84,7 @@ namespace AiCard.Enums
     public enum RoleType
     {
         System,
-        Proxy,
+        Enterprise,
     }
 
     public enum FileType

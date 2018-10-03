@@ -32,6 +32,21 @@ namespace AiCard.Models
         public Enums.UserType UserType { get; set; }
     }
 
+
+    public class ApplicationRole : IdentityRole
+    {
+        public ApplicationRole() : base() { }
+
+        public Enums.RoleType Type { get; set; }
+
+        public string Group { get; set; }
+
+        /// <summary>
+        /// 描述
+        /// </summary>
+        public virtual string Description { get; set; }
+    }
+
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext()

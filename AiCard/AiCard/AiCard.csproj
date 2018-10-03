@@ -274,6 +274,10 @@
     <Compile Include="Migrations\201810030625179_AddUserAndRole.Designer.cs">
       <DependentUpon>201810030625179_AddUserAndRole.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201810030629596_RoleAddTypeGroupDesc.cs" />
+    <Compile Include="Migrations\201810030629596_RoleAddTypeGroupDesc.Designer.cs">
+      <DependentUpon>201810030629596_RoleAddTypeGroupDesc.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -357,6 +361,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201810030625179_AddUserAndRole.resx">
       <DependentUpon>201810030625179_AddUserAndRole.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810030629596_RoleAddTypeGroupDesc.resx">
+      <DependentUpon>201810030629596_RoleAddTypeGroupDesc.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
