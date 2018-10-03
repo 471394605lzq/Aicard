@@ -3,6 +3,8 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using System.ComponentModel.DataAnnotations;
+using System;
 
 namespace AiCard.Models
 {
@@ -16,6 +18,18 @@ namespace AiCard.Models
             // 在此处添加自定义用户声明
             return userIdentity;
         }
+
+        [Display(Name = "注册时间")]
+        public DateTime RegisterDateTime { get; set; }
+
+        [Display(Name = "登录时间")]
+        public DateTime LastLoginDateTime { get; set; }
+
+
+        public int? RoleGroupID { get; set; }
+
+        [Display(Name = "用户类型")]
+        public Enums.UserType UserType { get; set; }
     }
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>

@@ -112,5 +112,13 @@ namespace AiCard.Enums
     }
     #endregion
 
-    
+    public enum UserType
+    {
+        [Display(Name = "管理员")]
+        Admin,
+        [Display(Name = "企业")]
+        Enterprise,
+        [Display(Name = "个人")]
+        Personal
+    }
 }
