@@ -239,11 +239,31 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Start\ActionFilterAttributes.cs" />
+    <Compile Include="App_Start\Api.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\Comm.cs" />
+    <Compile Include="App_Start\Enums.cs" />
+    <Compile Include="App_Start\Extensions\ControllerExtensions.cs" />
+    <Compile Include="App_Start\Extensions\DictionaryExtensions.cs" />
+    <Compile Include="App_Start\Extensions\EnumExtensions.cs" />
+    <Compile Include="App_Start\Extensions\ExcelHelper.cs" />
+    <Compile Include="App_Start\Extensions\HtmlHelperExtensions.cs" />
+    <Compile Include="App_Start\Extensions\ModelStateDictionaryExtensions.cs" />
+    <Compile Include="App_Start\Extensions\StringExtensions.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />
+    <Compile Include="App_Start\Interface\IDistrict.cs" />
+    <Compile Include="App_Start\Interface\IErrorReusult.cs" />
+    <Compile Include="App_Start\Interface\IGprs.cs" />
+    <Compile Include="App_Start\Interface\ISms.cs" />
+    <Compile Include="App_Start\Log.cs" />
+    <Compile Include="App_Start\QrCode.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="App_Start\SysRole.cs" />
+    <Compile Include="App_Start\WeChat\Api.cs" />
+    <Compile Include="App_Start\WeChat\Config.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
