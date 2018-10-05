@@ -42,12 +42,14 @@ namespace AiCard
         /// <param name="message"></param>
         /// <param name="returnUrl"></param>
         /// <returns></returns>
-        public static ActionResult ToError(this Controller controller, string head, string message, string returnUrl = null)
+        public static ActionResult ToError(this Controller controller, string head,
+            string message, string returnUrl = null, Enums.Layout layout = Enums.Layout.Manage)
         {
             var view = new ViewResult();
             view.ViewName = "Error";
             view.ViewBag.Head = string.IsNullOrWhiteSpace(head) ? "错误" : head;
             view.ViewBag.Message = message + (string.IsNullOrWhiteSpace(returnUrl) ? "" : $"<a href='{controller.Url.Content(returnUrl)}'>点击返回</a>");
+            view.ViewBag.Layout = layout;
             return view;
         }
 

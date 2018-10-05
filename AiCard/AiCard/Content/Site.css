@@ -137,6 +137,9 @@
   margin-right: 10px;
   margin-left: 0;
 }
+.navbar {
+  height: 50px;
+}
 .imageResizeUpload .imageResizeUpload_result {
   cursor: pointer;
 }
@@ -344,7 +347,6 @@
   flex: 1;
   margin-left: 200px;
   position: relative;
-  margin-top: 50px;
 }
 @media (min-width: 750px) {
   .layoutBackground .fluid .main {
@@ -638,4 +640,43 @@ textarea {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+.selectRoleList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.selectRoleList > li {
+  clear: both;
+}
+.selectRoleList > li > ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  margin-bottom: 10px;
+  margin-left: 20px;
+}
+.selectRoleList > li > ul:before,
+.selectRoleList > li > ul:after {
+  content: " ";
+  display: table;
+}
+.selectRoleList > li > ul:after {
+  clear: both;
+}
+.selectRoleList > li > ul:before,
+.selectRoleList > li > ul:after {
+  content: " ";
+  display: table;
+}
+.selectRoleList > li > ul:after {
+  clear: both;
+}
+.selectRoleList > li > ul > li {
+  float: left;
+  margin-right: 10px;
+}
+.selectRoleList label span {
+  position: relative;
+  top: -2px;
 }

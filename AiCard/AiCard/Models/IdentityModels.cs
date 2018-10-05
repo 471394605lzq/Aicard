@@ -30,6 +30,9 @@ namespace AiCard.Models
 
         [Display(Name = "用户类型")]
         public Enums.UserType UserType { get; set; }
+
+        [Display(Name = "企业")]
+        public int EnterpriseID { get; set; }
     }
 
 
@@ -53,6 +56,8 @@ namespace AiCard.Models
             : base("DefaultConnection", throwIfV1Schema: false)
         {
         }
+
+        public DbSet<RoleGroup> RoleGroups { get; set; }
 
         public static ApplicationDbContext Create()
         {

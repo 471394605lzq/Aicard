@@ -1,0 +1,58 @@
+﻿@model Octopus.Models.CloudFileControl
+
+<div id="@Model.ID" class="panel panel-default panel-modal cloud hidden">
+    <div class="panel-heading">
+        <span class="cloud_close glyphicon glyphicon-remove"></span>
+        <h4 class="modal-title">云文件</h4>
+    </div>
+    <div class="cloud-tool">
+        <button type="button" class="btn btn-success btn-sm btnCloudUpload">上传</button>
+        <input type="file" accept="image/*" class="hidden" multiple />
+        <ul class="cloud-upload">
+            <li class="cloud-upload-item-temp">
+                <div class="cloud-upload-title">
+                </div>
+                <div class="cloud-upload-progress">
+                    <div style="width:0%"></div>
+                </div>
+                <div class="cloud-upload-remove" title="停止上传">
+                    <span class="glyphicon glyphicon-stop"></span>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="panel-body">
+
+        <ul class="cloud-list">
+            <li class="cloud-list-item-temp" data-item>
+
+                <div class="cloud-list-item-img">
+                    <div class="cloud-list-item-mark">
+                        <span class="glyphicon glyphicon-ok"></span>
+                    </div>
+                    <img src="" alt="" />
+                </div>
+                <div class="cloud-list-item-name">
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="panel-footer">
+        <div class="cloud-page">
+            <button class="btn btn-default btn-sm cloud-page-prev" type="button">
+                上一页
+            </button>
+            <input type="text" value="1" class="cloud-page-number" />
+            <span class="cloud-page-total">/10</span>
+            <button class="btn btn-default btn-sm cloud-page-next" type="button">
+                下一页
+            </button>
+            <button class="btn btn-default btn-sm cloud-page-go" type="button">
+                GO
+            </button>
+        </div>
+        <button class="btn btn-danger btn-sm btnDelSelected">删除选中</button>
+        <button class="btn btn-success btn-sm btnAddSelected">添加选中</button>
+    </div>
+</div>
+

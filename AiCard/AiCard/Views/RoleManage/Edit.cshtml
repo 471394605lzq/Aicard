@@ -1,0 +1,45 @@
+﻿@model AiCard.Models.RoleGroupViewModel
+
+@{
+    ViewBag.Title = "分组编辑";
+    ViewBag.Sidebar = "用户管理";
+    Layout = "~/Views/Shared/_LayoutBackground.cshtml";
+}
+
+<ol class="breadcrumb">
+    <li><a href="@Url.Action("Index")">分组管理</a></li>
+    <li>@Model.Name</li>
+</ol>
+<div class="roleGroupCreateEdit">
+    @using (Html.BeginForm())
+    {
+        <div class="form-horizontal">
+            @Html.HiddenFor(model => model.ID)
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Name, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Name, null, new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.SelectedRoles, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10 form-control-static">
+                    @Html.HiddenFor(model => model.SelectedRoles)
+                    @Html.EditorFor(model => model.RolesList)
+                    @Html.ValidationMessageFor(model => model.SelectedRoles, null, new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-default">保存</button>
+                </div>
+            </div>
+
+        </div>
+    }
+</div>
+@section Scripts{
+    @Scripts.Render("~/Scripts/Views/roleGroup.js")
+}

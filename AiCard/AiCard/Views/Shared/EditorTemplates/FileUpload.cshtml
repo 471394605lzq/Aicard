@@ -1,0 +1,119 @@
+﻿@model AiCard.Models.Comm.FileUpload
+@{
+    var hidCtl = Model.Mode == AiCard.Models.Comm.FileUploadMode.ModalOnly ? "hidden" : "";
+}
+<div id="myModal_@Model.Name" class="uploader @(Model.AutoInit?"":"noInit")" data-max="@Model.Max" data-sortable="@Model.Sortable.ToString().ToLower()" data-isresetname="@Model.IsResetName" data-filepath="@Model.FilePath" data-type="@Model.Type">
+    @Html.HiddenFor(model => model.Value, new { @class = "uploaderVal" })
+    <div class="@hidCtl">
+        <button class="btn btn-default btn-success btnModal" type="button"><span class="glyphicon glyphicon-upload"></span> 上传文件</button>
+        <ul id="uploader_ul_@Model.Name">
+            <li class="demo_li hidden">
+                <img title="" src="" />
+                <span class="glyphicon glyphicon-remove" data-img=""></span>
+            </li>
+            @foreach (var item in Model.Images)
+            {
+                var imgsrc = Url.ResizeImage(item, h: 70, w: 120);
+                var fileType = Path.GetExtension(item);
+                if (fileType != ".bmp" && fileType != ".tif" && fileType != ".png" && fileType != ".jpge" && fileType != ".jpg" && fileType != ".gif")
+                {
+                    imgsrc = Url.ContentFull("/Content/Images/filetype/file.png");
+                    if (fileType == ".doc" || fileType == ".docx" || fileType == ".txt" || fileType == ".wps")
+                    {
+                        imgsrc = Url.ContentFull("/Content/Images/filetype/doc.png");
+                    }
+                    if (fileType == ".mp3")
+                    {
+                        imgsrc = Url.ContentFull("/Content/Images/filetype/mp3.png");
+                    }
+                    if (fileType == ".mp4")
+                    {
+                        imgsrc = Url.ContentFull("/Content/Images/filetype/mp4.png");
+                    }
+                    if (fileType == ".ppt")
+                    {
+                        imgsrc = Url.ContentFull("/Content/Images/filetype/ppt.png");
+                    }
+                    if (fileType == ".xls" || fileType == ".xlsx")
+                    {
+                        imgsrc = Url.ContentFull("/Content/Images/filetype/xls.png");
+                    }
+                    if (fileType == ".zip")
+                    {
+                        imgsrc = Url.ContentFull("/Content/Images/filetype/zip.png");
+                    }
+                }
+                <li>
+                    <img title="@Path.GetFileName(item)" src="@imgsrc" />
+                    <span class="glyphicon glyphicon-remove" data-img="@item"></span>
+                </li>
+            }
+        </ul>
+    </div>
+    <div class="panel panel-default hidden uploader_modal">
+        <div class="panel-heading">
+            <span class="uploader_modal_close glyphicon glyphicon-remove"></span>
+            <h4 class="modal-title">上传文件</h4>
+        </div>
+        <div class="panel-body">
+            <div class="modal_alter"></div>
+            <div class="DragOver">
+                @{
+                    var accept = "";
+                    switch (Model.Type)
+                    {
+                        case AiCard.Models.Comm.FileType.File:
+                            { accept = ""; }
+                            break;
+                        case AiCard.Models.Comm.FileType.Image:
+                            { accept = "image/*"; }
+                            break;
+                        case AiCard.Models.Comm.FileType.Word:
+                            { accept = "application/vnd.ms-works,application/vnd.ms-works,application/vnd.ms-works,application/msword"; }
+                            break;
+                        case AiCard.Models.Comm.FileType.Excel:
+                            { accept = "application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"; }
+                            break;
+                        case AiCard.Models.Comm.FileType.Video:
+                            { accept = "video/*"; }
+                            break;
+                        case AiCard.Models.Comm.FileType.Sound:
+                            { accept = "audio/*"; }
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                <input type="file" accept="@accept" class="hidden" @(Model.Max > 1 ? "multiple" : "") />
+                <h3 class="">
+                    将文件拖动到此处 <input type="button" value="选择文件" class="btn btn-default btnUpload" />
+                </h3>
+            </div>
+            <div class="uploadList">
+                <table class="table">
+                    <tbody>
+                        <tr class="hidden demo_list" data-name="">
+                            <td>
+                                <img class="preview" src="" alt="" />
+                            </td>
+                            <td>
+                                <div class="filename"></div>
+                                <div class="progress">
+                                    <div class="progress-bar demo_progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;min-width: 20px;">
+                                        0%
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <button name="" type="button" class="btn btn-default btnDelFile" data-url>
+                                    取消
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <input value="全部删除" type="button" class="btn btn-default alldel" />
+        </div>
+    </div>
+</div>

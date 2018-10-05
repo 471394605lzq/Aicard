@@ -1,0 +1,40 @@
+﻿@model AiCard.Models.CommModels.ImageResizer
+@{
+    Func<int, int, string> sizestyle = (w, h) => $"width:{w}px;height:{h}px";
+
+}
+<div id="@Model.Name" class="imageResizeUpload @(Model.AutoInit?"":"imageResizeUpload-noInit")">
+    <img class="imageResizeUpload_result" style="@sizestyle(Model.PreviewWidth,Model.PreviewHeight)" src="@Url.ContentNullEmpty(Model.PreviewUrl)" />
+    @Html.HiddenFor(model => model.ImageUrl)
+    <div class="panel panel-default imageResizeUpload_panel hidden">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                调整图片尺寸和位置
+            </h3>
+        </div>
+        <div class="panel-body">
+            <div class="preview">
+                <div class="preview_b">
+                    <img />
+                </div>
+                <div class="preview_f" style="@sizestyle(Model.Width,Model.Height)">
+                    <img />
+                </div>
+            </div>
+            <div class="imageResizeUpload_resize">
+                <div class="imageResizeUpload_resize_bar">
+                    <div class="imageResizeUpload_resize_bg">
+                    </div>
+                    <div class="imageResizeUpload_resize_button">
+                    </div>
+                </div>
+            </div>
+            <input type="file" class="hidden" />
+        </div>
+        <div class="panel-footer">
+            <button type="button" class="btn btn-default btn-cancel">取消</button>
+            <button type="button" class="btn btn-primary btn-upload">确认</button>
+        </div>
+    </div>
+</div>
+

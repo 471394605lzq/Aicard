@@ -4,7 +4,6 @@
 @import "Less/layoutBackground";
 @import "Less/uploader";
 @import "Less/urlMatch";
-
 h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
     font-family: @font-family !important;
 }
@@ -80,4 +79,31 @@ textarea {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+.selectRoleList {
+    .clean-ul();
+
+    > li {
+        clear: both;
+
+        > ul {
+            .clean-ul();
+            .clearfix();
+            margin-bottom: 10px;
+            margin-left: 20px;
+
+            > li {
+                float: left;
+                margin-right: 10px;
+            }
+        }
+    }
+
+    label {
+        span {
+            position: relative;
+            top: -2px;
+        }
+    }
 }

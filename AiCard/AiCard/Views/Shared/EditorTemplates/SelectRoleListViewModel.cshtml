@@ -1,0 +1,31 @@
+﻿@model AiCard.Models.SelectRoleListViewModel
+@{
+    var groups = Model.List.GroupBy(s => s.Group).Select(s => s.Key).OrderBy(s => s).ToList();
+}
+<ul class="selectRoleList">
+    @foreach (var group in groups)
+    {
+        var childList = Model.List.Where(s => s.Group == group).OrderBy(s => s.Description).ToList();
+        string allSelected = !childList.Any(s => !s.Selected) ? "checked" : "";
+        <li>
+            <div>
+                <label class="control-label">
+                    <input type="checkbox" @allSelected name="roleGroup" value="@group" />
+                    <span>@group</span>
+                </label>
+            </div>
+            <ul>
+                @foreach (var item in childList)
+                {
+                    string check = item.Selected ? "checked" : "";
+                    <li>
+                        <label class="control-label">
+                            <input type="checkbox" name="role" @check value="@item.Name" />
+                            <span>@item.Description</span>
+                        </label>
+                    </li>
+                }
+            </ul>
+        </li>
+    }
+</ul>
