@@ -59,6 +59,8 @@ namespace AiCard.Models
 
         public DbSet<RoleGroup> RoleGroups { get; set; }
 
+        public DbSet<Enterprise> Enterprises { get; set; }
+
         public static ApplicationDbContext Create()
         {
             return new ApplicationDbContext();
