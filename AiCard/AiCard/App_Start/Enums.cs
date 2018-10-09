@@ -120,8 +120,41 @@ namespace AiCard.Enums
         WebSide,
         MoblieWebSide
     }
+
+    public enum CellStyle
+    {
+        RichText,
+        CellList,
+
+    }
+
+    public enum ActionType
+    {
+        None,
+        Browser,
+        CardHome,
+        ShopHome,
+        EterpriseHome,
+        NewsHome,
+        ArticleDetail
+    }
     #endregion
 
+    #region 微信
+    public enum WeChatAccount
+    {
+        /// <summary>
+        /// 公众号
+        /// </summary>
+        PC,
+        /// <summary>
+        /// 小程序
+        /// </summary>
+        AiCardMini,
+
+    }
+
+    #endregion
     public enum UserType
     {
         [Display(Name = "管理员")]

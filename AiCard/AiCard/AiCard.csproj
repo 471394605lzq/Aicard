@@ -271,6 +271,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\RoleManageController.cs" />
+    <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Controllers\UploaderController.cs" />
     <Compile Include="Controllers\UserManageController.cs" />
     <Compile Include="Global.asax.cs">
@@ -300,16 +301,23 @@
     <Compile Include="Migrations\201810060930252_AddEnterprises.Designer.cs">
       <DependentUpon>201810060930252_AddEnterprises.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201810090656140_UserAddNickNameAndAvatar.cs" />
+    <Compile Include="Migrations\201810090656140_UserAddNickNameAndAvatar.Designer.cs">
+      <DependentUpon>201810090656140_UserAddNickNameAndAvatar.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\CommModels\Cell.cs" />
     <Compile Include="Models\CommModels\FileUpload.cs" />
     <Compile Include="Models\CommModels\HtmlHelpModels.cs" />
     <Compile Include="Models\CommModels\ImageResizer.cs" />
     <Compile Include="Models\EnterpriseModels.cs" />
+    <Compile Include="Models\EnterpriseViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\RoleGroup.cs" />
     <Compile Include="Models\UserManageViewModels.cs" />
+    <Compile Include="Models\UserViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -852,11 +860,12 @@
     <Content Include="Views\RoleManage\Index.cshtml" />
     <Content Include="Views\UserManage\Edit.cshtml" />
     <Content Include="Views\UserManage\Delete.cshtml" />
+    <Content Include="Views\EnterpriseManage\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Content\Less\View\" />
-    <Folder Include="Views\EnterpriseManage\" />
+    <Folder Include="Views\Test\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
@@ -880,6 +889,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201810060930252_AddEnterprises.resx">
       <DependentUpon>201810060930252_AddEnterprises.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810090656140_UserAddNickNameAndAvatar.resx">
+      <DependentUpon>201810090656140_UserAddNickNameAndAvatar.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
