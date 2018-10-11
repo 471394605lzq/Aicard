@@ -72,6 +72,11 @@ namespace AiCard.Models
 
         public DbSet<Card> Cards { get; set; }
 
+        public DbSet<Article> Articles { get; set; }
+
+        public DbSet<ArticleComment> ArticleComments { get; set; }
+
+
         public static ApplicationDbContext Create()
         {
             return new ApplicationDbContext();

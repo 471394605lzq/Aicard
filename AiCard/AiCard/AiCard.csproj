@@ -310,8 +310,13 @@
     <Compile Include="Migrations\201810110834161_AddCard.Designer.cs">
       <DependentUpon>201810110834161_AddCard.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201810111030337_AddArticle.cs" />
+    <Compile Include="Migrations\201810111030337_AddArticle.Designer.cs">
+      <DependentUpon>201810111030337_AddArticle.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\ArticleModels.cs" />
     <Compile Include="Models\CardModels.cs" />
     <Compile Include="Models\CommModels\Cell.cs" />
     <Compile Include="Models\CommModels\FileUpload.cs" />
@@ -901,6 +906,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201810110834161_AddCard.resx">
       <DependentUpon>201810110834161_AddCard.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810111030337_AddArticle.resx">
+      <DependentUpon>201810111030337_AddArticle.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
