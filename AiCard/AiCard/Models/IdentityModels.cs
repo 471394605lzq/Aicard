@@ -70,6 +70,8 @@ namespace AiCard.Models
 
         public DbSet<Enterprise> Enterprises { get; set; }
 
+        public DbSet<Card> Cards { get; set; }
+
         public static ApplicationDbContext Create()
         {
             return new ApplicationDbContext();

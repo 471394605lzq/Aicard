@@ -164,4 +164,11 @@ namespace AiCard.Enums
         [Display(Name = "个人")]
         Personal
     }
+
+    public enum Gender
+    {
+        NoSet,
+        Male,
+        Female
+    }
 }
