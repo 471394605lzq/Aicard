@@ -37,8 +37,8 @@ namespace AiCard.Models
         [Display(Name = "评论数")]
         public int Comment { get; set; }
 
-        [Display(Name = "审核")]
-        public bool Enable { get; set; }
+        [Display(Name = "状态")]
+        public Enums.ArticleState State { get; set; }
 
         List<ArticleComment> Comments { get; set; }
     }

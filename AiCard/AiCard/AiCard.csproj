@@ -314,6 +314,10 @@
     <Compile Include="Migrations\201810111030337_AddArticle.Designer.cs">
       <DependentUpon>201810111030337_AddArticle.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201810111156517_ArticleDeleteEnableAddState.cs" />
+    <Compile Include="Migrations\201810111156517_ArticleDeleteEnableAddState.Designer.cs">
+      <DependentUpon>201810111156517_ArticleDeleteEnableAddState.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ArticleModels.cs" />
@@ -909,6 +913,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201810111030337_AddArticle.resx">
       <DependentUpon>201810111030337_AddArticle.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810111156517_ArticleDeleteEnableAddState.resx">
+      <DependentUpon>201810111156517_ArticleDeleteEnableAddState.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

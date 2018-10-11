@@ -140,6 +140,17 @@ namespace AiCard.Enums
     }
     #endregion
 
+    public enum ArticleState
+    {
+        [Display(Name = "未审核")]
+        Wait,
+        [Display(Name = "已发布")]
+        Released,
+        [Display(Name = "已删除")]
+        Deleted
+
+    }
+
     #region 微信
     public enum WeChatAccount
     {
