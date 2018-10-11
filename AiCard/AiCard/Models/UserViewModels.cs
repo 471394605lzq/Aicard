@@ -13,8 +13,8 @@ namespace AiCard.Models
         {
             ID = user.Id;
             UserName = user.UserName;
-
-
+            NickName = user.NickName;
+            Avatar = user.Avatar;
         }
 
         public string ID { get; set; }
@@ -24,5 +24,6 @@ namespace AiCard.Models
         public string NickName { get; set; }
 
         public string Avatar { get; set; }
+        
     }
 }

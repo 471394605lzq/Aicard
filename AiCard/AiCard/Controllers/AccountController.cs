@@ -13,7 +13,7 @@ using System.Collections.Generic;
 
 namespace AiCard.Controllers
 {
-    [Authorize]
+
     public class AccountController : Controller
     {
         private ApplicationSignInManager _signInManager;
@@ -501,126 +501,150 @@ namespace AiCard.Controllers
             return Redirect($"https://open.weixin.qq.com/connect/oauth2/authorize{p.ToParam("?")}#wechat_redirect");
         }
 
-
+        /// <summary>
+        /// 微信授权登录
+        /// </summary>
+        /// <param name="code"></param>
+        /// <param name="state">扩展参数</param>
+        /// <param name="type">端口类别（Web App Mini）</param>
+        /// <returns></returns>
+        [HttpPost]
         [AllowCrossSiteJson]
         public ActionResult LoginByWeiXin(string code, string state = null, Enums.WeChatAccount type = Enums.WeChatAccount.AiCardMini)
         {
-            Func<string, ActionResult> error = content =>
-            {
-                if (type != Enums.WeChatAccount.PC)
-                {
-                    return Json(Comm.ToJsonResult("Error", content));
-                }
-                else
-                {
-                    return this.ToError("错误", content, Url.Action("Login", "Account"));
-                }
-            };
+            Func<string, string, ActionResult> error = (content, detail) =>
+             {
+                 if (type != Enums.WeChatAccount.PC)
+                 {
+                     return Json(Comm.ToJsonResult("Error", content, detail));
+                 }
+                 else
+                 {
+                     return this.ToError("错误", content, Url.Action("Login", "Account"));
+                 }
+             };
             if (string.IsNullOrWhiteSpace(code))
             {
-                return error("请求有误");
+                return error("请求有误", "Code不能为空");
             }
 
-            WeChat.WeChatApi wechat;
-
-            switch (type)
+            if (type != Enums.WeChatAccount.AiCardMini)
             {
-                case Enums.WeChatAccount.PC:
-                    {
-                        wechat = new WeChat.WeChatApi(AiCard.WeChat.ConfigPc.AppID, AiCard.WeChat.ConfigPc.AppSecret);
-                    }
-                    break;
-                default:
-                case Enums.WeChatAccount.AiCardMini:
-                    {
-                        wechat = new WeChat.WeChatApi(AiCard.WeChat.MiniConfig.AppID, AiCard.WeChat.MiniConfig.AppSecret);
-                    }
-                    break;
-            }
-            WeChat.AccessTokenResult result;
-            try
-            {
-                result = wechat.GetAccessTokenSns(code);
-            }
-            catch (Exception ex)
-            {
-                return this.ToError("错误", "获取微信用户失败", Url.Action("Login"));
-            }
-
-
-
-            var openID = result.OpenID;
-            if (state == "openid")
-            {
-                Response.Cookies["WeChatOpenID"].Value = openID;
-                return Json(Comm.ToJsonResult("Success", "成功", new { OpenID = openID }));
-            }
-            var accessToken = result.AccessToken;
-            var unionid = result.UnionID;
-            var user = db.Users.FirstOrDefault(s => s.WeChatID == unionid);
-
-            try
-            {
-                if (user != null)
+                //非小程序
+                switch (type)
                 {
-                    if (user.UserName == user.NickName)
-                    {
-                        var userInfo = wechat.GetUserInfoSns(openID, accessToken);
-                        string avart;
-                        try
-                        {
-                            avart = this.Download(userInfo.HeadImgUrl);
-                        }
-                        catch (Exception)
-                        {
-                            avart = "~/Content/Images/404/avatar.png";
-                        }
-                        user.NickName = userInfo.NickName;
-                        user.Avatar = avart;
-                    }
-                    user.LastLoginDateTime = DateTime.Now;
-                    db.SaveChanges();
-                }
-                else
-                {
-                    try
-                    {
-                        var userInfo = wechat.GetUserInfoSns(openID, accessToken);
-                        user = CreateByWeChat(userInfo);
-                    }
-                    catch (Exception)
-                    {
-                        user = CreateByWeChat(new WeChat.UserInfoResult { UnionID = unionid });
-                    }
-
-                }
-                if (type != Enums.WeChatAccount.PC)
-                {
-                    return Json(Comm.ToJsonResult("Success", "成功", new UserViewModel(user)));
-                }
-                SignInManager.SignIn(user, true, true);
-                switch (state.ToLower())
-                {
-                    case null:
-                    case "":
-                    case "ticketindex":
-                        return RedirectToAction("Index", "Tickets");
-                    case "qrcode":
-                        return RedirectToAction("Index", "Tickets", new { mode = "qrcode" });
-
                     default:
-                        return Redirect(state); ;
+                    case Enums.WeChatAccount.PC:
+                        {
+                            WeChat.WeChatApi wechat = new WeChat.WeChatApi(AiCard.WeChat.ConfigPc.AppID, AiCard.WeChat.ConfigPc.AppSecret);
+                            WeChat.AccessTokenResult result;
+                            try
+                            {
+                                result = wechat.GetAccessTokenSns(code);
+                                var openID = result.OpenID;
+                                if (state == "openid")
+                                {
+                                    Response.Cookies["WeChatOpenID"].Value = openID;
+                                    return Json(Comm.ToJsonResult("Success", "成功", new { OpenID = openID }));
+                                }
+                                var accessToken = result.AccessToken;
+                                var unionid = result.UnionID;
+                                var user = db.Users.FirstOrDefault(s => s.WeChatID == unionid);
+
+                                try
+                                {
+                                    if (user != null)
+                                    {
+                                        if (user.UserName == user.NickName)
+                                        {
+                                            var userInfo = wechat.GetUserInfoSns(openID, accessToken);
+                                            string avart;
+                                            try
+                                            {
+                                                avart = this.Download(userInfo.HeadImgUrl);
+                                            }
+                                            catch (Exception)
+                                            {
+                                                avart = "~/Content/Images/404/avatar.png";
+                                            }
+                                            user.NickName = userInfo.NickName;
+                                            user.Avatar = avart;
+                                        }
+                                        user.LastLoginDateTime = DateTime.Now;
+                                        db.SaveChanges();
+                                    }
+                                    else
+                                    {
+                                        try
+                                        {
+                                            var userInfo = wechat.GetUserInfoSns(openID, accessToken);
+                                            user = CreateByWeChat(userInfo);
+                                        }
+                                        catch (Exception)
+                                        {
+                                            user = CreateByWeChat(new WeChat.UserInfoResult { UnionID = unionid });
+                                        }
+
+                                    }
+                                    if (type != Enums.WeChatAccount.PC)
+                                    {
+                                        return Json(Comm.ToJsonResult("Success", "成功", new UserViewModel(user)));
+                                    }
+                                    SignInManager.SignIn(user, true, true);
+                                    switch (state.ToLower())
+                                    {
+                                        case null:
+                                        case "":
+                                        case "ticketindex":
+                                            return RedirectToAction("Index", "Tickets");
+                                        case "qrcode":
+                                            return RedirectToAction("Index", "Tickets", new { mode = "qrcode" });
+                                        default:
+                                            return Redirect(state); ;
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    return error("请求有误", ex.Message);
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                return error("请求有误", ex.Message);
+                            }
+                        }
                 }
             }
-            catch (Exception ex)
+            else
             {
-                return error("请求有误");
+                //小程序
+                WeChat.WeChatMinApi wechat = new WeChat.WeChatMinApi(AiCard.WeChat.ConfigMini.AppID, AiCard.WeChat.ConfigMini.AppSecret);
+                var result = wechat.Jscode2session(code);
+                var user = db.Users.FirstOrDefault(s => s.WeChatID == result.UnionID);
+
+                return Json(Comm.ToJsonResult("Success", "成功", new
+                {
+                    result.OpenID,
+                    result.UnionID,
+                    User = user == null ? null : new UserViewModel(user)
+                }));
             }
-
-
         }
 
-
+        [HttpPost]
+        [AllowCrossSiteJson]
+        public ActionResult RegisterByWeiXin(WeChat.UserInfoResult model)
+        {
+            try
+            {
+                var user = CreateByWeChat(model);
+                return Json(Comm.ToJsonResult("Success", "成功", new UserViewModel(user)));
+            }
+            catch (Exception ex)
+            {
+                return Json(Comm.ToJsonResult("Error", "注册失败", ex.Message));
+            }
+        }
 
         private ApplicationUser CreateByWeChat(WeChat.UserInfoResult model)
         {

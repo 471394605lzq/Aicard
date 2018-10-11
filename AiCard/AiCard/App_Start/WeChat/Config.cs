@@ -86,14 +86,14 @@ namespace AiCard.WeChat
     {
         public const string AppID = "wxbd54d6bab8add1e0";
 
-        public const string AppSecret = "";
+        public const string AppSecret = "14c8f514897eeea2a02a5ffa6c3c4f32";
 
         public static string AccessToken = null;
 
         public static string RefreshToken = null;
     }
 
-    public static class MiniConfig
+    public static class ConfigMini
     {
         public const string AppID = "wx4f0894f87f291778";
 

@@ -263,7 +263,8 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\SysRole.cs" />
-    <Compile Include="App_Start\WeChat\Api.cs" />
+    <Compile Include="App_Start\WeChat\WeChatMiniApi.cs" />
+    <Compile Include="App_Start\WeChat\WeChatApi.cs" />
     <Compile Include="App_Start\WeChat\Config.cs" />
     <Compile Include="Bll\Roles.cs" />
     <Compile Include="Controllers\AccountController.cs" />
