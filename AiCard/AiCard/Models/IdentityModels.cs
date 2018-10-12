@@ -33,6 +33,15 @@ namespace AiCard.Models
 
         [Display(Name = "企业")]
         public int EnterpriseID { get; set; }
+
+        [Display(Name = "微信UnitID")]
+        public string WeChatID { get; set; }
+
+        [Display(Name = "昵称")]
+        public string NickName { get; set; }
+
+        [Display(Name = "头像")]
+        public string Avatar { get; set; }
     }
 
 
@@ -60,6 +69,13 @@ namespace AiCard.Models
         public DbSet<RoleGroup> RoleGroups { get; set; }
 
         public DbSet<Enterprise> Enterprises { get; set; }
+
+        public DbSet<Card> Cards { get; set; }
+
+        public DbSet<Article> Articles { get; set; }
+
+        public DbSet<ArticleComment> ArticleComments { get; set; }
+
 
         public static ApplicationDbContext Create()
         {

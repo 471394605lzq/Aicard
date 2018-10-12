@@ -29,13 +29,17 @@ namespace AiCard.WeChat
 
         public string Secret { get; set; }
 
+        /// <summary>
+        /// 使用Code换取OpenID，UnionID，Token等
+        /// </summary>
+        /// <param name="code"></param>
+        /// <returns></returns>
         public AccessTokenResult GetAccessTokenSns(string code)
         {
             var p = new Dictionary<string, string>();
             p.Add("appid", AppID);
             p.Add("secret", Secret);
             p.Add("code", code);
-            p.Add("grant_type", "authorization_code");
             var result = new Api.BaseApi($"https://api.weixin.qq.com/sns/oauth2/access_token{p.ToParam("?")}", "GET").CreateRequestReturnJson();
             if (result["errcode"] != null)
             {
@@ -51,7 +55,11 @@ namespace AiCard.WeChat
         }
 
 
-
+        /// <summary>
+        /// 刷新微信登录的Token
+        /// </summary>
+        /// <param name="refreshToken"></param>
+        /// <returns></returns>
         public AccessTokenResult RefreshAccessTokenSns(string refreshToken)
         {
             var p = new Dictionary<string, string>();
@@ -72,7 +80,11 @@ namespace AiCard.WeChat
             };
         }
 
-
+        /// <summary>
+        /// 获取微信用户基本信息，通过openID,Token内嵌
+        /// </summary>
+        /// <param name="openID"></param>
+        /// <returns></returns>
         public UserInfoResult GetUserInfoCgi(string openID)
         {
             var p = new Dictionary<string, string>();
@@ -102,6 +114,12 @@ namespace AiCard.WeChat
 
         }
 
+        /// <summary>
+        /// 获取微信用户基本信息
+        /// </summary>
+        /// <param name="openID"></param>
+        /// <param name="accessToken"></param>
+        /// <returns></returns>
         public UserInfoResult GetUserInfoSns(string openID, string accessToken)
         {
             var p = new Dictionary<string, string>();
@@ -121,7 +139,13 @@ namespace AiCard.WeChat
             };
         }
 
-
+        /// <summary>
+        /// 推送消息
+        /// </summary>
+        /// <param name="to"></param>
+        /// <param name="from"></param>
+        /// <param name="content"></param>
+        /// <returns></returns>
         public static string SendTextMessage(string to, string from, string content)
         {
             return new XDocument(new XElement("xml",
@@ -134,6 +158,13 @@ namespace AiCard.WeChat
                )).ToString();
         }
 
+        /// <summary>
+        /// 推送消息
+        /// </summary>
+        /// <param name="to"></param>
+        /// <param name="from"></param>
+        /// <param name="content"></param>
+        /// <returns></returns>
         public static string SendNewsMessage(string to, string from, List<NewsMessage> news)
         {
             return new XDocument(new XElement("xml",
@@ -154,6 +185,10 @@ namespace AiCard.WeChat
               ))).ToString();
         }
 
+        /// <summary>
+        /// 获取Token
+        /// </summary>
+        /// <returns></returns>
         public string GetAccessToken()
         {
             if (_accessToken == null || _accessToken.End <= DateTime.Now)
@@ -163,7 +198,10 @@ namespace AiCard.WeChat
             return _accessToken.Code;
         }
 
-
+        /// <summary>
+        /// 刷新Token
+        /// </summary>
+        /// <returns></returns>
         public string RefreshToken()
         {
             var date = DateTime.Now;
@@ -204,6 +242,10 @@ namespace AiCard.WeChat
             }
         }
 
+        /// <summary>
+        /// 获取微信的推送消息模版
+        /// </summary>
+        /// <returns></returns>
         public List<TempMessage> GetAllTempMessage()
         {
             var url = $"  https://api.weixin.qq.com/cgi-bin/template/get_all_private_template?access_token={GetAccessToken()}";
@@ -278,7 +320,11 @@ namespace AiCard.WeChat
         }
 
 
-
+        /// <summary>
+        /// 上传
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
         public string UploadFile(HttpPostedFileBase file)
         {
             var accessToken = GetAccessToken();
@@ -324,14 +370,24 @@ namespace AiCard.WeChat
 
     public class UserInfoResult
     {
+        /// <summary>
+        /// 昵称
+        /// </summary>
         public string NickName { get; set; }
 
-
+        /// <summary>
+        /// 头像
+        /// </summary>
         public string HeadImgUrl { get; set; }
 
-
+        /// <summary>
+        /// 统一用户ID
+        /// </summary>
         public string UnionID { get; set; }
 
+        /// <summary>
+        /// 是否已经关注
+        /// </summary>
         public bool? IsSubscribe { get; set; }
     }
 

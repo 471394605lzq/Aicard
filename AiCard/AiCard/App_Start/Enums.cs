@@ -120,8 +120,52 @@ namespace AiCard.Enums
         WebSide,
         MoblieWebSide
     }
+
+    public enum CellStyle
+    {
+        RichText,
+        CellList,
+
+    }
+
+    public enum ActionType
+    {
+        None,
+        Browser,
+        CardHome,
+        ShopHome,
+        EterpriseHome,
+        NewsHome,
+        ArticleDetail
+    }
     #endregion
 
+    public enum ArticleState
+    {
+        [Display(Name = "未审核")]
+        Wait,
+        [Display(Name = "已发布")]
+        Released,
+        [Display(Name = "已删除")]
+        Deleted
+
+    }
+
+    #region 微信
+    public enum WeChatAccount
+    {
+        /// <summary>
+        /// 公众号
+        /// </summary>
+        PC,
+        /// <summary>
+        /// 小程序
+        /// </summary>
+        AiCardMini,
+
+    }
+
+    #endregion
     public enum UserType
     {
         [Display(Name = "管理员")]
@@ -130,5 +174,12 @@ namespace AiCard.Enums
         Enterprise,
         [Display(Name = "个人")]
         Personal
+    }
+
+    public enum Gender
+    {
+        NoSet,
+        Male,
+        Female
     }
 }
