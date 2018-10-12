@@ -87,6 +87,7 @@ namespace AiCard
             };
 
             addViewScripts("roleGroup", new string[] { "roleGroup.js" });
+            addViewScripts("userManageIndex", new string[] { "userManageIndex.js" });
             #endregion
 
 
