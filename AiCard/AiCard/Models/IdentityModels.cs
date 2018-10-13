@@ -76,6 +76,8 @@ namespace AiCard.Models
 
         public DbSet<ArticleComment> ArticleComments { get; set; }
 
+        public DbSet<UserLog> UserLogs { get; set; }
+        
 
         public static ApplicationDbContext Create()
         {

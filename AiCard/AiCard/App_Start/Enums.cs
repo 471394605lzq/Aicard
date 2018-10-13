@@ -176,10 +176,57 @@ namespace AiCard.Enums
         Personal
     }
 
+    /// <summary>
+    /// 性别
+    /// </summary>
     public enum Gender
     {
         NoSet,
         Male,
         Female
+    }
+
+    public enum UserLogType
+    {
+        [Display(Name = "文章点赞")]
+        ArticleLike = 10,
+        [Display(Name = "文章评论")]
+        ArticleComment = 11,
+        [Display(Name = "文章查看")]
+        ArticleRead = 12,
+        [Display(Name = "在线沟通")]
+        Communication = 20,
+        [Display(Name = "商品查看")]
+        ProductRead = 30,
+        [Display(Name = "商品咨询")]
+        ProductCon = 31,
+        [Display(Name = "主页查看")]
+        HomePageRead = 40,
+        [Display(Name = "微信查看")]
+        WeChatOpen = 50,
+        [Display(Name = "转发查看")]
+        CardRead = 60,
+        [Display(Name = "转发名片")]
+        CardForward = 61,
+        [Display(Name = "名片保存")]
+        CardSave = 62,
+        [Display(Name = "商城查看")]
+        ShopRead = 70,
+        [Display(Name = "手机拨打")]
+        PhoneCall = 80,
+        [Display(Name = "邮件发送")]
+        EmailSend = 81,
+        [Display(Name = "语音播放")]
+        VoicePlay = 82,
+        [Display(Name = "视频播放")]
+        VideoPlay = 83
+    }
+
+    public enum ProductType
+    {
+        [Display(Name = "实物")]
+        Physical,
+        [Display(Name = "虚拟")]
+        Virtual 
     }
 }

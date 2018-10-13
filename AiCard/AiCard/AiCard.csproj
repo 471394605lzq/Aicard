@@ -318,6 +318,10 @@
     <Compile Include="Migrations\201810111156517_ArticleDeleteEnableAddState.Designer.cs">
       <DependentUpon>201810111156517_ArticleDeleteEnableAddState.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201810130255490_AddUserLogs.cs" />
+    <Compile Include="Migrations\201810130255490_AddUserLogs.Designer.cs">
+      <DependentUpon>201810130255490_AddUserLogs.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ArticleModels.cs" />
@@ -330,7 +334,9 @@
     <Compile Include="Models\EnterpriseViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\ProductModels.cs" />
     <Compile Include="Models\RoleGroup.cs" />
+    <Compile Include="Models\UserLog.cs" />
     <Compile Include="Models\UserManageViewModels.cs" />
     <Compile Include="Models\UserViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -841,6 +847,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201810111156517_ArticleDeleteEnableAddState.resx">
       <DependentUpon>201810111156517_ArticleDeleteEnableAddState.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810130255490_AddUserLogs.resx">
+      <DependentUpon>201810130255490_AddUserLogs.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
