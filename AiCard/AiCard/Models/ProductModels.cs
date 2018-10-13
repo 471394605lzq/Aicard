@@ -6,7 +6,7 @@ using System.Web;
 
 namespace AiCard.Models
 {
-    public class Products
+    public class Product
     {
         public int ID { get; set; }
 
@@ -58,7 +58,7 @@ namespace AiCard.Models
         [Display(Name = "排序")]
         public int Sort { get; set; }
 
-        public List<Products> Products { get; set; }
+        public List<Product> Products { get; set; }
 
     }
 }

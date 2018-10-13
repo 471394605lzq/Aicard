@@ -322,6 +322,10 @@
     <Compile Include="Migrations\201810130255490_AddUserLogs.Designer.cs">
       <DependentUpon>201810130255490_AddUserLogs.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201810130303156_AddProductsAndProductKind.cs" />
+    <Compile Include="Migrations\201810130303156_AddProductsAndProductKind.Designer.cs">
+      <DependentUpon>201810130303156_AddProductsAndProductKind.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ArticleModels.cs" />
@@ -850,6 +854,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201810130255490_AddUserLogs.resx">
       <DependentUpon>201810130255490_AddUserLogs.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810130303156_AddProductsAndProductKind.resx">
+      <DependentUpon>201810130303156_AddProductsAndProductKind.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
