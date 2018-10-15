@@ -55,7 +55,9 @@ namespace AiCard.Controllers
 
         public ActionResult UploadTest()
         {
+            var e = new { Name = "1", Image = "1.jpg,2.jpg" };
             var model = new TestImages();
+            model.Avatar.Images = e.Image.SplitToArray<string>().ToArray();
             return View(model);
         }
 
@@ -96,7 +98,7 @@ namespace AiCard.Controllers
             {
                 Avatar = new AiCard.Models.CommModels.FileUpload
                 {
-                    Max = 5,
+                    Max = 3,
                     Name = "Avatar",
                     Sortable = true,
                     Type = AiCard.Models.CommModels.FileType.Image,

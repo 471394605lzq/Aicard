@@ -16,13 +16,30 @@
 {
     <p>@Html.EditorFor(model => model.NickName)</p>
     <p>@Html.EditorFor(model => model.Avatar)</p>
-    <p><input type="submit" name="name" value="Submit" /></p>
+    <p>
+        <input type="submit" id="btnSubmit" name="name" value="Submit" />
+        <input type="button" id="btnJsGet" name="name" value="get" />
+    </p>
 }
 
 @section Scripts{
     @Scripts.Render("~/bundles/jqueryui")
 
     <script>
-        new uploader(".uploader", { uploaded: function (url) { console.log(url) } });
+        var myUploader = new uploader(".uploader", {
+            uploaded: function (url) {
+                console.log(url);
+
+            },
+            closed: function () {
+            },
+            showed: function () {
+
+            }
+        });
+        $("#btnJsGet").click(function () {
+            console.log(myUploader.getUploadFilePaths());
+
+        });
     </script>
 }
