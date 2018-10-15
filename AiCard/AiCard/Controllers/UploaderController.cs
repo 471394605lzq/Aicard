@@ -77,16 +77,45 @@ namespace AiCard.Controllers
             {
                 filename = this.UploadFile(path: model.FilePath, isResetName: model.IsResetName);
             }
+
             if (filename == null || filename.Count <= 0)
             {
                 return Json(Comm.ToJsonResult("Error", "上传失败"));
             }
-            return Json(Comm.ToJsonResult("Success", "成功", new
+
+            switch (model.Server)
             {
-                FileUrls = filename,
-                FileFullUrls = filename.Select(s => Url.ContentFull(s))
-            }));
+
+                default:
+                case Models.CommModels.UploadServer.Local:
+                    {
+                        return Json(Comm.ToJsonResult("Success", "成功", new
+                        {
+                            FileUrls = filename,
+                            FileFullUrls = filename.Select(s => Url.ContentFull(s))
+                        }));
+                    }
+                case Models.CommModels.UploadServer.QinQiu:
+                    {
+                        List<string> fileList = new List<string>();
+                        var qinniu = new Qiniu.QinQiuApi();
+                        foreach (var item in filename)
+                        {
+                            var path = Server.MapPath(item);
+                            fileList.Add(qinniu.UploadFile(path, true));
+                        }
+                        return Json(Comm.ToJsonResult("Success", "成功", new
+                        {
+                            FileUrls = fileList,
+                            FileFullUrls = fileList
+                        }));
+
+                    }
+            }
+
         }
+
+
 
         //[HttpPost]
         //[Authorize]
@@ -126,25 +155,34 @@ namespace AiCard.Controllers
 
         private void DeleteSeverFile(string file)
         {
-            var fileName = file.ToLower();
-            //if (!fileName.Contains("~/upload/"))
-            //{
-            //    throw new Exception("Error");
-            //}
-            file = Server.MapPath(file);
-            try
+
+            if (file.Contains(Qiniu.QinQiuApi.ServerLink))
             {
-                FileInfo fileInfo = new FileInfo(file);
-                if (!fileInfo.Exists)
+                string key = Qiniu.QinQiuApi.LinkToKey(file);
+                try
                 {
-                    throw new DirectoryNotFoundException("文件不存在");
+                    new Qiniu.QinQiuApi().DeleteFile(key);
                 }
-                System.IO.File.Delete(file);
+                catch (Exception ex)
+                {
+
+                    throw ex;
+                }
+
             }
-            catch (System.IO.IOException e)
+            else
             {
-                throw e;
+                file = Server.MapPath(file);
+                try
+                {
+                    System.IO.File.Delete(file);
+                }
+                catch (System.IO.IOException ex)
+                {
+                    throw ex;
+                }
             }
+
         }
 
 

@@ -1,8 +1,14 @@
-﻿@model AiCard.Models.Comm.FileUpload
+﻿@model AiCard.Models.CommModels.FileUpload
 @{
-    var hidCtl = Model.Mode == AiCard.Models.Comm.FileUploadMode.ModalOnly ? "hidden" : "";
+    var hidCtl = Model.Mode == AiCard.Models.CommModels.FileUploadMode.ModalOnly ? "hidden" : "";
 }
-<div id="myModal_@Model.Name" class="uploader @(Model.AutoInit?"":"noInit")" data-max="@Model.Max" data-sortable="@Model.Sortable.ToString().ToLower()" data-isresetname="@Model.IsResetName" data-filepath="@Model.FilePath" data-type="@Model.Type">
+<div id="myModal_@Model.Name" class="uploader @(Model.AutoInit?"":"noInit")"
+     data-max="@Model.Max"
+     data-sortable="@Model.Sortable.ToString().ToLower()"
+     data-isresetname="@Model.IsResetName"
+     data-filepath="@Model.FilePath"
+     data-type="@Model.Type"
+     data-server="@Model.Server">
     @Html.HiddenFor(model => model.Value, new { @class = "uploaderVal" })
     <div class="@hidCtl">
         <button class="btn btn-default btn-success btnModal" type="button"><span class="glyphicon glyphicon-upload"></span> 上传文件</button>
@@ -62,22 +68,22 @@
                     var accept = "";
                     switch (Model.Type)
                     {
-                        case AiCard.Models.Comm.FileType.File:
+                        case AiCard.Models.CommModels.FileType.File:
                             { accept = ""; }
                             break;
-                        case AiCard.Models.Comm.FileType.Image:
+                        case AiCard.Models.CommModels.FileType.Image:
                             { accept = "image/*"; }
                             break;
-                        case AiCard.Models.Comm.FileType.Word:
+                        case AiCard.Models.CommModels.FileType.Word:
                             { accept = "application/vnd.ms-works,application/vnd.ms-works,application/vnd.ms-works,application/msword"; }
                             break;
-                        case AiCard.Models.Comm.FileType.Excel:
+                        case AiCard.Models.CommModels.FileType.Excel:
                             { accept = "application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"; }
                             break;
-                        case AiCard.Models.Comm.FileType.Video:
+                        case AiCard.Models.CommModels.FileType.Video:
                             { accept = "video/*"; }
                             break;
-                        case AiCard.Models.Comm.FileType.Sound:
+                        case AiCard.Models.CommModels.FileType.Sound:
                             { accept = "audio/*"; }
                             break;
                         default:

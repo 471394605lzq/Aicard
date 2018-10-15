@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-
+using AiCard.Models;
 namespace AiCard.Controllers
 {
     public class TestController : Controller
@@ -53,7 +53,11 @@ namespace AiCard.Controllers
             return Json(Comm.ToJsonResult("Success", "成功", list), JsonRequestBehavior.AllowGet);
         }
 
-
+        public ActionResult UploadTest()
+        {
+            
+            return View();
+        }
     }
 
     public class MiniModel
@@ -79,5 +83,9 @@ namespace AiCard.Controllers
 
     }
 
+    public class TestImages
+    {
 
+        
+    }
 }

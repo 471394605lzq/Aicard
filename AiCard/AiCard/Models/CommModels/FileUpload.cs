@@ -9,6 +9,11 @@ namespace AiCard.Models.CommModels
 {
     public class FileUpload
     {
+        public FileUpload()
+        {
+            
+        }
+
         public void UseByCkEdit()
         {
             Name = "ckupload";
@@ -16,6 +21,8 @@ namespace AiCard.Models.CommModels
             AutoInit = false;
             Max = 20;
             Type = FileType.Image;
+            
+
         }
 
         /// <summary>
@@ -79,6 +86,48 @@ namespace AiCard.Models.CommModels
         /// 模式
         /// </summary>
         public FileUploadMode Mode { get; set; }
+
+        private UploadServer server;
+        public UploadServer Server { get {
+                return server;
+
+            }
+        set {
+                server = value;
+                switch (Server)
+                {
+                    default:
+                    case UploadServer.Local:
+                        uploadControl = "~/Uploader/Upload";
+                        deleteControl = "~/Uploader/DeleteFile";
+                        break;
+                    case UploadServer.QinQiu:
+                        uploadControl = "~/Uploader/UploadQinui";
+                        deleteControl = "~/Uploader/DeleteFileQiniu";
+                        break;
+                }
+            }
+        } 
+
+        private string uploadControl;
+        public string UploadControl
+        {
+
+            get
+            {
+                return uploadControl;
+            }
+        }
+
+        private string deleteControl;
+        public string DeleteControl
+        {
+
+            get
+            {
+                return deleteControl;
+            }
+        }
     }
 
     public enum FileType
@@ -125,5 +174,11 @@ namespace AiCard.Models.CommModels
         /// 只有弹窗
         /// </summary>
         ModalOnly
+    }
+
+    public enum UploadServer
+    {
+        Local,
+        QinQiu
     }
 }

@@ -628,6 +628,8 @@ namespace AiCard.Controllers
                     result.UnionID,
                     User = user == null ? null : new UserViewModel(user)
                 }));
+
+
             }
         }
 
@@ -665,10 +667,11 @@ namespace AiCard.Controllers
                     avart = "~/Content/Images/404/avatar.png";
                 }
             }
-
-
             unionId = model.UnionID;
-
+            #region 把图片传到七牛
+            var path = Server.MapPath(avart);
+            avart = new Qiniu.QinQiuApi().UploadFile(path, true);
+            #endregion
 
             ApplicationUser user = db.Users.FirstOrDefault(s => s.WeChatID == unionId);
             if (user == null)
@@ -701,9 +704,6 @@ namespace AiCard.Controllers
             }
             return user;
         }
-
-
-
 
         #endregion
     }

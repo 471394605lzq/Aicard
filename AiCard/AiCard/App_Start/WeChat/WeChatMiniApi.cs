@@ -52,16 +52,12 @@ namespace AiCard.WeChat
             p.Add("secret", Secret);
             p.Add("js_code", code);
             p.Add("grant_type", "authorization_code");
-            //throw new Exception(JsonConvert.SerializeObject($"https://api.weixin.qq.com/sns/jscode2session{p.ToParam("?")}"));
-            var result = new AiCard.Api.BaseApi($"https://api.weixin.qq.com/sns/jscode2session{p.ToParam("?")}", "GET").CreateRequestReturnJson(); ;
-            if (result["errcode"] != null)
-            {
-                throw new Exception(JsonConvert.SerializeObject(result));
-            }
+            var result = new AiCard.Api.BaseApi($"https://api.weixin.qq.com/sns/jscode2session{p.ToParam("?")}", "GET").CreateRequestReturnJson();
             return new Jscode2sessionResult
             {
                 OpenID = result["openid"].Value<string>(),
                 UnionID = result["unionid"].Value<string>(),
+                Session = result["session_key"].Value<string>(),
             };
 
         }
@@ -98,7 +94,7 @@ namespace AiCard.WeChat
         {
             System.IO.MemoryStream ms = new System.IO.MemoryStream(streamByte);
             System.Drawing.Image img = System.Drawing.Image.FromStream(ms);
-            string newimgpath = "E:\"" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss:fff")+".png";
+            string newimgpath = "E:\"" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss:fff") + ".png";
             img.Save(newimgpath, ImageFormat.Png);
             return newimgpath;
         }

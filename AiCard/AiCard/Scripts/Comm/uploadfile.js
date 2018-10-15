@@ -18,13 +18,18 @@ var uploader = function (target, option) {
     var sortable = $this.data("sortable");
     var isResetName = $this.data("isresetname");
     var filePath = $this.data("filepath");
+    var server = $this.data("server");
     var fileUrls = new Array();
     var mask = comm.mask2.create(10000);
-    $this.after(mask)
+
+    var uploadControl = comm.imgFullUrl("~/Uploader/Upload");
+    var deleteControl = comm.imgFullUrl("~/Uploader/DeleteFile");
+    $this.after(mask);
     if (option == undefined) {
         option = {
             showed: function () { },
-            closed: function () { }
+            closed: function () { },
+            uploaded: function () { },
         }
     } else {
         if (option.showed == undefined) {
@@ -63,7 +68,7 @@ var uploader = function (target, option) {
         $file.val("");
     }
 
-    
+
 
     this.close = function () {
         _close();
@@ -197,6 +202,7 @@ var uploader = function (target, option) {
         data.append("max", max);
         data.append("sortable", sortable);
         data.append("isResetName", isResetName);
+        data.append("server", server);
         if (filePath != undefined) {
             data.append("filePath", filePath);
         }
@@ -204,7 +210,7 @@ var uploader = function (target, option) {
         var xhr = null;
         $.ajax({
             type: "POST",
-            url: comm.action("Upload", "Uploader"),
+            url: uploadControl,
             data: data,
             cache: false,
             dataType: "json",
@@ -385,6 +391,9 @@ var uploader = function (target, option) {
 
     //排序
     if (sortable) {
+        if ($fileList.sortable == undefined) {
+            throw "未引用jquery ui";
+        };
         $fileList.sortable({
             cursor: "img",
             update: function () {

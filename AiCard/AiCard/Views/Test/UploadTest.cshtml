@@ -1,0 +1,22 @@
+﻿
+@{
+    ViewBag.Title = "UploadTest";
+    Layout = "~/Views/Shared/_LayoutBackground.cshtml";
+    AiCard.Models.CommModels.FileUpload upload = new AiCard.Models.CommModels.FileUpload
+    {
+        Max = 5,
+        Name = "fileUpload",
+        Sortable = true,
+        Type = AiCard.Models.CommModels.FileType.Image,
+        AutoInit = false,
+        Server = AiCard.Models.CommModels.UploadServer.QinQiu
+    };
+}
+@Html.EditorFor(model => upload)
+@section Scripts{
+    @Scripts.Render("~/bundles/jqueryui")
+
+    <script>
+        new uploader(".uploader", { uploaded: function (url) { console.log(url) } });
+    </script>
+}
