@@ -55,37 +55,61 @@ namespace AiCard.Controllers
 
         public ActionResult UploadTest()
         {
-            
-            return View();
+            var model = new TestImages();
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult UploadTest(TestImages model)
+        {
+
+            return View(model);
+        }
+
+
+        public class MiniModel
+        {
+            public string ID { get; set; }
+
+            public string Title { get; set; }
+
+            public Enums.CellStyle Style { get; set; }
+
+            public object Data { get; set; }
+        }
+
+        public class ImageListViewModel
+        {
+            public int ID { get; set; }
+
+            public string Image { get; set; }
+
+            public string Title { get; set; }
+
+            public string Date { get; set; }
+
+        }
+
+        public class TestImages
+        {
+            public TestImages()
+            {
+                Avatar = new AiCard.Models.CommModels.FileUpload
+                {
+                    Max = 5,
+                    Name = "Avatar",
+                    Sortable = true,
+                    Type = AiCard.Models.CommModels.FileType.Image,
+                    AutoInit = false,
+                    Server = AiCard.Models.CommModels.UploadServer.Local
+                };
+            }
+
+            public string NickName { get; set; }
+
+            public AiCard.Models.CommModels.FileUpload Avatar { get; set; }
+
         }
     }
 
-    public class MiniModel
-    {
-        public string ID { get; set; }
-
-        public string Title { get; set; }
-
-        public Enums.CellStyle Style { get; set; }
-
-        public object Data { get; set; }
-    }
-
-    public class ImageListViewModel
-    {
-        public int ID { get; set; }
-
-        public string Image { get; set; }
-
-        public string Title { get; set; }
-
-        public string Date { get; set; }
-
-    }
-
-    public class TestImages
-    {
-
-        
-    }
 }
