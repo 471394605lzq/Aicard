@@ -348,6 +348,7 @@
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\ProductModels.cs" />
     <Compile Include="Models\RoleGroup.cs" />
+    <Compile Include="Models\RolesModel.cs" />
     <Compile Include="Models\UserLog.cs" />
     <Compile Include="Models\UserManageViewModels.cs" />
     <Compile Include="Models\UserViewModels.cs" />
@@ -832,6 +833,8 @@
     <Content Include="Views\UserManage\Delete.cshtml" />
     <Content Include="Views\EnterpriseManage\Index.cshtml" />
     <Content Include="Views\Test\UploadTest.cshtml" />
+    <Content Include="Views\EnterpriseManage\Create.cshtml" />
+    <Content Include="Views\EnterpriseManage\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
