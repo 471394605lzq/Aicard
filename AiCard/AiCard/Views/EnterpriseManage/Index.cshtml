@@ -1,4 +1,4 @@
-﻿@model IEnumerable<AiCard.Models.EnterpriseViewModels>
+﻿@model PagedList.IPagedList<AiCard.Models.EnterpriseViewModels>
 
 @{
     ViewBag.Title = "Index";
@@ -9,20 +9,21 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
                 <li><a href="@Url.Action("Create")">新增</a></li>
-                <li class="dropdown">
+                @*<li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">状态 <span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        @*<li><a href="@Url.WithAllPara("enable")">content</a></li>*@
+                        <li><a href="@Url.WithAllPara("enable")">content</a></li>
                         <li><a href="#">Action</a></li>
                         <li><a href="#">Another action</a></li>
                     </ul>
-                </li>
+                </li>*@
             </ul>
             <form class="navbar-form navbar-left">
                 <div class="form-group">
                     <input type="text" class="form-control" placeholder="Search">
                 </div>
-                <button type="submit" class="btn btn-default">Submit</button>
+                @*<button type="submit" class="btn btn-default">搜索</button>*@
+                <a href="@Url.Action("Index")" class="btn btn-default">搜索</a>
             </form>
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="#">Link</a></li>
@@ -43,22 +44,19 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Name)
+            企业名称
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.AdminID)
+            管理员账号
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Admin)
+            剩余名片数量
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.CardCount)
+            是否启动
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Enable)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.PhoneNumber)
+            联系电话
         </th>
         <th></th>
     </tr>
@@ -68,9 +66,6 @@
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AdminID)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Admin)
@@ -93,3 +88,4 @@
     }
 
 </table>
+@Html.PageList(Model, Url.Action("Index"))
