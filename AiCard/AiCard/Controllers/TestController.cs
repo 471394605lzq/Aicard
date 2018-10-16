@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-
+using AiCard.Models;
 namespace AiCard.Controllers
 {
     public class TestController : Controller
@@ -53,31 +53,65 @@ namespace AiCard.Controllers
             return Json(Comm.ToJsonResult("Success", "成功", list), JsonRequestBehavior.AllowGet);
         }
 
+        public ActionResult UploadTest()
+        {
+            var e = new { Name = "1", Image = "1.jpg,2.jpg" };
+            var model = new TestImages();
+            model.Avatar.Images = e.Image.SplitToArray<string>().ToArray();
+            return View(model);
+        }
 
+        [HttpPost]
+        public ActionResult UploadTest(TestImages model)
+        {
+
+            return View(model);
+        }
+
+
+        public class MiniModel
+        {
+            public string ID { get; set; }
+
+            public string Title { get; set; }
+
+            public Enums.CellStyle Style { get; set; }
+
+            public object Data { get; set; }
+        }
+
+        public class ImageListViewModel
+        {
+            public int ID { get; set; }
+
+            public string Image { get; set; }
+
+            public string Title { get; set; }
+
+            public string Date { get; set; }
+
+        }
+
+        public class TestImages
+        {
+            public TestImages()
+            {
+                Avatar = new AiCard.Models.CommModels.FileUpload
+                {
+                    Max = 3,
+                    Name = "Avatar",
+                    Sortable = true,
+                    Type = AiCard.Models.CommModels.FileType.Image,
+                    AutoInit = false,
+                    Server = AiCard.Models.CommModels.UploadServer.Local
+                };
+            }
+
+            public string NickName { get; set; }
+
+            public AiCard.Models.CommModels.FileUpload Avatar { get; set; }
+
+        }
     }
-
-    public class MiniModel
-    {
-        public string ID { get; set; }
-
-        public string Title { get; set; }
-
-        public Enums.CellStyle Style { get; set; }
-
-        public object Data { get; set; }
-    }
-
-    public class ImageListViewModel
-    {
-        public int ID { get; set; }
-
-        public string Image { get; set; }
-
-        public string Title { get; set; }
-
-        public string Date { get; set; }
-
-    }
-
 
 }

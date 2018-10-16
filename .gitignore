@@ -185,3 +185,6 @@ UpgradeLog*.htm
 
 # Microsoft Fakes
 FakesAssemblies/
+
+#web
+[Uu]pload/

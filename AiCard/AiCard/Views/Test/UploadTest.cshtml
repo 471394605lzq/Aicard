@@ -1,0 +1,45 @@
+﻿@model AiCard.Controllers.TestController.TestImages
+@{
+    ViewBag.Title = "UploadTest";
+    Layout = "~/Views/Shared/_LayoutBackground.cshtml";
+    //AiCard.Models.CommModels.FileUpload upload = new AiCard.Models.CommModels.FileUpload
+    //{
+    //    Max = 5,
+    //    Name = "fileUpload",
+    //    Sortable = true,
+    //    Type = AiCard.Models.CommModels.FileType.Image,
+    //    AutoInit = false,
+    //    Server = AiCard.Models.CommModels.UploadServer.QinQiu
+    //};
+}
+@using (Html.BeginForm())
+{
+    <p>@Html.EditorFor(model => model.NickName)</p>
+    <p>@Html.EditorFor(model => model.Avatar)</p>
+    <p>
+        <input type="submit" id="btnSubmit" name="name" value="Submit" />
+        <input type="button" id="btnJsGet" name="name" value="get" />
+    </p>
+}
+
+@section Scripts{
+    @Scripts.Render("~/bundles/jqueryui")
+
+    <script>
+        var myUploader = new uploader(".uploader", {
+            uploaded: function (url) {
+                console.log(url);
+
+            },
+            closed: function () {
+            },
+            showed: function () {
+
+            }
+        });
+        $("#btnJsGet").click(function () {
+            console.log(myUploader.getUploadFilePaths());
+
+        });
+    </script>
+}

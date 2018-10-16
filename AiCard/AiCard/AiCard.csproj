@@ -98,8 +98,8 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Qiniu.7.3.1.1\lib\Net40\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="NPOI, Version=2.3.0.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
@@ -124,6 +124,10 @@
     </Reference>
     <Reference Include="PagedList.Mvc, Version=4.5.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
       <HintPath>..\packages\PagedList.Mvc.4.5.0.0\lib\net40\PagedList.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Qiniu, Version=7.2.15.0, Culture=neutral, PublicKeyToken=2894d75bb9f220bf, processorArchitecture=MSIL">
+      <HintPath>..\packages\Qiniu.Shared.ExtJson.7.2.15\lib\net45\Qiniu.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -243,6 +247,7 @@
     <Compile Include="App_Start\Api.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\Comm.cs" />
+    <Compile Include="App_Start\EncryptDecrypt.cs" />
     <Compile Include="App_Start\Enums.cs" />
     <Compile Include="App_Start\Extensions\ActionFilterAttributes.cs" />
     <Compile Include="App_Start\Extensions\ControllerExtensions.cs" />
@@ -259,6 +264,7 @@
     <Compile Include="App_Start\Interface\IGprs.cs" />
     <Compile Include="App_Start\Interface\ISms.cs" />
     <Compile Include="App_Start\Log.cs" />
+    <Compile Include="App_Start\Qiniu\QinQiuApi.cs" />
     <Compile Include="App_Start\QrCode.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
@@ -362,6 +368,15 @@
     <Content Include="Content\Images\filetype\ppt.png" />
     <Content Include="Content\Images\filetype\xls.png" />
     <Content Include="Content\Images\filetype\zip.png" />
+    <Content Include="Content\Images\ui-icons_444444_256x240.png" />
+    <Content Include="Content\Images\ui-icons_555555_256x240.png" />
+    <Content Include="Content\Images\ui-icons_777620_256x240.png" />
+    <Content Include="Content\Images\ui-icons_777777_256x240.png" />
+    <Content Include="Content\Images\ui-icons_cc0000_256x240.png" />
+    <Content Include="Content\Images\ui-icons_ffffff_256x240.png" />
+    <Content Include="Content\jquery-ui.css" />
+    <Content Include="Content\jquery-ui.structure.css" />
+    <Content Include="Content\jquery-ui.theme.css" />
     <Content Include="Content\PagedList.css" />
     <Content Include="Content\Site.css">
       <DependentUpon>Site.less</DependentUpon>
@@ -754,6 +769,7 @@
     <Content Include="Scripts\jquery-2.2.4.min.js" />
     <Content Include="Scripts\jquery-2.2.4.min.map" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery-ui.js" />
     <Content Include="Scripts\jquery.cookie-1.4.1.min.js" />
     <Content Include="Scripts\jquery.cookie.js" />
     <Content Include="Scripts\jquery.validate.js" />
@@ -767,7 +783,9 @@
     <Content Include="Scripts\Views\roleGroup.js" />
     <Content Include="Scripts\Views\userManageIndex.js" />
     <Content Include="Scripts\_references.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -815,6 +833,7 @@
     <Content Include="Views\UserManage\Edit.cshtml" />
     <Content Include="Views\UserManage\Delete.cshtml" />
     <Content Include="Views\EnterpriseManage\Index.cshtml" />
+    <Content Include="Views\Test\UploadTest.cshtml" />
     <Content Include="Views\EnterpriseManage\Create.cshtml" />
     <Content Include="Views\EnterpriseManage\Edit.cshtml" />
     <Content Include="Views\Shared\_LayoutEnterprise.cshtml" />
@@ -826,7 +845,6 @@
     <Folder Include="Content\Less\View\" />
     <Folder Include="Views\CardManage\" />
     <Folder Include="Views\Enterprise\" />
-    <Folder Include="Views\Test\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
