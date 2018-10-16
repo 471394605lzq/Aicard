@@ -92,6 +92,53 @@ namespace AiCard.Controllers
             }
         }
 
+        //企业登录
+        [AllowAnonymous]
+        public ActionResult EnterpriseLogin(string returnUrl)
+        {
+            ViewBag.ReturnUrl = returnUrl;
+            return View();
+        }
+        //企业登录
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> EnterpriseLogin(LoginViewModel model, string returnUrl)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            // 这不会计入到为执行帐户锁定而统计的登录失败次数中
+            // 若要在多次输入错误密码的情况下触发帐户锁定，请更改为 shouldLockout: true
+            var result = await SignInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, shouldLockout: false);
+            switch (result)
+            {
+                case SignInStatus.Success:
+                    HttpCookie _userInfoCookies = new HttpCookie("userid");
+                    var user = db.Users.FirstOrDefault(s => s.UserName == model.UserName);
+                    _userInfoCookies["UserName"] = user.UserName;
+                    _userInfoCookies["UserId"] = user.Id;
+                    Response.Cookies.Add(_userInfoCookies);
+                    if (Url.IsLocalUrl(returnUrl))
+                    {
+                        return RedirectToLocal(returnUrl);
+                    }
+                    else {
+                        return RedirectToAction("","");
+                    }
+                case SignInStatus.LockedOut:
+                    return View("Lockout");
+                case SignInStatus.RequiresVerification:
+                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
+                case SignInStatus.Failure:
+                default:
+                    ModelState.AddModelError("", "无效的登录尝试。");
+                    return View(model);
+            }
+        }
+
+
         //
         // GET: /Account/VerifyCode
         [AllowAnonymous]

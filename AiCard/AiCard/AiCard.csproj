@@ -817,12 +817,14 @@
     <Content Include="Views\EnterpriseManage\Index.cshtml" />
     <Content Include="Views\EnterpriseManage\Create.cshtml" />
     <Content Include="Views\EnterpriseManage\Edit.cshtml" />
+    <Content Include="Views\Shared\_LayoutEnterprise.cshtml" />
+    <Content Include="Views\Account\EnterpriseLogin.cshtml" />
+    <Content Include="Views\Card\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Content\Less\View\" />
     <Folder Include="Views\CardManage\" />
-    <Folder Include="Views\Card\" />
     <Folder Include="Views\Enterprise\" />
     <Folder Include="Views\Test\" />
   </ItemGroup>

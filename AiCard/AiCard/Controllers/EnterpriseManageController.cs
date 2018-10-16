@@ -44,10 +44,15 @@ namespace AiCard.Controllers
                 return _roleManager;
             }
         }
+        public void Sidebar(string name = "企业管理")
+        {
+            ViewBag.Sidebar = name;
 
+        }
         //列表页
         public ActionResult Index(string filter, bool? enable = null, int page = 1)
         {
+            Sidebar();
             var m = from e in db.Enterprises
                     from u in db.Users
                     where e.AdminID == u.Id
@@ -59,7 +64,15 @@ namespace AiCard.Controllers
                         CardCount = e.CardCount,
                         Name = e.Name,
                         PhoneNumber = e.PhoneNumber,
-                        AdminID = u.Id
+                        AdminID = u.Id,
+                        Province=e.Province,
+                        City=e.City,
+                        District=e.District,
+                        Address=e.Address,
+                        HomePage=e.HomePage,
+                        Info=e.Info,
+                        Code=e.Code,
+                        Email=e.Email
                     };
             if (!string.IsNullOrWhiteSpace(filter))
             {
@@ -75,6 +88,7 @@ namespace AiCard.Controllers
         //新增
         public ActionResult Create()
         {
+            Sidebar();
             return View();
         }
         // POST: tests/Create
@@ -85,6 +99,8 @@ namespace AiCard.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(Enterprise enterprise)
         {
+
+            Sidebar();
             if (ModelState.IsValid)
             {
                 var hascode = db.Enterprises.Any(s => s.Code == enterprise.Code);
@@ -154,6 +170,7 @@ namespace AiCard.Controllers
         }
         public ActionResult Edit(int? id)
         {
+            Sidebar();
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -198,6 +215,7 @@ namespace AiCard.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(Enterprise enterprise)
         {
+            Sidebar();
             if (ModelState.IsValid)
             {
                 var t = db.Enterprises.FirstOrDefault(s => s.ID == enterprise.ID);
@@ -219,6 +237,33 @@ namespace AiCard.Controllers
             }
             return View(enterprise);
         }
+        //删除
+        public ActionResult Delete(int id) {
+            Enterprise enterprise = db.Enterprises.Find(id);
+            var adminid = enterprise.AdminID;
+            //删除跟企业关联的管理员账号信息
+            var user = db.Users.FirstOrDefault(s => s.Id == adminid);
+            if (user != null)
+            {
+                db.Users.Remove(user);
+            }
+            //删除跟企业关联的权限组信息
+            var rolegroup = db.RoleGroups.FirstOrDefault(s => s.EnterpriseID == id);
+            if (rolegroup != null)
+            {
+                db.RoleGroups.Remove(rolegroup);
+            }
+            //删除企业信息
+
+            if (enterprise != null)
+            {
+                db.Enterprises.Remove(enterprise);
+            }
+            db.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+       
         protected override void Dispose(bool disposing)
         {
             if (disposing)
