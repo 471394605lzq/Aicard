@@ -247,7 +247,6 @@
     <Compile Include="App_Start\Api.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\Comm.cs" />
-    <Compile Include="App_Start\EncryptDecrypt.cs" />
     <Compile Include="App_Start\Enums.cs" />
     <Compile Include="App_Start\Extensions\ActionFilterAttributes.cs" />
     <Compile Include="App_Start\Extensions\ControllerExtensions.cs" />
@@ -269,6 +268,8 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\SysRole.cs" />
+    <Compile Include="App_Start\WeChatWork\WeChatWorkApi.cs" />
+    <Compile Include="App_Start\WeChatWork\WeChatWorkModel.cs" />
     <Compile Include="App_Start\WeChat\WeChatMiniApi.cs" />
     <Compile Include="App_Start\WeChat\WeChatApi.cs" />
     <Compile Include="App_Start\WeChat\Config.cs" />
@@ -343,6 +344,7 @@
     <Compile Include="Models\CommModels\FileUpload.cs" />
     <Compile Include="Models\CommModels\HtmlHelpModels.cs" />
     <Compile Include="Models\CommModels\ImageResizer.cs" />
+    <Compile Include="Models\CommModels\Map.cs" />
     <Compile Include="Models\EnterpriseModels.cs" />
     <Compile Include="Models\EnterpriseViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -368,6 +370,8 @@
     <Content Include="Content\Images\filetype\ppt.png" />
     <Content Include="Content\Images\filetype\xls.png" />
     <Content Include="Content\Images\filetype\zip.png" />
+    <Content Include="Content\Images\map_mark_bs.png" />
+    <Content Include="Content\Images\map_mark_bs_active.png" />
     <Content Include="Content\Images\ui-icons_444444_256x240.png" />
     <Content Include="Content\Images\ui-icons_555555_256x240.png" />
     <Content Include="Content\Images\ui-icons_777620_256x240.png" />
@@ -664,6 +668,7 @@
     <Content Include="Scripts\ckeditor\samples\toolbarconfigurator\font\fontello.woff" />
     <Content Include="Scripts\ckeditor\samples\toolbarconfigurator\lib\codemirror\LICENSE" />
     <Content Include="Scripts\ckeditor\skins\moono-lisa\readme.md" />
+    <Content Include="Content\Less\map.less" />
     <None Include="Properties\PublishProfiles\AiCardRelease.pubxml" />
     <None Include="Scripts\jquery-2.2.4.intellisense.js" />
     <Content Include="Scripts\ckeditor\build-config.js" />
@@ -836,6 +841,10 @@
     <Content Include="Views\Test\UploadTest.cshtml" />
     <Content Include="Views\EnterpriseManage\Create.cshtml" />
     <Content Include="Views\EnterpriseManage\Edit.cshtml" />
+    <Content Include="Views\Test\TestMap.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Map.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\WeChatWorkDep.cshtml" />
+    <Content Include="Views\Test\TestWeixinWork.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

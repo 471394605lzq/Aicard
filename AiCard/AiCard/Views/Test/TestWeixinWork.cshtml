@@ -1,0 +1,45 @@
+﻿@model IEnumerable<AiCard.WeChatWork.Models.User>
+@{
+    List<AiCard.WeChatWork.Models.Department> deps = ViewBag.Deps;
+
+}
+<table>
+    <tr>
+        <td>
+            <ul data-id="0">
+                @foreach (var item in deps)
+                {
+                    @Html.EditorFor(s => item, "WeChatWorkDep", new { Url = "~/test/TestWeixinWork?dep={0}" })
+                }
+            </ul>
+        </td>
+        <td>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <td>@Html.DisplayNameFor(model => model.ID)</td>
+                        <td>@Html.DisplayNameFor(model => model.Name)</td>
+                        <td>@Html.DisplayNameFor(model => model.Gender)</td>
+                        <td>@Html.DisplayNameFor(model => model.Position)</td>
+                        <td>@Html.DisplayNameFor(model => model.Mobile)</td>
+                        <td>@Html.DisplayNameFor(model => model.Telephone)</td>
+                        <td>@Html.DisplayNameFor(model => model.Email)</td>
+                    </tr>
+                </thead>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(model => item.ID)</td>
+                        <td>@Html.DisplayFor(model => item.Name)</td>
+                        <td>@Html.DisplayFor(model => item.Gender)</td>
+                        <td>@Html.DisplayFor(model => item.Position)</td>
+                        <td>@Html.DisplayFor(model => item.Mobile)</td>
+                        <td>@Html.DisplayFor(model => item.Telephone)</td>
+                        <td>@Html.DisplayFor(model => item.Email)</td>
+                    </tr>
+                }
+            </table>
+
+        </td>
+    </tr>
+</table>

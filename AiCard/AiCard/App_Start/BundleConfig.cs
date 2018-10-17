@@ -71,6 +71,7 @@ namespace AiCard
                 "~/Scripts/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"
             });
             addControl("cloud", new string[] { "~/Scripts/Comm/cloud.js" });
+            addControl("mapapi", new string[] { "~/Scripts/Comm/map.js" });
             #endregion
 
 

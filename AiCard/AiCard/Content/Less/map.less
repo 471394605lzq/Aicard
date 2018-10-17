@@ -1,0 +1,57 @@
+﻿@import "base";
+.map {
+    .address {
+        float: left;
+    }
+
+    .map_mark {
+        margin: 2px 7px;
+
+        img {
+            height: 34px;
+        }
+    }
+
+    .editMap-address {
+        margin-bottom: 20px;
+    }
+
+    .modal-map {
+        position: relative;
+
+        .mapKeyWord {
+            position: absolute;
+            right: 20px;
+            top: 5px;
+            color: #333;
+            border: @border-bc;
+            box-shadow: 3px 4px 3px 0 silver;
+            overflow: hidden;
+            line-height: 20px;
+            z-index: 100;
+
+            input[type="text"] {
+                height: 25px;
+                border: 0;
+                padding-left: 5px;
+                width: 280px;
+                outline: none;
+                border-bottom: @border-bc;
+            }
+
+            ul {
+                .clean-ul();
+
+                li {
+                    background-color: #fff;
+                    padding: 5px;
+                    cursor: pointer;
+                }
+            }
+        }
+    }
+}
+
+.amap-sug-result {
+    z-index: @z-index-top !important;
+}

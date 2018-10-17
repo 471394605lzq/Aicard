@@ -16,13 +16,13 @@ namespace AiCard.Qiniu
 {
     public class QinQiuApi
     {
-        private const string AccessKey = "R-lzlUjvB4ChkCZzYv5Ur8QKy-pHbOdarerMrOI-";
+        private const string AccessKey = "jMrLqQG-vKkJZpUC2aAJcuJPEy-QRNmU0js0rDJ1";
 
-        private const string SecretKey = "AI6fKu6R90XkH7dyjVmuGFgun-AxtiY6MrWPdpJL";
+        private const string SecretKey = "aS5GPLu7_i63sI4ZpBK52rymlVKGFpqCwgMpz8yk";
 
         private const string Bucket = "image";
 
-        public const string ServerLink = "http://image.dgztmc.com/";
+        public const string ServerLink = "http://image.dtoao.com/";
         private Mac mac;
         //private Auth auth;
 
@@ -33,7 +33,7 @@ namespace AiCard.Qiniu
 
             //auth = new Auth(mac);
 
-            Config.AutoZone(AccessKey, "aicard", false);
+            Config.AutoZone(AccessKey, Bucket, false);
             Config.SetZone(ZoneID.CN_South, false);
 
         }
