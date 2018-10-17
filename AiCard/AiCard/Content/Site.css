@@ -559,6 +559,53 @@
   width: 100%;
   table-layout: fixed;
 }
+.map .address {
+  float: left;
+}
+.map .map_mark {
+  margin: 2px 7px;
+}
+.map .map_mark img {
+  height: 34px;
+}
+.map .editMap-address {
+  margin-bottom: 20px;
+}
+.map .modal-map {
+  position: relative;
+}
+.map .modal-map .mapKeyWord {
+  position: absolute;
+  right: 20px;
+  top: 5px;
+  color: #333;
+  border: 1px solid #ddd;
+  box-shadow: 3px 4px 3px 0 silver;
+  overflow: hidden;
+  line-height: 20px;
+  z-index: 100;
+}
+.map .modal-map .mapKeyWord input[type="text"] {
+  height: 25px;
+  border: 0;
+  padding-left: 5px;
+  width: 280px;
+  outline: none;
+  border-bottom: 1px solid #ddd;
+}
+.map .modal-map .mapKeyWord ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.map .modal-map .mapKeyWord ul li {
+  background-color: #fff;
+  padding: 5px;
+  cursor: pointer;
+}
+.amap-sug-result {
+  z-index: 10000 !important;
+}
 h1,
 h2,
 h3,

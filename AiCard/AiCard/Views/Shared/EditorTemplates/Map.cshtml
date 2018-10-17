@@ -1,0 +1,44 @@
+﻿@model AiCard.Models.CommModels.Map
+@{
+    Layout = null;
+    bool hadSet = !(Model.Lat == null || Model.Lng == null);
+}
+
+<div class="map" data-search="@Model.Search">
+    @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control address map_address" } })
+    <span class="map_mark" data-toggle="modal" data-target="#map_modal">
+        <img class="@(hadSet?"hidden":"")" src="~/Content/Images/map_mark_bs.png" title="未定位" />
+        <img class="@(hadSet?"":"hidden")" src="~/Content/Images/map_mark_bs_active.png" title="已定位" />
+    </span>
+
+    @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger editMap-address" })
+    @Html.HiddenFor(model => model.Lat, new { @class = "map_lat" })
+    @Html.HiddenFor(model => model.Lng, new { @class = "map_lng" })
+
+    <div class="modal fade" id="map_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">地图定位</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-map" style="@($"width:{Model.Width}px")">
+                        <div class="mapKeyWord">
+                            <input id="mapKeyWord" name="mapKeyWord" type="text" value="" placeholder="店铺名称/街道/地名" />
+                            <ul id="mapKeyTip"></ul>
+                        </div>
+                        <div id="mapContainer" style="@($"height:{Model.Height}px");"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary map_submit">确认</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

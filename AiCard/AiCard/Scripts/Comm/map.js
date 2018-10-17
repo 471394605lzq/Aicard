@@ -4,9 +4,13 @@ var editMap = function (option) {
     var windowsArr = [];
     var marker = null;
     var clickListener;
-    var selectlat = $("#UserAddress_Lat").val();
-    var selectlng = $("#UserAddress_Lng").val();
-    var selectaddress = $("#UserAddress_Address").val();
+    var $lat = $(".map_lat");
+    var $lng = $(".map_lng");
+    var $adress = $(".map_address");
+    var $btnSubmit = $(".map_submit");
+    var selectlat = $lat.val();
+    var selectlng = $lng.val();
+    var selectaddress = $adress.val();
 
     if (option == null) {
         option = { search: "True" };
@@ -28,7 +32,7 @@ var editMap = function (option) {
     if (option.search == "True") {
         if (selectaddress != "")
         {
-            $("#mapKeyWord").val(selectaddress);
+            //$("#mapKeyWord").val(selectaddress);
         }
         AMap.plugin(['AMap.Autocomplete', 'AMap.PlaceSearch'], function () {
             var autoOptions = {
@@ -60,7 +64,7 @@ var editMap = function (option) {
                             selectlat = loc.lat;
                             selectlng = loc.lng;
                             updateMarker(loc.lng, loc.lat);
-                            $("#btnMap").text("已绑定");
+                            //$("#btnMap").text("已绑定");
                             $("#mapKeyTip li").remove();
                         });
                     }
@@ -79,11 +83,14 @@ var editMap = function (option) {
 
         bind();
 
-        $(".map_submit").click(function (e) {
-            console.log("sdfsfsd");
-            $("#UserAddress_Lng").val(selectlng);
-            $("#UserAddress_Lat").val(selectlat);
-            $("#UserAddress_Address").val(selectaddress);
+        $btnSubmit.click(function (e) {
+          
+            $lng.val(selectlng);
+            $lat.val(selectlat);
+            $(".map_mark img").addClass("hidden")
+                .filter(":nth-child(2)")
+                .removeClass("hidden");
+            //$("#Address").val(selectaddress);
             $('#map_modal').modal('hide')
         });
     }

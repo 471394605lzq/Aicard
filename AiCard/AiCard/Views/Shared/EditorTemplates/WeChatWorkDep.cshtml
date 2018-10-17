@@ -1,0 +1,15 @@
+﻿@model AiCard.WeChatWork.Models.Department
+@{
+    Layout = null;
+
+}
+<li data-id="@Model.ID">
+    <a data-id="@Model.ID" href="@(Url.Content(string.Format((string)ViewData["Url"], Model.ID)))">@Model.Name</a>
+    <ul>
+        @foreach (var item in Model.Child)
+        {
+            @Html.EditorFor(s => item, templateName: "WeChatWorkDep", additionalViewData: new { Url = ViewData["Url"] })
+        }
+    </ul>
+
+</li>

@@ -55,9 +55,7 @@ namespace AiCard.Controllers
 
         public ActionResult UploadTest()
         {
-            var e = new { Name = "1", Image = "1.jpg,2.jpg" };
             var model = new TestImages();
-            model.Avatar.Images = e.Image.SplitToArray<string>().ToArray();
             return View(model);
         }
 
@@ -66,6 +64,43 @@ namespace AiCard.Controllers
         {
 
             return View(model);
+        }
+
+        [HttpGet]
+        public ActionResult TestMap()
+        {
+            Models.Enterprise e = new Enterprise
+            {
+                Address = "帝推科技",
+                //Lat = 23.015228,
+                //Lng = 113.74574
+            };
+            var map = new Models.CommModels.Map(e);
+            return View(map);
+        }
+
+        public ActionResult TestWeixinWork(int? dep = null)
+        {
+            string corpid = "wwfbd3847b25072e2b";
+            string secret = "x7H_NcJJ0-mxfwH42SSHGqxS9TdGkRvNqtZbPH5-xb8";
+            var api = new WeChatWork.WeChatWorkApi();
+            try
+            {
+                api.GetAccessToken(corpid, secret);
+                var deps = api.GetDepartment();
+                ViewBag.Deps = deps;
+                if (!dep.HasValue)
+                {
+                    dep = deps.FirstOrDefault().ID;
+                }
+                var model = api.GetUsesByDepID(dep.Value);
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                return Json(ex.Message, JsonRequestBehavior.AllowGet);
+            }
+
         }
 
 
@@ -103,7 +138,7 @@ namespace AiCard.Controllers
                     Sortable = true,
                     Type = AiCard.Models.CommModels.FileType.Image,
                     AutoInit = false,
-                    Server = AiCard.Models.CommModels.UploadServer.Local
+                    Server = AiCard.Models.CommModels.UploadServer.QinQiu
                 };
             }
 
@@ -112,6 +147,8 @@ namespace AiCard.Controllers
             public AiCard.Models.CommModels.FileUpload Avatar { get; set; }
 
         }
+
+
     }
 
 }
