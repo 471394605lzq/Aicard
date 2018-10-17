@@ -24,5 +24,26 @@ namespace AiCard.Models
         public bool Enable { get; set; }
         [Display(Name = "联系电话")]
         public string PhoneNumber { get; set; }
+        //省份
+        [Display(Name = "省份")]
+        public string Province { get; set; }
+        //城市
+        [Display(Name = "城市")]
+        public string City { get; set; }
+        //地区
+        [Display(Name = "地区")]
+        public string District { get; set; }
+        //详细地址
+        [Display(Name = "详细地址")]
+        public string Address { get; set; }
+        [Display(Name = "官网主页")]
+        public string HomePage { get; set; }
+        [Display(Name = "简介")]
+        public string Info { get; set; }
+        [Display(Name = "编号")]
+        public string Code { get; set; }
+        [Display(Name = "邮箱")]
+        public string Email { get; set; }
+
     }
 }

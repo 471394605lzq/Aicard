@@ -845,12 +845,14 @@
     <Content Include="Views\Shared\EditorTemplates\Map.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\WeChatWorkDep.cshtml" />
     <Content Include="Views\Test\TestWeixinWork.cshtml" />
+    <Content Include="Views\Shared\_LayoutEnterprise.cshtml" />
+    <Content Include="Views\Account\EnterpriseLogin.cshtml" />
+    <Content Include="Views\Card\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Content\Less\View\" />
     <Folder Include="Views\CardManage\" />
-    <Folder Include="Views\Card\" />
     <Folder Include="Views\Enterprise\" />
   </ItemGroup>
   <ItemGroup>
