@@ -247,7 +247,6 @@
     <Compile Include="App_Start\Api.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\Comm.cs" />
-    <Compile Include="App_Start\EncryptDecrypt.cs" />
     <Compile Include="App_Start\Enums.cs" />
     <Compile Include="App_Start\Extensions\ActionFilterAttributes.cs" />
     <Compile Include="App_Start\Extensions\ControllerExtensions.cs" />
@@ -339,6 +338,7 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ArticleModels.cs" />
     <Compile Include="Models\CardModels.cs" />
+    <Compile Include="Models\CardViewModels.cs" />
     <Compile Include="Models\CommModels\Cell.cs" />
     <Compile Include="Models\CommModels\FileUpload.cs" />
     <Compile Include="Models\CommModels\HtmlHelpModels.cs" />
@@ -758,6 +758,7 @@
     <Content Include="Scripts\Comm\comm.js" />
     <Content Include="Scripts\Comm\imageModule.js" />
     <Content Include="Scripts\Comm\imageResizeUpload.js" />
+    <Content Include="Scripts\Comm\jquery-ui-sortable-for-uploader.min.js" />
     <Content Include="Scripts\Comm\jQueryEx.js" />
     <Content Include="Scripts\Comm\jsEx.js" />
     <Content Include="Scripts\Comm\map.js" />
@@ -838,13 +839,15 @@
     <Content Include="Views\EnterpriseManage\Edit.cshtml" />
     <Content Include="Views\Shared\_LayoutEnterprise.cshtml" />
     <Content Include="Views\Account\EnterpriseLogin.cshtml" />
+    <Content Include="Views\Enterprise\Index.cshtml" />
     <Content Include="Views\Card\Index.cshtml" />
+    <Content Include="Views\Card\Create.cshtml" />
+    <Content Include="Views\Card\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Content\Less\View\" />
     <Folder Include="Views\CardManage\" />
-    <Folder Include="Views\Enterprise\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

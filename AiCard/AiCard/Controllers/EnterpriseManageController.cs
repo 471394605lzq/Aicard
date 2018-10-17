@@ -11,6 +11,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System.Data.Entity;
 using System.Net;
+using AiCard.Enums;
 
 namespace AiCard.Controllers
 {
@@ -142,23 +143,28 @@ namespace AiCard.Controllers
                     };
                     db.RoleGroups.Add(rg);
                     int saveresult = db.SaveChanges();
+                    //saveresult>0表示新增权限组信息成功
                     if (saveresult > 0)
                     {
                         var rgid = rg.ID;
                         //用企业编号自动创建一个企业管理账号,默认密码为"123456"
                         string username = enterprise.Code + "admin";
-                        var user = new ApplicationUser { UserName = username, RegisterDateTime = DateTime.Now, LastLoginDateTime = DateTime.Now, RoleGroupID = rgid };
+                        var user = new ApplicationUser { UserName = username, RegisterDateTime = DateTime.Now, LastLoginDateTime = DateTime.Now, RoleGroupID = rgid,UserType= UserType.Enterprise };
                         var result = await UserManager.CreateAsync(user, "123456");
+                        //创建企业管理员账号成功
                         if (result.Succeeded)
                         {
                             enterprise.AdminID = user.Id;
                             enterprise.RegisterDateTime = DateTime.Now;
                             db.Enterprises.Add(enterprise);
                             int r = db.SaveChanges();
+                            //r>0表示保存企业信息成功
                             if (r > 0)
                             {
                                 var t = db.RoleGroups.FirstOrDefault(s => s.ID == rgid);
                                 t.EnterpriseID = enterprise.ID;
+                                var u = db.Users.FirstOrDefault(s=>s.Id== enterprise.AdminID);
+                                u.EnterpriseID = enterprise.ID;
                                 db.SaveChanges();
                             }
                             return RedirectToAction("Index");

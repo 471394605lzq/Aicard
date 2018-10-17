@@ -35,6 +35,7 @@ namespace AiCard
                         "~/Scripts/Comm/jQueryEx.js",
                         "~/Scripts/Comm/canvas-to-blob.min.js",
                         "~/Scripts/Comm/check.js",
+                        "~/Scripts/Comm/jquery-ui-sortable-for-uploader.min.js",
                         "~/Scripts/Comm/comm.js",
                         "~/Scripts/Comm/uploadfile.js",
                         "~/Scripts/Comm/imageResizeUpload.js"
@@ -89,6 +90,7 @@ namespace AiCard
 
             addViewScripts("roleGroup", new string[] { "roleGroup.js" });
             addViewScripts("userManageIndex", new string[] { "userManageIndex.js" });
+            addViewScripts("cardCreate", new string[] { "cardCreate.js" });
             #endregion
 
 
