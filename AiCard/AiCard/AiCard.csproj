@@ -368,6 +368,7 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\iconfont.css" />
     <Content Include="Content\Images\filetype\doc.png" />
     <Content Include="Content\Images\filetype\file.png" />
     <Content Include="Content\Images\filetype\mp3.png" />
@@ -674,6 +675,7 @@
     <Content Include="Scripts\ckeditor\samples\toolbarconfigurator\lib\codemirror\LICENSE" />
     <Content Include="Scripts\ckeditor\skins\moono-lisa\readme.md" />
     <Content Include="Content\Less\map.less" />
+    <Content Include="Content\iconfont.ttf" />
     <None Include="Properties\PublishProfiles\AiCardRelease.pubxml" />
     <None Include="Scripts\jquery-2.2.4.intellisense.js" />
     <Content Include="Scripts\ckeditor\build-config.js" />
@@ -791,6 +793,7 @@
     <Content Include="Scripts\npm.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\Views\Deploy.js" />
     <Content Include="Scripts\Views\roleGroup.js" />
     <Content Include="Scripts\Views\userManageIndex.js" />
     <Content Include="Scripts\_references.js" />
@@ -847,19 +850,19 @@
     <Content Include="Views\Test\UploadTest.cshtml" />
     <Content Include="Views\EnterpriseManage\Create.cshtml" />
     <Content Include="Views\EnterpriseManage\Edit.cshtml" />
-    <Content Include="Views\Shared\_LayoutEnterprise.cshtml" />
     <Content Include="Views\Account\EnterpriseLogin.cshtml" />
     <Content Include="Views\Card\Index.cshtml" />
     <Content Include="Views\Test\TestMap.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Map.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\WeChatWorkDep.cshtml" />
     <Content Include="Views\Test\TestWeixinWork.cshtml" />
-    <Content Include="Views\Shared\_LayoutEnterprise.cshtml" />
     <Content Include="Views\Account\EnterpriseLogin.cshtml" />
     <Content Include="Views\Enterprise\Index.cshtml" />
     <Content Include="Views\Card\Index.cshtml" />
     <Content Include="Views\Card\Create.cshtml" />
     <Content Include="Views\Card\Edit.cshtml" />
+    <Content Include="Views\EnterpriseManage\Deploy.cshtml" />
+    <Content Include="Views\Shared\_LayoutEnterprise.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

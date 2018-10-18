@@ -30,6 +30,9 @@ namespace AiCard
             bundles.Add(new StyleBundle("~/Content/bgcss").Include(
                         "~/Content/bootstrap.css",
                         "~/Content/site.css"));
+            //字体图标css
+            bundles.Add(new StyleBundle("~/Content/icon").Include(
+          "~/Content/iconfont.css"));
             bundles.Add(new ScriptBundle("~/bundles/comm").Include(
                         "~/Scripts/Comm/jsEx.js",
                         "~/Scripts/Comm/jQueryEx.js",
