@@ -62,5 +62,7 @@ namespace AiCard.Models
         public double? Lat { get; set; }
 
         public double? Lng { get; set; }
+        public string WeChatWorkCorpid { get; set; }
+        public string WeChatWorkSecret { get; set; }
     }
 }

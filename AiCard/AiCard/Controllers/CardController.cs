@@ -141,7 +141,7 @@ namespace AiCard.Controllers
                          from en in db.Enterprises
                          where e.UserID == u.Id && e.ID == id.Value && e.EnterpriseID == en.ID
                          select e).FirstOrDefault();
-            var models = new Card
+            var models = new CardCreateEditViewModel
             {
                 ID = model.ID,
                 Name = model.Name,
@@ -149,16 +149,19 @@ namespace AiCard.Controllers
                 Info = model.Info,
                 Enable = model.Enable,
                 PhoneNumber = model.PhoneNumber,
-                Avatar = model.Avatar,
                 Gender = model.Gender,
-                Images = model.Images,
                 Mobile = model.Mobile,
                 Position = model.Position,
                 Remark = model.Remark,
                 Video = model.Video,
                 Voice = model.Voice,
-                WeChatCode = model.WeChatCode
+                WeChatCode = model.WeChatCode,
+                UserID = model.UserID,
+                EnterpriseID = model.EnterpriseID,
+                //AdminName = model.User.UserName,
             };
+            models.Avatar.Images = model.Avatar?.Split(',') ?? new string[0];
+            models.Images.Images = model.Images?.Split(',') ?? new string[0];
             if (models == null)
             {
                 return HttpNotFound();
@@ -179,7 +182,7 @@ namespace AiCard.Controllers
                 var t = db.Cards.FirstOrDefault(s => s.ID == model.ID);
                 t.Name = model.Name;
                 t.Gender = model.Gender;
-                t.Avatar =string.Join(",", model.Avatar.Images);
+                t.Avatar = string.Join(",", model.Avatar.Images);
                 t.PhoneNumber = model.PhoneNumber;
                 t.Email = model.Email;
                 t.WeChatCode = model.WeChatCode;
@@ -190,7 +193,7 @@ namespace AiCard.Controllers
                 t.Enable = model.Enable;
                 t.Voice = model.Voice;
                 t.Video = model.Video;
-                t.Images =string.Join(",", model.Images);
+                t.Images = string.Join(",", model.Images.Images);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }

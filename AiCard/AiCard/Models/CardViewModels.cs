@@ -14,7 +14,11 @@ namespace AiCard.Models
 
         }
 
-       
+        public string UserID { get; set; }
+
+        public string AdminName { get; set; }
+
+        public int? EnterpriseID { get; set; }
 
         public int ID { get; set; }
 

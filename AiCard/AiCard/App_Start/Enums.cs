@@ -207,12 +207,14 @@ namespace AiCard.Enums
         HomePageRead = 40,
         [Display(Name = "微信查看")]
         WeChatOpen = 50,
-        [Display(Name = "转发查看")]
+        [Display(Name = "名片查看")]
         CardRead = 60,
         [Display(Name = "转发名片")]
         CardForward = 61,
         [Display(Name = "名片保存")]
         CardSave = 62,
+        [Display(Name = "名片点赞数")]
+        CardLike = 63,
         [Display(Name = "商城查看")]
         ShopRead = 70,
         [Display(Name = "手机拨打")]

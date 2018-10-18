@@ -102,7 +102,7 @@
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Avatar)
+                @Html.TableImg(item.Avatar.SplitToArray<string>()[0])
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.PhoneNumber)
@@ -133,7 +133,7 @@
                 @Html.DisplayFor(modelItem => item.Info)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Images)
+                @Html.TableImg(item.Images.SplitToArray<string>()[0])
             </td>
             <td>
                 @Html.ActionLink("编辑", "Edit", new { id = item.ID }) |
