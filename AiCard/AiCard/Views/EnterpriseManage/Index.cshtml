@@ -103,7 +103,8 @@
                 @Html.DisplayFor(modelItem => item.CardCount)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Enable)
+                @*@Html.DisplayFor(modelItem => item.Enable)*@
+                @(item.Enable ? "启动" : "关闭")
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.PhoneNumber)

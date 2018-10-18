@@ -181,8 +181,11 @@ namespace AiCard.Enums
     /// </summary>
     public enum Gender
     {
+        [Display(Name = "未设置")]
         NoSet,
+        [Display(Name = "男")]
         Male,
+        [Display(Name = "女")]
         Female
     }
 
@@ -227,6 +230,6 @@ namespace AiCard.Enums
         [Display(Name = "实物")]
         Physical,
         [Display(Name = "虚拟")]
-        Virtual 
+        Virtual
     }
 }

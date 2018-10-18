@@ -56,17 +56,24 @@ namespace AiCard.Controllers
         //
         // GET: /Account/Login
         [AllowAnonymous]
-        public ActionResult Login(string returnUrl)
+        public ActionResult Login(string returnUrl, string afterlogin)
         {
-            ViewBag.ReturnUrl = returnUrl;
-            return View();
+            if (afterlogin == "后台登录")
+            {
+                ViewBag.ReturnUrl = returnUrl;
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         //
         // POST: /Account/Login
         [HttpPost]
         [AllowAnonymous]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
         {
             if (!ModelState.IsValid)
@@ -80,7 +87,33 @@ namespace AiCard.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
-                    return RedirectToLocal(returnUrl);
+                    var user = db.Users.FirstOrDefault(s => s.UserName == model.UserName);
+                    //获取用户类型 Admin：管理员 Enterprise：企业 Personal：个人
+                    var usertype = (int)user.UserType;
+                    if (usertype == 0)
+                    {
+                        //存入cookie前给userid加密
+                        string encryptid = Comm.Encrypt(user.Id);
+                        Response.Cookies["UserName"].Value = user.UserName;
+                        Response.Cookies["UserName"].Expires = DateTime.Now.AddDays(1);
+                        Response.Cookies["UserId"].Value = encryptid;
+                        Response.Cookies["UserId"].Expires = DateTime.Now.AddDays(1);
+                        Response.Cookies["UserType"].Value = usertype.ToString();
+                        Response.Cookies["UserType"].Expires = DateTime.Now.AddDays(1);
+                        if (Url.IsLocalUrl(returnUrl))
+                        {
+                            return RedirectToLocal(returnUrl);
+                        }
+                        else
+                        {
+                            return RedirectToAction("Index", "UserManage");
+                        }
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "该账号不属于总后台！");
+                        return View(model);
+                    }
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:
@@ -102,7 +135,6 @@ namespace AiCard.Controllers
         //企业登录
         [HttpPost]
         [AllowAnonymous]
-        [ValidateAntiForgeryToken]
         public async Task<ActionResult> EnterpriseLogin(LoginViewModel model, string returnUrl)
         {
             if (!ModelState.IsValid)
@@ -115,17 +147,32 @@ namespace AiCard.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
-                    HttpCookie _userInfoCookies = new HttpCookie("userid");
                     var user = db.Users.FirstOrDefault(s => s.UserName == model.UserName);
-                    _userInfoCookies["UserName"] = user.UserName;
-                    _userInfoCookies["UserId"] = user.Id;
-                    Response.Cookies.Add(_userInfoCookies);
-                    if (Url.IsLocalUrl(returnUrl))
+                    //获取用户类型 Admin：管理员 Enterprise：企业 Personal：个人
+                    var usertype = (int)user.UserType;
+                    if (usertype == 1)
                     {
-                        return RedirectToLocal(returnUrl);
+                        //存入cookie前给userid加密
+                        string encryptid = Comm.Encrypt(user.Id);
+                        Response.Cookies["UserName"].Value = user.UserName;
+                        Response.Cookies["UserName"].Expires = DateTime.Now.AddDays(1);
+                        Response.Cookies["UserId"].Value = encryptid;
+                        Response.Cookies["UserId"].Expires = DateTime.Now.AddDays(1);
+                        Response.Cookies["UserType"].Value = usertype.ToString();
+                        Response.Cookies["UserType"].Expires = DateTime.Now.AddDays(1);
+                        if (Url.IsLocalUrl(returnUrl))
+                        {
+                            return RedirectToLocal(returnUrl);
+                        }
+                        else
+                        {
+                            return RedirectToAction("Index", "Enterprise");
+                        }
                     }
-                    else {
-                        return RedirectToAction("","");
+                    else
+                    {
+                        ModelState.AddModelError("", "该账号不是企业账号！");
+                        return View(model);
                     }
                 case SignInStatus.LockedOut:
                     return View("Lockout");
