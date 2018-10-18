@@ -280,6 +280,7 @@
     <Compile Include="Controllers\EnterpriseController.cs" />
     <Compile Include="Controllers\EnterpriseManageController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\HomePageManageController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\RoleManageController.cs" />
     <Compile Include="Controllers\TestController.cs" />
@@ -860,11 +861,13 @@
     <Content Include="Views\Card\Index.cshtml" />
     <Content Include="Views\Card\Create.cshtml" />
     <Content Include="Views\Card\Edit.cshtml" />
+    <Content Include="Views\Test\TestQiniu.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Content\Less\View\" />
     <Folder Include="Views\CardManage\" />
+    <Folder Include="Views\HomePageManage\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

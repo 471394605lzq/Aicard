@@ -102,6 +102,12 @@ namespace AiCard.Controllers
 
         }
 
+        public ActionResult TestQiniu()
+        {
+            return View();
+
+        }
+
 
         public class MiniModel
         {
@@ -147,7 +153,7 @@ namespace AiCard.Controllers
 
         }
 
-
+       
     }
 
 }
