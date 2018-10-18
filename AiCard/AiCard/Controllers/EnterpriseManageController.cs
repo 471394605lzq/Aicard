@@ -268,8 +268,48 @@ namespace AiCard.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
+        //配置企业和微信绑定
+        public ActionResult Deploy(int? id) {
 
-       
+            Sidebar();
+            if (id == null)
+            {
+                //return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return RedirectToAction("Index");
+            }
+            var model = (from e in db.Enterprises
+                         from u in db.Users
+                         where e.AdminID == u.Id && e.ID == id.Value
+                         select e).FirstOrDefault();
+            var models = new Enterprise
+            {
+                ID = model.ID,
+                WeChatWorkCorpid = model.WeChatWorkCorpid=="" ? model.WeChatWorkCorpid : "无",
+                WeChatWorkSecret = model.WeChatWorkSecret == "" ? model.WeChatWorkSecret: "无"
+            };
+            if (models == null)
+            {
+                return HttpNotFound();
+            }
+            return View(models);
+        }
+
+        //保存微信绑定设置
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Deploy(Enterprise enterprise)
+        {
+            Sidebar();
+            if (ModelState.IsValid)
+            {
+                var t = db.Enterprises.FirstOrDefault(s => s.ID == enterprise.ID);
+                t.WeChatWorkCorpid = enterprise.WeChatWorkCorpid;
+                t.WeChatWorkSecret = enterprise.WeChatWorkSecret;
+                db.SaveChanges();
+                return RedirectToAction("Deploy",new { id=enterprise.ID});
+            }
+            return View(enterprise);
+        }
         protected override void Dispose(bool disposing)
         {
             if (disposing)
