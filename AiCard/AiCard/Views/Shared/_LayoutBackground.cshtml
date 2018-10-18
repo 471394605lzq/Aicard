@@ -16,6 +16,7 @@
             var roles = s.Split(',').Where(x => !string.IsNullOrWhiteSpace(x));
             return roles.Any(x => User.IsInRole(x)) ? "" : "hidden";
         };
+
     }
 </head>
 <body class="layoutBackground">
@@ -38,17 +39,12 @@
     <div class="fluid">
         <div id="sidebar" class="sidebar">
             <ul class="nav nav-sidebar">
-                <li class="">
-                    <a href="@Url.Action("Index", "UserManage" )" title="用户管理">用户管理</a>
-                </li>
-
-                <li class="">
-                    <a href="@Url.Action("Index", "RoleManage" )" title="权限管理">权限管理</a>
-                </li>
-
-                <li>
-                    <a href="@Url.Action("Index", "EnterpriseManage" )" title="企业管理">企业管理</a>
-                </li>
+                @foreach (var item in User.Menus())
+                {
+                    <li class="">
+                        <a href="@Url.Content(item.Url)" title="@item.Title">@item.Name</a>
+                    </li>
+                }
             </ul>
         </div>
 

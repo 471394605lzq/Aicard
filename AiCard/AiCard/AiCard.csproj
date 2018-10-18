@@ -254,6 +254,7 @@
     <Compile Include="App_Start\Extensions\EnumExtensions.cs" />
     <Compile Include="App_Start\Extensions\ExcelHelper.cs" />
     <Compile Include="App_Start\Extensions\HtmlHelperExtensions.cs" />
+    <Compile Include="App_Start\Extensions\IPrincipalExtensions.cs" />
     <Compile Include="App_Start\Extensions\ModelStateDictionaryExtensions.cs" />
     <Compile Include="App_Start\Extensions\StringExtensions.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
@@ -280,7 +281,7 @@
     <Compile Include="Controllers\EnterpriseController.cs" />
     <Compile Include="Controllers\EnterpriseManageController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\HomePageManageController.cs" />
+    <Compile Include="Controllers\HomePageModularsManageController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\RoleManageController.cs" />
     <Compile Include="Controllers\TestController.cs" />
@@ -355,6 +356,7 @@
     <Compile Include="Models\CommModels\HtmlHelpModels.cs" />
     <Compile Include="Models\CommModels\ImageResizer.cs" />
     <Compile Include="Models\CommModels\Map.cs" />
+    <Compile Include="Models\CommModels\Menu.cs" />
     <Compile Include="Models\EnterpriseModels.cs" />
     <Compile Include="Models\EnterpriseViewModels.cs" />
     <Compile Include="Models\HomePageModular.cs" />

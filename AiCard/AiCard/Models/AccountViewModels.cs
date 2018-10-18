@@ -108,4 +108,16 @@ namespace AiCard.Models
         [Display(Name = "电子邮件")]
         public string Email { get; set; }
     }
+
+    public class AccountData
+    {
+        public string UserID { get; set; }
+
+        public Enums.UserType UserType { get; set; }
+
+        public int EnterpriseID { get; set; }
+
+        public string UserName { get; set; }
+
+    }
 }
