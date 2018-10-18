@@ -341,6 +341,10 @@
     <Compile Include="Migrations\201810180133010_EnterpriseAddWeChatWorkCorpIDAndWeChatWorkSecret.Designer.cs">
       <DependentUpon>201810180133010_EnterpriseAddWeChatWorkCorpIDAndWeChatWorkSecret.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201810180706124_AddHomePageModulars.cs" />
+    <Compile Include="Migrations\201810180706124_AddHomePageModulars.Designer.cs">
+      <DependentUpon>201810180706124_AddHomePageModulars.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ArticleModels.cs" />
@@ -353,6 +357,7 @@
     <Compile Include="Models\CommModels\Map.cs" />
     <Compile Include="Models\EnterpriseModels.cs" />
     <Compile Include="Models\EnterpriseViewModels.cs" />
+    <Compile Include="Models\HomePageModular.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\ProductModels.cs" />
@@ -912,6 +917,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201810180133010_EnterpriseAddWeChatWorkCorpIDAndWeChatWorkSecret.resx">
       <DependentUpon>201810180133010_EnterpriseAddWeChatWorkCorpIDAndWeChatWorkSecret.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810180706124_AddHomePageModulars.resx">
+      <DependentUpon>201810180706124_AddHomePageModulars.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
