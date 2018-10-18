@@ -93,13 +93,13 @@ namespace AiCard.Controllers
                     if (usertype == 0)
                     {
                         //存入cookie前给userid加密
-                        string encryptid = Comm.Encrypt(user.Id);
-                        Response.Cookies["UserName"].Value = user.UserName;
-                        Response.Cookies["UserName"].Expires = DateTime.Now.AddDays(1);
-                        Response.Cookies["UserId"].Value = encryptid;
-                        Response.Cookies["UserId"].Expires = DateTime.Now.AddDays(1);
-                        Response.Cookies["UserType"].Value = usertype.ToString();
-                        Response.Cookies["UserType"].Expires = DateTime.Now.AddDays(1);
+                        this.SetAccountData(new AccountData
+                        {
+                            EnterpriseID = user.EnterpriseID,
+                            UserID = user.Id,
+                            UserName = user.UserName,
+                            UserType = user.UserType,
+                        });
                         if (Url.IsLocalUrl(returnUrl))
                         {
                             return RedirectToLocal(returnUrl);
@@ -153,13 +153,13 @@ namespace AiCard.Controllers
                     if (usertype == 1)
                     {
                         //存入cookie前给userid加密
-                        string encryptid = Comm.Encrypt(user.Id);
-                        Response.Cookies["UserName"].Value = user.UserName;
-                        Response.Cookies["UserName"].Expires = DateTime.Now.AddDays(1);
-                        Response.Cookies["UserId"].Value = encryptid;
-                        Response.Cookies["UserId"].Expires = DateTime.Now.AddDays(1);
-                        Response.Cookies["UserType"].Value = usertype.ToString();
-                        Response.Cookies["UserType"].Expires = DateTime.Now.AddDays(1);
+                        this.SetAccountData(new AccountData
+                        {
+                            EnterpriseID = user.EnterpriseID,
+                            UserID = user.Id,
+                            UserName = user.UserName,
+                            UserType = user.UserType,
+                        });
                         if (Url.IsLocalUrl(returnUrl))
                         {
                             return RedirectToLocal(returnUrl);

@@ -277,5 +277,25 @@ namespace AiCard
             controller.Response.AddHeader("Content-Disposition", $"attachment; filename={dt.TableName}.xlsx");
             return result;
         }
+
+
+        public static void SetAccountData(this Controller controller, Models.AccountData data)
+        {
+            controller.Response.Cookies["AccountData"].Value = Comm.Encrypt(JsonConvert.SerializeObject(data));
+            controller.Response.Cookies["AccountData"].Expires = DateTime.Now.AddYears(1);
+        }
+
+        public static Models.AccountData GetAccountData(this Controller controller)
+        {
+            if (controller.Request.Cookies["AccountData"] == null)
+            {
+                throw new Exception("AccountData is null");
+            }
+            var data = controller.Request.Cookies["AccountData"].Value;
+            var decData = Comm.Decrypt(data);
+            return JsonConvert.DeserializeObject<Models.AccountData>(decData);
+        }
+
+        
     }
 }
