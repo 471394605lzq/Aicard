@@ -62,7 +62,6 @@ namespace AiCard.Controllers
         [HttpPost]
         public ActionResult UploadTest(TestImages model)
         {
-
             return View(model);
         }
 

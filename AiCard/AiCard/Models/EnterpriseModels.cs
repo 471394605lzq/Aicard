@@ -62,7 +62,11 @@ namespace AiCard.Models
         public double? Lat { get; set; }
 
         public double? Lng { get; set; }
+
+        [Display(Name = "企业微信ID")]
         public string WeChatWorkCorpid { get; set; }
+
+        [Display(Name = "企业微信Secret")]
         public string WeChatWorkSecret { get; set; }
     }
 }

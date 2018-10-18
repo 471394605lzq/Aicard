@@ -336,6 +336,10 @@
     <Compile Include="Migrations\201810130303156_AddProductsAndProductKind.Designer.cs">
       <DependentUpon>201810130303156_AddProductsAndProductKind.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201810180133010_EnterpriseAddWeChatWorkCorpIDAndWeChatWorkSecret.cs" />
+    <Compile Include="Migrations\201810180133010_EnterpriseAddWeChatWorkCorpIDAndWeChatWorkSecret.Designer.cs">
+      <DependentUpon>201810180133010_EnterpriseAddWeChatWorkCorpIDAndWeChatWorkSecret.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ArticleModels.cs" />
@@ -843,6 +847,9 @@
     <Content Include="Views\Test\UploadTest.cshtml" />
     <Content Include="Views\EnterpriseManage\Create.cshtml" />
     <Content Include="Views\EnterpriseManage\Edit.cshtml" />
+    <Content Include="Views\Shared\_LayoutEnterprise.cshtml" />
+    <Content Include="Views\Account\EnterpriseLogin.cshtml" />
+    <Content Include="Views\Card\Index.cshtml" />
     <Content Include="Views\Test\TestMap.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Map.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\WeChatWorkDep.cshtml" />
@@ -899,6 +906,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201810130303156_AddProductsAndProductKind.resx">
       <DependentUpon>201810130303156_AddProductsAndProductKind.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810180133010_EnterpriseAddWeChatWorkCorpIDAndWeChatWorkSecret.resx">
+      <DependentUpon>201810180133010_EnterpriseAddWeChatWorkCorpIDAndWeChatWorkSecret.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
