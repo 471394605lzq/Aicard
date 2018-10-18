@@ -284,8 +284,8 @@ namespace AiCard.Controllers
             var models = new Enterprise
             {
                 ID = model.ID,
-                WeChatWorkCorpid = model.WeChatWorkCorpid=="" ? model.WeChatWorkCorpid : "无",
-                WeChatWorkSecret = model.WeChatWorkSecret == "" ? model.WeChatWorkSecret: "无"
+                WeChatWorkCorpid = model.WeChatWorkCorpid,
+                WeChatWorkSecret = model.WeChatWorkSecret
             };
             if (models == null)
             {

@@ -50,7 +50,7 @@ namespace AiCard.Bll
             return _appUserManager.IsInRole(userID, role);
         }
 
-     
+
         public IEnumerable<string> GetRoles(string userID)
         {
             return _appUserManager.GetRoles(userID);
@@ -59,16 +59,24 @@ namespace AiCard.Bll
         public void Init()
         {
             List<ApplicationRole> roles = new List<ApplicationRole>();
-            Action<string, string, string> addUserRole = (name, gourp, desc) =>
-             {
-                 roles.Add(new ApplicationRole
-                 {
-                     Description = desc,
-                     Group = gourp,
-                     Name = name,
-                     Type = Enums.RoleType.Enterprise
-                 });
-             };
+            #region 企业权限
+            Action<string, string, string> addSystemERole = (name, gourp, desc) =>
+            {
+                roles.Add(new ApplicationRole
+                {
+                    Description = desc,
+                    Group = gourp,
+                    Name = name,
+                    Type = Enums.RoleType.Enterprise
+                });
+            };
+            addSystemERole(SysRole.ERoleManageRead, "后台权限管理", "后台权限管理查看");
+            addSystemERole(SysRole.ERoleManageCreate, "后台权限管理", "后台权限管理创建");
+            addSystemERole(SysRole.ERoleManageEdit, "后台权限管理", "后台权限管理编辑");
+            addSystemERole(SysRole.ERoleManageDelete, "后台权限管理", "后台权限管理删除");
+
+            #endregion
+            #region 后台权限
             Action<string, string, string> addSystemRole = (name, gourp, desc) =>
             {
                 roles.Add(new ApplicationRole
@@ -78,19 +86,29 @@ namespace AiCard.Bll
                     Name = name,
                     Type = Enums.RoleType.System
                 });
+                
             };
-            #region 企业权限
-            #endregion
-            #region 后台权限
             addSystemRole(SysRole.UserManageRead, "系统用户", "系统用户查看");
             addSystemRole(SysRole.UserManageCreate, "系统用户", "系统用户创建");
             addSystemRole(SysRole.UserManageEdit, "系统用户", "系统用户编辑");
             addSystemRole(SysRole.UserManageDelete, "系统用户", "系统用户删除");
-            
+
             addSystemRole(SysRole.RoleManageRead, "权限管理", "权限管理查看");
             addSystemRole(SysRole.RoleManageCreate, "权限管理", "权限管理创建");
             addSystemRole(SysRole.RoleManageEdit, "权限管理", "权限管理编辑");
             addSystemRole(SysRole.RoleManageDelete, "权限管理", "权限管理删除");
+
+          
+
+            addSystemRole(SysRole.EnterpriseManageRead, "企业权限管理", "企业权限管理查看");
+            addSystemRole(SysRole.EnterpriseManageCreate, "企业权限管理", "企业权限管理创建");
+            addSystemRole(SysRole.EnterpriseManageEdit, "企业权限管理", "企业权限管理编辑");
+            addSystemRole(SysRole.EnterpriseManageDelete, "企业权限管理", "企业权限管理删除");
+
+            addSystemRole(SysRole.CardManageRead, "名片权限管理", "名片权限管理查看");
+            addSystemRole(SysRole.CardManageCreate, "名片权限管理", "名片权限管理创建");
+            addSystemRole(SysRole.CardManageEdit, "名片权限管理", "名片权限管理编辑");
+            addSystemRole(SysRole.CardMangeDelete, "名片权限管理", "名片权限管理删除");
             #endregion
 
 

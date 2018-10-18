@@ -39,6 +39,16 @@
     <div class="fluid">
         <div id="sidebar" class="sidebar">
             <ul class="nav nav-sidebar">
+                @if (User.IsInRole(SysRole.EnterpriseManageRead))
+                {
+                    <li class="">
+                        <a href="@Url.Action("Index", "Enterprise")" title="企业信息">企业信息</a>
+                    </li>
+                    <li class="">
+                        <a href="@Url.Action("Index", "Card" )" title="名片管理">名片管理</a>
+                    </li>
+                }
+                @if(User.IsInRole(SysRole.ERoleManageRead)){
                 <li class="">
                     <a href="@Url.Action("Index", "UserManage" )" title="用户管理">用户管理</a>
                 </li>
@@ -50,6 +60,7 @@
                 <li>
                     <a href="@Url.Action("Index", "EnterpriseManage" )" title="企业管理">企业管理</a>
                 </li>
+                }
             </ul>
         </div>
 

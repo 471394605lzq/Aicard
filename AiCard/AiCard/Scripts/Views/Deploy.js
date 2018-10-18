@@ -2,16 +2,21 @@
 $("#wecharworkidi").click(function () {
     showtemp("show", "hide");
 });
+//撤销修改
 $("#wecharworkidiqx").click(function () {
     showtemp("hide", "show");
+    var oldval = $("#labwechatworkid").html();
+    $("#WeChatWorkCorpid").val(oldval);
 });
 //修改微信secret按钮
 $("#wecharworksecreti").click(function () {
     showtemp2("show", "hide");
 });
-//修改微信secret按钮
+//撤销修改
 $("#wecharworksecretiqx").click(function () {
     showtemp2("hide", "show");
+    var oldval = $("#labwechatworksecret").html();
+    $("#WeChatWorkSecret").val(oldval);
 });
 function showtemp(class1,class2) {
     //隐藏lable标签

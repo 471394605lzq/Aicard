@@ -88,6 +88,7 @@ namespace AiCard.Controllers
             model.ID = rg.ID;
             model.Name = rg.Name;
             model.SelectedRoles = rg.Roles;
+            model.EnterpriseID = rg.EnterpriseID;
             model.RolesList.List.AddRange(GetSelectRoleView(rg.Roles));
             return View(model);
         }
@@ -101,7 +102,8 @@ namespace AiCard.Controllers
                 {
                     ID = model.ID,
                     Name = model.Name,
-                    Roles = model.SelectedRoles
+                    Roles = model.SelectedRoles,
+                    EnterpriseID=model.EnterpriseID
                 };
                 db.Entry(rg).State = System.Data.Entity.EntityState.Modified;
                 db.SaveChanges();

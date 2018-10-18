@@ -39,7 +39,7 @@ namespace AiCard.Models
         [Required(ErrorMessage = "未选择角色")]
         [Display(Name = "角色")]
         public string SelectedRoles { get; set; }
-
+        public int EnterpriseID { get; set; }
         /// <summary>
         /// 全部组列表
         /// </summary>

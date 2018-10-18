@@ -15,6 +15,11 @@ namespace AiCard
         public const string RoleManageEdit = "RoleManageEdit";
         public const string RoleManageDelete = "RoleManageDelete";
 
+        public const string ERoleManageRead = "ERoleManageRead";
+        public const string ERoleManageCreate = "ERoleManageCreate";
+        public const string ERoleManageEdit = "ERoleManageEdit";
+        public const string ERoleManageDelete = "ERoleManageDelete";
+
         public const string UserManageRead = "SystemUserManageRead";
         public const string UserManageCreate = "SystemUserManageCreate";
         public const string UserManageEdit = "SystemUserManageEdit";
