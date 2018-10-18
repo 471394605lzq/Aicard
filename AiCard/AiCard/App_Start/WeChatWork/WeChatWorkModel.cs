@@ -44,6 +44,8 @@ namespace AiCard.WeChatWork.Models
 
         public UserState State { get; set; }
 
+        public string UnionID { get; set; }
+
     }
 
     [Flags]

@@ -176,6 +176,44 @@ namespace AiCard
                     }
                     return t + p.ToParam("?");
                 }
+                else if (url.Contains(Qiniu.QinQiuApi.ServerLink))
+                {
+                    Dictionary<string, string> p = new Dictionary<string, string>();
+                    if (w.HasValue || h.HasValue)
+                    {
+
+                    }
+                    if (w.HasValue)
+                    {
+                        p.Add("w", w.ToString());
+                    }
+                    if (h.HasValue)
+                    {
+                        p.Add("h", h.ToString());
+                    }
+                    if (scale.HasValue)
+                    {
+                        p.Add("scale", scale.Value.ToString());
+                    }
+                    if (quality.HasValue)
+                    {
+                        p.Add("quality", quality.ToString());
+                    }
+                    if (mode.HasValue)
+                    {
+                        p.Add("mode", mode.ToString());
+                    }
+                    if (p.Count > 0)
+                    {
+                        //StringBuilder sb = new StringBuilder(url);
+                        //foreach (var item in p)
+                        //{
+                        //    sb.Append($"{}")
+                        //}
+                        //url = url +
+                    }
+                    return $"{url}{p.ToParam("?imageMogr2/")}";
+                }
                 else
                 {
                     return url;

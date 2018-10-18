@@ -25,7 +25,10 @@ namespace AiCard.WeChatWork
 
         public List<Models.Department> GetDepartment(int? pid = null)
         {
-            var api = new Api.BaseApi($"https://qyapi.weixin.qq.com/cgi-bin/department/list?access_token={AccessToken}&id={pid}", "get");
+            var p = new Dictionary<string, object>();
+            p.Add("access_token", AccessToken);
+            p.Add("id", pid);
+            var api = new Api.BaseApi($"https://qyapi.weixin.qq.com/cgi-bin/department/list{p.ToParam("?")}", "get");
 
             var result = api.CreateRequestReturnJson();
             var deps = result["department"].Value<JArray>()
@@ -56,8 +59,11 @@ namespace AiCard.WeChatWork
 
         public List<Models.User> GetUsesByDepID(int id)
         {
-
-            var api = new Api.BaseApi($"https://qyapi.weixin.qq.com/cgi-bin/user/list?access_token={AccessToken}&department_id={id}&fetch_child=0", "get");
+            var p = new Dictionary<string, string>();
+            p.Add("access_token", AccessToken);
+            p.Add("department_id", id.ToString());
+            p.Add("fetch_child", "0");
+            var api = new Api.BaseApi($"https://qyapi.weixin.qq.com/cgi-bin/user/list{p.ToParam("?")}", "get");
             var result = api.CreateRequestReturnJson();
             return result["userlist"].Value<JArray>()
                 .Select(s =>
@@ -72,9 +78,43 @@ namespace AiCard.WeChatWork
                         Mobile = s["mobile"].Value<string>(),
                         Name = s["name"].Value<string>(),
                         Position = s["position"].Value<string>(),
-                        Telephone = s["telephone"].Value<string>()
+                        Telephone = s["telephone"].Value<string>(),
+                        //UnionID = GetUserUnionID(s["userid"].Value<string>())
                     };
                 }).ToList();
+        }
+
+        /// <summary>
+        /// 获取微信用户基本信息，通过openID,Token内嵌
+        /// </summary>
+        /// <param name="userid"></param>
+        /// <returns></returns>
+        public string GetUserUnionID(string userid)
+        {
+            var p0 = new Dictionary<string, object>();
+            p0.Add("access_token", AccessToken);
+            try
+            {
+                var api = new Api.BaseApi($"https://qyapi.weixin.qq.com/cgi-bin/user/convert_to_openid{p0.ToParam("?")}", "POST", new { userid = userid });
+                var openid = api.CreateRequestReturnJson()["openid"].Value<string>();
+
+                var p = new Dictionary<string, string>();
+                p.Add("access_token", AccessToken);
+                p.Add("openid", openid);
+                p.Add("lang", "zh_CN");
+                var result = new Api.BaseApi($"https://api.weixin.qq.com/cgi-bin/user/info{p.ToParam("?")}", "GET")
+                 .CreateRequestReturnJson();
+                if (result["errcode"] != null)
+                {
+                    throw new Exception(JsonConvert.SerializeObject(result));
+                }
+                return result["unionid"].Value<string>();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
         }
 
     }
