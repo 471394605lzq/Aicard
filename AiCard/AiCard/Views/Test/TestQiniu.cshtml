@@ -1,0 +1,24 @@
+﻿@{
+    var img = "http://image.dtoao.com/201810171539446905.jpg";
+    var imgs = new string[] {
+        img,
+        Url.ResizeImage(img, w: 100),
+        Url.ResizeImage(img, w: 100, h: 50),
+        Url.ResizeImage(img, w: 100, h: 50, mode: AiCard.Enums.ResizerMode.Max)
+    };
+}
+@foreach (var item in imgs)
+{
+    <p>
+        <input data-i type="text" class="form-control" value="@item" style="max-width:none" />
+        <img src="@item" alt="" />
+    </p>
+
+}
+@section Scripts{
+    <script>
+        $("[data-i]").change(function () {
+            $(this).next("img").attr("src", $(this).val());
+        });
+    </script>
+}

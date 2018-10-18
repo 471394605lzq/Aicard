@@ -234,4 +234,14 @@ namespace AiCard.Enums
         [Display(Name = "虚拟")]
         Virtual
     }
+
+    public enum HomePageModularType
+    {
+        [Display(Name = "富文本")]
+        Html,
+        [Display(Name = "图片")]
+        Images,
+        [Display(Name = "联系方式")]
+        Contact
+    }
 }

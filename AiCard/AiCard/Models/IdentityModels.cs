@@ -82,6 +82,8 @@ namespace AiCard.Models
 
         public DbSet<ProductKind> ProductKinds { get; set; }
 
+        public DbSet<HomePageModular> HomePageModulars { get; set; }
+
         public static ApplicationDbContext Create()
         {
             return new ApplicationDbContext();
