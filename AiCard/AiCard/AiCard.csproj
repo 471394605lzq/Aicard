@@ -872,6 +872,8 @@
     <Content Include="Views\EnterpriseManage\Deploy.cshtml" />
     <Content Include="Views\Shared\_LayoutEnterprise.cshtml" />
     <Content Include="Views\Test\TestQiniu.cshtml" />
+    <Content Include="Views\EnterpriseManage\Info.cshtml" />
+    <Content Include="Views\EnterpriseManage\CogradientWXUserInfo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -12,6 +12,10 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using System.Data.Entity;
 using System.Net;
 using AiCard.Enums;
+using AiCard.WeChatWork;
+using AiCard.WeChatWork.Models;
+using PagedList;
+using PagedList.Mvc;
 
 namespace AiCard.Controllers
 {
@@ -54,6 +58,9 @@ namespace AiCard.Controllers
         public ActionResult Index(string filter, bool? enable = null, int page = 1)
         {
             Sidebar();
+            int usertype = (int)this.GetAccountData().UserType;//从cookie中读取用户类型
+            string userID = this.GetAccountData().UserID;//从cookie中读取userid
+            var user = db.Users.FirstOrDefault(s => s.Id == userID);
             var m = from e in db.Enterprises
                     from u in db.Users
                     where e.AdminID == u.Id
@@ -66,14 +73,14 @@ namespace AiCard.Controllers
                         Name = e.Name,
                         PhoneNumber = e.PhoneNumber,
                         AdminID = u.Id,
-                        Province=e.Province,
-                        City=e.City,
-                        District=e.District,
-                        Address=e.Address,
-                        HomePage=e.HomePage,
-                        Info=e.Info,
-                        Code=e.Code,
-                        Email=e.Email
+                        Province = e.Province,
+                        City = e.City,
+                        District = e.District,
+                        Address = e.Address,
+                        HomePage = e.HomePage,
+                        Info = e.Info,
+                        Code = e.Code,
+                        Email = e.Email
                     };
             if (!string.IsNullOrWhiteSpace(filter))
             {
@@ -83,9 +90,101 @@ namespace AiCard.Controllers
             {
                 m = m.Where(s => s.Enable == enable.Value);
             }
+            //如果是企业用户则只查询该企业信息
+            if (usertype == 1)
+            {
+                m = m.Where(s => s.ID == user.EnterpriseID);
+            }
             var paged = m.OrderByDescending(s => s.AdminID).ToPagedList(page);
             return View(paged);
         }
+
+        public ActionResult Info()
+        {
+            Sidebar();
+            string userID = this.GetAccountData().UserID;//从cookie中读取userid
+            var user = db.Users.FirstOrDefault(s => s.Id == userID);
+            if (user.Id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var model = (from e in db.Enterprises
+                         from u in db.Users
+                         where e.AdminID == u.Id && e.ID == user.EnterpriseID
+                         select e).FirstOrDefault();
+            var models = new Enterprise
+            {
+                ID = model.ID,
+                Code = model.Code,
+                Province = model.Province,
+                City = model.City,
+                Address = model.Address,
+                Email = model.Email,
+                HomePage = model.HomePage,
+                Logo = model.Logo,
+                Info = model.Info,
+                District = model.District,
+                Enable = model.Enable,
+                CardCount = model.CardCount,
+                Name = model.Name,
+                PhoneNumber = model.PhoneNumber,
+                AdminID = model.AdminID,
+                RegisterDateTime = model.RegisterDateTime,
+                AppID = model.AppID,
+                Lat = model.Lat,
+                Lng = model.Lng
+            };
+            if (models == null)
+            {
+                return HttpNotFound();
+            }
+            return View(models);
+        }
+
+        //同步企业微信中的微信用户信息
+        public ActionResult CogradientWXUserInfo(int? id, int page = 1)
+        {
+            Sidebar();
+            var em = db.Enterprises.FirstOrDefault(s => s.ID == id.Value);
+            ViewBag.code = em.Code;
+            ViewBag.name = em.Name;
+            ViewBag.logo = em.Logo;
+
+            List<User> list = new List<WeChatWork.Models.User>();
+            //错误的时候返回该model
+            PagedList.PagedList<AiCard.WeChatWork.Models.User> model = new PagedList<WeChatWork.Models.User>(list, page, 15);
+            if (string.IsNullOrWhiteSpace(em.WeChatWorkCorpid) || string.IsNullOrWhiteSpace(em.WeChatWorkSecret))
+            {
+                ViewBag.errormsg = "错误提示：请先配置微信corpid和secrrt!";
+                return View(model);
+            }
+            else
+            {
+                try
+                {
+                    ViewBag.errormsg = "";
+                    WeChatWorkApi wxapi = new WeChatWorkApi(em.WeChatWorkCorpid, em.WeChatWorkSecret);
+                    List<Department> listdepartment = wxapi.GetDepartment();
+                    List<User> listwxuser = null;
+                    if (listdepartment.Count > 0)
+                    {
+                        for (int i = 0; i < listdepartment.Count; i++)
+                        {
+                            listwxuser.AddRange(wxapi.GetUsesByDepID(listdepartment[i].ID));
+                        }
+                    }
+
+                    var paged = listwxuser.OrderByDescending(s => s.ID).ToList();
+                    PagedList.PagedList<AiCard.WeChatWork.Models.User> models = new PagedList<WeChatWork.Models.User>(paged, page, 15);
+                    return View(models);
+                }
+                catch (Exception ex) {
+                    ViewBag.errormsg = "错误提示："+ ex.ToString();
+                    return View(model);
+                }
+            }
+        }
+
         //新增
         public ActionResult Create()
         {
@@ -149,7 +248,7 @@ namespace AiCard.Controllers
                         var rgid = rg.ID;
                         //用企业编号自动创建一个企业管理账号,默认密码为"123456"
                         string username = enterprise.Code + "admin";
-                        var user = new ApplicationUser { UserName = username, RegisterDateTime = DateTime.Now, LastLoginDateTime = DateTime.Now, RoleGroupID = rgid,UserType= UserType.Enterprise };
+                        var user = new ApplicationUser { UserName = username, RegisterDateTime = DateTime.Now, LastLoginDateTime = DateTime.Now, RoleGroupID = rgid, UserType = UserType.Enterprise };
                         var result = await UserManager.CreateAsync(user, "123456");
                         //创建企业管理员账号成功
                         if (result.Succeeded)
@@ -163,7 +262,7 @@ namespace AiCard.Controllers
                             {
                                 var t = db.RoleGroups.FirstOrDefault(s => s.ID == rgid);
                                 t.EnterpriseID = enterprise.ID;
-                                var u = db.Users.FirstOrDefault(s=>s.Id== enterprise.AdminID);
+                                var u = db.Users.FirstOrDefault(s => s.Id == enterprise.AdminID);
                                 u.EnterpriseID = enterprise.ID;
                                 db.SaveChanges();
                             }
@@ -202,10 +301,10 @@ namespace AiCard.Controllers
                 Name = model.Name,
                 PhoneNumber = model.PhoneNumber,
                 AdminID = model.AdminID,
-                RegisterDateTime=model.RegisterDateTime,
-                AppID=model.AppID,
-                Lat=model.Lat,
-                Lng=model.Lng
+                RegisterDateTime = model.RegisterDateTime,
+                AppID = model.AppID,
+                Lat = model.Lat,
+                Lng = model.Lng
             };
             if (models == null)
             {
@@ -244,7 +343,8 @@ namespace AiCard.Controllers
             return View(enterprise);
         }
         //删除
-        public ActionResult Delete(int id) {
+        public ActionResult Delete(int id)
+        {
             Enterprise enterprise = db.Enterprises.Find(id);
             var adminid = enterprise.AdminID;
             //删除跟企业关联的管理员账号信息
@@ -269,7 +369,8 @@ namespace AiCard.Controllers
             return RedirectToAction("Index");
         }
         //配置企业和微信绑定
-        public ActionResult Deploy(int? id) {
+        public ActionResult Deploy(int? id)
+        {
 
             Sidebar();
             if (id == null)
@@ -306,7 +407,7 @@ namespace AiCard.Controllers
                 t.WeChatWorkCorpid = enterprise.WeChatWorkCorpid;
                 t.WeChatWorkSecret = enterprise.WeChatWorkSecret;
                 db.SaveChanges();
-                return RedirectToAction("Deploy",new { id=enterprise.ID});
+                return RedirectToAction("Deploy", new { id = enterprise.ID });
             }
             return View(enterprise);
         }

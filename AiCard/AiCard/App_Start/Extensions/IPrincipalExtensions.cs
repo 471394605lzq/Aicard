@@ -18,7 +18,7 @@ namespace AiCard
             {
                 menus.Add(new Models.CommModels.Menu { Name = "权限管理", Title = "权限管理", Url = "~/RoleManage/Index" });
             }
-            if (p.IsInRole(SysRole.EnterpriseManageRead))
+            if (p.IsInRole(SysRole.ERoleManageRead)||p.IsInRole(SysRole.EnterpriseManageRead))
             {
                 menus.Add(new Models.CommModels.Menu { Name = "企业管理", Title = "企业管理", Url = "~/EnterpriseManage/Index" });
             }

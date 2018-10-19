@@ -134,7 +134,8 @@
             <td>
                 @Html.ActionLink("编辑", "Edit", new { id = item.ID }) |
                 @Html.ActionLink("删除", "Delete", new { id = item.ID })|
-                @Html.ActionLink("配置", "Deploy", new { id = item.ID })
+                @Html.ActionLink("配置", "Deploy", new { id = item.ID })|
+                @Html.ActionLink("同步微信用户", "CogradientWXUserInfo", new { id = item.ID })
             </td>
         </tr>
     }

@@ -1,4 +1,5 @@
-﻿@model IEnumerable<AiCard.Models.RoleGroup>
+﻿@*@model IEnumerable<AiCard.Models.RoleGroup>*@
+@model PagedList.IPagedList<AiCard.Models.RoleGroupViewModel>
 @{
     ViewBag.Title = "分组管理";
     Layout = "~/Views/Shared/_LayoutBackground.cshtml";
@@ -24,7 +25,7 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                名称
             </th>
             <th>操作</th>
         </tr>
@@ -44,7 +45,7 @@
     }
 
 </table>
-
+@Html.PageList(Model, Url.Action("Index"))
 
 @section Scripts{
     @Scripts.Render("~/Scripts/Views/roleGroup.js")
