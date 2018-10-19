@@ -26,9 +26,8 @@ namespace AiCard.Controllers
         public ActionResult Index()
         {
             Sidebar();
-            string cookieuserid = this.GetAccountData().UserID;//从cookie中读取userid
-            string decryptuserid = Comm.Decrypt(cookieuserid);
-            var user = db.Users.FirstOrDefault(s => s.Id == decryptuserid);
+            string userID = this.GetAccountData().UserID;
+            var user = db.Users.FirstOrDefault(s => s.Id == userID);
             if (user.Id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);

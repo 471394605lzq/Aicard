@@ -95,6 +95,8 @@ namespace AiCard
             addViewScripts("roleGroup", new string[] { "roleGroup.js" });
             addViewScripts("userManageIndex", new string[] { "userManageIndex.js" });
             addViewScripts("cardCreate", new string[] { "cardCreate.js" });
+            addViewScripts("homePageModular", new string[] { "homePageModular.js" });
+            addViewScripts("homePageModularIndex", new string[] { "homePageModularIndex.js" });
             #endregion
 
 

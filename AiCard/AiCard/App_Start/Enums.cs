@@ -242,6 +242,8 @@ namespace AiCard.Enums
         [Display(Name = "图片")]
         Images,
         [Display(Name = "联系方式")]
-        Contact
+        Contact,
+        [Display(Name = "头部轮播")]
+        Banner
     }
 }

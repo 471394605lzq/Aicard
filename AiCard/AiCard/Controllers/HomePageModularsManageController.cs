@@ -11,22 +11,58 @@ namespace AiCard.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
+
+        public int EnterpriseID
+        {
+            get
+            {
+                return this.GetAccountData().EnterpriseID;
+            }
+        }
+
         // GET: HomePageManage
         public ActionResult Index()
         {
+            var eid = EnterpriseID;
+            var model = db.HomePageModulars
+                .Where(s => s.EnterpriseID == eid)
+                .OrderBy(s => s.Sort)
+                .Select(s => new HomePageModular
+                {
+                    ID = s.ID,
+                    Sort = s.Sort,
+                    Title = s.Title,
+                    Type = s.Type
+                })
+                .ToList();
             return View();
         }
 
-        public void SetModularList()
+        public void InitModularList()
         {
 
         }
 
-        public ActionResult Create()
+        public ActionResult Check()
+        {
+            var eid = EnterpriseID;
+            var m = new Bll.HomePageModulars(eid);
+            return Json(Comm.ToJsonResult("Success", "", new { HasInit = eid }));
+        }
+
+        public ActionResult CreateByHtml()
+        {
+            var model = new HomePageModularByHtml();
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult CreateByHtml(HomePageModularByHtml model)
         {
 
             return View();
         }
+
 
 
         protected override void Dispose(bool disposing)
