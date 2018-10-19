@@ -20,9 +20,16 @@ namespace AiCard.Controllers
             }
         }
 
+        public void Sidebar()
+        {
+            ViewBag.Sidebar = "公司首页";
+
+        }
+
         // GET: HomePageManage
         public ActionResult Index()
         {
+            Sidebar();
             var eid = EnterpriseID;
             var model = db.HomePageModulars
                 .Where(s => s.EnterpriseID == eid)

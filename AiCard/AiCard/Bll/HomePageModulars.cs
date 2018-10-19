@@ -16,6 +16,8 @@ namespace AiCard.Bll
 
         }
 
+       
+
         public bool HasModulars
         {
             get

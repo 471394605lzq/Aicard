@@ -70,11 +70,30 @@ namespace AiCard.Bll
                     Type = Enums.RoleType.Enterprise
                 });
             };
+
+            addSystemERole(SysRole.EUserManageRead, "系统用户", "系统用户查看");
+            addSystemERole(SysRole.EUserManageCreate, "系统用户", "系统用户创建");
+            addSystemERole(SysRole.EUserManageEdit, "系统用户", "系统用户编辑");
+            addSystemERole(SysRole.EUserManageDelete, "系统用户", "系统用户删除");
+
             addSystemERole(SysRole.ERoleManageRead, "后台权限管理", "后台权限管理查看");
             addSystemERole(SysRole.ERoleManageCreate, "后台权限管理", "后台权限管理创建");
             addSystemERole(SysRole.ERoleManageEdit, "后台权限管理", "后台权限管理编辑");
             addSystemERole(SysRole.ERoleManageDelete, "后台权限管理", "后台权限管理删除");
 
+            addSystemERole(SysRole.EEnterpriseManageRead, "企业权限管理", "企业权限管理查看");
+            addSystemERole(SysRole.EEnterpriseManageCreate, "企业权限管理", "企业权限管理创建");
+            addSystemERole(SysRole.EEnterpriseManageEdit, "企业权限管理", "企业权限管理编辑");
+            addSystemERole(SysRole.EEnterpriseManageDelete, "企业权限管理", "企业权限管理删除");
+
+            addSystemERole(SysRole.ECardManageRead, "名片权限管理", "名片权限管理查看");
+            addSystemERole(SysRole.ECardManageCreate, "名片权限管理", "名片权限管理创建");
+            addSystemERole(SysRole.ECardManageEdit, "名片权限管理", "名片权限管理编辑");
+            addSystemERole(SysRole.ECardMangeDelete, "名片权限管理", "名片权限管理删除");
+
+            addSystemERole(SysRole.EHomePageModularsManageRead, "公司主页", "公司主页查看");
+            addSystemERole(SysRole.EHomePageModularsManageEdit, "公司主页", "公司主页模块编辑");
+            addSystemERole(SysRole.EHomePageModularsManageDelete, "公司主页", "公司主页模块删除");
             #endregion
             #region 后台权限
             Action<string, string, string> addSystemRole = (name, gourp, desc) =>
@@ -86,7 +105,7 @@ namespace AiCard.Bll
                     Name = name,
                     Type = Enums.RoleType.System
                 });
-                
+
             };
             addSystemRole(SysRole.UserManageRead, "系统用户", "系统用户查看");
             addSystemRole(SysRole.UserManageCreate, "系统用户", "系统用户创建");
@@ -97,8 +116,6 @@ namespace AiCard.Bll
             addSystemRole(SysRole.RoleManageCreate, "权限管理", "权限管理创建");
             addSystemRole(SysRole.RoleManageEdit, "权限管理", "权限管理编辑");
             addSystemRole(SysRole.RoleManageDelete, "权限管理", "权限管理删除");
-
-          
 
             addSystemRole(SysRole.EnterpriseManageRead, "企业权限管理", "企业权限管理查看");
             addSystemRole(SysRole.EnterpriseManageCreate, "企业权限管理", "企业权限管理创建");
