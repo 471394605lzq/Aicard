@@ -10,6 +10,17 @@ namespace AiCard.WeChatWork
     {
         public string AccessToken { get; set; }
 
+        public WeChatWorkApi()
+        {
+
+        }
+
+        public WeChatWorkApi(string corpid, string secret)
+        {
+            GetAccessToken(corpid, secret);
+        }
+
+
         /// <summary>
         /// 获取AccessToken
         /// </summary>

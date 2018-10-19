@@ -7,6 +7,8 @@ using AiCard.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using AiCard.WeChatWork;
+
 namespace AiCard.Controllers
 {
     [Authorize]
@@ -48,6 +50,9 @@ namespace AiCard.Controllers
         public ActionResult Index(string filter, Enums.UserType? userType, int page = 1)
         {
             Sidebar();
+            int usertype = (int)this.GetAccountData().UserType;//从cookie中读取用户类型
+            string userID = this.GetAccountData().UserID;//从cookie中读取userid
+            var user = db.Users.FirstOrDefault(s => s.Id == userID);//当前登录的用户信息
             var users = from u in db.Users
                         from r in db.RoleGroups
                         where u.RoleGroupID == r.ID
@@ -64,7 +69,11 @@ namespace AiCard.Controllers
             {
                 users = users.Where(s => s.User.UserType == userType);
             }
-
+            //如果是企业用户则只查询该企业信息
+            if (usertype == 1)
+            {
+                users = users.Where(s => s.User.EnterpriseID == user.EnterpriseID);
+            }
             var paged = users.OrderByDescending(s => s.User.RegisterDateTime)
                 .Select(s => new UserManageIndexViewModel
                 {

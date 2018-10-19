@@ -6,6 +6,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using AiCard.Models;
+using PagedList;
+using PagedList.Mvc;
 
 namespace AiCard.Controllers
 {
@@ -46,11 +48,26 @@ namespace AiCard.Controllers
         }
 
         // GET: RoleManage
-        public ActionResult Index()
+        public ActionResult Index(int page = 1)
         {
             Sidebar();
-            var modle = db.RoleGroups.OrderByDescending(s => s.ID).ToList();
-            return View(modle);
+            int usertype = (int)this.GetAccountData().UserType;//从cookie中读取用户类型
+            string userID = this.GetAccountData().UserID;//从cookie中读取userid
+            var user = db.Users.FirstOrDefault(s => s.Id == userID);
+            var modle = from r in db.RoleGroups
+                        select new RoleGroupViewModel
+                        {
+                            ID=r.ID,
+                            Name = r.Name,
+                            EnterpriseID = r.EnterpriseID
+                        };
+            //如果是企业用户则只查询该企业信息
+            if (usertype == 1)
+            {
+                modle = modle.Where(s => s.EnterpriseID == user.EnterpriseID);
+            }
+            var paged = modle.OrderByDescending(s => s.ID).ToPagedList(page);
+            return View(paged);
         }
 
         public ActionResult Create()

@@ -166,7 +166,7 @@ namespace AiCard.Controllers
                         }
                         else
                         {
-                            return RedirectToAction("Index", "Enterprise");
+                            return RedirectToAction("Index", "EnterpriseManage");
                         }
                     }
                     else

@@ -878,6 +878,8 @@
     <Content Include="Views\Test\TestQiniu.cshtml" />
     <Content Include="Views\HomePageModularsManage\CreateByHtml.cshtml" />
     <Content Include="Views\HomePageModularsManage\Index.cshtml" />
+    <Content Include="Views\EnterpriseManage\Info.cshtml" />
+    <Content Include="Views\EnterpriseManage\CogradientWXUserInfo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
