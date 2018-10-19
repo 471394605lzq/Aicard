@@ -44,6 +44,9 @@ namespace AiCard.Models
         /// 全部组列表
         /// </summary>
         public SelectRoleListViewModel RolesList { get; set; }
+
+        [Display(Name = "用户列表")]
+        public IEnumerable<string> UserNames { get; set; }
     }
 
     /// <summary>

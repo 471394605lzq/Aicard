@@ -83,16 +83,19 @@ namespace AiCard.Controllers
 
             // 这不会计入到为执行帐户锁定而统计的登录失败次数中
             // 若要在多次输入错误密码的情况下触发帐户锁定，请更改为 shouldLockout: true
-            var result = await SignInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, shouldLockout: false);
+            var result = await SignInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, shouldLockout: true);
             switch (result)
             {
                 case SignInStatus.Success:
-                    var user = db.Users.FirstOrDefault(s => s.UserName == model.UserName);
-                    //获取用户类型 Admin：管理员 Enterprise：企业 Personal：个人
-                    var usertype = (int)user.UserType;
-                    if (usertype == 0)
                     {
-                        //存入cookie前给userid加密
+                        var user = db.Users.FirstOrDefault(s => s.UserName == model.UserName && s.UserType == Enums.UserType.Enterprise);
+                        if (user == null)
+                        {
+                            ModelState.AddModelError("", "帐号不存在或密码错误！");
+                            return View(model);
+                        }
+
+                        //把重要的用户信息进行加密，存放到cookie
                         this.SetAccountData(new AccountData
                         {
                             EnterpriseID = user.EnterpriseID,
@@ -106,13 +109,9 @@ namespace AiCard.Controllers
                         }
                         else
                         {
-                            return RedirectToAction("Index", "UserManage");
+                            //默认返回地址
+                            return RedirectToAction("Index", "EnterpriseManage");
                         }
-                    }
-                    else
-                    {
-                        ModelState.AddModelError("", "该账号不属于总后台！");
-                        return View(model);
                     }
                 case SignInStatus.LockedOut:
                     return View("Lockout");
@@ -147,11 +146,16 @@ namespace AiCard.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
-                    var user = db.Users.FirstOrDefault(s => s.UserName == model.UserName);
-                    //获取用户类型 Admin：管理员 Enterprise：企业 Personal：个人
-                    var usertype = (int)user.UserType;
-                    if (usertype == 1)
                     {
+                        var user = db.Users.FirstOrDefault(s => s.UserName == model.UserName
+                            && s.UserType == Enums.UserType.Enterprise);
+
+                        if (user == null)
+                        {
+                            ModelState.AddModelError("", "用户不存在或者密码错误！");
+                            return View(model);
+                        }
+                        //获取用户类型 Admin：管理员 Enterprise：企业 Personal：个人
                         //存入cookie前给userid加密
                         this.SetAccountData(new AccountData
                         {
@@ -168,11 +172,6 @@ namespace AiCard.Controllers
                         {
                             return RedirectToAction("Index", "EnterpriseManage");
                         }
-                    }
-                    else
-                    {
-                        ModelState.AddModelError("", "该账号不是企业账号！");
-                        return View(model);
                     }
                 case SignInStatus.LockedOut:
                     return View("Lockout");
@@ -246,21 +245,21 @@ namespace AiCard.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
-                var result = await UserManager.CreateAsync(user, model.Password);
-                if (result.Succeeded)
-                {
-                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                //var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                //var result = await UserManager.CreateAsync(user, model.Password);
+                //if (result.Succeeded)
+                //{
+                //    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
 
-                    // 有关如何启用帐户确认和密码重置的详细信息，请访问 http://go.microsoft.com/fwlink/?LinkID=320771
-                    // 发送包含此链接的电子邮件
-                    // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    // await UserManager.SendEmailAsync(user.Id, "确认你的帐户", "请通过单击 <a href=\"" + callbackUrl + "\">這裏</a>来确认你的帐户");
+                //    // 有关如何启用帐户确认和密码重置的详细信息，请访问 http://go.microsoft.com/fwlink/?LinkID=320771
+                //    // 发送包含此链接的电子邮件
+                //    // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+                //    // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                //    // await UserManager.SendEmailAsync(user.Id, "确认你的帐户", "请通过单击 <a href=\"" + callbackUrl + "\">這裏</a>来确认你的帐户");
 
-                    return RedirectToAction("Index", "Home");
-                }
-                AddErrors(result);
+                //    return RedirectToAction("Index", "Home");
+                //}
+                //AddErrors(result);
             }
 
             // 如果我们进行到这一步时某个地方出错，则重新显示表单

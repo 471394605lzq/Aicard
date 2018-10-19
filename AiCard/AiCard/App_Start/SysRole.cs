@@ -49,9 +49,9 @@ namespace AiCard
         public const string EEnterpriseManageDelete = "EEnterpriseManageDelete";
 
         public const string ECardManageRead = "ECardManageRead";
-        public const string ECardManageCreate = "ECardManageRead";
-        public const string ECardManageEdit = "ECardManageRead";
-        public const string ECardMangeDelete = "ECardManageRead";
+        public const string ECardManageCreate = "ECardManageCreate";
+        public const string ECardManageEdit = "ECardManageEdit";
+        public const string ECardManageDelete = "ECardManageDelete";
 
         public const string EHomePageModularsManageRead = "EHomePageModularsManageRead";
         public const string EHomePageModularsManageEdit = "EHomePageModularsManageEdit";

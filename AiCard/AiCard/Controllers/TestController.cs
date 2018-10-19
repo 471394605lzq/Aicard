@@ -4,13 +4,36 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using AiCard.Models;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNet.Identity.Owin;
+
 namespace AiCard.Controllers
 {
     public class TestController : Controller
     {
+        private ApplicationDbContext db = new ApplicationDbContext();
+
         // GET: Test
         public ActionResult Index()
         {
+
+            //var _roleManager = new RoleManager<ApplicationRole>(new RoleStore<ApplicationRole>(db));
+            //var _userManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+
+            //var roles = _roleManager.Roles
+            //    .Where(s => s.Type == Enums.RoleType.Enterprise)
+            //    .Select(s => s.Name).ToArray();
+            //var admins = from u in db.Users
+            //             from e in db.Enterprises
+            //             where u.Id == e.AdminID
+            //             select u.Id;
+            //foreach (var item in admins)
+            //{
+            //    _userManager.AddToRoles(item, roles);
+            //}
+
+
             return View();
         }
 
@@ -153,7 +176,14 @@ namespace AiCard.Controllers
 
         }
 
-       
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
+        }
     }
 
 }

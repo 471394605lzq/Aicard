@@ -23,6 +23,13 @@ namespace AiCard.Controllers
             }
         }
 
+        public AccountData AccountData
+        {
+            get
+            {
+                return this.GetAccountData();
+            }
+        }
 
         ApplicationDbContext db = new ApplicationDbContext();
         private ApplicationUserManager _userManager;
@@ -46,12 +53,14 @@ namespace AiCard.Controllers
 
         }
 
-        [Authorize(Roles = SysRole.UserManageRead)]
+        [Authorize(Roles = SysRole.UserManageRead + "," + SysRole.EUserManageRead)]
         public ActionResult Index(string filter, Enums.UserType? userType, int page = 1)
         {
             Sidebar();
-            int usertype = (int)this.GetAccountData().UserType;//从cookie中读取用户类型
-            string userID = this.GetAccountData().UserID;//从cookie中读取userid
+
+            var usertype = AccountData.UserType;//从cookie中读取用户类型
+            string userID = AccountData.UserID;//从cookie中读取userid
+            var enterpriseID = AccountData.EnterpriseID;
             var user = db.Users.FirstOrDefault(s => s.Id == userID);//当前登录的用户信息
             var users = from u in db.Users
                         from r in db.RoleGroups
@@ -61,19 +70,21 @@ namespace AiCard.Controllers
                             User = u,
                             Role = r
                         };
+
+            if (usertype == Enums.UserType.Enterprise)
+            {
+                users = users.Where(s => s.User.EnterpriseID == enterpriseID);
+            }
+            else if (userType.HasValue)
+            {
+                users = users.Where(s => s.User.UserType == userType);
+            }
             if (!string.IsNullOrWhiteSpace(filter))
             {
                 users = users.Where(s => s.User.UserName == filter);
             }
-            if (userType != null)
-            {
-                users = users.Where(s => s.User.UserType == userType);
-            }
             //如果是企业用户则只查询该企业信息
-            if (usertype == 1)
-            {
-                users = users.Where(s => s.User.EnterpriseID == user.EnterpriseID);
-            }
+
             var paged = users.OrderByDescending(s => s.User.RegisterDateTime)
                 .Select(s => new UserManageIndexViewModel
                 {
@@ -97,7 +108,7 @@ namespace AiCard.Controllers
             ViewBag.RoleGroup = new SelectList(roles, dataValueField: "ID", dataTextField: "Name");
         }
 
-        [Authorize(Roles = SysRole.UserManageCreate)]
+        [Authorize(Roles = SysRole.UserManageCreate + "," + SysRole.EUserManageCreate)]
         public ActionResult Create()
         {
             Sidebar();
@@ -107,15 +118,23 @@ namespace AiCard.Controllers
 
 
         [HttpPost]
-        [Authorize(Roles = SysRole.UserManageCreate)]
+        [Authorize(Roles = SysRole.UserManageCreate + "," + SysRole.EUserManageCreate)]
         public ActionResult Create(UserManageCreateViewModel model)
         {
             Sidebar();
             var hasUser = db.Users.Any(s => s.UserName == model.Name);
+            var userType = AccountData.UserType;
+            //企业用户添加的用户企业ID为0，企业用户添加的和当前用户一致
+            var enterpriseID = userType == Enums.UserType.Admin ? 0 : AccountData.EnterpriseID;
             if (hasUser)
             {
                 ModelState.AddModelError("Name", "帐号已经存在");
                 SetRoleGroup();
+                return View(model);
+            }
+            if (!db.RoleGroups.Any(s => s.ID == model.RoleGroupID && s.EnterpriseID == enterpriseID))
+            {
+                ModelState.AddModelError("RoleGroupID", "该角色不存在");
                 return View(model);
             }
             var user = new ApplicationUser
@@ -124,7 +143,8 @@ namespace AiCard.Controllers
                 UserType = Enums.UserType.Admin,
                 RegisterDateTime = DateTime.Now,
                 RoleGroupID = model.RoleGroupID,
-                LastLoginDateTime = DateTime.Now
+                LastLoginDateTime = DateTime.Now,
+                EnterpriseID = enterpriseID
             };
             var result = UserManager.Create(user, model.Password);
             if (!result.Succeeded)
@@ -141,12 +161,18 @@ namespace AiCard.Controllers
         }
 
 
-        [Authorize(Roles = SysRole.UserManageEdit)]
+        [Authorize(Roles = SysRole.UserManageEdit + "," + SysRole.EUserManageEdit)]
         public ActionResult Edit(string id)
         {
+
             Sidebar();
             SetRoleGroup();
-            var user = db.Users.FirstOrDefault(s => s.Id == id);
+            var enterpriseID = AccountData.EnterpriseID;
+            var user = db.Users.FirstOrDefault(s => s.Id == id&&s.EnterpriseID== enterpriseID);
+            if (user == null)
+            {
+                return this.ToError("错误", "用户不存在");
+            }
             var model = new UserManageEditViewModel
             {
                 Name = user.UserName,
@@ -157,11 +183,15 @@ namespace AiCard.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = SysRole.UserManageEdit)]
+        [Authorize(Roles = SysRole.UserManageEdit + "," + SysRole.EUserManageEdit)]
         public ActionResult Edit(UserManageEditViewModel model)
         {
-
-            var user = db.Users.FirstOrDefault(s => s.Id == model.ID);
+            var enterpriseID = AccountData.EnterpriseID;
+            var user = db.Users.FirstOrDefault(s => s.Id == model.ID && s.EnterpriseID == enterpriseID);
+            if (user == null)
+            {
+                return this.ToError("错误", "用户不存在");
+            }
             if (!string.IsNullOrWhiteSpace(model.Password))
             {
                 UserManager.RemovePassword(model.ID);
@@ -186,17 +216,18 @@ namespace AiCard.Controllers
             return RedirectToAction("Index");
         }
 
-        [Authorize(Roles = SysRole.UserManageDelete)]
+        [Authorize(Roles = SysRole.UserManageDelete + "," + SysRole.EUserManageDelete)]
         public ActionResult Delete(string id)
         {
+            var enterpriseID = AccountData.EnterpriseID;
             var user = (from u in db.Users
                         from r in db.RoleGroups
-                        where u.Id == id && u.RoleGroupID == r.ID
+                        where u.Id == id && u.RoleGroupID == r.ID && u.EnterpriseID == enterpriseID
                         select new UserManageEditViewModel
                         {
                             ID = u.Id,
                             Name = u.UserName,
-                            RoleGroup = r.Name
+                            RoleGroup = r.Name,
                         }).FirstOrDefault();
             if (user == null)
             {
@@ -208,10 +239,15 @@ namespace AiCard.Controllers
 
         [HttpPost]
         [ActionName("Delete")]
-        [Authorize(Roles = SysRole.UserManageDelete)]
+        [Authorize(Roles = SysRole.UserManageDelete + "," + SysRole.EUserManageDelete)]
         public ActionResult DeleteConfirm(string id)
         {
-            var user = db.Users.FirstOrDefault(s => s.Id == id);
+            var enterpriseID = AccountData.EnterpriseID;
+            var user = db.Users.FirstOrDefault(s => s.Id == id && s.EnterpriseID == enterpriseID);
+            if (user == null)
+            {
+                return this.ToError("错误", "用户不存在", Url.Action("Index"));
+            }
             new Bll.Roles().EditUserRole(user.Id, new List<string>());
             db.Users.Remove(user);
             db.SaveChanges();

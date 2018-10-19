@@ -178,8 +178,9 @@ namespace AiCard.Controllers
                     PagedList.PagedList<AiCard.WeChatWork.Models.User> models = new PagedList<WeChatWork.Models.User>(paged, page, 15);
                     return View(models);
                 }
-                catch (Exception ex) {
-                    ViewBag.errormsg = "错误提示："+ ex.ToString();
+                catch (Exception ex)
+                {
+                    ViewBag.errormsg = "错误提示：" + ex.ToString();
                     return View(model);
                 }
             }
@@ -199,7 +200,6 @@ namespace AiCard.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(Enterprise enterprise)
         {
-
             Sidebar();
             if (ModelState.IsValid)
             {
@@ -219,26 +219,15 @@ namespace AiCard.Controllers
                 }
                 else
                 {
-                    //查询type为0的用户权限
-                    var listrg = RoleManager.Roles.Where(s => s.Type == 0).ToList();
-                    //拼接RoleGroup表需要的Roles字段值
-                    string temprolesstr = "";
-                    for (int i = 0; i < listrg.Count; i++)
-                    {
-                        if (string.IsNullOrEmpty(temprolesstr))
-                        {
-                            temprolesstr = listrg[i].Name;
-                        }
-                        else
-                        {
-                            temprolesstr = temprolesstr + "," + listrg[i].Name;
-                        }
-                    }
+                    //查询企业权限
+                    var listrg = RoleManager.Roles.Where(s => s.Type == RoleType.Enterprise).ToList();
+                  
                     //为企业单独设定一个管理员权限
                     RoleGroup rg = new RoleGroup
                     {
                         Name = enterprise.Name + "系统管理员",
-                        Roles = temprolesstr
+                        //拼接RoleGroup表需要的Roles字段值
+                        Roles = string.Join(",", listrg.Select(s => s.Name))
                     };
                     db.RoleGroups.Add(rg);
                     int saveresult = db.SaveChanges();
@@ -248,11 +237,20 @@ namespace AiCard.Controllers
                         var rgid = rg.ID;
                         //用企业编号自动创建一个企业管理账号,默认密码为"123456"
                         string username = enterprise.Code + "admin";
-                        var user = new ApplicationUser { UserName = username, RegisterDateTime = DateTime.Now, LastLoginDateTime = DateTime.Now, RoleGroupID = rgid, UserType = UserType.Enterprise };
+                        var user = new ApplicationUser
+                        {
+                            UserName = username,
+                            RegisterDateTime = DateTime.Now,
+                            LastLoginDateTime = DateTime.Now,
+                            RoleGroupID = rgid,
+                            UserType = UserType.Enterprise
+                        };
                         var result = await UserManager.CreateAsync(user, "123456");
                         //创建企业管理员账号成功
                         if (result.Succeeded)
                         {
+                            //给企业管理添加权限
+                            UserManager.AddToRoles(user.Id, listrg.Select(s => s.Name).ToArray());
                             enterprise.AdminID = user.Id;
                             enterprise.RegisterDateTime = DateTime.Now;
                             db.Enterprises.Add(enterprise);

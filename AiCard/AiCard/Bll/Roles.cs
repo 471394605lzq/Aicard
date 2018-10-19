@@ -89,7 +89,7 @@ namespace AiCard.Bll
             addSystemERole(SysRole.ECardManageRead, "名片权限管理", "名片权限管理查看");
             addSystemERole(SysRole.ECardManageCreate, "名片权限管理", "名片权限管理创建");
             addSystemERole(SysRole.ECardManageEdit, "名片权限管理", "名片权限管理编辑");
-            addSystemERole(SysRole.ECardMangeDelete, "名片权限管理", "名片权限管理删除");
+            addSystemERole(SysRole.ECardManageDelete, "名片权限管理", "名片权限管理删除");
 
             addSystemERole(SysRole.EHomePageModularsManageRead, "公司主页", "公司主页查看");
             addSystemERole(SysRole.EHomePageModularsManageEdit, "公司主页", "公司主页模块编辑");
@@ -128,14 +128,26 @@ namespace AiCard.Bll
             addSystemRole(SysRole.CardMangeDelete, "名片权限管理", "名片权限管理删除");
             #endregion
 
-
+            var dbRoles = _appRoleManager.Roles.ToList();
+       
             foreach (var item in roles)
             {
-                if (_appRoleManager.FindByName(item.Name) == null)
+                //如果没有当前权限就添加到数据库
+                if (!dbRoles.Any(s => s.Name == item.Name && s.Type == item.Type))
                 {
                     _appRoleManager.Create(item);
                 }
             }
+
+            foreach (var item in dbRoles)
+            {
+                //如果数据库存在，当时配置里面不出在就删除
+                if (!roles.Any(s => s.Name == item.Name && s.Type == item.Type))
+                {
+                    _appRoleManager.Delete(item);
+                }
+            }
+
         }
 
         public void Dispose()
