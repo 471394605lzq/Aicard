@@ -24,7 +24,7 @@ namespace AiCard.Controllers
         {
             var query = from c in db.Cards
                         from e in db.Enterprises
-                        where e.ID == enterpriseID && c.EnterpriseID == enterpriseID
+                        where e.ID == enterpriseID && c.EnterpriseID == e.ID
                         select new CardListViewModel
                         {
                             Avatar = c.Avatar,
@@ -35,12 +35,15 @@ namespace AiCard.Controllers
                             Name = c.Name,
                             Position = c.Position
                         };
-            if (string.IsNullOrWhiteSpace(filter))
+            if (!string.IsNullOrWhiteSpace(filter))
             {
-                query = query.Where(s => s.Name.Contains(filter) || s.Position.Contains(filter) || s.Mobile.Contains(filter));
+                query = query.Where(s => s.Name.Contains(filter) 
+                    || s.Position.Contains(filter) 
+                    || s.Mobile.Contains(filter)
+                    || s.Email.Contains(filter));
             }
-            var paged = query.ToPagedList(page, pageSize);
-            return Json(Comm.ToJsonResultForPagedList(paged), JsonRequestBehavior.AllowGet);
+            var paged = query.OrderBy(s => s.CardID).ToPagedList(page, pageSize);
+            return Json(Comm.ToJsonResultForPagedList(paged, paged), JsonRequestBehavior.AllowGet);
         }
 
 
