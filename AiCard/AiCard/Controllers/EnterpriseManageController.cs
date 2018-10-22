@@ -16,7 +16,8 @@ using AiCard.WeChatWork;
 using AiCard.WeChatWork.Models;
 using PagedList;
 using PagedList.Mvc;
-
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 namespace AiCard.Controllers
 {
     [Authorize]
@@ -149,6 +150,7 @@ namespace AiCard.Controllers
             ViewBag.code = em.Code;
             ViewBag.name = em.Name;
             ViewBag.logo = em.Logo;
+            ViewBag.enterpriseid = em.ID;
 
             List<User> list = new List<WeChatWork.Models.User>();
             //错误的时候返回该model
@@ -165,15 +167,32 @@ namespace AiCard.Controllers
                     ViewBag.errormsg = "";
                     WeChatWorkApi wxapi = new WeChatWorkApi(em.WeChatWorkCorpid, em.WeChatWorkSecret);
                     List<Department> listdepartment = wxapi.GetDepartment();
-                    List<User> listwxuser = null;
+                    List<User> listwxuser = new List<WeChatWork.Models.User>();
+                    //var m= db.Cards.Select(s => s.EnterpriseID == em.ID) as List<Card>;
+                    List<Card> listcard = db.Cards.Where(s => s.EnterpriseID == em.ID).ToList();
                     if (listdepartment.Count > 0)
                     {
                         for (int i = 0; i < listdepartment.Count; i++)
                         {
-                            listwxuser.AddRange(wxapi.GetUsesByDepID(listdepartment[i].ID));
+                            List<User> listt = wxapi.GetUsesByDepID(listdepartment[i].ID);
+                            listwxuser.AddRange(listt);
                         }
                     }
-
+                    if (listcard != null)
+                    {
+                        //遍历数据库该公司原有的用户和微信获取到的用户进行比对，如果数据库已存在则标识为已存在 ishave=true 
+                        for (int i = 0; i < listcard.Count; i++)
+                        {
+                            for (int j = 0; j < listwxuser.Count;j++)
+                            {
+                                if (listcard[i].Mobile == listwxuser[j].Mobile)
+                                {
+                                    listwxuser[j].ishave = true;
+                                    listwxuser[j].ischeck = true;
+                                }
+                            }
+                        }
+                    }
                     var paged = listwxuser.OrderByDescending(s => s.ID).ToList();
                     PagedList.PagedList<AiCard.WeChatWork.Models.User> models = new PagedList<WeChatWork.Models.User>(paged, page, 15);
                     return View(models);
@@ -183,6 +202,53 @@ namespace AiCard.Controllers
                     ViewBag.errormsg = "错误提示：" + ex.ToString();
                     return View(model);
                 }
+            }
+        }
+        [HttpPost]
+        [AllowCrossSiteJson]
+        public ActionResult CogradientWXUserInfo(string listu, int enterpriseid)
+        {
+            Sidebar();
+            var users = JsonConvert.DeserializeObject<List<User>>(listu);//post过来需要保存数据库的用户数据
+            int usertype = (int)this.GetAccountData().UserType;//从cookie中读取用户类型
+            string userID = this.GetAccountData().UserID;//从cookie中读取userid
+            var user = db.Users.FirstOrDefault(s => s.Id == userID);
+            var em = db.Enterprises.FirstOrDefault(s => s.ID == enterpriseid);
+            int cardcount = em.CardCount;
+            if (cardcount > users.Count)
+            {
+                foreach (var item in users)
+                {
+                    var img = this.Download(item.Avatar);
+                    try
+                    {
+                        Qiniu.QinQiuApi qin = new Qiniu.QinQiuApi();
+                        var path = Server.MapPath(img);
+                        var img2 = qin.UploadFile(path);
+                        Card card = new Card
+                        {
+                            Name = item.Name,
+                            Avatar = img2,
+                            Email = item.Email,
+                            EnterpriseID = em.ID,
+                            Gender = item.Gender,
+                            Mobile = item.Mobile,
+                            PhoneNumber = item.Telephone,
+                            Position = item.Position
+                        };
+                        db.Cards.Add(card);
+                        db.SaveChanges();
+                    }
+                    catch (Exception ex)
+                    {
+                        return Json(Comm.ToJsonResult("Error", ex.Message), JsonRequestBehavior.AllowGet);
+                    }
+                }
+                return Json(Comm.ToJsonResult("Success", "同步成功", new { data = users }), JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json(Comm.ToJsonResult("Fail", "该企业剩余名片数量为" + cardcount.ToString() + ",可用数量不够！", new { data = users }), JsonRequestBehavior.AllowGet);
             }
         }
 

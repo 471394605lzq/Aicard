@@ -4,83 +4,44 @@
     Layout = "~/Views/Shared/_LayoutBackground.cshtml";
 }
 
-<style type="text/css">
-    .roleGroupCreateEdit {
-        border:1px solid #efefef;
-        margin-bottom:20px;
-        border-radius:5px;
+<div class="deploy">
+    <ol class="breadcrumb">
+        <li><a href="@Url.Action("Index")">企业管理</a></li>
+        <li>配置企业</li>
+    </ol>
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        <div class="roleGroupCreateEdit">
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.WeChatWorkCorpid)：
+                </dt>
+                <dd>
+                    <label class="show" id="labwechatworkid">@Model.WeChatWorkCorpid</label>
+                    <input class="form-control text-box single-line hide" id="WeChatWorkCorpid" name="WeChatWorkCorpid" type="text" value="@Model.WeChatWorkCorpid">
+                    <i class="iconfont dtkj-icon-" id="wecharworkidi" title="修改"></i>
+                    <i class="iconfont dtkj-chexiao hide" id="wecharworkidiqx" title="返回"></i>
+                </dd>
+            </dl>
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.WeChatWorkSecret)：
+                </dt>
+                <dd>
+                    <label class="show" id="labwechatworksecret">@Model.WeChatWorkSecret</label>
+                    <input class="form-control text-box single-line hide" id="WeChatWorkSecret" name="WeChatWorkSecret" type="text" value="@Model.WeChatWorkSecret">
+                    <i class="iconfont dtkj-icon-" id="wecharworksecreti" title="修改"></i>
+                    <i class="iconfont dtkj-chexiao hide" id="wecharworksecretiqx" title="返回"></i>
+                </dd>
+            </dl>
+        </div>
+        <p>
+            <input type="submit" value="保存" class="btn btn-default" />
+            <a href="@Url.Action("Index")" class="btn btn-default" style="margin-left:60px;">返回</a>
+        </p>
     }
-    .dl-horizontal {
-        height:50px;
-        margin-top:20px;
-    }
-        .dl-horizontal dt {
-            height:50px;
-        }
-        .dl-horizontal dd {
-            line-height:15px;
-        }
-            .dl-horizontal dd label {
-                color:#666666;
-                font-size:14px;
-                float:left;
-                width:280px;
-                max-width:280px;
-                height:50px;
-            }
-            .dl-horizontal dd i {
-                float: left;
-                font-size: 24px;
-                cursor: pointer;
-                margin-left:50px;
-            }
-            .dl-horizontal dd input {
-                float:left;
-                margin-top:-8px;
-            }
-    .show {
-        display:block;
-    }
-    .hide {
-        display:none;
-    }
-</style>
-<ol class="breadcrumb">
-    <li><a href="@Url.Action("Index")">企业管理</a></li>
-    <li>配置企业</li>
-</ol>
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-<div class="roleGroupCreateEdit">
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.WeChatWorkCorpid)：
-        </dt>
-        <dd>
-            <label class="show" id="labwechatworkid">@Model.WeChatWorkCorpid</label>
-            <input class="form-control text-box single-line hide" id="WeChatWorkCorpid" name="WeChatWorkCorpid" type="text" value="@Model.WeChatWorkCorpid">
-            <i class="iconfont dtkj-icon-" id="wecharworkidi" title="修改"></i>
-            <i class="iconfont dtkj-chexiao hide" id="wecharworkidiqx"  title="返回"></i>
-        </dd>
-    </dl>
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.WeChatWorkSecret)：
-        </dt>
-        <dd>
-            <label class="show" id="labwechatworksecret">@Model.WeChatWorkSecret</label>
-            <input class="form-control text-box single-line hide" id="WeChatWorkSecret" name="WeChatWorkSecret" type="text" value="@Model.WeChatWorkSecret">
-            <i class="iconfont dtkj-icon-" id="wecharworksecreti"  title="修改"></i>
-            <i class="iconfont dtkj-chexiao hide" id="wecharworksecretiqx"  title="返回"></i>
-        </dd>
-    </dl>
 </div>
-<p>
-    <input type="submit" value="保存" class="btn btn-default" />
-    <a href="@Url.Action("Index")" class="btn btn-default" style="margin-left:60px;">返回</a>
-</p>
-}
 @section Scripts{
     @Scripts.Render("~/Scripts/Views/Deploy.js")
 }

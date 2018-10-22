@@ -42,6 +42,7 @@ namespace AiCard
                         "~/Scripts/Comm/comm.js",
                         "~/Scripts/Comm/uploadfile.js",
                         "~/Scripts/Comm/imageResizeUpload.js"
+
                 ));
 
             bundles.Add(new ScriptBundle($"~/bundles/cloud").Include(
@@ -97,6 +98,7 @@ namespace AiCard
             addViewScripts("cardCreate", new string[] { "cardCreate.js" });
             addViewScripts("homePageModular", new string[] { "homePageModular.js" });
             addViewScripts("homePageModularIndex", new string[] { "homePageModularIndex.js" });
+            addViewScripts("enterpriseManage", new string[] { "enterpriseManage.js" });
             #endregion
 
 

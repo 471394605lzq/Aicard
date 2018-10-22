@@ -398,12 +398,6 @@
     <Content Include="Content\jquery-ui.structure.css" />
     <Content Include="Content\jquery-ui.theme.css" />
     <Content Include="Content\PagedList.css" />
-    <Content Include="Content\Site.css">
-      <DependentUpon>Site.less</DependentUpon>
-    </Content>
-    <Content Include="Content\Site.min.css">
-      <DependentUpon>Site.css</DependentUpon>
-    </Content>
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -686,6 +680,7 @@
     <Content Include="Scripts\ckeditor\skins\moono-lisa\readme.md" />
     <Content Include="Content\Less\map.less" />
     <Content Include="Content\iconfont.ttf" />
+    <Content Include="Content\Less\View\enterpriseManage.less" />
     <None Include="Properties\PublishProfiles\AiCardRelease.pubxml" />
     <None Include="Scripts\jquery-2.2.4.intellisense.js" />
     <Content Include="Scripts\ckeditor\build-config.js" />
@@ -806,6 +801,7 @@
     <Content Include="Scripts\Views\Deploy.js" />
     <Content Include="Scripts\Views\homePageModular.js" />
     <Content Include="Scripts\Views\homePageModularIndex.js" />
+    <Content Include="Scripts\Views\enterpriseManage.js" />
     <Content Include="Scripts\Views\roleGroup.js" />
     <Content Include="Scripts\Views\userManageIndex.js" />
     <Content Include="Scripts\_references.js" />
@@ -884,6 +880,7 @@
     <Folder Include="App_Data\" />
     <Folder Include="Content\Less\View\" />
     <Folder Include="Views\Card\" />
+    <Folder Include="Views\CardManage\" />
     <Folder Include="Views\HomePageManage\" />
   </ItemGroup>
   <ItemGroup>

@@ -4,141 +4,116 @@
     ViewBag.Title = "同步微信用户";
     Layout = "~/Views/Shared/_LayoutBackground.cshtml";
 }
-<style type="text/css">
-    .topinfodiv {
-        width: 100%;
-        height: 100px;
-        margin: 0 auto;
-        border-bottom: 1px solid #e8e8e8;
-        border-radius: 5px;
-    }
-
-    .topcontentdiv {
-        width: 110px;
-        height: 80px;
-        margin-top: 10px;
-        float: left;
-    }
-
-    .topimgdiv {
-        width: 80px;
-        height: 80px;
-        border: 1px solid #e8e8e8;
-        float: left;
-        margin-left: 15px;
-        border-radius: 80px;
-    }
-
-    .topcontentinfodiv {
-        width: 300px;
-        height: 80px;
-        float: left;
-        margin-left: 15px;
-        margin-top: 10px;
-    }
-
-    .topcontentitemdiv {
-        width: 300px;
-        height: 40px;
-        line-height: 40px;
-    }
-
-    .toperrormsgdiv {
-        width: 100%;
-        height: 30px;
-        font-size: 14px;
-        line-height: 30px;
-        color: red;
-    }
-</style>
-<ol class="breadcrumb">
-    <li><a href="@Url.Action("Index")">企业管理</a></li>
-    <li>同步微信用户</li>
-</ol>
-<div class="toperrormsgdiv">@ViewBag.errormsg</div>
-<div class="topinfodiv">
-    <div class="topcontentdiv">
-        <div class="topimgdiv">
-            <img src="@ViewBag.logo" />
+<input id="model" type="hidden" data-model="@Newtonsoft.Json.JsonConvert.SerializeObject(Model)" value="" />
+<input type="hidden" id="enterpriseid" data-enterpriseid="@ViewBag.enterpriseid" value="" />
+<div class="enterpriseManage">
+    <ol class="breadcrumb">
+        <li><a href="@Url.Action("Index")">企业管理</a></li>
+        <li>同步微信用户</li>
+    </ol>
+    <div class="toperrormsgdiv">@ViewBag.errormsg</div>
+    <div class="topinfodiv">
+        <div class="topcontentdiv">
+            <div class="topimgdiv">
+                <img src="@ViewBag.logo" />
+            </div>
+        </div>
+        <div class="topcontentinfodiv">
+            <div class="topcontentitemdiv">
+                企业编号：@ViewBag.code
+            </div>
+            <div class="topcontentitemdiv">
+                企业名称：@ViewBag.name
+            </div>
         </div>
     </div>
-    <div class="topcontentinfodiv">
-        <div class="topcontentitemdiv">
-            企业编号：@ViewBag.code
-        </div>
-        <div class="topcontentitemdiv">
-            企业名称：@ViewBag.name
+    <table id="table" class="table  table-hover table-striped">
+        <thead>
+            <tr>
+                <th>
+                    <input id="chkAll" type="checkbox" name="name" value="" />
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ishave)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Position)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Mobile)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Gender)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Email)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Avatar)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Telephone)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+
+        @foreach (var item in Model)
+        {
+            var ishas = item.ishave ? "disabled" : "";
+            var ischeck = item.ischeck ? "checked" : "";
+            <tr>
+                <td>
+                    <input data-id="@item.ID" data-item="@Newtonsoft.Json.JsonConvert.SerializeObject(item)" class="chk" type="checkbox" @ishas @ischeck name="name" value="" />
+                </td>
+                <td>
+                    @(item.ishave ? "是" : "否")
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Position)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Mobile)
+                </td>
+                <td>
+                    @*@Html.DisplayFor(modelItem => item.Gender)*@
+                    @item.Gender.GetDisplayName()
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+
+                <td>
+                    @*<img :src="item.Avatar" style="width:25px;height:25px;" />*@
+                    @Html.TableImg(item.Avatar)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Telephone)
+                </td>
+                <td>
+                    @*@Html.ActionLink("编辑", "Edit", new { id = item.ID }) |
+                        @Html.ActionLink("删除", "Delete", new { id = item.ID })|
+                        @Html.ActionLink("配置", "Deploy", new { id = item.ID })|
+                        @Html.ActionLink("同步微信用户", "CogradientWXUserInfo", new { id = item.ID })*@
+                </td>
+            </tr>
+        }
+
+    </table>
+    @Html.PageList((PagedList.IPagedList<AiCard.WeChatWork.Models.User>)Model, Url.Action("Index"))
+    <div class="form-group" style="border-top:1px solid #e8e8e8;padding-top:15px;">
+        <div class="col-md-offset-2 col-md-10">
+            <input id="btnSubmit" type="submit" value="开始同步" class="btn btn-default" />
+            <a href="@Url.Action("Index")" class="btn btn-default" style="margin-left:60px;">返回</a>
         </div>
     </div>
 </div>
-<table class="table  table-hover table-striped">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                岗位
-            </th>
-            <th>
-                手机号
-            </th>
-            <th>
-                性别
-            </th>
-            <th>
-                邮箱
-            </th>
-            <th>
-                头像
-            </th>
-            <th>
-                座机
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-
-
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Position)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Mobile)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Gender)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-
-            <td>
-                @Html.DisplayFor(modelItem => item.Avatar)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Telephone)
-            </td>
-            <td>
-                @Html.ActionLink("编辑", "Edit", new { id = item.ID }) |
-                @Html.ActionLink("删除", "Delete", new { id = item.ID })|
-                @Html.ActionLink("配置", "Deploy", new { id = item.ID })|
-                @Html.ActionLink("同步微信用户", "CogradientWXUserInfo", new { id = item.ID })
-            </td>
-        </tr>
-    }
-
-</table>
-@Html.PageList((PagedList.IPagedList<AiCard.WeChatWork.Models.User>)Model, Url.Action("Index"))
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
+@section Scripts{
+    @Scripts.Render("~/bundles/jqueryui", "~/bundles/enterpriseManage")
 }
-<script type="text/javascript">
-    alert(@ViewBag.errormsg);
-</script>
