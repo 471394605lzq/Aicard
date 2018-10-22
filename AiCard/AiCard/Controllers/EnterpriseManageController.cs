@@ -26,6 +26,15 @@ namespace AiCard.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
         private ApplicationUserManager _userManager;
 
+
+        //获取当前登录的用户信息
+        AccountData AccontData
+        {
+            get
+            {
+                return this.GetAccountData();
+            }
+        }
         public ApplicationUserManager UserManager
         {
             get
@@ -59,9 +68,9 @@ namespace AiCard.Controllers
         public ActionResult Index(string filter, bool? enable = null, int page = 1)
         {
             Sidebar();
-            int usertype = (int)this.GetAccountData().UserType;//从cookie中读取用户类型
-            string userID = this.GetAccountData().UserID;//从cookie中读取userid
-            var user = db.Users.FirstOrDefault(s => s.Id == userID);
+            //int usertype = (int)this.GetAccountData().UserType;//从cookie中读取用户类型
+            //string userID = this.GetAccountData().UserID;//从cookie中读取userid
+            //var user = db.Users.FirstOrDefault(s => s.Id == userID);
             var m = from e in db.Enterprises
                     from u in db.Users
                     where e.AdminID == u.Id
@@ -92,9 +101,9 @@ namespace AiCard.Controllers
                 m = m.Where(s => s.Enable == enable.Value);
             }
             //如果是企业用户则只查询该企业信息
-            if (usertype == 1)
+            if (AccontData.UserType == Enums.UserType.Enterprise)
             {
-                m = m.Where(s => s.ID == user.EnterpriseID);
+                m = m.Where(s => s.ID == AccontData.EnterpriseID);
             }
             var paged = m.OrderByDescending(s => s.AdminID).ToPagedList(page);
             return View(paged);
@@ -273,7 +282,8 @@ namespace AiCard.Controllers
         public ActionResult Create()
         {
             Sidebar();
-            return View();
+            var model = new EnterpriseViewModels();
+            return View(model);
         }
         // POST: tests/Create
         // 为了防止“过多发布”攻击，请启用要绑定到的特定属性，有关 
@@ -281,7 +291,7 @@ namespace AiCard.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(Enterprise enterprise)
+        public async Task<ActionResult> Create(EnterpriseViewModels enterprise)
         {
             Sidebar();
             if (ModelState.IsValid)
@@ -334,9 +344,32 @@ namespace AiCard.Controllers
                         {
                             //给企业管理添加权限
                             UserManager.AddToRoles(user.Id, listrg.Select(s => s.Name).ToArray());
-                            enterprise.AdminID = user.Id;
-                            enterprise.RegisterDateTime = DateTime.Now;
-                            db.Enterprises.Add(enterprise);
+
+                            var model = new Enterprise
+                            {
+                                AdminID = user.Id,
+                                Address = enterprise.Address,
+                                AppID = enterprise.AppID,
+                                CardCount = enterprise.CardCount,
+                                City = enterprise.City,
+                                Code = enterprise.Code,
+                                District = enterprise.District,
+                                Email = enterprise.Email,
+                                Enable = enterprise.Enable,
+                                HomePage = enterprise.HomePage,
+                                Info = enterprise.Info,
+                                Lng = enterprise.Lng,
+                                Lat = enterprise.Lat,
+                                Logo = string.Join(",", enterprise.Logo),
+                                Name = enterprise.Name,
+                                PhoneNumber = enterprise.PhoneNumber,
+                                Province = enterprise.Province,
+                                WeChatWorkCorpid = enterprise.WeChatWorkCorpid,
+                                WeChatWorkSecret = enterprise.WeChatWorkSecret,
+                                RegisterDateTime = DateTime.Now
+                            };
+                            
+                            db.Enterprises.Add(model);
                             int r = db.SaveChanges();
                             //r>0表示保存企业信息成功
                             if (r > 0)
@@ -365,7 +398,7 @@ namespace AiCard.Controllers
                          from u in db.Users
                          where e.AdminID == u.Id && e.ID == id.Value
                          select e).FirstOrDefault();
-            var models = new Enterprise
+            var models = new EnterpriseViewModels
             {
                 ID = model.ID,
                 Code = model.Code,
@@ -374,7 +407,6 @@ namespace AiCard.Controllers
                 Address = model.Address,
                 Email = model.Email,
                 HomePage = model.HomePage,
-                Logo = model.Logo,
                 Info = model.Info,
                 District = model.District,
                 Enable = model.Enable,
@@ -387,6 +419,7 @@ namespace AiCard.Controllers
                 Lat = model.Lat,
                 Lng = model.Lng
             };
+            models.Logo.Images = model.Logo?.Split(',') ?? new string[0];
             if (models == null)
             {
                 return HttpNotFound();
@@ -399,7 +432,7 @@ namespace AiCard.Controllers
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(Enterprise enterprise)
+        public ActionResult Edit(EnterpriseViewModels enterprise)
         {
             Sidebar();
             if (ModelState.IsValid)
@@ -417,7 +450,7 @@ namespace AiCard.Controllers
                 t.Enable = enterprise.Enable;
                 t.CardCount = enterprise.CardCount;
                 t.PhoneNumber = enterprise.PhoneNumber;
-                t.Logo = enterprise.Logo;
+                t.Logo = string.Join(",", enterprise.Logo.Images); //enterprise.Logo;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }

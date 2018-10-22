@@ -12,7 +12,19 @@ namespace AiCard.Models
 
         [Display(Name ="企业名称")]
         public string Name { get; set; }
-
+        [Display(Name = "企业logo")]
+        //public string Logo { get; set; }
+        public Models.CommModels.FileUpload Logo { get; set; } = new CommModels.FileUpload
+        {
+            AutoInit = true,
+            Max = 5,
+            Name = "Logo",
+            Server = CommModels.UploadServer.QinQiu,
+            Sortable = true,
+            Type = CommModels.FileType.Image,
+        };
+        [Display(Name = "小程序AppID")]
+        public string AppID { get; set; }
         [Display(Name = "管理员")]
         public string AdminID { get; set; }
         [Display(Name = "用户名")]
@@ -44,6 +56,19 @@ namespace AiCard.Models
         public string Code { get; set; }
         [Display(Name = "邮箱")]
         public string Email { get; set; }
+
+        [Display(Name = "注册时间")]
+        public DateTime RegisterDateTime { get; set; }
+
+        public double? Lat { get; set; }
+
+        public double? Lng { get; set; }
+
+        [Display(Name = "企业微信ID")]
+        public string WeChatWorkCorpid { get; set; }
+
+        [Display(Name = "企业微信Secret")]
+        public string WeChatWorkSecret { get; set; }
 
     }
 }

@@ -64,7 +64,7 @@
         @foreach (var item in Model)
         {
             var ishas = item.ishave ? "disabled" : "";
-            var ischeck = item.ischeck ? "checked" : "";
+            var ischeck = item.ishave ? "":item.ischeck ? "checked" :"" ;
             <tr>
                 <td>
                     <input data-id="@item.ID" data-item="@Newtonsoft.Json.JsonConvert.SerializeObject(item)" class="chk" type="checkbox" @ishas @ischeck name="name" value="" />

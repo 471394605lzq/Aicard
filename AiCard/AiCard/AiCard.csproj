@@ -284,6 +284,8 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\HomePageModularsManageController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\ProductKindsManageController.cs" />
+    <Compile Include="Controllers\ProductsManageController.cs" />
     <Compile Include="Controllers\RoleManageController.cs" />
     <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Controllers\UploaderController.cs" />
@@ -364,6 +366,8 @@
     <Compile Include="Models\HomePageModularViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\ProductKindsViewModels.cs" />
+    <Compile Include="Models\ProductViewModels.cs" />
     <Compile Include="Models\ProductModels.cs" />
     <Compile Include="Models\RoleGroup.cs" />
     <Compile Include="Models\RolesModel.cs" />
@@ -881,12 +885,20 @@
     <Content Include="Views\HomePageModularsManage\Index.cshtml" />
     <Content Include="Views\EnterpriseManage\Info.cshtml" />
     <Content Include="Views\EnterpriseManage\CogradientWXUserInfo.cshtml" />
+    <Content Include="Views\ProductKindsManage\Create.cshtml" />
+    <Content Include="Views\ProductKindsManage\Delete.cshtml" />
+    <Content Include="Views\ProductKindsManage\Details.cshtml" />
+    <Content Include="Views\ProductKindsManage\Edit.cshtml" />
+    <Content Include="Views\ProductKindsManage\Index.cshtml" />
+    <Content Include="Views\ProductsManage\Create.cshtml" />
+    <Content Include="Views\ProductsManage\Delete.cshtml" />
+    <Content Include="Views\ProductsManage\Details.cshtml" />
+    <Content Include="Views\ProductsManage\Edit.cshtml" />
+    <Content Include="Views\ProductsManage\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Content\Less\View\" />
     <Folder Include="Views\Card\" />
-    <Folder Include="Views\CardManage\" />
     <Folder Include="Views\HomePageManage\" />
   </ItemGroup>
   <ItemGroup>

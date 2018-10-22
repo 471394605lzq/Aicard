@@ -625,9 +625,14 @@
 .enterpriseManage .topimgdiv {
   width: 80px;
   height: 80px;
-  border: 1px solid #e8e8e8;
   float: left;
   margin-left: 15px;
+  border-radius: 80px;
+}
+.enterpriseManage .topimgdiv img {
+  width: 80px;
+  height: 80px;
+  border: 1px solid #e8e8e8;
   border-radius: 80px;
 }
 .enterpriseManage .topcontentinfodiv {

@@ -15,7 +15,7 @@ namespace AiCard.Models
 
         [Display(Name = "分类")]
         public int KindID { get; set; }
-
+        [Display(Name = "分类")]
         public ProductKind Kind { get; set; }
 
         [Display(Name = "企业")]
@@ -52,7 +52,7 @@ namespace AiCard.Models
 
         [Display(Name = "名称")]
         public string Name { get; set; }
-
+        [Display(Name = "企业名称")]
         public int EnterpriseID { get; set; }
 
         [Display(Name = "排序")]
