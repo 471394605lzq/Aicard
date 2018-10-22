@@ -26,6 +26,7 @@ namespace AiCard.Controllers
 
         }
 
+
         // GET: HomePageManage
         public ActionResult Index()
         {
@@ -63,11 +64,52 @@ namespace AiCard.Controllers
             return View(model);
         }
 
+        //不同类型的模块提交时候都统一提交到这里
         [HttpPost]
-        public ActionResult CreateByHtml(HomePageModularByHtml model)
+        public ActionResult Create(IHomePageModular model)
         {
+            if (!ModelState.IsValid)
+            {
+                return Json(Comm.ToJsonResult("Error", ModelState.FirstErrorMessage()));
+            }
+            var eId = EnterpriseID;
+            var maxSort = db.HomePageModulars.Where(s => s.EnterpriseID == eId).Max(s => s.Sort) + 1;
+            HomePageModular modular = new HomePageModular
+            {
+                Content = model.Content,
+                EnterpriseID = eId,
+                Sort = maxSort,
+                Title = model.Title,
+                Type = model.Type
+            };
+            return Json(Comm.ToJsonResult("Success", "成功"));
+        }
 
-            return View();
+        public ActionResult Edit(IHomePageModular model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return Json(Comm.ToJsonResult("Error", ModelState.FirstErrorMessage()));
+            }
+            var eId = EnterpriseID;
+            var modular = db.HomePageModulars
+                .FirstOrDefault(s => s.ID == model.ID
+                    && s.EnterpriseID == EnterpriseID);
+            if (modular == null)
+            {
+                return Json(Comm.ToJsonResult("NoFound", "模块不存在"));
+            }
+            modular.Content = model.Content;
+            modular.Title = model.Title;
+            //HomePageModular modular = new HomePageModular
+            //{
+            //    Content = model.Content,
+            //    EnterpriseID = eId,
+            //    Sort = model,
+            //    Title = model.Title,
+            //    Type = model.Type
+            //};
+            return Json(Comm.ToJsonResult("Success", "成功"));
         }
 
 

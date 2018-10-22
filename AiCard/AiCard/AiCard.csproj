@@ -863,16 +863,15 @@
     <Content Include="Views\EnterpriseManage\Create.cshtml" />
     <Content Include="Views\EnterpriseManage\Edit.cshtml" />
     <Content Include="Views\Account\EnterpriseLogin.cshtml" />
-    <Content Include="Views\Card\Index.cshtml" />
     <Content Include="Views\Test\TestMap.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Map.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\WeChatWorkDep.cshtml" />
     <Content Include="Views\Test\TestWeixinWork.cshtml" />
     <Content Include="Views\Account\EnterpriseLogin.cshtml" />
     <Content Include="Views\Enterprise\Index.cshtml" />
-    <Content Include="Views\Card\Index.cshtml" />
-    <Content Include="Views\Card\Create.cshtml" />
-    <Content Include="Views\Card\Edit.cshtml" />
+    <Content Include="Views\CardManage\Index.cshtml" />
+    <Content Include="Views\CardManage\Create.cshtml" />
+    <Content Include="Views\CardManage\Edit.cshtml" />
     <Content Include="Views\EnterpriseManage\Deploy.cshtml" />
     <Content Include="Views\Shared\_LayoutEnterprise.cshtml" />
     <Content Include="Views\Test\TestQiniu.cshtml" />
@@ -884,7 +883,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Content\Less\View\" />
-    <Folder Include="Views\CardManage\" />
+    <Folder Include="Views\Card\" />
     <Folder Include="Views\HomePageManage\" />
   </ItemGroup>
   <ItemGroup>
