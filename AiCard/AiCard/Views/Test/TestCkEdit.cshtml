@@ -1,0 +1,22 @@
+﻿@{
+    Layout = "";
+    Layout = "~/Views/Shared/_LayoutBackground.cshtml";
+    var ckImgUpload = new AiCard.Models.CommModels.FileUpload
+    {
+        AutoInit = false,
+        Max = 20,
+        Mode = AiCard.Models.CommModels.FileUploadMode.ModalOnly,
+        Name = "ckupload",
+        Server = AiCard.Models.CommModels.UploadServer.QinQiu,
+        Sortable = false,
+        Type = AiCard.Models.CommModels.FileType.Image,
+    };
+}
+<textarea name="Content" rows="10"></textarea>
+@Html.EditorFor(s => ckImgUpload)
+@section Scripts{
+    @Scripts.Render("~/Scripts/ckeditor/ckeditor.js")
+    <script>
+        var editor = CKEDITOR.replace('Content', { height: 250 });
+    </script>
+}

@@ -237,7 +237,8 @@ namespace AiCard
                 {
                     page.PageNumber,
                     page.PageCount,
-                    page.HasNextPage
+                    page.HasNextPage,
+                    page.TotalItemCount,
                 },
                 Data = data
             });
