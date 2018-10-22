@@ -83,46 +83,38 @@ namespace AiCard.Controllers
             {
                 var hasname = db.Cards.Any(s => s.Name == model.Name);
                 //检验企业编号是否存在
-                if (hasname)
+                string cookieuserid = Request.Cookies["UserId"].Value;//Request.Cookies["UserId"].ToString();//从cookie中读取userid
+                string decryptuserid = Comm.Decrypt(cookieuserid);
+                var tempuser = db.Users.FirstOrDefault(s => s.Id == decryptuserid);
+                //用名片用户的手机号创建一个账号,默认密码为手机号
+                string username = model.Mobile;
+                var user = new ApplicationUser { UserName = model.Mobile, RegisterDateTime = DateTime.Now, EnterpriseID = tempuser.EnterpriseID, LastLoginDateTime = DateTime.Now, UserType = UserType.Personal };
+                var result = await UserManager.CreateAsync(user, model.Mobile);
+                //创建名片账号成功
+                if (result.Succeeded)
                 {
-                    ModelState.AddModelError("Code", "名片已存在");
-                    return View(model);
-                }
-                else
-                {
-                    string cookieuserid = Request.Cookies["UserId"].Value;//Request.Cookies["UserId"].ToString();//从cookie中读取userid
-                    string decryptuserid = Comm.Decrypt(cookieuserid);
-                    var tempuser = db.Users.FirstOrDefault(s => s.Id == decryptuserid);
-                    //用名片用户的手机号创建一个账号,默认密码为手机号
-                    string username = model.Mobile;
-                    var user = new ApplicationUser { UserName = model.Mobile, RegisterDateTime = DateTime.Now, EnterpriseID = tempuser.EnterpriseID, LastLoginDateTime = DateTime.Now, UserType = UserType.Personal };
-                    var result = await UserManager.CreateAsync(user, model.Mobile);
-                    //创建名片账号成功
-                    if (result.Succeeded)
+                    var card = new Card
                     {
-                        var card = new Card
-                        {
-                            Avatar = string.Join(",", model.Avatar.Images),
-                            UserID = user.Id,
-                            EnterpriseID = tempuser.EnterpriseID,
-                            Name = model.Name,
-                            Enable = model.Enable,
-                            Email = model.Email,
-                            Gender = model.Gender,
-                            Images = string.Join(",", model.Images.Images),
-                            Mobile = model.Mobile,
-                            Info = model.Info,
-                            PhoneNumber = model.PhoneNumber,
-                            Position = model.Position,
-                            Remark = model.Remark,
-                            Video = model.Video,
-                            Voice = model.Voice,
-                            WeChatCode = model.WeChatCode
-                        };
-                        db.Cards.Add(card);
-                        db.SaveChanges();
-                        return RedirectToAction("Index");
-                    }
+                        Avatar = string.Join(",", model.Avatar.Images),
+                        UserID = user.Id,
+                        EnterpriseID = tempuser.EnterpriseID,
+                        Name = model.Name,
+                        Enable = model.Enable,
+                        Email = model.Email,
+                        Gender = model.Gender,
+                        Images = string.Join(",", model.Images.Images),
+                        Mobile = model.Mobile,
+                        Info = model.Info,
+                        PhoneNumber = model.PhoneNumber,
+                        Position = model.Position,
+                        Remark = model.Remark,
+                        Video = model.Video,
+                        Voice = model.Voice,
+                        WeChatCode = model.WeChatCode
+                    };
+                    db.Cards.Add(card);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
                 }
             }
             return View(model);

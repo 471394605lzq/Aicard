@@ -146,6 +146,10 @@ namespace AiCard.Controllers
         public ActionResult CogradientWXUserInfo(int? id, int page = 1)
         {
             Sidebar();
+            if (id==null) {
+                ViewBag.errormsg = "错误提示：企业不存在";
+                return View();
+            }
             var em = db.Enterprises.FirstOrDefault(s => s.ID == id.Value);
             ViewBag.code = em.Code;
             ViewBag.name = em.Name;
@@ -206,7 +210,7 @@ namespace AiCard.Controllers
         }
         [HttpPost]
         [AllowCrossSiteJson]
-        public ActionResult CogradientWXUserInfo(string listu, int enterpriseid)
+        public async Task<ActionResult> CogradientWXUserInfo(string listu, int enterpriseid)
         {
             Sidebar();
             var users = JsonConvert.DeserializeObject<List<User>>(listu);//post过来需要保存数据库的用户数据
@@ -215,29 +219,42 @@ namespace AiCard.Controllers
             var user = db.Users.FirstOrDefault(s => s.Id == userID);
             var em = db.Enterprises.FirstOrDefault(s => s.ID == enterpriseid);
             int cardcount = em.CardCount;
+
             if (cardcount > users.Count)
             {
                 foreach (var item in users)
                 {
-                    var img = this.Download(item.Avatar);
                     try
                     {
-                        Qiniu.QinQiuApi qin = new Qiniu.QinQiuApi();
-                        var path = Server.MapPath(img);
-                        var img2 = qin.UploadFile(path);
-                        Card card = new Card
+                        //判断数据库中是否存在(只保存不存在的数据)
+                        if (!item.ishave)
                         {
-                            Name = item.Name,
-                            Avatar = img2,
-                            Email = item.Email,
-                            EnterpriseID = em.ID,
-                            Gender = item.Gender,
-                            Mobile = item.Mobile,
-                            PhoneNumber = item.Telephone,
-                            Position = item.Position
-                        };
-                        db.Cards.Add(card);
-                        db.SaveChanges();
+                            var img = this.Download(item.Avatar);
+                            string username = item.Mobile;
+                            var tempuser = new ApplicationUser { UserName = item.Mobile, RegisterDateTime = DateTime.Now, EnterpriseID = em.ID, LastLoginDateTime = DateTime.Now, UserType = UserType.Personal };
+                            var result = await UserManager.CreateAsync(tempuser, item.Mobile);
+                            //用户创建成果
+                            if (result.Succeeded)
+                            {
+                                Qiniu.QinQiuApi qin = new Qiniu.QinQiuApi();
+                                var path = Server.MapPath(img);
+                                var img2 = qin.UploadFile(path);
+                                Card card = new Card
+                                {
+                                    Name = item.Name,
+                                    Avatar = img2,
+                                    UserID = tempuser.Id,
+                                    Email = item.Email,
+                                    EnterpriseID = em.ID,
+                                    Gender = item.Gender,
+                                    Mobile = item.Mobile,
+                                    PhoneNumber = item.Telephone,
+                                    Position = item.Position
+                                };
+                                db.Cards.Add(card);
+                                db.SaveChanges();
+                            }
+                        }
                     }
                     catch (Exception ex)
                     {

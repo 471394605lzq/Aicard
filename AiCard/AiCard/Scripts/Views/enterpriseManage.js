@@ -12,10 +12,11 @@ $("#btnSubmit").click(function () {
     var a = new Array();
     $.each($(".chk:checked"), function (i, n) {
         var item = $(n).data("item");
-        a.push(item);
+        if (!item.ishave) {
+            a.push(item);
+        }
     });
     var enterpriseid = $("#enterpriseid").data("enterpriseid");
-    alert(enterpriseid);
     $.ajax({
         type: "POST",
         url: comm.action("CogradientWXUserInfo", "EnterpriseManage"),
@@ -24,7 +25,15 @@ $("#btnSubmit").click(function () {
         success: function (data) {
             if (data.State == "Success") {
                 var rs = data.Result;
-
+                console.log(rs);
+                alert("同步成功！");
+                window.location.reload();
+            }
+            else if (data.State == "Fail") {
+                alert("同步失败！" + data.message);
+            }
+            else {
+                alert("系统异常！" + data.message);
             }
         }
     });

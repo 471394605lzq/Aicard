@@ -88,7 +88,7 @@ namespace AiCard.Controllers
             {
                 case SignInStatus.Success:
                     {
-                        var user = db.Users.FirstOrDefault(s => s.UserName == model.UserName && s.UserType == Enums.UserType.Enterprise);
+                        var user = db.Users.FirstOrDefault(s => s.UserName == model.UserName && s.UserType == Enums.UserType.Admin);
                         if (user == null)
                         {
                             ModelState.AddModelError("", "帐号不存在或密码错误！");
