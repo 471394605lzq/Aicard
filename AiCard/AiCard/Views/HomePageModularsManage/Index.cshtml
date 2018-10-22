@@ -1,0 +1,56 @@
+﻿@model IEnumerable<AiCard.Models.HomePageModular>
+@{
+    var modularTypes = Enum.GetValues(typeof(AiCard.Enums.HomePageModularType));
+}
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">添加模块 <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        @foreach (AiCard.Enums.HomePageModularType item in modularTypes)
+                        {
+                            <li><a href="@Url.Action("Create", new { Type = item })">@item.GetDisplayName()</a></li>
+                        }
+                    </ul>
+                </li>
+                @*<li><a href="#">预览</a></li>*@
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>
+<table class="table table-hover table-striped">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Content)
+                </td>
+                <td>
+                    @Html.ActionLink("编辑", "Edit", new { id = item.ID })
+                    | @Html.ActionLink("删除", "Delete", new { id = item.ID })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@section Scripts{
+    @Scripts.Render("~/bundles/homePageModularIndex")
+}

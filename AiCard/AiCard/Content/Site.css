@@ -140,6 +140,9 @@
 .navbar {
   height: 50px;
 }
+.cke_editor_Content textarea {
+  max-width: none;
+}
 .imageResizeUpload .imageResizeUpload_result {
   cursor: pointer;
 }

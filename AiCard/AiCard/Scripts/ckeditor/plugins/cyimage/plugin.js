@@ -16,9 +16,9 @@ CKEDITOR.plugins.add('cyimage',
             closed: function (data) {
                 var html = "";
                 $.each(data, function (i, n) {
-                    html += "<p><img src='" + comm.imgFullUrl(n) + "' style='width:100%'/></p>";
+                    $("img").attr("src", n)
+                    html += "<img src='" + n + "' style='width:100%'/><br/>";
                 });
-                html += "<p></p>"
                 editor.insertHtml(html);
                 tempUploader.clean();
 

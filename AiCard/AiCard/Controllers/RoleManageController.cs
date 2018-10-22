@@ -16,6 +16,14 @@ namespace AiCard.Controllers
     {
         ApplicationDbContext db = new ApplicationDbContext();
 
+
+        AccountData AccontData
+        {
+            get
+            {
+                return this.GetAccountData();
+            }
+        }
         RoleManager<ApplicationRole> _roleManager;
         public RoleManager<ApplicationRole> RoleManager
         {
@@ -47,29 +55,37 @@ namespace AiCard.Controllers
             ViewBag.Sidebar = "权限管理";
         }
 
-        // GET: RoleManage
+        [Authorize(Roles = SysRole.RoleManageRead + "," + SysRole.ERoleManageRead)]
         public ActionResult Index(int page = 1)
         {
             Sidebar();
-            int usertype = (int)this.GetAccountData().UserType;//从cookie中读取用户类型
-            string userID = this.GetAccountData().UserID;//从cookie中读取userid
-            var user = db.Users.FirstOrDefault(s => s.Id == userID);
-            var modle = from r in db.RoleGroups
-                        select new RoleGroupViewModel
-                        {
-                            ID=r.ID,
-                            Name = r.Name,
-                            EnterpriseID = r.EnterpriseID
-                        };
+
+            var usertype = AccontData.UserType;//从cookie中读取用户类型
+            var enterpriseID = AccontData.EnterpriseID;//从cookie中读取enterpriseID
+            string userID = AccontData.UserID;//从cookie中读取userid
+            var modle = (from r in db.RoleGroups
+                         join u in db.Users on r.ID equals u.RoleGroupID into ru
+                         select new RoleGroupViewModel
+                         {
+                             ID = r.ID,
+                             EnterpriseID = r.EnterpriseID,
+                             Name = r.Name,
+                             UserNames = ru.Select(s => s.UserName)
+                         });
             //如果是企业用户则只查询该企业信息
-            if (usertype == 1)
+            if (usertype == Enums.UserType.Enterprise)
             {
-                modle = modle.Where(s => s.EnterpriseID == user.EnterpriseID);
+                modle = modle.Where(s => s.EnterpriseID == enterpriseID);
+            }
+            else
+            {
+                modle = modle.Where(s => s.EnterpriseID == 0);
             }
             var paged = modle.OrderByDescending(s => s.ID).ToPagedList(page);
             return View(paged);
         }
 
+        [Authorize(Roles = SysRole.RoleManageCreate + "," + SysRole.ERoleManageCreate)]
         public ActionResult Create()
         {
             Sidebar();
@@ -79,6 +95,7 @@ namespace AiCard.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = SysRole.RoleManageCreate + "," + SysRole.ERoleManageCreate)]
         public ActionResult Create(RoleGroupViewModel model)
         {
             if (ModelState.IsValid)
@@ -97,32 +114,45 @@ namespace AiCard.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = SysRole.RoleManageEdit + "," + SysRole.ERoleManageEdit)]
         public ActionResult Edit(int id)
         {
+            var aData = this.GetAccountData();
+            var enterpriseID = aData.EnterpriseID;
             Sidebar();
             RoleGroupViewModel model = new RoleGroupViewModel();
             var rg = db.RoleGroups.FirstOrDefault(s => s.ID == id);
+            //防止企业用户串号修改
+            if (aData.UserType == Enums.UserType.Enterprise
+                && rg.EnterpriseID != enterpriseID)
+            {
+                return this.ToError("错误", "没有权限修改当前角色", Url.Action("Index"));
+            }
+
             model.ID = rg.ID;
             model.Name = rg.Name;
             model.SelectedRoles = rg.Roles;
-            model.EnterpriseID = rg.EnterpriseID;
             model.RolesList.List.AddRange(GetSelectRoleView(rg.Roles));
             return View(model);
         }
 
         [HttpPost]
+        [Authorize(Roles = SysRole.RoleManageEdit + "," + SysRole.ERoleManageEdit)]
         public ActionResult Edit(RoleGroupViewModel model)
         {
+            var rg = db.RoleGroups.FirstOrDefault(s => s.ID == model.ID);
+            //防止企业用户串号修改
+            if (AccontData.UserType == Enums.UserType.Enterprise
+                && rg.EnterpriseID != AccontData.EnterpriseID)
+            {
+                return this.ToError("错误", "没有权限修改当前角色", Url.Action("Index"));
+            }
             if (ModelState.IsValid)
             {
-                RoleGroup rg = new RoleGroup
-                {
-                    ID = model.ID,
-                    Name = model.Name,
-                    Roles = model.SelectedRoles,
-                    EnterpriseID=model.EnterpriseID
-                };
-                db.Entry(rg).State = System.Data.Entity.EntityState.Modified;
+
+
+                rg.Name = model.Name;
+                rg.Roles = model.SelectedRoles;
                 db.SaveChanges();
                 var users = db.Users.Where(s => s.RoleGroupID == model.ID).ToList();
                 var roles = rg.Roles.Split(',').Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
@@ -143,12 +173,18 @@ namespace AiCard.Controllers
             return View(model);
         }
 
-
+        [Authorize(Roles = SysRole.RoleManageDelete + "," + SysRole.ERoleManageDelete)]
         public ActionResult Delete(int id)
         {
             Sidebar();
             RoleGroupViewModel model = new RoleGroupViewModel();
             var rg = db.RoleGroups.FirstOrDefault(s => s.ID == id);
+            //防止企业用户串号修改
+            if (AccontData.UserType == Enums.UserType.Enterprise
+                && rg.EnterpriseID != AccontData.EnterpriseID)
+            {
+                return this.ToError("错误", "没有权限修改当前角色", Url.Action("Index"));
+            }
             model.ID = rg.ID;
             model.Name = rg.Name;
             model.RolesList.List.AddRange(GetSelectRoleView(rg.Roles));
@@ -157,9 +193,16 @@ namespace AiCard.Controllers
 
         [HttpPost]
         [ActionName("Delete")]
+        [Authorize(Roles = SysRole.RoleManageDelete + "," + SysRole.ERoleManageDelete)]
         public ActionResult DeleteConfirm(int id)
         {
             var rg = db.RoleGroups.FirstOrDefault(s => s.ID == id);
+            //防止企业用户串号修改
+            if (AccontData.UserType == Enums.UserType.Enterprise
+                && rg.EnterpriseID != AccontData.EnterpriseID)
+            {
+                return this.ToError("错误", "没有权限修改当前角色", Url.Action("Index"));
+            }
             db.Users.Where(s => s.RoleGroupID == id).ToList().ForEach(s => s.RoleGroupID = null);
             db.RoleGroups.Remove(rg);
             db.SaveChanges();
@@ -168,14 +211,32 @@ namespace AiCard.Controllers
 
         public List<SelectRoleView> GetSelectRoleView(string selectedRole = "")
         {
+            var userType = this.GetAccountData().UserType;
             if (selectedRole == null)
             {
                 selectedRole = "";
             }
-            var roles = RoleManager.Roles.Where(s => s.Type == Enums.RoleType.System).ToList();
+
+            var roles = RoleManager.Roles;
+            //根据不同类型读取不同的权限
+            switch (userType)
+            {
+                case Enums.UserType.Admin:
+                    roles = roles.Where(s => s.Type == Enums.RoleType.System);
+                    break;
+                case Enums.UserType.Enterprise:
+                    roles = roles.Where(s => s.Type == Enums.RoleType.Enterprise);
+                    break;
+                case Enums.UserType.Personal:
+                default:
+                    throw new Exception("普通用户没有权限获取");
+                    break;
+            }
+
             var lstSelectedRole = selectedRole.Split(',')
                 .Where(s => !string.IsNullOrWhiteSpace(s))
                 .ToList();
+
             return roles.Select(s => new SelectRoleView
             {
                 Selected = lstSelectedRole.Any(x => x == s.Name),
@@ -185,13 +246,27 @@ namespace AiCard.Controllers
             }).ToList();
         }
 
+        /// <summary>
+        /// 更新配置的里面的用户权限，只有admin才能使用
+        /// </summary>
+        /// <returns></returns>
         [HttpPost]
+        [Authorize(Users = "admin")]
         public ActionResult UpdateRoles()
         {
+
             var role = new Bll.Roles();
             role.Init();
             return Json(new { State = "Success", Message = "更新权限成功" });
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
+        }
     }
 }

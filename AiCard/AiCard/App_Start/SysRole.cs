@@ -15,10 +15,6 @@ namespace AiCard
         public const string RoleManageEdit = "RoleManageEdit";
         public const string RoleManageDelete = "RoleManageDelete";
 
-        public const string ERoleManageRead = "ERoleManageRead";
-        public const string ERoleManageCreate = "ERoleManageCreate";
-        public const string ERoleManageEdit = "ERoleManageEdit";
-        public const string ERoleManageDelete = "ERoleManageDelete";
 
         public const string UserManageRead = "SystemUserManageRead";
         public const string UserManageCreate = "SystemUserManageCreate";
@@ -36,7 +32,30 @@ namespace AiCard
         public const string CardMangeDelete = "CardMangeDelete";
         #endregion
 
-        #region 用户权限
+        #region 企业权限
+        public const string EUserManageRead = "EUserManageRead";
+        public const string EUserManageCreate = "EUserManageCreate";
+        public const string EUserManageEdit = "EUserManageEdit";
+        public const string EUserManageDelete = "EUserManageDelete";
+
+        public const string ERoleManageRead = "ERoleManageRead";
+        public const string ERoleManageCreate = "ERoleManageCreate";
+        public const string ERoleManageEdit = "ERoleManageEdit";
+        public const string ERoleManageDelete = "ERoleManageDelete";
+
+        public const string EEnterpriseManageRead = "EEnterpriseManageRead";
+        public const string EEnterpriseManageCreate = "EEnterpriseManageCreate";
+        public const string EEnterpriseManageEdit = "EEnterpriseManageEdit";
+        public const string EEnterpriseManageDelete = "EEnterpriseManageDelete";
+
+        public const string ECardManageRead = "ECardManageRead";
+        public const string ECardManageCreate = "ECardManageCreate";
+        public const string ECardManageEdit = "ECardManageEdit";
+        public const string ECardManageDelete = "ECardManageDelete";
+
+        public const string EHomePageModularsManageRead = "EHomePageModularsManageRead";
+        public const string EHomePageModularsManageEdit = "EHomePageModularsManageEdit";
+        public const string EHomePageModularsManageDelete = "EHomePageModularsManageDelete";
 
         #endregion
 

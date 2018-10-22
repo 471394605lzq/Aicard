@@ -274,6 +274,7 @@
     <Compile Include="App_Start\WeChat\WeChatMiniApi.cs" />
     <Compile Include="App_Start\WeChat\WeChatApi.cs" />
     <Compile Include="App_Start\WeChat\Config.cs" />
+    <Compile Include="Bll\HomePageModulars.cs" />
     <Compile Include="Bll\Roles.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CardController.cs" />
@@ -360,6 +361,7 @@
     <Compile Include="Models\EnterpriseModels.cs" />
     <Compile Include="Models\EnterpriseViewModels.cs" />
     <Compile Include="Models\HomePageModular.cs" />
+    <Compile Include="Models\HomePageModularViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\ProductModels.cs" />
@@ -803,6 +805,8 @@
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\Views\Deploy.js" />
+    <Content Include="Scripts\Views\homePageModular.js" />
+    <Content Include="Scripts\Views\homePageModularIndex.js" />
     <Content Include="Scripts\Views\enterpriseManage.js" />
     <Content Include="Scripts\Views\roleGroup.js" />
     <Content Include="Scripts\Views\userManageIndex.js" />
@@ -874,6 +878,8 @@
     <Content Include="Views\EnterpriseManage\Deploy.cshtml" />
     <Content Include="Views\Shared\_LayoutEnterprise.cshtml" />
     <Content Include="Views\Test\TestQiniu.cshtml" />
+    <Content Include="Views\HomePageModularsManage\CreateByHtml.cshtml" />
+    <Content Include="Views\HomePageModularsManage\Index.cshtml" />
     <Content Include="Views\EnterpriseManage\Info.cshtml" />
     <Content Include="Views\EnterpriseManage\CogradientWXUserInfo.cshtml" />
   </ItemGroup>
