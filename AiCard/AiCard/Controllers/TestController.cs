@@ -131,6 +131,12 @@ namespace AiCard.Controllers
 
         }
 
+        public ActionResult TestCkEdit()
+        {
+
+            return View();
+        }
+
 
         public class MiniModel
         {

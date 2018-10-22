@@ -276,6 +276,7 @@
     <Compile Include="App_Start\WeChat\Config.cs" />
     <Compile Include="Bll\HomePageModulars.cs" />
     <Compile Include="Bll\Roles.cs" />
+    <Compile Include="Bll\UserLogs.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CardController.cs" />
     <Compile Include="Controllers\CardManageController.cs" />
@@ -287,6 +288,7 @@
     <Compile Include="Controllers\RoleManageController.cs" />
     <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Controllers\UploaderController.cs" />
+    <Compile Include="Controllers\UserLogController.cs" />
     <Compile Include="Controllers\UserManageController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -368,6 +370,7 @@
     <Compile Include="Models\RoleGroup.cs" />
     <Compile Include="Models\RolesModel.cs" />
     <Compile Include="Models\UserLog.cs" />
+    <Compile Include="Models\UserLogViewModels.cs" />
     <Compile Include="Models\UserManageViewModels.cs" />
     <Compile Include="Models\UserViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -881,11 +884,13 @@
     <Content Include="Views\HomePageModularsManage\Index.cshtml" />
     <Content Include="Views\EnterpriseManage\Info.cshtml" />
     <Content Include="Views\EnterpriseManage\CogradientWXUserInfo.cshtml" />
+    <Content Include="Views\Test\TestCkEdit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\Card\" />
     <Folder Include="Views\HomePageManage\" />
+    <Folder Include="Views\UserLog\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
