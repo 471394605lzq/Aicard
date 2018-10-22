@@ -398,6 +398,9 @@
     <Content Include="Content\jquery-ui.structure.css" />
     <Content Include="Content\jquery-ui.theme.css" />
     <Content Include="Content\PagedList.css" />
+    <Content Include="Content\Site.css">
+      <DependentUpon>Site.less</DependentUpon>
+    </Content>
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -878,9 +881,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Content\Less\View\" />
     <Folder Include="Views\Card\" />
-    <Folder Include="Views\CardManage\" />
     <Folder Include="Views\HomePageManage\" />
   </ItemGroup>
   <ItemGroup>
