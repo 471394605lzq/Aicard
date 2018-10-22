@@ -84,4 +84,43 @@ namespace AiCard.Models
             Type = CommModels.FileType.Image,
         };
     }
+
+    public class CardListViewModel
+    {
+        /// <summary>
+        /// 名片ID
+        /// </summary>
+        public int CardID { get; set; }
+
+        /// <summary>
+        /// 姓名
+        /// </summary>
+
+        public string Name { get; set; }
+
+        /// <summary>
+        /// 手机号
+        /// </summary>
+        public string Mobile { get; set; }
+
+        /// <summary>
+        /// 职位
+        /// </summary>
+        public string Email { get; set; }
+
+        /// <summary>
+        /// 头像
+        /// </summary>
+        public string Avatar { get; set; }
+
+        /// <summary>
+        /// 公司LOGO
+        /// </summary>
+        public string Logo { get; set; }
+
+        /// <summary>
+        /// 职位
+        /// </summary>
+        public string Position { get; set; }
+    }
 }

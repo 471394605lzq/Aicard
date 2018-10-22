@@ -14,9 +14,43 @@ using AiCard.Enums;
 using System.Net;
 namespace AiCard.Controllers
 {
-   
+
     public class CardController : Controller
     {
-       
+        private ApplicationDbContext db = new ApplicationDbContext();
+
+        [AllowCrossSiteJson]
+        public ActionResult Index(int enterpriseID, string filter, int page = 1, int pageSize = 20)
+        {
+            var query = from c in db.Cards
+                        from e in db.Enterprises
+                        where e.ID == enterpriseID && c.EnterpriseID == enterpriseID
+                        select new CardListViewModel
+                        {
+                            Avatar = c.Avatar,
+                            Email = c.Email,
+                            CardID = c.ID,
+                            Logo = e.Logo,
+                            Mobile = c.Mobile,
+                            Name = c.Name,
+                            Position = c.Position
+                        };
+            if (string.IsNullOrWhiteSpace(filter))
+            {
+                query = query.Where(s => s.Name.Contains(filter) || s.Position.Contains(filter) || s.Mobile.Contains(filter));
+            }
+            var paged = query.ToPagedList(page, pageSize);
+            return Json(Comm.ToJsonResultForPagedList(paged), JsonRequestBehavior.AllowGet);
+        }
+
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
+        }
     }
 }
