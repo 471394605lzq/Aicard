@@ -684,6 +684,7 @@
     <Content Include="Scripts\ckeditor\skins\moono-lisa\readme.md" />
     <Content Include="Content\Less\map.less" />
     <Content Include="Content\iconfont.ttf" />
+    <Content Include="Content\Less\View\enterpriseManage.less" />
     <None Include="Properties\PublishProfiles\AiCardRelease.pubxml" />
     <None Include="Scripts\jquery-2.2.4.intellisense.js" />
     <Content Include="Scripts\ckeditor\build-config.js" />
@@ -802,6 +803,7 @@
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\Views\Deploy.js" />
+    <Content Include="Scripts\Views\enterpriseManage.js" />
     <Content Include="Scripts\Views\roleGroup.js" />
     <Content Include="Scripts\Views\userManageIndex.js" />
     <Content Include="Scripts\_references.js" />
@@ -877,7 +879,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Content\Less\View\" />
     <Folder Include="Views\CardManage\" />
     <Folder Include="Views\HomePageManage\" />
   </ItemGroup>
