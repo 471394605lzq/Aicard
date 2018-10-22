@@ -123,4 +123,129 @@ namespace AiCard.Models
         /// </summary>
         public string Position { get; set; }
     }
+
+    public class CardDetailViewModel : IGprs
+    {
+        /// <summary>
+        /// 名片ID
+        /// </summary>
+        public int CardID { get; set; }
+
+        /// <summary>
+        /// 企业ID
+        /// </summary>
+        public int EnterpriseID { get; set; }
+
+        /// <summary>
+        /// 姓名
+        /// </summary>
+
+        public string Name { get; set; }
+
+        /// <summary>
+        /// 手机号
+        /// </summary>
+        public string Mobile { get; set; }
+
+        /// <summary>
+        /// 职位
+        /// </summary>
+        public string Email { get; set; }
+
+        /// <summary>
+        /// 头像
+        /// </summary>
+        public List<string> Avatar { get; set; } = new List<string>();
+
+        /// <summary>
+        /// 公司LOGO
+        /// </summary>
+        public string Logo { get; set; }
+
+        /// <summary>
+        /// 职位
+        /// </summary>
+        public string Position { get; set; }
+
+        /// <summary>
+        /// 公司名称
+        /// </summary>
+        public string EnterpriseName { get; set; }
+
+        /// <summary>
+        /// 公司地址
+        /// </summary>
+        public string Address { get; set; }
+
+        /// <summary>
+        /// 座机
+        /// </summary>
+        public string Phone { get; set; }
+
+        /// <summary>
+        /// 微信号
+        /// </summary>
+        public string WeChatCode { get; set; }
+        
+        /// <summary>
+        /// 纬度
+        /// </summary>
+        public double? Lat { get; set; }
+
+        /// <summary>
+        /// 经度
+        /// </summary>
+        public double? Lng { get; set; }
+
+        /// <summary>
+        /// 简介
+        /// </summary>
+        public string Info { get; set; }
+
+        /// <summary>
+        /// 签名
+        /// </summary>
+        public string Remark { get; set; }
+
+        /// <summary>
+        /// 语音
+        /// </summary>
+        public string Voice { get; set; }
+
+        /// <summary>
+        /// 视频
+        /// </summary>
+        public string Video { get; set; }
+
+        /// <summary>
+        /// 我的照片
+        /// </summary>
+        public List<string> Images { get; set; } = new List<string>();
+
+        /// <summary>
+        /// 最近的查看
+        /// </summary>
+        public List<string> Viewers { get; set; }
+
+        /// <summary>
+        /// 靠谱
+        /// </summary>
+        public int LikeCount { get; set; }
+
+        /// <summary>
+        /// 人气
+        /// </summary>
+        public int ViewCount { get; set; }
+
+        /// <summary>
+        /// 是否已经点赞过
+        /// </summary>
+        public bool HadLike { get; set; }
+
+        /// <summary>
+        /// 未读消息数量
+        /// </summary>
+        public int NoReadCount { get; set; }
+    }
+
 }
