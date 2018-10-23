@@ -246,4 +246,16 @@ namespace AiCard.Enums
         [Display(Name = "头部轮播")]
         Banner
     }
+
+    public enum CardTabStyle
+    {
+        [Display(Name = "橙色")]
+        Orange,
+        [Display(Name = "绿色")]
+        Green,
+        [Display(Name = "蓝色")]
+        Blue,
+        [Display(Name = "紫色")]
+        Purple
+    }
 }
