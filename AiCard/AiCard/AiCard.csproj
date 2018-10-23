@@ -699,6 +699,7 @@
     <Content Include="Content\Less\View\enterpriseManage.less" />
     <None Include="Properties\PublishProfiles\AiCardRelease.pubxml" />
     <Content Include="Scripts\ChinaPCAS\pcas.json" />
+    <Content Include="Scripts\ChinaPCAS\pcas - 复制.json" />
     <None Include="Scripts\jquery-2.2.4.intellisense.js" />
     <Content Include="Scripts\ckeditor\build-config.js" />
     <Content Include="Scripts\ckeditor\ckeditor.js" />

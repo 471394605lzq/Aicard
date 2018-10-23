@@ -17,7 +17,6 @@ namespace AiCard.Controllers
         // GET: Test
         public ActionResult Index()
         {
-
             //var _roleManager = new RoleManager<ApplicationRole>(new RoleStore<ApplicationRole>(db));
             //var _userManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
 
@@ -32,8 +31,7 @@ namespace AiCard.Controllers
             //{
             //    _userManager.AddToRoles(item, roles);
             //}
-
-
+            
             return View();
         }
 
@@ -78,6 +76,7 @@ namespace AiCard.Controllers
 
         public ActionResult UploadTest()
         {
+            string s = ChinaPCAS.getp();
             var model = new TestImages();
             return View(model);
         }
