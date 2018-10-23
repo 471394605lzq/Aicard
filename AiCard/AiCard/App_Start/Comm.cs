@@ -183,25 +183,29 @@ namespace AiCard
                         return url;
                     }
                     StringBuilder sbUrl = new StringBuilder(url);
-                    sbUrl.Append("?imageMogr2");
+                    sbUrl.Append("?imageView2");
                     Dictionary<string, string> p = new Dictionary<string, string>();
                     switch (mode)
                     {
                         case Enums.ResizerMode.Pad:
                         default:
                         case Enums.ResizerMode.Crop:
-                            sbUrl.Append("/gravity/Center/crop");
+                            sbUrl.Append("/1");
                             break;
                         case Enums.ResizerMode.Max:
-                            sbUrl.Append("/thumbnail");
+                            sbUrl.Append("/0");
                             break;
                     }
                     if (w.HasValue)
                     {
-                        sbUrl.Append($"/{w}x{h}");
+                        sbUrl.Append($"/w/{w}");
+                    }
+                    if (h.HasValue)
+                    {
+                        sbUrl.Append($"/h/{h}");
                     }
                     quality = quality ?? 100;
-                    sbUrl.Append($"/quality/{quality}");
+                    sbUrl.Append($"/q/{quality}");
                     return sbUrl.ToString();
                 }
                 else

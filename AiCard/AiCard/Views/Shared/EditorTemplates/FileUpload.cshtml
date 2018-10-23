@@ -19,7 +19,7 @@
             </li>
             @foreach (var item in Model.Images)
             {
-                var imgsrc = Url.ResizeImage(item, h: 70, w: 120);
+                var imgsrc = Url.ResizeImage(item, h: 70, w: 120, quality: 100, mode: AiCard.Enums.ResizerMode.Max);
                 var fileType = Path.GetExtension(item);
                 if (fileType != ".bmp" && fileType != ".tif" && fileType != ".png" && fileType != ".jpge" && fileType != ".jpg" && fileType != ".gif")
                 {

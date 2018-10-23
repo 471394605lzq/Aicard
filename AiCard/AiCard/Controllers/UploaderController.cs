@@ -66,7 +66,7 @@ namespace AiCard.Controllers
 
         [HttpPost]
         [AllowCrossSiteJson]
-        public ActionResult Upload(Models.CommModels.FileUpload model)
+        public ActionResult Upload(BaseFileUpload model)
         {
             ICollection<string> filename = null;
             if (string.IsNullOrWhiteSpace(model.FilePath))

@@ -10,18 +10,15 @@ namespace AiCard.Models
     {
         public int ID { get; set; }
 
-        [Display(Name ="企业名称")]
+        [Display(Name = "企业名称")]
         public string Name { get; set; }
         [Display(Name = "企业logo")]
         //public string Logo { get; set; }
-        public Models.CommModels.FileUpload Logo { get; set; } = new CommModels.FileUpload
+        public Models.CommModels.ImageResizer Logo { get; set; } = new CommModels.ImageResizer("Logo", 120, 120)
         {
             AutoInit = true,
-            Max = 5,
             Name = "Logo",
             Server = CommModels.UploadServer.QinQiu,
-            Sortable = true,
-            Type = CommModels.FileType.Image,
         };
         [Display(Name = "小程序AppID")]
         public string AppID { get; set; }

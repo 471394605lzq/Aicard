@@ -681,7 +681,7 @@ namespace AiCard.Controllers
                                     }
                                     if (type != Enums.WeChatAccount.PC)
                                     {
-                                        return Json(Comm.ToJsonResult("Success", "成功", new UserViewModel(user)));
+                                        return Json(Comm.ToJsonResult("Success", "成功", new UserForApiViewModel(user)));
                                     }
                                     SignInManager.SignIn(user, true, true);
                                     switch (state.ToLower())
@@ -719,7 +719,7 @@ namespace AiCard.Controllers
                 {
                     result.OpenID,
                     result.UnionID,
-                    User = user == null ? null : new UserViewModel(user)
+                    User = user == null ? null : new UserForApiViewModel(user)
                 }));
 
 
@@ -733,7 +733,7 @@ namespace AiCard.Controllers
             try
             {
                 var user = CreateByWeChat(model);
-                return Json(Comm.ToJsonResult("Success", "成功", new UserViewModel(user)));
+                return Json(Comm.ToJsonResult("Success", "成功", new UserForApiViewModel(user)));
             }
             catch (Exception ex)
             {

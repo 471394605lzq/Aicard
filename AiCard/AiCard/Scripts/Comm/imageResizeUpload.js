@@ -1,7 +1,7 @@
 ﻿
 var imageResizeUpload = function (selector, option) {
     var isMoblieDevice = new check().isMoblieDevice();
-    var sp = 50;
+    var sp = 0;//前景和背景的间隔
 
     var $iru = $(selector);
     var $panel = $iru.find(".imageResizeUpload_panel");
@@ -10,6 +10,7 @@ var imageResizeUpload = function (selector, option) {
     var $p = $iru.find(".preview");
     var $rImage = $iru.find(".imageResizeUpload_result");
     var $val = $iru.find("[type=hidden]");
+    var server = $iru.data("server");
     //配置参数
     var config = {
         uploadUrl: comm.action("Upload", "Uploader")
@@ -235,6 +236,7 @@ var imageResizeUpload = function (selector, option) {
         var resizedImage = window.dataURLtoBlob(canvas.toDataURL());
         var data = new FormData();
         data.append("img", resizedImage, "resize.jpg");
+        data.append("server", server);
         $.ajax({
             type: "POST",
             url: config.uploadUrl,

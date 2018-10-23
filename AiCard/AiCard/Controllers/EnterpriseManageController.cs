@@ -155,7 +155,8 @@ namespace AiCard.Controllers
         public ActionResult CogradientWXUserInfo(int? id, int page = 1)
         {
             Sidebar();
-            if (id==null) {
+            if (id == null)
+            {
                 ViewBag.errormsg = "错误提示：企业不存在";
                 return View();
             }
@@ -196,7 +197,7 @@ namespace AiCard.Controllers
                         //遍历数据库该公司原有的用户和微信获取到的用户进行比对，如果数据库已存在则标识为已存在 ishave=true 
                         for (int i = 0; i < listcard.Count; i++)
                         {
-                            for (int j = 0; j < listwxuser.Count;j++)
+                            for (int j = 0; j < listwxuser.Count; j++)
                             {
                                 if (listcard[i].Mobile == listwxuser[j].Mobile)
                                 {
@@ -314,7 +315,7 @@ namespace AiCard.Controllers
                 {
                     //查询企业权限
                     var listrg = RoleManager.Roles.Where(s => s.Type == RoleType.Enterprise).ToList();
-                  
+
                     //为企业单独设定一个管理员权限
                     RoleGroup rg = new RoleGroup
                     {
@@ -368,7 +369,7 @@ namespace AiCard.Controllers
                                 WeChatWorkSecret = enterprise.WeChatWorkSecret,
                                 RegisterDateTime = DateTime.Now
                             };
-                            
+
                             db.Enterprises.Add(model);
                             int r = db.SaveChanges();
                             //r>0表示保存企业信息成功
@@ -419,7 +420,7 @@ namespace AiCard.Controllers
                 Lat = model.Lat,
                 Lng = model.Lng
             };
-            models.Logo.Images = model.Logo?.Split(',') ?? new string[0];
+            models.Logo.ImageUrl = model.Logo;
             if (models == null)
             {
                 return HttpNotFound();
@@ -450,7 +451,7 @@ namespace AiCard.Controllers
                 t.Enable = enterprise.Enable;
                 t.CardCount = enterprise.CardCount;
                 t.PhoneNumber = enterprise.PhoneNumber;
-                t.Logo = string.Join(",", enterprise.Logo.Images); //enterprise.Logo;
+                t.Logo = enterprise.Logo.ImageUrl; //enterprise.Logo;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }

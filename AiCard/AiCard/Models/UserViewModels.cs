@@ -5,19 +5,19 @@ using System.Web;
 
 namespace AiCard.Models
 {
-    public class UserViewModel
+    public class UserForApiViewModel
     {
-        public UserViewModel() { }
+        public UserForApiViewModel() { }
 
-        public UserViewModel(ApplicationUser user)
+        public UserForApiViewModel(ApplicationUser user)
         {
-            ID = user.Id;
+            UserID = user.Id;
             UserName = user.UserName;
             NickName = user.NickName;
             Avatar = user.Avatar;
         }
 
-        public string ID { get; set; }
+        public string UserID { get; set; }
 
         public string UserName { get; set; }
 

@@ -7,11 +7,11 @@ using System.Web;
 
 namespace AiCard.Models.CommModels
 {
-    public class FileUpload
+    public class FileUpload : AiCard.BaseFileUpload
     {
         public FileUpload()
         {
-            
+
         }
 
         public void UseByCkEdit()
@@ -21,7 +21,7 @@ namespace AiCard.Models.CommModels
             AutoInit = false;
             Max = 20;
             Type = FileType.Image;
-            
+
 
         }
 
@@ -59,20 +59,6 @@ namespace AiCard.Models.CommModels
         /// </summary>
         public bool Sortable { get; set; }
 
-
-        /// <summary>
-        /// 取消重命名
-        /// </summary>
-        [Display(Name = "取消重命名")]
-        public bool IsResetName { get; set; }
-
-        /// <summary>
-        /// 路径
-        ///  <para>为空表示使用默认路径</para>
-        /// </summary>
-        [Display(Name = "路径")]
-        public string FilePath { get; set; }
-
         /// <summary>
         /// 上传模式
         /// </summary>
@@ -87,47 +73,7 @@ namespace AiCard.Models.CommModels
         /// </summary>
         public FileUploadMode Mode { get; set; }
 
-        private UploadServer server;
-        public UploadServer Server { get {
-                return server;
 
-            }
-        set {
-                server = value;
-                switch (Server)
-                {
-                    default:
-                    case UploadServer.Local:
-                        uploadControl = "~/Uploader/Upload";
-                        deleteControl = "~/Uploader/DeleteFile";
-                        break;
-                    case UploadServer.QinQiu:
-                        uploadControl = "~/Uploader/UploadQinui";
-                        deleteControl = "~/Uploader/DeleteFileQiniu";
-                        break;
-                }
-            }
-        } 
-
-        private string uploadControl;
-        public string UploadControl
-        {
-
-            get
-            {
-                return uploadControl;
-            }
-        }
-
-        private string deleteControl;
-        public string DeleteControl
-        {
-
-            get
-            {
-                return deleteControl;
-            }
-        }
     }
 
     public enum FileType

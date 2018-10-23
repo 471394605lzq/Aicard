@@ -261,6 +261,7 @@
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\Interface\IDistrict.cs" />
     <Compile Include="App_Start\Interface\IErrorReusult.cs" />
+    <Compile Include="App_Start\Interface\IFileUpload.cs" />
     <Compile Include="App_Start\Interface\IGprs.cs" />
     <Compile Include="App_Start\Interface\ISms.cs" />
     <Compile Include="App_Start\Log.cs" />
@@ -395,6 +396,7 @@
     <Content Include="Content\Images\filetype\zip.png" />
     <Content Include="Content\Images\map_mark_bs.png" />
     <Content Include="Content\Images\map_mark_bs_active.png" />
+    <Content Include="Content\Images\phone.jpg" />
     <Content Include="Content\Images\ui-icons_444444_256x240.png" />
     <Content Include="Content\Images\ui-icons_555555_256x240.png" />
     <Content Include="Content\Images\ui-icons_777620_256x240.png" />
@@ -818,6 +820,7 @@
     <Content Include="Scripts\Views\roleGroup.js" />
     <Content Include="Scripts\Views\userManageIndex.js" />
     <Content Include="Scripts\_references.js" />
+    <Content Include="Views\Shared\phone.jpg" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -899,6 +902,8 @@
     <Content Include="Views\ProductsManage\Edit.cshtml" />
     <Content Include="Views\ProductsManage\Index.cshtml" />
     <Content Include="Views\Test\TestCkEdit.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\FileUpload.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\ImageResizer.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,0 +1,12 @@
+﻿@model AiCard.Models.CommModels.ImageResizer
+@{
+    Func<int, int, string> sizestyle = (w, h) => $"width:{w}px;height:{h}px";
+
+}
+<div class="imageResizeUpload imageResizeUpload-display">
+    <a href="@Url.ContentNullEmpty(Model.ImageUrl)" target="_blank">
+        <img class="imageResizeUpload_result" style="@sizestyle(Model.PreviewWidth,Model.PreviewHeight)" src="@Url.ContentNullEmpty(Model.PreviewUrl)" />
+    </a>
+    <input id="@Model.Name" name="@Model.Name" type="hidden" value="@Model.ImageUrl" />
+</div>
+

@@ -1,0 +1,14 @@
+﻿@model AiCard.Models.CommModels.FileUpload
+<div id="myModal_@Model.Name" class="uploader" data-max="@Model.Max">
+    <div>
+        <ul id="uploader_ul_@Model.Name">
+            @foreach (var item in Model.Images)
+            {
+                <li>
+                    <img src="@Url.ResizeImage(item,h:70,w:120)" />
+                    <span class="glyphicon glyphicon-remove" data-img="@item"></span>
+                </li>
+            }
+        </ul>
+    </div>
+</div>

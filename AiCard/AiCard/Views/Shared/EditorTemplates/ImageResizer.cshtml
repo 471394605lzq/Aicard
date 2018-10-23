@@ -3,8 +3,10 @@
     Func<int, int, string> sizestyle = (w, h) => $"width:{w}px;height:{h}px";
 
 }
-<div id="@Model.Name" class="imageResizeUpload @(Model.AutoInit?"":"imageResizeUpload-noInit")">
-    <img class="imageResizeUpload_result" style="@sizestyle(Model.PreviewWidth,Model.PreviewHeight)" src="@Url.ContentNullEmpty(Model.PreviewUrl)" />
+<div id="@Model.Name" class="imageResizeUpload @(Model.AutoInit?"":"imageResizeUpload-noInit")" 
+         data-server="@Model.Server">
+    <img class="imageResizeUpload_result" style="@sizestyle(Model.PreviewWidth,Model.PreviewHeight)"
+         src="@Url.ContentNullEmpty(Model.PreviewUrl)" />
     @Html.HiddenFor(model => model.ImageUrl)
     <div class="panel panel-default imageResizeUpload_panel hidden">
         <div class="panel-heading">
@@ -13,14 +15,17 @@
             </h3>
         </div>
         <div class="panel-body">
-            <div class="preview">
-                <div class="preview_b">
-                    <img />
-                </div>
-                <div class="preview_f" style="@sizestyle(Model.Width,Model.Height)">
-                    <img />
+            <div class="panel-preview">
+                <div class="preview">
+                    <div class="preview_b">
+                        <img />
+                    </div>
+                    <div class="preview_f" style="@sizestyle(Model.Width,Model.Height)">
+                        <img />
+                    </div>
                 </div>
             </div>
+            
             <div class="imageResizeUpload_resize">
                 <div class="imageResizeUpload_resize_bar">
                     <div class="imageResizeUpload_resize_bg">
