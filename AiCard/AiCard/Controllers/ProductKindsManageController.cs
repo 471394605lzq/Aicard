@@ -95,7 +95,7 @@ namespace AiCard.Controllers
             if (AccontData.UserType == Enums.UserType.Enterprise
                 && tempuser.EnterpriseID != AccontData.EnterpriseID)
             {
-                return this.ToError("错误", "没有权限修改当前角色", Url.Action("Index"));
+                return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
             }
             Sidebar();
             if (ModelState.IsValid)
@@ -118,7 +118,7 @@ namespace AiCard.Controllers
             if (AccontData.UserType == Enums.UserType.Enterprise
                 && temp.EnterpriseID != AccontData.EnterpriseID)
             {
-                return this.ToError("错误", "没有权限修改当前角色", Url.Action("Index"));
+                return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
             }
             if (id == null)
             {
@@ -148,7 +148,7 @@ namespace AiCard.Controllers
             if (AccontData.UserType == Enums.UserType.Enterprise
                 && temp.EnterpriseID != AccontData.EnterpriseID)
             {
-                return this.ToError("错误", "没有权限修改当前角色", Url.Action("Index"));
+                return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
             }
             if (ModelState.IsValid)
             {
@@ -169,7 +169,7 @@ namespace AiCard.Controllers
             if (AccontData.UserType == Enums.UserType.Enterprise
                 && temp.EnterpriseID != AccontData.EnterpriseID)
             {
-                return this.ToError("错误", "没有权限修改当前角色", Url.Action("Index"));
+                return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
             }
             Sidebar();
             if (id == null)
@@ -198,7 +198,7 @@ namespace AiCard.Controllers
             if (AccontData.UserType == Enums.UserType.Enterprise
                 && temp.EnterpriseID != AccontData.EnterpriseID)
             {
-                return this.ToError("错误", "没有权限修改当前角色", Url.Action("Index"));
+                return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
             }
             ProductKind productKind = db.ProductKinds.Find(id);
             db.ProductKinds.Remove(productKind);

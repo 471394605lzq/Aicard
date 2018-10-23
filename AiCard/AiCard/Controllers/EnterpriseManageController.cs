@@ -304,7 +304,7 @@ namespace AiCard.Controllers
             if (AccontData.UserType == Enums.UserType.Enterprise
                 && temp.ID != AccontData.EnterpriseID)
             {
-                return this.ToError("错误", "没有权限修改当前角色", Url.Action("Index"));
+                return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
             }
             Sidebar();
             if (ModelState.IsValid)
@@ -408,7 +408,7 @@ namespace AiCard.Controllers
             if (AccontData.UserType == Enums.UserType.Enterprise
                 && temp.ID != AccontData.EnterpriseID)
             {
-                return this.ToError("错误", "没有权限修改当前角色", Url.Action("Index"));
+                return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
             }
             Sidebar();
             if (id == null)
@@ -461,7 +461,7 @@ namespace AiCard.Controllers
             if (AccontData.UserType == Enums.UserType.Enterprise
                 && temp.ID != AccontData.EnterpriseID)
             {
-                return this.ToError("错误", "没有权限修改当前角色", Url.Action("Index"));
+                return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
             }
             Sidebar();
             if (ModelState.IsValid)
@@ -494,7 +494,7 @@ namespace AiCard.Controllers
             if (AccontData.UserType == Enums.UserType.Enterprise
                 && enterprise.ID != AccontData.EnterpriseID)
             {
-                return this.ToError("错误", "没有权限修改当前角色", Url.Action("Index"));
+                return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
             }
             var adminid = enterprise.AdminID;
             //删除跟企业关联的管理员账号信息
@@ -527,7 +527,7 @@ namespace AiCard.Controllers
             if (AccontData.UserType == Enums.UserType.Enterprise
                 && temp.ID != AccontData.EnterpriseID)
             {
-                return this.ToError("错误", "没有权限修改当前角色", Url.Action("Index"));
+                return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
             }
             Sidebar();
             if (id == null)
@@ -563,7 +563,7 @@ namespace AiCard.Controllers
             if (AccontData.UserType == Enums.UserType.Enterprise
                 && temp.ID != AccontData.EnterpriseID)
             {
-                return this.ToError("错误", "没有权限修改当前角色", Url.Action("Index"));
+                return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
             }
             Sidebar();
             if (ModelState.IsValid)

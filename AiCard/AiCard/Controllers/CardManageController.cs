@@ -81,9 +81,16 @@ namespace AiCard.Controllers
         [Authorize(Roles =SysRole.CardManageCreate+","+SysRole.EEnterpriseManageCreate)]
         public ActionResult Create()
         {
-            Sidebar();
-            var model = new CardCreateEditViewModel();
-            return View(model);
+            var tempuser = db.Users.FirstOrDefault(s => s.Id == AccontData.UserID);
+            //防止企业用户串号修改
+            if (AccontData.UserType == Enums.UserType.Enterprise
+                && tempuser.EnterpriseID != AccontData.EnterpriseID)
+            {
+                return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
+            }
+                Sidebar();
+                var model = new CardCreateEditViewModel();
+                return View(model);
         }
         // POST: tests/Create
         // 为了防止“过多发布”攻击，请启用要绑定到的特定属性，有关 
@@ -111,7 +118,7 @@ namespace AiCard.Controllers
                     if (AccontData.UserType == Enums.UserType.Enterprise
                         && tempuser.EnterpriseID != AccontData.EnterpriseID)
                     {
-                        return this.ToError("错误", "没有权限修改当前角色", Url.Action("Index"));
+                        return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
                     }
                     //用名片用户的手机号创建一个账号,默认密码为手机号
                     string username = model.Mobile;
@@ -161,7 +168,7 @@ namespace AiCard.Controllers
             if (AccontData.UserType == Enums.UserType.Enterprise
                 && temp.EnterpriseID != AccontData.EnterpriseID)
             {
-                return this.ToError("错误", "没有权限修改当前角色", Url.Action("Index"));
+                return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
             }
             //var models = db.Cards.Include(s => s.Enterprise).Include(s => s.User).Where(s=>s.ID==id.Value);
             var model = (from e in db.Cards
@@ -211,7 +218,7 @@ namespace AiCard.Controllers
             if (AccontData.UserType == Enums.UserType.Enterprise
                 && temp.EnterpriseID != AccontData.EnterpriseID)
             {
-                return this.ToError("错误", "没有权限修改当前角色", Url.Action("Index"));
+                return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
             }
             if (ModelState.IsValid)
             {
@@ -244,7 +251,7 @@ namespace AiCard.Controllers
             if (AccontData.UserType == Enums.UserType.Enterprise
                 && temp.EnterpriseID != AccontData.EnterpriseID)
             {
-                return this.ToError("错误", "没有权限修改当前角色", Url.Action("Index"));
+                return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
             }
             Card card = db.Cards.Find(id);
             var userid = card.UserID;
