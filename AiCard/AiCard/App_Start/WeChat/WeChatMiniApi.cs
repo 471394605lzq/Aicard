@@ -99,7 +99,15 @@ namespace AiCard.WeChat
             return newimgpath;
         }
 
+        public string GetCardQrCode(int cardID)
+        {
+            var p = new Dictionary<string, string>();
+            p.Add("page", "");
+            p.Add("scene", Secret);
+            var result = new AiCard.Api.BaseApi($"https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token={_accessToken}", "POST").CreateRequestReturnJson();
+            return "";
 
+        }
     }
 
     public class Jscode2sessionResult

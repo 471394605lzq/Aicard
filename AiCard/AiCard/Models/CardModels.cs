@@ -65,5 +65,43 @@ namespace AiCard.Models
         [Display(Name = "图片")]
         public string Images { get; set; }
 
+        [Display(Name = "小程序分享二维码")]
+        public string WeChatMiniQrCode { get; set; }
+
+
+        public List<CardTab> CardTabs { get; set; }
+
+    }
+
+    public class CardTab
+    {
+        public int ID { get; set; }
+
+        /// <summary>
+        /// 名称
+        /// </summary>
+        [Display(Name = "名称")]
+        public string Name { get; set; }
+
+        /// <summary>
+        /// 卡片ID
+        /// </summary>
+        [Display(Name = "卡片")]
+        public int CardID { get; set; }
+
+        public Card Card { get; set; }
+
+        /// <summary>
+        /// 样式
+        /// </summary>
+        [Display(Name = "样式")]
+        public Enums.CardTabStyle Style { get; set; }
+
+        /// <summary>
+        /// 总的点击次数
+        /// </summary>
+        [Display(Name = "点击次数")]
+        public int Count { get; set; }
+
     }
 }

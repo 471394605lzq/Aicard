@@ -224,7 +224,9 @@ namespace AiCard.Enums
         [Display(Name = "语音播放")]
         VoicePlay = 82,
         [Display(Name = "视频播放")]
-        VideoPlay = 83
+        VideoPlay = 83,
+        [Display(Name = "名片标签点击")]
+        CardTab = 90
     }
 
     public enum ProductType

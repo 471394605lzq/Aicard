@@ -125,14 +125,6 @@ namespace AiCard.Models
     }
     
 
-    public class CardTab
-    {
-        public string Count { get; set; }
-
-        public string Name { get; set; }
-
-        public Enums.CardTabStyle Style { get; set; }
-
-    }
+    
 
 }
