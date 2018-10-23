@@ -85,6 +85,8 @@ namespace AiCard.Bll
             addSystemERole(SysRole.EEnterpriseManageCreate, "企业权限管理", "企业权限管理创建");
             addSystemERole(SysRole.EEnterpriseManageEdit, "企业权限管理", "企业权限管理编辑");
             addSystemERole(SysRole.EEnterpriseManageDelete, "企业权限管理", "企业权限管理删除");
+            addSystemERole(SysRole.EEnterpriseManageDeploy, "企业权限管理", "企业权限管理绑定企业微信");
+            addSystemERole(SysRole.EEnterpriseManageCogradient, "企业权限管理", "企业权限管理同步企业微信用户");
 
             addSystemERole(SysRole.ECardManageRead, "名片权限管理", "名片权限管理查看");
             addSystemERole(SysRole.ECardManageCreate, "名片权限管理", "名片权限管理创建");
@@ -94,6 +96,16 @@ namespace AiCard.Bll
             addSystemERole(SysRole.EHomePageModularsManageRead, "公司主页", "公司主页查看");
             addSystemERole(SysRole.EHomePageModularsManageEdit, "公司主页", "公司主页模块编辑");
             addSystemERole(SysRole.EHomePageModularsManageDelete, "公司主页", "公司主页模块删除");
+
+            addSystemERole(SysRole.EProductKindManageRead, "商品分类权限管理", "商品分类权限管理查看");
+            addSystemERole(SysRole.EProductKindManageCreate, "商品分类权限管理", "商品分类权限管理创建");
+            addSystemERole(SysRole.EProductKindManageEdit, "商品分类权限管理", "商品分类权限管理编辑");
+            addSystemERole(SysRole.EProductKindMangeDelete, "商品分类权限管理", "商品分类权限管理删除");
+
+            addSystemERole(SysRole.EProductManageRead, "商品权限管理", "商品权限管理查看");
+            addSystemERole(SysRole.EProductManageCreate, "商品权限管理", "商品权限管理创建");
+            addSystemERole(SysRole.EProductManageEdit, "商品权限管理", "商品权限管理编辑");
+            addSystemERole(SysRole.EProductMangeDelete, "商品权限管理", "商品权限管理删除");
             #endregion
             #region 后台权限
             Action<string, string, string> addSystemRole = (name, gourp, desc) =>
@@ -121,11 +133,23 @@ namespace AiCard.Bll
             addSystemRole(SysRole.EnterpriseManageCreate, "企业权限管理", "企业权限管理创建");
             addSystemRole(SysRole.EnterpriseManageEdit, "企业权限管理", "企业权限管理编辑");
             addSystemRole(SysRole.EnterpriseManageDelete, "企业权限管理", "企业权限管理删除");
+            addSystemRole(SysRole.EnterpriseManageDeploy, "企业权限管理", "企业权限管理绑定企业微信");
+            addSystemRole(SysRole.EnterpriseManageCogradient, "企业权限管理", "企业权限管理同步企业微信用户");
 
             addSystemRole(SysRole.CardManageRead, "名片权限管理", "名片权限管理查看");
             addSystemRole(SysRole.CardManageCreate, "名片权限管理", "名片权限管理创建");
             addSystemRole(SysRole.CardManageEdit, "名片权限管理", "名片权限管理编辑");
             addSystemRole(SysRole.CardMangeDelete, "名片权限管理", "名片权限管理删除");
+
+            addSystemRole(SysRole.ProductKindManageRead, "商品分类权限管理", "商品分类权限管理查看");
+            addSystemRole(SysRole.ProductKindManageCreate, "商品分类权限管理", "商品分类权限管理创建");
+            addSystemRole(SysRole.ProductKindManageEdit, "商品分类权限管理", "商品分类权限管理编辑");
+            addSystemRole(SysRole.ProductKindMangeDelete, "商品分类权限管理", "商品分类权限管理删除");
+
+            addSystemRole(SysRole.ProductManageRead, "商品权限管理", "商品权限管理查看");
+            addSystemRole(SysRole.ProductManageCreate, "商品权限管理", "商品权限管理创建");
+            addSystemRole(SysRole.ProductManageEdit, "商品权限管理", "商品权限管理编辑");
+            addSystemRole(SysRole.ProductMangeDelete, "商品权限管理", "商品权限管理删除");
             #endregion
 
             var dbRoles = _appRoleManager.Roles.ToList();
