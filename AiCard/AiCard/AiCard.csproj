@@ -353,6 +353,10 @@
     <Compile Include="Migrations\201810180706124_AddHomePageModulars.Designer.cs">
       <DependentUpon>201810180706124_AddHomePageModulars.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201810230915321_AddCardTabs.cs" />
+    <Compile Include="Migrations\201810230915321_AddCardTabs.Designer.cs">
+      <DependentUpon>201810230915321_AddCardTabs.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ArticleModels.cs" />
@@ -959,6 +963,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201810180706124_AddHomePageModulars.resx">
       <DependentUpon>201810180706124_AddHomePageModulars.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810230915321_AddCardTabs.resx">
+      <DependentUpon>201810230915321_AddCardTabs.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

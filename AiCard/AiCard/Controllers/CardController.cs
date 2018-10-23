@@ -79,6 +79,7 @@ namespace AiCard.Controllers
                             e.Lat,
                             e.Lng,
                             e.Logo,
+                            c.WeChatMiniQrCode
                         }).FirstOrDefault();
             if (card == null)
             {
@@ -96,10 +97,10 @@ namespace AiCard.Controllers
                               select new { u.Avatar, u.Id }).Take(6);
 
             var tab = new List<CardTab>();
-            tab.Add(new CardTab { Count = "1000", Name = "服务贴心", Style = CardTabStyle.Green });
-            tab.Add(new CardTab { Count = "40", Name = "诚实", Style = CardTabStyle.Blue });
-            tab.Add(new CardTab { Count = "10", Name = "能说", Style = CardTabStyle.Orange });
-            tab.Add(new CardTab { Count = "165451", Name = "能唱", Style = CardTabStyle.Purple });
+            tab.Add(new CardTab { Count = 1000, Name = "服务贴心", Style = CardTabStyle.Green });
+            tab.Add(new CardTab { Count = 40, Name = "诚实", Style = CardTabStyle.Blue });
+            tab.Add(new CardTab { Count = 10, Name = "能说", Style = CardTabStyle.Orange });
+            tab.Add(new CardTab { Count = 165451, Name = "能唱", Style = CardTabStyle.Purple });
             Func<int, string> stringNum = num =>
             {
                 if (num < 1000)
@@ -111,7 +112,6 @@ namespace AiCard.Controllers
                     return $"{num / 1000}k".ToString();
                 }
             };
-
 
             var model = new
             {
@@ -138,8 +138,9 @@ namespace AiCard.Controllers
                 ViewCount = stringNum(viewCount),
                 Viewers = leastUsers.Select(s => s.Avatar).ToList(),
                 WeChatCode = card.WeChatCode,
-                CardTab = tab,
-                QrCode = ""
+                CardTab = tab.Select(s => new { Count = s.Count.ToString(), s.Name, s.Style }),
+                //WeChatMiniQrCode = card.WeChatMiniQrCode
+                WeChatMiniQrCode = "http://image.dtoao.com/WeChatQrCodeDemo.png"
             };
             return Json(Comm.ToJsonResult("Success", "成功", model), JsonRequestBehavior.AllowGet);
         }
