@@ -17,7 +17,8 @@ namespace AiCard.Models
         public int KindID { get; set; }
         [Display(Name = "分类")]
         public ProductKind Kind { get; set; }
-
+        [Display(Name = "分类名称")]
+        public string KindName { get; set; }
         [Display(Name = "企业")]
         public int EnterpriseID { get; set; }
         [Display(Name = "企业名称")]
@@ -67,7 +68,8 @@ namespace AiCard.Models
         public int KindID { get; set; }
         [Display(Name = "分类")]
         public ProductKind Kind { get; set; }
-
+        [Display(Name = "分类名称")]
+        public string KindName { get; set; }
         [Display(Name = "企业")]
         public int EnterpriseID { get; set; }
         [Display(Name = "企业名称")]

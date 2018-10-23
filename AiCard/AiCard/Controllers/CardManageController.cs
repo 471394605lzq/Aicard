@@ -42,12 +42,21 @@ namespace AiCard.Controllers
                 return _roleManager;
             }
         }
+        //获取当前登录的用户信息
+        AccountData AccontData
+        {
+            get
+            {
+                return this.GetAccountData();
+            }
+        }
         public void Sidebar(string name = "名片管理")
         {
             ViewBag.Sidebar = name;
         }
         //查询名片列表信息
         // GET: Card
+        [Authorize(Roles=SysRole.CardManageRead+","+SysRole.ECardManageRead)]
         public ActionResult Index(string filter, bool? enable = null, int page = 1)
         {
             Sidebar();
@@ -60,15 +69,28 @@ namespace AiCard.Controllers
             {
                 m = m.Where(s => s.Enable == enable.Value);
             }
+            //如果是企业用户则只查询该企业信息
+            if (AccontData.UserType == Enums.UserType.Enterprise)
+            {
+                m = m.Where(s => s.EnterpriseID == AccontData.EnterpriseID);
+            }
             var paged = m.OrderByDescending(s => s.ID).ToPagedList(page);
             return View(paged);
         }
         //新增
+        [Authorize(Roles =SysRole.CardManageCreate+","+SysRole.EEnterpriseManageCreate)]
         public ActionResult Create()
         {
-            Sidebar();
-            var model = new CardCreateEditViewModel();
-            return View(model);
+            var tempuser = db.Users.FirstOrDefault(s => s.Id == AccontData.UserID);
+            //防止企业用户串号修改
+            if (AccontData.UserType == Enums.UserType.Enterprise
+                && tempuser.EnterpriseID != AccontData.EnterpriseID)
+            {
+                return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
+            }
+                Sidebar();
+                var model = new CardCreateEditViewModel();
+                return View(model);
         }
         // POST: tests/Create
         // 为了防止“过多发布”攻击，请启用要绑定到的特定属性，有关 
@@ -76,6 +98,7 @@ namespace AiCard.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = SysRole.CardManageCreate + "," + SysRole.EEnterpriseManageCreate)]
         public async Task<ActionResult> Create(CardCreateEditViewModel model)
         {
             Sidebar();
@@ -90,12 +113,16 @@ namespace AiCard.Controllers
                 }
                 else
                 {
-                    string cookieuserid = Request.Cookies["UserId"].Value;//Request.Cookies["UserId"].ToString();//从cookie中读取userid
-                    string decryptuserid = Comm.Decrypt(cookieuserid);
-                    var tempuser = db.Users.FirstOrDefault(s => s.Id == decryptuserid);
+                    var tempuser = db.Users.FirstOrDefault(s => s.Id == AccontData.UserID);
+                    //防止企业用户串号修改
+                    if (AccontData.UserType == Enums.UserType.Enterprise
+                        && tempuser.EnterpriseID != AccontData.EnterpriseID)
+                    {
+                        return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
+                    }
                     //用名片用户的手机号创建一个账号,默认密码为手机号
                     string username = model.Mobile;
-                    var user = new ApplicationUser { UserName = model.Mobile, RegisterDateTime = DateTime.Now, EnterpriseID = tempuser.EnterpriseID, LastLoginDateTime = DateTime.Now, UserType = UserType.Personal };
+                    var user = new ApplicationUser { UserName = model.Mobile, RegisterDateTime = DateTime.Now, EnterpriseID = AccontData.EnterpriseID, LastLoginDateTime = DateTime.Now, UserType = UserType.Personal };
                     var result = await UserManager.CreateAsync(user, model.Mobile);
                     //创建名片账号成功
                     if (result.Succeeded)
@@ -104,7 +131,7 @@ namespace AiCard.Controllers
                         {
                             Avatar = string.Join(",", model.Avatar.Images),
                             UserID = user.Id,
-                            EnterpriseID = tempuser.EnterpriseID,
+                            EnterpriseID = AccontData.EnterpriseID,
                             Name = model.Name,
                             Enable = model.Enable,
                             Email = model.Email,
@@ -128,12 +155,20 @@ namespace AiCard.Controllers
             return View(model);
         }
         //加载编辑数据
+        [Authorize(Roles =SysRole.CardManageEdit+","+SysRole.ECardManageEdit)]
         public ActionResult Edit(int? id)
         {
             Sidebar();
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var temp = db.Cards.FirstOrDefault(s => s.ID == id);
+            //防止企业用户串号修改
+            if (AccontData.UserType == Enums.UserType.Enterprise
+                && temp.EnterpriseID != AccontData.EnterpriseID)
+            {
+                return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
             }
             //var models = db.Cards.Include(s => s.Enterprise).Include(s => s.User).Where(s=>s.ID==id.Value);
             var model = (from e in db.Cards
@@ -174,9 +209,17 @@ namespace AiCard.Controllers
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = SysRole.CardManageEdit + "," + SysRole.ECardManageEdit)]
         public ActionResult Edit(CardCreateEditViewModel model)
         {
             Sidebar();
+            var temp = db.Cards.FirstOrDefault(s => s.ID == model.ID);
+            //防止企业用户串号修改
+            if (AccontData.UserType == Enums.UserType.Enterprise
+                && temp.EnterpriseID != AccontData.EnterpriseID)
+            {
+                return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
+            }
             if (ModelState.IsValid)
             {
                 var t = db.Cards.FirstOrDefault(s => s.ID == model.ID);
@@ -200,8 +243,16 @@ namespace AiCard.Controllers
             return View(model);
         }
         //删除
+        [Authorize(Roles = SysRole.CardMangeDelete + "," + SysRole.ECardManageDelete)]
         public ActionResult Delete(int id)
         {
+            var temp = db.Cards.FirstOrDefault(s => s.ID == id);
+            //防止企业用户串号修改
+            if (AccontData.UserType == Enums.UserType.Enterprise
+                && temp.EnterpriseID != AccontData.EnterpriseID)
+            {
+                return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
+            }
             Card card = db.Cards.Find(id);
             var userid = card.UserID;
             //删除跟企业关联的管理员账号信息
@@ -217,6 +268,14 @@ namespace AiCard.Controllers
             }
             db.SaveChanges();
             return RedirectToAction("Index");
+        }
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
         }
     }
 }

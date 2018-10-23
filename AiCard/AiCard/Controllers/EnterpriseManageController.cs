@@ -65,6 +65,7 @@ namespace AiCard.Controllers
 
         }
         //列表页
+        [Authorize(Roles = SysRole.EnterpriseManageRead + "," + SysRole.EEnterpriseManageRead)]
         public ActionResult Index(string filter, bool? enable = null, int page = 1)
         {
             Sidebar();
@@ -152,6 +153,7 @@ namespace AiCard.Controllers
         }
 
         //同步企业微信中的微信用户信息
+        [Authorize(Roles = SysRole.EnterpriseManageCogradient + "," + SysRole.EEnterpriseManageCogradient)]
         public ActionResult CogradientWXUserInfo(int? id, int page = 1)
         {
             Sidebar();
@@ -161,6 +163,7 @@ namespace AiCard.Controllers
                 return View();
             }
             var em = db.Enterprises.FirstOrDefault(s => s.ID == id.Value);
+
             ViewBag.code = em.Code;
             ViewBag.name = em.Name;
             ViewBag.logo = em.Logo;
@@ -220,6 +223,7 @@ namespace AiCard.Controllers
         }
         [HttpPost]
         [AllowCrossSiteJson]
+        [Authorize(Roles = SysRole.EnterpriseManageCogradient + "," + SysRole.EEnterpriseManageCogradient)]
         public async Task<ActionResult> CogradientWXUserInfo(string listu, int enterpriseid)
         {
             Sidebar();
@@ -280,6 +284,7 @@ namespace AiCard.Controllers
         }
 
         //新增
+        [Authorize(Roles = SysRole.EnterpriseManageCreate + "," + SysRole.EEnterpriseManageCreate)]
         public ActionResult Create()
         {
             Sidebar();
@@ -292,8 +297,16 @@ namespace AiCard.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = SysRole.EnterpriseManageCreate + "," + SysRole.EEnterpriseManageCreate)]
         public async Task<ActionResult> Create(EnterpriseViewModels enterprise)
         {
+            var temp = db.Enterprises.FirstOrDefault(s => s.ID == enterprise.ID);
+            //防止企业用户串号修改
+            if (AccontData.UserType == Enums.UserType.Enterprise
+                && temp.ID != AccontData.EnterpriseID)
+            {
+                return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
+            }
             Sidebar();
             if (ModelState.IsValid)
             {
@@ -388,8 +401,16 @@ namespace AiCard.Controllers
             }
             return View(enterprise);
         }
+        [Authorize(Roles = SysRole.EnterpriseManageEdit + "," + SysRole.EEnterpriseManageEdit)]
         public ActionResult Edit(int? id)
         {
+            var temp = db.Enterprises.FirstOrDefault(s => s.ID == id);
+            //防止企业用户串号修改
+            if (AccontData.UserType == Enums.UserType.Enterprise
+                && temp.ID != AccontData.EnterpriseID)
+            {
+                return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
+            }
             Sidebar();
             if (id == null)
             {
@@ -433,8 +454,16 @@ namespace AiCard.Controllers
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = SysRole.EnterpriseManageEdit + "," + SysRole.EEnterpriseManageEdit)]
         public ActionResult Edit(EnterpriseViewModels enterprise)
         {
+            var temp = db.Enterprises.FirstOrDefault(s => s.ID == enterprise.ID);
+            //防止企业用户串号修改
+            if (AccontData.UserType == Enums.UserType.Enterprise
+                && temp.ID != AccontData.EnterpriseID)
+            {
+                return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
+            }
             Sidebar();
             if (ModelState.IsValid)
             {
@@ -458,9 +487,16 @@ namespace AiCard.Controllers
             return View(enterprise);
         }
         //删除
+        [Authorize(Roles = SysRole.EnterpriseManageDelete + "," + SysRole.EEnterpriseManageDelete)]
         public ActionResult Delete(int id)
         {
             Enterprise enterprise = db.Enterprises.Find(id);
+            //防止企业用户串号修改
+            if (AccontData.UserType == Enums.UserType.Enterprise
+                && enterprise.ID != AccontData.EnterpriseID)
+            {
+                return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
+            }
             var adminid = enterprise.AdminID;
             //删除跟企业关联的管理员账号信息
             var user = db.Users.FirstOrDefault(s => s.Id == adminid);
@@ -484,9 +520,16 @@ namespace AiCard.Controllers
             return RedirectToAction("Index");
         }
         //配置企业和微信绑定
+        [Authorize(Roles = SysRole.EnterpriseManageDeploy + "," + SysRole.EEnterpriseManageDeploy)]
         public ActionResult Deploy(int? id)
         {
-
+            var temp = db.Enterprises.FirstOrDefault(s => s.ID == id.Value);
+            //防止企业用户串号修改
+            if (AccontData.UserType == Enums.UserType.Enterprise
+                && temp.ID != AccontData.EnterpriseID)
+            {
+                return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
+            }
             Sidebar();
             if (id == null)
             {
@@ -513,8 +556,16 @@ namespace AiCard.Controllers
         //保存微信绑定设置
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = SysRole.EnterpriseManageDeploy + "," + SysRole.EEnterpriseManageDeploy)]
         public ActionResult Deploy(Enterprise enterprise)
         {
+            var temp = db.Enterprises.FirstOrDefault(s => s.ID == enterprise.ID);
+            //防止企业用户串号修改
+            if (AccontData.UserType == Enums.UserType.Enterprise
+                && temp.ID != AccontData.EnterpriseID)
+            {
+                return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
+            }
             Sidebar();
             if (ModelState.IsValid)
             {

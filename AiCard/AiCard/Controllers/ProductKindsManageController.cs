@@ -30,6 +30,7 @@ namespace AiCard.Controllers
 
         }
         // GET: ProductKinds
+        [Authorize(Roles = SysRole.ProductKindManageRead + "," + SysRole.EProductKindManageRead)]
         public ActionResult Index(string filter, int page = 1)
         {
             Sidebar();
@@ -74,16 +75,11 @@ namespace AiCard.Controllers
         }
 
         // GET: ProductKinds/Create
+        [Authorize(Roles = SysRole.ProductKindManageCreate + "," + SysRole.EProductKindManageCreate)]
         public ActionResult Create()
         {
             Sidebar();
-            if (AccontData.UserType == Enums.UserType.Enterprise)
-            {
-                return View();
-            }
-            else {
-                return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
-            }
+            return View();
         }
 
         // POST: ProductKinds/Create
@@ -91,49 +87,52 @@ namespace AiCard.Controllers
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = SysRole.ProductKindManageCreate + "," + SysRole.EProductKindManageCreate)]
         public ActionResult Create(ProductKind productKind)
         {
-            Sidebar();
-            if (AccontData.UserType == Enums.UserType.Enterprise)
+            var tempuser = db.Users.FirstOrDefault(s => s.Id == AccontData.UserID);
+            //防止企业用户串号修改
+            if (AccontData.UserType == Enums.UserType.Enterprise
+                && tempuser.EnterpriseID != AccontData.EnterpriseID)
             {
-                if (ModelState.IsValid)
-                {
-                    productKind.EnterpriseID = AccontData.EnterpriseID;
-                    db.ProductKinds.Add(productKind);
-                    db.SaveChanges();
-                    return RedirectToAction("Index");
-                }
-            }
-            else {
                 return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
+            }
+            Sidebar();
+            if (ModelState.IsValid)
+            {
+                productKind.EnterpriseID = AccontData.EnterpriseID;
+                db.ProductKinds.Add(productKind);
+                db.SaveChanges();
+                return RedirectToAction("Index");
             }
             return View(productKind);
         }
 
         // GET: ProductKinds/Edit/5
+        [Authorize(Roles = SysRole.ProductKindManageEdit + "," + SysRole.EProductKindManageEdit)]
         public ActionResult Edit(int? id)
         {
             Sidebar();
-            if (AccontData.UserType == Enums.UserType.Enterprise)
-            {
-                if (id == null)
-                {
-                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-                }
-                var m = (from ps in db.ProductKinds
-                         from e in db.Enterprises
-                         where ps.EnterpriseID == e.ID && ps.ID == id.Value
-                         select ps).FirstOrDefault();
-                if (m == null)
-                {
-                    return HttpNotFound();
-                }
-                return View(m);
-            }
-            else
+            var temp = db.ProductKinds.FirstOrDefault(s => s.ID == id.Value);
+            //防止企业用户串号修改
+            if (AccontData.UserType == Enums.UserType.Enterprise
+                && temp.EnterpriseID != AccontData.EnterpriseID)
             {
                 return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
             }
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var m = (from ps in db.ProductKinds
+                     from e in db.Enterprises
+                     where ps.EnterpriseID == e.ID && ps.ID == id.Value
+                     select ps).FirstOrDefault();
+            if (m == null)
+            {
+                return HttpNotFound();
+            }
+            return View(m);
         }
 
         // POST: ProductKinds/Edit/5
@@ -141,66 +140,70 @@ namespace AiCard.Controllers
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = SysRole.ProductKindManageEdit + "," + SysRole.EProductKindManageEdit)]
         public ActionResult Edit([Bind(Include = "ID,Name,EnterpriseID,Sort")] ProductKind productKind)
         {
-            if (AccontData.UserType == Enums.UserType.Enterprise)
+            var temp = db.ProductKinds.FirstOrDefault(s => s.ID == productKind.ID);
+            //防止企业用户串号修改
+            if (AccontData.UserType == Enums.UserType.Enterprise
+                && temp.EnterpriseID != AccontData.EnterpriseID)
             {
-                if (ModelState.IsValid)
-                {
-                    productKind.EnterpriseID= AccontData.EnterpriseID;
-                    db.Entry(productKind).State = EntityState.Modified;
-                    db.SaveChanges();
-                    return RedirectToAction("Index");
-                }
-            }
-            else {
                 return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
+            }
+            if (ModelState.IsValid)
+            {
+                productKind.EnterpriseID = AccontData.EnterpriseID;
+                db.Entry(productKind).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("Index");
             }
             return View(productKind);
         }
 
         // GET: ProductKinds/Delete/5
+        [Authorize(Roles = SysRole.ProductKindMangeDelete + "," + SysRole.EProductKindMangeDelete)]
         public ActionResult Delete(int? id)
         {
-            if (AccontData.UserType == Enums.UserType.Enterprise)
-            {
-                Sidebar();
-                if (id == null)
-                {
-                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-                }
-                var m = (from ps in db.ProductKinds
-                         from e in db.Enterprises
-                         where ps.EnterpriseID == e.ID && ps.ID == id.Value
-                         select ps).FirstOrDefault();
-                if (m == null)
-                {
-                    return HttpNotFound();
-                }
-                return View(m);
-            }
-            else
+            var temp = db.ProductKinds.FirstOrDefault(s => s.ID == id.Value);
+            //防止企业用户串号修改
+            if (AccontData.UserType == Enums.UserType.Enterprise
+                && temp.EnterpriseID != AccontData.EnterpriseID)
             {
                 return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
             }
+            Sidebar();
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var m = (from ps in db.ProductKinds
+                     from e in db.Enterprises
+                     where ps.EnterpriseID == e.ID && ps.ID == id.Value
+                     select ps).FirstOrDefault();
+            if (m == null)
+            {
+                return HttpNotFound();
+            }
+            return View(m);
         }
 
         // POST: ProductKinds/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = SysRole.ProductKindMangeDelete + "," + SysRole.EProductKindMangeDelete)]
         public ActionResult DeleteConfirmed(int id)
         {
-            if (AccontData.UserType == Enums.UserType.Enterprise)
-            {
-                ProductKind productKind = db.ProductKinds.Find(id);
-                db.ProductKinds.Remove(productKind);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            else
+            var temp = db.ProductKinds.FirstOrDefault(s => s.ID == id);
+            //防止企业用户串号修改
+            if (AccontData.UserType == Enums.UserType.Enterprise
+                && temp.EnterpriseID != AccontData.EnterpriseID)
             {
                 return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
             }
+            ProductKind productKind = db.ProductKinds.Find(id);
+            db.ProductKinds.Remove(productKind);
+            db.SaveChanges();
+            return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)
