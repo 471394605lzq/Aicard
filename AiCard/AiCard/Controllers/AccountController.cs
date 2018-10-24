@@ -712,15 +712,23 @@ namespace AiCard.Controllers
             {
                 //小程序
                 WeChat.WeChatMinApi wechat = new WeChat.WeChatMinApi(AiCard.WeChat.ConfigMini.AppID, AiCard.WeChat.ConfigMini.AppSecret);
-                var result = wechat.Jscode2session(code);
-                var user = db.Users.FirstOrDefault(s => s.WeChatID == result.UnionID);
-
-                return Json(Comm.ToJsonResult("Success", "成功", new
+                try
                 {
-                    result.OpenID,
-                    result.UnionID,
-                    User = user == null ? null : new UserForApiViewModel(user)
-                }));
+                    var result = wechat.Jscode2session(code);
+                    var user = db.Users.FirstOrDefault(s => s.WeChatID == result.UnionID);
+
+                    return Json(Comm.ToJsonResult("Success", "成功", new
+                    {
+                        result.OpenID,
+                        result.UnionID,
+                        User = user == null ? null : new UserForApiViewModel(user)
+                    }));
+                }
+                catch (Exception ex)
+                {
+                    return Json(Comm.ToJsonResult("Error", ex.Message));
+                }
+
 
 
             }
