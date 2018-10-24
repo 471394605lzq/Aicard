@@ -77,7 +77,7 @@
             <div class="form-group">
                 @Html.LabelFor(model => model.Enable, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
-                    <div class="checkbox">
+                    <div class="form-control-static">
                         @Html.EditorFor(model => model.Enable)
                         @Html.ValidationMessageFor(model => model.Enable, "", new { @class = "text-danger" })
                     </div>
@@ -135,13 +135,12 @@
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
                     <input type="submit" value="保存" class="btn btn-default" />
-                    <a href="@Url.Action("Index")" class="btn btn-default" style="margin-left:60px;">返回</a>
                 </div>
             </div>
         </div>
     }
 </div>
 @section Scripts{
-    @Scripts.Render("~/bundles/jqueryui", "~/bundles/cardCreate")
+    @Scripts.Render("~/bundles/jqueryval", "~/bundles/jqueryui", "~/bundles/cardCreate")
 
 }
