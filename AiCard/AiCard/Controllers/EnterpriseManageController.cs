@@ -84,9 +84,9 @@ namespace AiCard.Controllers
                         Name = e.Name,
                         PhoneNumber = e.PhoneNumber,
                         AdminID = u.Id,
-                        Province = e.Province,
-                        City = e.City,
-                        District = e.District,
+                        //Province = e.Province,
+                        //City = e.City,
+                        //District = e.District,
                         Address = e.Address,
                         HomePage = e.HomePage,
                         Info = e.Info,
@@ -288,6 +288,9 @@ namespace AiCard.Controllers
         public ActionResult Create()
         {
             Sidebar();
+            //ViewBag.Province = ChinaPCAS.GetP();//省份
+            //ViewBag.City = ChinaPCAS.GetC("北京市");//城市
+            //ViewBag.District = ChinaPCAS.GetA("北京市","东城区");//街道
             var model = new EnterpriseViewModels();
             return View(model);
         }
@@ -300,13 +303,6 @@ namespace AiCard.Controllers
         [Authorize(Roles = SysRole.EnterpriseManageCreate + "," + SysRole.EEnterpriseManageCreate)]
         public async Task<ActionResult> Create(EnterpriseViewModels enterprise)
         {
-            var temp = db.Enterprises.FirstOrDefault(s => s.ID == enterprise.ID);
-            //防止企业用户串号修改
-            if (AccontData.UserType == Enums.UserType.Enterprise
-                && temp.ID != AccontData.EnterpriseID)
-            {
-                return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
-            }
             Sidebar();
             if (ModelState.IsValid)
             {
@@ -358,40 +354,39 @@ namespace AiCard.Controllers
                         {
                             //给企业管理添加权限
                             UserManager.AddToRoles(user.Id, listrg.Select(s => s.Name).ToArray());
-
                             var model = new Enterprise
                             {
                                 AdminID = user.Id,
                                 Address = enterprise.Address,
                                 AppID = enterprise.AppID,
                                 CardCount = enterprise.CardCount,
-                                City = enterprise.City,
+                                City = enterprise.Province.City,
                                 Code = enterprise.Code,
-                                District = enterprise.District,
+                                District = enterprise.Province.District,
                                 Email = enterprise.Email,
                                 Enable = enterprise.Enable,
                                 HomePage = enterprise.HomePage,
                                 Info = enterprise.Info,
                                 Lng = enterprise.Lng,
                                 Lat = enterprise.Lat,
-                                Logo = string.Join(",", enterprise.Logo),
+                                Logo = enterprise.Logo.ImageUrl,
                                 Name = enterprise.Name,
                                 PhoneNumber = enterprise.PhoneNumber,
-                                Province = enterprise.Province,
+                                Province = enterprise.Province.Province,
                                 WeChatWorkCorpid = enterprise.WeChatWorkCorpid,
                                 WeChatWorkSecret = enterprise.WeChatWorkSecret,
                                 RegisterDateTime = DateTime.Now
                             };
-
                             db.Enterprises.Add(model);
                             int r = db.SaveChanges();
                             //r>0表示保存企业信息成功
                             if (r > 0)
                             {
+                                var renterprise = db.Enterprises.FirstOrDefault(s=>s.Code==enterprise.Code);
                                 var t = db.RoleGroups.FirstOrDefault(s => s.ID == rgid);
-                                t.EnterpriseID = enterprise.ID;
+                                t.EnterpriseID = renterprise.ID;
                                 var u = db.Users.FirstOrDefault(s => s.Id == enterprise.AdminID);
-                                u.EnterpriseID = enterprise.ID;
+                                u.EnterpriseID = renterprise.ID;
                                 db.SaveChanges();
                             }
                             return RedirectToAction("Index");
@@ -424,13 +419,13 @@ namespace AiCard.Controllers
             {
                 ID = model.ID,
                 Code = model.Code,
-                Province = model.Province,
-                City = model.City,
+                //Province = model.Province,
+                //City = model.City,
                 Address = model.Address,
                 Email = model.Email,
                 HomePage = model.HomePage,
                 Info = model.Info,
-                District = model.District,
+                //District = model.District,
                 Enable = model.Enable,
                 CardCount = model.CardCount,
                 Name = model.Name,
@@ -442,6 +437,10 @@ namespace AiCard.Controllers
                 Lng = model.Lng
             };
             models.Logo.ImageUrl = model.Logo;
+            models.Province.Province = model.Province;
+            models.Province.City = model.City;
+            models.Province.District = model.District;
+
             if (models == null)
             {
                 return HttpNotFound();
@@ -470,11 +469,11 @@ namespace AiCard.Controllers
                 var t = db.Enterprises.FirstOrDefault(s => s.ID == enterprise.ID);
                 t.Name = enterprise.Name;
                 t.Code = enterprise.Code;
-                t.Province = enterprise.Province;
-                t.City = enterprise.City;
+                t.Province = enterprise.Province.Province;
+                t.City = enterprise.Province.City;
                 t.Address = enterprise.Address;
                 t.Email = enterprise.Email;
-                t.District = enterprise.District;
+                t.District = enterprise.Province.District;
                 t.HomePage = enterprise.HomePage;
                 t.Info = enterprise.Info;
                 t.Enable = enterprise.Enable;

@@ -31,7 +31,7 @@ namespace AiCard.Controllers
             //{
             //    _userManager.AddToRoles(item, roles);
             //}
-            
+
             return View();
         }
 
@@ -76,9 +76,16 @@ namespace AiCard.Controllers
 
         public ActionResult UploadTest()
         {
-            string s = ChinaPCAS.getp();
+            var s = ChinaPCAS.GetP();
+            var a = ChinaPCAS.GetC("广东省");
+            var c = ChinaPCAS.GetA("广东省", "东莞市");
             var model = new TestImages();
             return View(model);
+        }
+
+        public ActionResult PcasTest()
+        {
+            return View();
         }
 
         [HttpPost]

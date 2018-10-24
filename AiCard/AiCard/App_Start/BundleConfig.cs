@@ -41,7 +41,8 @@ namespace AiCard
                         "~/Scripts/Comm/jquery-ui-sortable-for-uploader.min.js",
                         "~/Scripts/Comm/comm.js",
                         "~/Scripts/Comm/uploadfile.js",
-                        "~/Scripts/Comm/imageResizeUpload.js"
+                        "~/Scripts/Comm/imageResizeUpload.js",
+                        "~/Scripts/Comm/chinapcas.js"
 
                 ));
 
