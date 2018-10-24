@@ -4,7 +4,7 @@ CKEDITOR.plugins.add('cyimage',
 {
     lang: 'zh-cn',
     init: function (editor) {
-        
+
         var pluginName = 'cyimage';
         editor.ui.addButton('cyimage',
            {
@@ -16,8 +16,8 @@ CKEDITOR.plugins.add('cyimage',
             closed: function (data) {
                 var html = "";
                 $.each(data, function (i, n) {
-                    $("img").attr("src", n)
-                    html += "<img src='" + n + "' style='width:100%'/><br/>";
+                    var $img = $("<img>").attr("src", n).css("width", "100%");
+                    html += $("<div>").append($img).append("<br/>").html();;
                 });
                 editor.insertHtml(html);
                 tempUploader.clean();

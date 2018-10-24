@@ -115,10 +115,11 @@ namespace AiCard.Controllers
                                .Take(6)
                                .ToList();
             var tab = (from t in db.CardTabs
-                       join l in db.UserLogs.Where(s => s.Type == UserLogType.CardTab) on t.ID equals l.RelationID into tl
+                       join l in db.UserLogs.Where(s => s.Type == UserLogType.CardTab && s.UserID == userID) on t.ID equals l.RelationID into tl
                        where t.CardID == cardID
                        select new
                        {
+                           t.ID,
                            t.CardID,
                            t.Count,
                            t.Name,
@@ -162,7 +163,14 @@ namespace AiCard.Controllers
                 ViewCount = stringNum(viewCount),
                 Viewers = leastUsers.Select(s => s.Avatar).ToList(),
                 WeChatCode = card.WeChatCode,
-                CardTabs = tab.Select(s => new { Count = s.Count.ToString(), s.Name, s.Style }),
+                CardTabs = tab.Select(s => new
+                {
+                    TabID = s.ID,
+                    Count = s.Count.ToString(),
+                    s.Name,
+                    s.Style,
+                    s.HadLike
+                }),
                 //WeChatMiniQrCode = card.WeChatMiniQrCode
                 WeChatMiniQrCode = "http://image.dtoao.com/WeChatQrCodeDemo.png"
             };
