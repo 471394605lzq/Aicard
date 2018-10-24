@@ -21,11 +21,15 @@ namespace AiCard.Controllers
         public ActionResult Create(int cardID, string name, string userID)
         {
             name = name.Trim();
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                return Json(Comm.ToJsonResult("NameIsNull", "标签名不能为空"));
+            }
             if (!db.Cards.Any(s => s.ID == cardID && s.UserID == userID))
             {
                 return Json(Comm.ToJsonResult("CardNoFound", "卡片不存在"));
             }
-            if (!db.Cards.Any(s => s.ID == cardID && s.Name == name))
+            if (db.Cards.Any(s => s.ID == cardID && s.Name == name))
             {
                 return Json(Comm.ToJsonResult("HadAdd", $"{name}已经存在"));
             }

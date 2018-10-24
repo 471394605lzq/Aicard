@@ -128,8 +128,11 @@ namespace AiCard.Bll
                             var t = db.CardTabs.FirstOrDefault(s => s.ID == log.RelationID);
                             if (t == null)
                             {
-                                throw new Exception("卡片不存在");
+                                throw new Exception("卡片标签不存在");
                             }
+                            var c = db.Cards.FirstOrDefault(s => s.ID == t.CardID);
+                            log.TargetEnterpriseID = c.EnterpriseID;
+                            log.TargetUserID = c.UserID;
                             break;
                         }
                     default:
@@ -155,7 +158,7 @@ namespace AiCard.Bll
                             }
                             if (log.Type == Enums.UserLogType.CardTab)
                             {
-                                var tab = db.CardTabs.FirstOrDefault(s => s.ID == log.ID);
+                                var tab = db.CardTabs.FirstOrDefault(s => s.ID == log.RelationID);
                                 tab.Count = db.UserLogs
                                     .Count(s => s.RelationID == log.RelationID
                                      && s.Type == Enums.UserLogType.CardTab);
@@ -163,7 +166,7 @@ namespace AiCard.Bll
                             }
                             if (log.Type == Enums.UserLogType.ArticleLike)
                             {
-                                var art = db.Articles.FirstOrDefault(s => s.ID == log.ID);
+                                var art = db.Articles.FirstOrDefault(s => s.ID == log.RelationID);
                                 art.Like = db.UserLogs
                                     .Count(s => s.RelationID == log.RelationID
                                      && s.Type == Enums.UserLogType.ArticleLike);
@@ -171,7 +174,7 @@ namespace AiCard.Bll
                             }
                             if (log.Type == Enums.UserLogType.CardLike || log.Type == Enums.UserLogType.CardRead)
                             {
-                                var card = db.Cards.FirstOrDefault(s => s.ID == log.ID);
+                                var card = db.Cards.FirstOrDefault(s => s.ID == log.RelationID);
                                 if (log.Type == Enums.UserLogType.CardLike)
                                 {
                                     card.Like = db.UserLogs
