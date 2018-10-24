@@ -20,7 +20,6 @@ namespace AiCard.Models.CommModels
             PreviewHeight = pHeight > 0 ? pHeight : height;
 
         }
-
         /// <summary>
         /// 图片地址
         /// </summary>

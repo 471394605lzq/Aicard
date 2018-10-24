@@ -283,6 +283,7 @@
     <Compile Include="Controllers\CardController.cs" />
     <Compile Include="Controllers\CardManageController.cs" />
     <Compile Include="Controllers\CardTabController.cs" />
+    <Compile Include="Controllers\ChinaPCASController.cs" />
     <Compile Include="Controllers\EnterpriseController.cs" />
     <Compile Include="Controllers\EnterpriseManageController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -368,6 +369,7 @@
     <Compile Include="Models\CardModels.cs" />
     <Compile Include="Models\CardViewModels.cs" />
     <Compile Include="Models\CommModels\Cell.cs" />
+    <Compile Include="Models\CommModels\ChinaPCASCom.cs" />
     <Compile Include="Models\CommModels\FileUpload.cs" />
     <Compile Include="Models\CommModels\HtmlHelpModels.cs" />
     <Compile Include="Models\CommModels\ImageResizer.cs" />
@@ -709,6 +711,7 @@
     <None Include="Properties\PublishProfiles\AiCardRelease.pubxml" />
     <Content Include="Scripts\ChinaPCAS\pcas.json" />
     <Content Include="Scripts\ChinaPCAS\pcas - 复制.json" />
+    <Content Include="Scripts\ChinaPCAS\pcas-code.json" />
     <None Include="Scripts\jquery-2.2.4.intellisense.js" />
     <Content Include="Scripts\ckeditor\build-config.js" />
     <Content Include="Scripts\ckeditor\ckeditor.js" />
@@ -798,6 +801,7 @@
     <Content Include="Scripts\Comm\accessLog.js" />
     <Content Include="Scripts\Comm\canvas-to-blob.min.js" />
     <Content Include="Scripts\Comm\check.js" />
+    <Content Include="Scripts\Comm\chinapcas.js" />
     <Content Include="Scripts\Comm\cloud.js" />
     <Content Include="Scripts\Comm\comm.js" />
     <Content Include="Scripts\Comm\imageModule.js" />
@@ -916,11 +920,13 @@
     <Content Include="Views\Test\TestCkEdit.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\FileUpload.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\ImageResizer.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\ChinaPCAS.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\CardTab\" />
     <Folder Include="Views\Card\" />
+    <Folder Include="Views\ChinaPCAS\" />
     <Folder Include="Views\HomePageManage\" />
     <Folder Include="Views\UserLog\" />
   </ItemGroup>

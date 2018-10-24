@@ -260,4 +260,13 @@ namespace AiCard.Enums
         [Display(Name = "紫色")]
         Purple
     }
+
+    public enum PcasType {
+        [Display(Name = "省份")]
+        Province,
+        [Display(Name = "城市")]
+        City,
+        [Display(Name = "城镇")]
+        County
+    }
 }

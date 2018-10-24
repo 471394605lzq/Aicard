@@ -35,13 +35,16 @@ namespace AiCard.Models
         public string PhoneNumber { get; set; }
         //省份
         [Display(Name = "省份")]
-        public string Province { get; set; }
+        //public string Province { get; set; }
+        public Models.CommModels.ChinaPCASCom Province { get; set; } = new CommModels.ChinaPCASCom("北京市","东城区")
+        {
+        };
         //城市
-        [Display(Name = "城市")]
-        public string City { get; set; }
+        //[Display(Name = "城市")]
+        //public string City { get; set; }
         //地区
-        [Display(Name = "地区")]
-        public string District { get; set; }
+        //[Display(Name = "地区")]
+        //public string District { get; set; }
         //详细地址
         [Display(Name = "详细地址")]
         public string Address { get; set; }
