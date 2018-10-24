@@ -11,6 +11,7 @@ namespace AiCard.Models
         public int ID { get; set; }
 
         [Display(Name = "企业名称")]
+        [Required]
         public string Name { get; set; }
         [Display(Name = "企业logo")]
         //public string Logo { get; set; }
@@ -35,16 +36,13 @@ namespace AiCard.Models
         public string PhoneNumber { get; set; }
         //省份
         [Display(Name = "省份")]
-        //public string Province { get; set; }
-        public Models.CommModels.ChinaPCASCom Province { get; set; } = new CommModels.ChinaPCASCom("北京市","东城区")
-        {
-        };
+        public string Province { get; set; }
         //城市
-        //[Display(Name = "城市")]
-        //public string City { get; set; }
+        [Display(Name = "城市")]
+        public string City { get; set; }
         //地区
-        //[Display(Name = "地区")]
-        //public string District { get; set; }
+        [Display(Name = "地区")]
+        public string District { get; set; }
         //详细地址
         [Display(Name = "详细地址")]
         public string Address { get; set; }
@@ -53,6 +51,7 @@ namespace AiCard.Models
         [Display(Name = "简介")]
         public string Info { get; set; }
         [Display(Name = "编号")]
+        [Required]
         public string Code { get; set; }
         [Display(Name = "邮箱")]
         public string Email { get; set; }

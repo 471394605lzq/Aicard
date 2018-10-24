@@ -1,0 +1,26 @@
+﻿@model AiCard.Models.CommModels.ChinaPCASCom
+@{ 
+    List<string> province = Model.Provincelist;
+    List<string> city = Model.Citylist;
+    List<string> district = Model.Districtlist;
+}
+<select class="form-control" id="Province" name="Province">
+    @foreach (var item in province)
+    {
+        
+        <option>@item</option>
+    }
+</select>
+<select class="form-control" id="City" name="City">
+    @foreach (var item in city)
+    {
+        <option>@item</option>
+    }
+</select>
+<select class="form-control" id="District" name="District">
+    @foreach (var item in city)
+    {
+        <option>@item</option>
+    }
+</select>
+

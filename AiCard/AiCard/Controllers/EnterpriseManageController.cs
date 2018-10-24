@@ -84,9 +84,9 @@ namespace AiCard.Controllers
                         Name = e.Name,
                         PhoneNumber = e.PhoneNumber,
                         AdminID = u.Id,
-                        //Province = e.Province,
-                        //City = e.City,
-                        //District = e.District,
+                        Province = e.Province,
+                        City = e.City,
+                        District = e.District,
                         Address = e.Address,
                         HomePage = e.HomePage,
                         Info = e.Info,
@@ -288,9 +288,9 @@ namespace AiCard.Controllers
         public ActionResult Create()
         {
             Sidebar();
-            //ViewBag.Province = ChinaPCAS.GetP();//省份
-            //ViewBag.City = ChinaPCAS.GetC("北京市");//城市
-            //ViewBag.District = ChinaPCAS.GetA("北京市","东城区");//街道
+            ViewBag.Province = ChinaPCAS.GetP();//省份
+            ViewBag.City = ChinaPCAS.GetC("北京市");//城市
+            ViewBag.District = ChinaPCAS.GetA("北京市", "东城区");//街道
             var model = new EnterpriseViewModels();
             return View(model);
         }
@@ -360,9 +360,9 @@ namespace AiCard.Controllers
                                 Address = enterprise.Address,
                                 AppID = enterprise.AppID,
                                 CardCount = enterprise.CardCount,
-                                City = enterprise.Province.City,
+                                City = enterprise.City,
                                 Code = enterprise.Code,
-                                District = enterprise.Province.District,
+                                District = enterprise.District,
                                 Email = enterprise.Email,
                                 Enable = enterprise.Enable,
                                 HomePage = enterprise.HomePage,
@@ -372,7 +372,7 @@ namespace AiCard.Controllers
                                 Logo = enterprise.Logo.ImageUrl,
                                 Name = enterprise.Name,
                                 PhoneNumber = enterprise.PhoneNumber,
-                                Province = enterprise.Province.Province,
+                                Province = enterprise.Province,
                                 WeChatWorkCorpid = enterprise.WeChatWorkCorpid,
                                 WeChatWorkSecret = enterprise.WeChatWorkSecret,
                                 RegisterDateTime = DateTime.Now
@@ -385,7 +385,7 @@ namespace AiCard.Controllers
                                 var renterprise = db.Enterprises.FirstOrDefault(s=>s.Code==enterprise.Code);
                                 var t = db.RoleGroups.FirstOrDefault(s => s.ID == rgid);
                                 t.EnterpriseID = renterprise.ID;
-                                var u = db.Users.FirstOrDefault(s => s.Id == enterprise.AdminID);
+                                var u = db.Users.FirstOrDefault(s => s.Id == user.Id);
                                 u.EnterpriseID = renterprise.ID;
                                 db.SaveChanges();
                             }
@@ -411,6 +411,7 @@ namespace AiCard.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+
             var model = (from e in db.Enterprises
                          from u in db.Users
                          where e.AdminID == u.Id && e.ID == id.Value
@@ -419,13 +420,13 @@ namespace AiCard.Controllers
             {
                 ID = model.ID,
                 Code = model.Code,
-                //Province = model.Province,
-                //City = model.City,
+                Province = model.Province,
+                City = model.City,
                 Address = model.Address,
                 Email = model.Email,
                 HomePage = model.HomePage,
                 Info = model.Info,
-                //District = model.District,
+                District = model.District,
                 Enable = model.Enable,
                 CardCount = model.CardCount,
                 Name = model.Name,
@@ -437,10 +438,9 @@ namespace AiCard.Controllers
                 Lng = model.Lng
             };
             models.Logo.ImageUrl = model.Logo;
-            models.Province.Province = model.Province;
-            models.Province.City = model.City;
-            models.Province.District = model.District;
-
+            ViewBag.Province = ChinaPCAS.GetP();//省份
+            ViewBag.City = ChinaPCAS.GetC(model.Province);//城市
+            ViewBag.District = ChinaPCAS.GetA(model.Province, model.City);//街道
             if (models == null)
             {
                 return HttpNotFound();
@@ -469,11 +469,11 @@ namespace AiCard.Controllers
                 var t = db.Enterprises.FirstOrDefault(s => s.ID == enterprise.ID);
                 t.Name = enterprise.Name;
                 t.Code = enterprise.Code;
-                t.Province = enterprise.Province.Province;
-                t.City = enterprise.Province.City;
+                t.Province = enterprise.Province;
+                t.City = enterprise.City;
                 t.Address = enterprise.Address;
                 t.Email = enterprise.Email;
-                t.District = enterprise.Province.District;
+                t.District = enterprise.District;
                 t.HomePage = enterprise.HomePage;
                 t.Info = enterprise.Info;
                 t.Enable = enterprise.Enable;

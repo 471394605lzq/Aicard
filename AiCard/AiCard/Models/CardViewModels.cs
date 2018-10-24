@@ -71,10 +71,28 @@ namespace AiCard.Models
         public string Info { get; set; }
 
         [Display(Name = "语音")]
-        public string Voice { get; set; }
+        //public string Voice { get; set; }
+        public Models.CommModels.FileUpload Voice { get; set; } = new CommModels.FileUpload
+        {
+            AutoInit = true,
+            Max = 5,
+            Name = "Voice",
+            Server = CommModels.UploadServer.QinQiu,
+            Sortable = true,
+            Type = CommModels.FileType.Sound,
+        };
 
         [Display(Name = "视频")]
-        public string Video { get; set; }
+        //public string Video { get; set; }
+        public Models.CommModels.FileUpload Video { get; set; } = new CommModels.FileUpload
+        {
+            AutoInit = true,
+            Max = 5,
+            Name = "Video",
+            Server = CommModels.UploadServer.QinQiu,
+            Sortable = true,
+            Type = CommModels.FileType.Video,
+        };
 
         [Display(Name = "图片")]
         public Models.CommModels.FileUpload Images { get; set; } = new CommModels.FileUpload

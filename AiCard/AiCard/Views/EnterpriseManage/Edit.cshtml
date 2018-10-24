@@ -2,6 +2,10 @@
 @{
     ViewBag.Title = "编辑企业";
     Layout = "~/Views/Shared/_LayoutBackground.cshtml";
+
+    SelectList province = new SelectList((List<string>)ViewBag.Province,selectedValue: Model.Province);
+    SelectList city = new SelectList((List<string>)ViewBag.City, selectedValue: Model.City);
+    SelectList district = new SelectList((List<string>)ViewBag.District, selectedValue: Model.District);
 }
 
 <ol class="breadcrumb">
@@ -51,7 +55,13 @@
             <div class="form-group">
                 @Html.LabelFor(model => model.Province, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
-                    @Html.EditorFor(model => model.Province, new { htmlAttributes = new { @class = "form-control" } })
+                    <select id="Province" name="Province" class = "form-control">
+                        @foreach (var item in (List<string>)ViewBag.Province)
+                        {
+                            var selected = item == Model.Province? "selected":"";
+                            <option @selected value="@item">@item</option>
+                        }
+                    </select>
                     @Html.ValidationMessageFor(model => model.Province, "", new { @class = "text-danger" })
                 </div>
             </div>
@@ -59,7 +69,13 @@
             <div class="form-group">
                 @Html.LabelFor(model => model.City, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
-                    @Html.EditorFor(model => model.City, new { htmlAttributes = new { @class = "form-control" } })
+                    <select id="City" name="City" class="form-control">
+                        @foreach (var item in (List<string>)ViewBag.City)
+                        {
+                            var selected = item == Model.City ? "selected" : "";
+                            <option @selected value="@item">@item</option>
+                        }
+                    </select>
                     @Html.ValidationMessageFor(model => model.City, "", new { @class = "text-danger" })
                 </div>
             </div>
@@ -67,7 +83,13 @@
             <div class="form-group">
                 @Html.LabelFor(model => model.District, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
-                    @Html.EditorFor(model => model.District, new { htmlAttributes = new { @class = "form-control" } })
+                    <select id="District" name="District" class="form-control">
+                        @foreach (var item in (List<string>)ViewBag.District)
+                        {
+                            var selected = item == Model.District ? "selected" : "";
+                            <option @selected value="@item">@item</option>
+                        }
+                    </select>
                     @Html.ValidationMessageFor(model => model.District, "", new { @class = "text-danger" })
                 </div>
             </div>
