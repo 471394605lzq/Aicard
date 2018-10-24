@@ -41,15 +41,18 @@ namespace AiCard.Models
         };
 
         [Display(Name = "座机")]
+        [RegularExpression(Reg.PHONE, ErrorMessage = "{0}格式不正确")]
         public string PhoneNumber { get; set; }
 
         [Display(Name = "Email")]
+        [DataType(DataType.EmailAddress,ErrorMessage = "{0}格式不正确")]
         public string Email { get; set; }
 
         [Display(Name = "微信号")]
         public string WeChatCode { get; set; }
 
         [Display(Name = "手机号")]
+        [RegularExpression(Reg.MOBILE, ErrorMessage = "{0}格式不正确")]
         public string Mobile { get; set; }
 
         [Display(Name = "启用")]
@@ -119,11 +122,13 @@ namespace AiCard.Models
         /// <summary>
         /// 手机号
         /// </summary>
+       
         public string Mobile { get; set; }
 
         /// <summary>
         /// 职位
         /// </summary>
+      
         public string Email { get; set; }
 
         /// <summary>
@@ -141,8 +146,8 @@ namespace AiCard.Models
         /// </summary>
         public string Position { get; set; }
     }
-    
 
-    
+
+
 
 }

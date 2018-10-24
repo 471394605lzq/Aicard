@@ -24,7 +24,9 @@ namespace AiCard.Controllers
         {
             var query = from c in db.Cards
                         from e in db.Enterprises
-                        where e.ID == enterpriseID && c.EnterpriseID == e.ID
+                        where e.ID == enterpriseID
+                            && c.EnterpriseID == e.ID
+                            && c.Enable
                         select new CardListViewModel
                         {
                             Avatar = c.Avatar,
@@ -86,21 +88,45 @@ namespace AiCard.Controllers
                 return Json(Comm.ToJsonResult("NoFound", "卡片不存在"));
             }
             var likeCount = db.UserLogs.Count(s => s.Type == UserLogType.CardLike && s.RelationID == cardID);
-            var viewCount = db.UserLogs.Count(s => s.Type == UserLogType.CardRead && s.RelationID == cardID);
+            var viewCount = db.UserLogs
+                .Where(s => s.Type == UserLogType.CardRead && s.RelationID == cardID)
+                .GroupBy(s => s.UserID)
+                .Count();
             var hadLike = db.UserLogs.Any(s => s.Type == UserLogType.CardLike && s.UserID == userID);
-            var leastUsers = (from u in db.Users
-                              from l in db.UserLogs
-                              where u.Id == l.UserID
-                                  && l.Type == UserLogType.CardRead
-                                  && l.RelationID == cardID
-                              orderby l.CreateDateTime descending
-                              select new { u.Avatar, u.Id }).Take(6);
+            //获取最近访问的6个人头像
+            var leastUsers = (from l in db.UserLogs
+                              from u in db.Users
+                              where l.Type == UserLogType.CardRead
+                                && l.RelationID == cardID
+                                && u.Id == l.UserID
+                              select new
+                              {
+                                  UserID = u.Id,
+                                  u.Avatar,
+                                  l.CreateDateTime
+                              }).GroupBy(s => new { s.UserID, s.Avatar })
+                               .Select(s => new
+                               {
+                                   s.Key.UserID,
+                                   s.Key.Avatar,
+                                   CreateDateTime = s.Max(x => x.CreateDateTime)
+                               })
+                               .OrderByDescending(s => s.CreateDateTime)
+                               .Take(6)
+                               .ToList();
+            var tab = (from t in db.CardTabs
+                       join l in db.UserLogs.Where(s => s.Type == UserLogType.CardTab && s.UserID == userID) on t.ID equals l.RelationID into tl
+                       where t.CardID == cardID
+                       select new
+                       {
+                           t.ID,
+                           t.CardID,
+                           t.Count,
+                           t.Name,
+                           t.Style,
+                           HadLike = tl.Any()
+                       }).ToList();
 
-            var tab = new List<CardTab>();
-            tab.Add(new CardTab { Count = 1000, Name = "服务贴心", Style = CardTabStyle.Green });
-            tab.Add(new CardTab { Count = 40, Name = "诚实", Style = CardTabStyle.Blue });
-            tab.Add(new CardTab { Count = 10, Name = "能说", Style = CardTabStyle.Orange });
-            tab.Add(new CardTab { Count = 165451, Name = "能唱", Style = CardTabStyle.Purple });
             Func<int, string> stringNum = num =>
             {
                 if (num < 1000)
@@ -137,18 +163,33 @@ namespace AiCard.Controllers
                 ViewCount = stringNum(viewCount),
                 Viewers = leastUsers.Select(s => s.Avatar).ToList(),
                 WeChatCode = card.WeChatCode,
-                CardTabs = tab.Select(s => new { Count = s.Count.ToString(), s.Name, s.Style }),
+                CardTabs = tab.Select(s => new
+                {
+                    TabID = s.ID,
+                    Count = s.Count.ToString(),
+                    s.Name,
+                    s.Style,
+                    s.HadLike
+                }),
                 //WeChatMiniQrCode = card.WeChatMiniQrCode
                 WeChatMiniQrCode = "http://image.dtoao.com/WeChatQrCodeDemo.png"
             };
+            try
+            {
+                Bll.UserLogs.Add(new UserLog
+                {
+                    UserID = userID,
+                    RelationID = cardID,
+                    Type = UserLogType.CardRead
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(Comm.ToJsonResult("Error", ex.Message), JsonRequestBehavior.AllowGet);
+            }
+
             return Json(Comm.ToJsonResult("Success", "成功", model), JsonRequestBehavior.AllowGet);
         }
-
-
-      
-
-
-        
 
 
         protected override void Dispose(bool disposing)

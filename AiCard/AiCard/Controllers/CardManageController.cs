@@ -102,6 +102,7 @@ namespace AiCard.Controllers
         public async Task<ActionResult> Create(CardCreateEditViewModel model)
         {
             Sidebar();
+            return View(model);
             if (ModelState.IsValid)
             {
                 var hasname = db.Cards.Any(s => s.Name == model.Name);
