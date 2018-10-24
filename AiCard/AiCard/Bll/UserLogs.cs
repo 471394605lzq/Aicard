@@ -138,75 +138,54 @@ namespace AiCard.Bll
                     default:
                         break;
                 }
-                switch (log.Type)
+                if (log.Type == Enums.UserLogType.ArticleLike || log.Type == Enums.UserLogType.CardLike)
                 {
-                    case Enums.UserLogType.ArticleLike:
-                    case Enums.UserLogType.CardLike:
-                    case Enums.UserLogType.CardTab:
-                        {
-                            var dbLog = db.UserLogs.FirstOrDefault(s => s.RelationID == log.RelationID
-                                    && s.UserID == log.UserID
-                                    && s.Type == log.Type);
-                            if (dbLog == null)
-                            {
-                                db.UserLogs.Add(log);
-
-                            }
-                            else
-                            {
-                                db.UserLogs.Remove(dbLog);
-                            }
-                            if (log.Type == Enums.UserLogType.CardTab)
-                            {
-                                var tab = db.CardTabs.FirstOrDefault(s => s.ID == log.RelationID);
-                                tab.Count = db.UserLogs
-                                    .Count(s => s.RelationID == log.RelationID
-                                     && s.Type == Enums.UserLogType.CardTab);
-                                db.SaveChanges();
-                            }
-                            if (log.Type == Enums.UserLogType.ArticleLike)
-                            {
-                                var art = db.Articles.FirstOrDefault(s => s.ID == log.RelationID);
-                                art.Like = db.UserLogs
-                                    .Count(s => s.RelationID == log.RelationID
-                                     && s.Type == Enums.UserLogType.ArticleLike);
-                                db.SaveChanges();
-                            }
-                            if (log.Type == Enums.UserLogType.CardLike || log.Type == Enums.UserLogType.CardRead)
-                            {
-                                var card = db.Cards.FirstOrDefault(s => s.ID == log.RelationID);
-                                if (log.Type == Enums.UserLogType.CardLike)
-                                {
-                                    card.Like = db.UserLogs
-                                       .Count(s => s.RelationID == log.RelationID
-                                        && s.Type == Enums.UserLogType.CardLike);
-                                }
-                                if (log.Type == Enums.UserLogType.CardRead)
-                                {
-                                    card.View = db.UserLogs
-                                      .Count(s => s.RelationID == log.RelationID
-                                       && s.Type == Enums.UserLogType.CardRead);
-                                }
-                                db.SaveChanges();
-                            }
-                        }
-                        break;
-                    default:
-                        {
-                            db.UserLogs.Add(log);
-                        }
-                        break;
-                }
-                //如果已经存在点赞记录，就取消点赞
-                if (log.Type == Enums.UserLogType.CardLike || log.Type == Enums.UserLogType.ArticleLike)
-                {
-
+                    var dbLog = db.UserLogs.FirstOrDefault(s => s.RelationID == log.RelationID
+                                && s.UserID == log.UserID
+                                && s.Type == log.Type);
+                    if (dbLog == null)
+                    {
+                        db.UserLogs.Add(log);
+                    }
+                    else
+                    {
+                        db.UserLogs.Remove(dbLog);
+                    }
                 }
                 else
                 {
                     db.UserLogs.Add(log);
+
                 }
-                db.SaveChanges();
+                db.SaveChanges();//修改log
+                if (log.Type == Enums.UserLogType.ArticleLike)
+                {
+                    var art = db.Articles.FirstOrDefault(s => s.ID == log.RelationID);
+                    art.Like = db.UserLogs
+                        .Count(s => s.RelationID == log.RelationID
+                         && s.Type == Enums.UserLogType.ArticleLike);
+                    db.SaveChanges();//更新点赞数量
+                }
+                if (log.Type == Enums.UserLogType.CardLike || log.Type == Enums.UserLogType.CardRead)
+                {
+                    var card = db.Cards.FirstOrDefault(s => s.ID == log.RelationID);
+                    if (log.Type == Enums.UserLogType.CardRead)
+                    {
+                        //算人头
+                        card.Like = db.UserLogs
+                           .Where(s => s.Type == log.Type && s.RelationID == log.RelationID)
+                           .GroupBy(s => s.UserID)
+                           .Count();
+                      
+                    }
+                    if (log.Type == Enums.UserLogType.CardLike)
+                    {
+                        card.View = db.UserLogs
+                         .Count(s => s.RelationID == log.RelationID
+                          && s.Type == log.Type);
+                    }
+                    db.SaveChanges();//更新点赞数量或阅读数量
+                }
 
             }
         }
