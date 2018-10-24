@@ -3,9 +3,9 @@
 @{
     ViewBag.Title = "新增企业";
     Layout = "~/Views/Shared/_LayoutBackground.cshtml";
-    //SelectList province = new SelectList((List<string>)ViewBag.Province, "name");
-    //SelectList city = new SelectList((List<string>)ViewBag.City, "name");
-    //SelectList district = new SelectList((List<string>)ViewBag.District, "name");
+    SelectList province = new SelectList((List<string>)ViewBag.Province, "name");
+    SelectList city = new SelectList((List<string>)ViewBag.City, "name");
+    SelectList district = new SelectList((List<string>)ViewBag.District, "name");
 }
 
 <ol class="breadcrumb">
@@ -57,25 +57,27 @@
             <div class="form-group">
                 @Html.LabelFor(model => model.Province, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
-                    <p>@Html.EditorFor(model => model.Province)</p>
-                    @*@Html.DropDownListFor(model => model.Province, province, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.Province, "", new { @class = "text-danger" })*@
+                    @Html.DropDownListFor(model => model.Province, province, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Province, "", new { @class = "text-danger" })
                 </div>
             </div>
 
-            @*<div class="form-group">
+            <div class="form-group">
                 @Html.LabelFor(model => model.City, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
-                    <p>@Html.EditorFor(model => model.City)</p>
+                    @Html.DropDownListFor(model => model.City, city, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.City, "", new { @class = "text-danger" })
                 </div>
             </div>
 
             <div class="form-group">
                 @Html.LabelFor(model => model.District, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
-                    <p>@Html.EditorFor(model => model.District)</p>
+                    @Html.DropDownListFor(model => model.District, district, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.District, "", new { @class = "text-danger" })
                 </div>
-            </div>*@
+            </div>
+
 
             <div class="form-group">
                 @Html.LabelFor(model => model.Address, htmlAttributes: new { @class = "control-label col-md-2" })

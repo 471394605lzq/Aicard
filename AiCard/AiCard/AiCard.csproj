@@ -386,6 +386,7 @@
     <Compile Include="Models\ProductModels.cs" />
     <Compile Include="Models\RoleGroup.cs" />
     <Compile Include="Models\RolesModel.cs" />
+    <Compile Include="Models\Test.cs" />
     <Compile Include="Models\UserLog.cs" />
     <Compile Include="Models\UserLogViewModels.cs" />
     <Compile Include="Models\UserManageViewModels.cs" />
@@ -920,7 +921,8 @@
     <Content Include="Views\Test\TestCkEdit.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\FileUpload.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\ImageResizer.cshtml" />
-    <Content Include="Views\Shared\DisplayTemplates\ChinaPCAS.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\ChinaPCASCom.cshtml" />
+    <Content Include="Views\Test\pac.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

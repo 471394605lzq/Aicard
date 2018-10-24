@@ -142,8 +142,8 @@ namespace AiCard.Controllers
                             PhoneNumber = model.PhoneNumber,
                             Position = model.Position,
                             Remark = model.Remark,
-                            Video = model.Video,
-                            Voice = model.Voice,
+                            Video = string.Join(",", model.Video.Images),
+                            Voice = string.Join(",", model.Voice.Images),
                             WeChatCode = model.WeChatCode
                         };
                         db.Cards.Add(card);
@@ -188,8 +188,8 @@ namespace AiCard.Controllers
                 Mobile = model.Mobile,
                 Position = model.Position,
                 Remark = model.Remark,
-                Video = model.Video,
-                Voice = model.Voice,
+                //Video = model.Video,
+                //Voice = model.Voice,
                 WeChatCode = model.WeChatCode,
                 UserID = model.UserID,
                 EnterpriseID = model.EnterpriseID,
@@ -197,6 +197,8 @@ namespace AiCard.Controllers
             };
             models.Avatar.Images = model.Avatar?.Split(',') ?? new string[0];
             models.Images.Images = model.Images?.Split(',') ?? new string[0];
+            models.Video.Images=model.Video?.Split(',') ?? new string[0];
+            models.Voice.Images = model.Voice?.Split(',') ?? new string[0];
             if (models == null)
             {
                 return HttpNotFound();
@@ -234,8 +236,8 @@ namespace AiCard.Controllers
                 t.Remark = model.Remark;
                 t.Info = model.Info;
                 t.Enable = model.Enable;
-                t.Voice = model.Voice;
-                t.Video = model.Video;
+                t.Voice = string.Join(",", model.Voice.Images);
+                t.Video = string.Join(",", model.Video.Images); 
                 t.Images = string.Join(",", model.Images.Images);
                 db.SaveChanges();
                 return RedirectToAction("Index");

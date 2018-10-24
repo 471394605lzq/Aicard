@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -21,17 +22,20 @@ namespace AiCard.Models.CommModels
             {
                 Citylist = ChinaPCAS.GetC(pname);
             }
-            else if (!string.IsNullOrWhiteSpace(pname) && !string.IsNullOrWhiteSpace(cname))
+            if (!string.IsNullOrWhiteSpace(pname) && !string.IsNullOrWhiteSpace(cname))
             {
                 Districtlist = ChinaPCAS.GetA(pname, cname);
             }
         }
 
         //省份
+        [Display(Name ="省份")]
         public string Province { get; set; }
         //城市
+        [Display(Name = "城市")]
         public string City { get; set; }
         //地区
+        [Display(Name = "地区")]
         public string District { get; set; }
         public List<string> Provincelist { get; set; }
 

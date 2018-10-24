@@ -46,3 +46,5 @@ $("#btnSubmit").click(function () {
         alert("请选择要同步的用户信息");
     }
 });
+
+var mychinaPcas = new chinaPcas("#Province", "#City", "#District");

@@ -142,7 +142,10 @@ namespace AiCard.Controllers
 
             return View();
         }
-
+        public ActionResult pac() {
+            var model = new Test();
+            return View(model);
+        }
 
         public class MiniModel
         {
