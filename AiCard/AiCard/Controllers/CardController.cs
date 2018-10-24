@@ -127,10 +127,9 @@ namespace AiCard.Controllers
                 card.Info,
                 card.Lat,
                 card.Lng,
-                likeCount,
+                LikeCount = likeCount.ToString(),
                 card.Logo,
                 card.Mobile,
-                NoReadCount = 0,
                 Phone = card.PhoneNumber,
                 card.Position,
                 card.Video,
@@ -138,13 +137,18 @@ namespace AiCard.Controllers
                 ViewCount = stringNum(viewCount),
                 Viewers = leastUsers.Select(s => s.Avatar).ToList(),
                 WeChatCode = card.WeChatCode,
-                CardTab = tab.Select(s => new { Count = s.Count.ToString(), s.Name, s.Style }),
+                CardTabs = tab.Select(s => new { Count = s.Count.ToString(), s.Name, s.Style }),
                 //WeChatMiniQrCode = card.WeChatMiniQrCode
                 WeChatMiniQrCode = "http://image.dtoao.com/WeChatQrCodeDemo.png"
             };
             return Json(Comm.ToJsonResult("Success", "成功", model), JsonRequestBehavior.AllowGet);
         }
 
+
+      
+
+
+        
 
 
         protected override void Dispose(bool disposing)

@@ -53,6 +53,10 @@ namespace AiCard.WeChat
             p.Add("js_code", code);
             p.Add("grant_type", "authorization_code");
             var result = new AiCard.Api.BaseApi($"https://api.weixin.qq.com/sns/jscode2session{p.ToParam("?")}", "GET").CreateRequestReturnJson();
+            if (result["errcode"] != null)
+            {
+                throw new Exception(JsonConvert.SerializeObject(result));
+            }
             return new Jscode2sessionResult
             {
                 OpenID = result["openid"].Value<string>(),

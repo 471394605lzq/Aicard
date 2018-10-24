@@ -282,6 +282,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CardController.cs" />
     <Compile Include="Controllers\CardManageController.cs" />
+    <Compile Include="Controllers\CardTabController.cs" />
     <Compile Include="Controllers\EnterpriseController.cs" />
     <Compile Include="Controllers\EnterpriseManageController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -356,6 +357,10 @@
     <Compile Include="Migrations\201810230915321_AddCardTabs.cs" />
     <Compile Include="Migrations\201810230915321_AddCardTabs.Designer.cs">
       <DependentUpon>201810230915321_AddCardTabs.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201810240602250_CardAddViewAndLike.cs" />
+    <Compile Include="Migrations\201810240602250_CardAddViewAndLike.Designer.cs">
+      <DependentUpon>201810240602250_CardAddViewAndLike.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -913,6 +918,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\CardTab\" />
     <Folder Include="Views\Card\" />
     <Folder Include="Views\HomePageManage\" />
     <Folder Include="Views\UserLog\" />
@@ -966,6 +972,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201810230915321_AddCardTabs.resx">
       <DependentUpon>201810230915321_AddCardTabs.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810240602250_CardAddViewAndLike.resx">
+      <DependentUpon>201810240602250_CardAddViewAndLike.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

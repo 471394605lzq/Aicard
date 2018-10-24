@@ -71,6 +71,12 @@ namespace AiCard.Models
 
         public List<CardTab> CardTabs { get; set; }
 
+        [Display(Name = "点赞")]
+        public int Like { get; set; }
+
+        [Display(Name = "阅览数")]
+        public int View { get; set; }
+
     }
 
     public class CardTab
