@@ -102,14 +102,13 @@ namespace AiCard.Controllers
         public async Task<ActionResult> Create(CardCreateEditViewModel model)
         {
             Sidebar();
-            return View(model);
             if (ModelState.IsValid)
             {
                 var hasname = db.Cards.Any(s => s.Name == model.Name);
-                //检验企业编号是否存在
+                //检验名片是否存在
                 if (hasname)
                 {
-                    ModelState.AddModelError("Code", "名片已存在");
+                    ModelState.AddModelError("Name", "名片已存在");
                     return View(model);
                 }
                 else
@@ -122,7 +121,6 @@ namespace AiCard.Controllers
                         return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
                     }
                     //用名片用户的手机号创建一个账号,默认密码为手机号
-                    string username = model.Mobile;
                     var user = new ApplicationUser { UserName = model.Mobile, RegisterDateTime = DateTime.Now, EnterpriseID = AccontData.EnterpriseID, LastLoginDateTime = DateTime.Now, UserType = UserType.Personal };
                     var result = await UserManager.CreateAsync(user, model.Mobile);
                     //创建名片账号成功
@@ -148,6 +146,9 @@ namespace AiCard.Controllers
                             WeChatCode = model.WeChatCode
                         };
                         db.Cards.Add(card);
+                        db.SaveChanges();
+                        var enterprise = db.Enterprises.FirstOrDefault(s => s.ID == AccontData.EnterpriseID);
+                        enterprise.CardCount--;
                         db.SaveChanges();
                         return RedirectToAction("Index");
                     }

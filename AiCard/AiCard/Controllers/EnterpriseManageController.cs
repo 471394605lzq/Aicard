@@ -112,6 +112,7 @@ namespace AiCard.Controllers
             return View(paged);
         }
 
+        //企业首页
         public ActionResult Info()
         {
             Sidebar();
