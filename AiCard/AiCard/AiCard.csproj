@@ -928,6 +928,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Upload\" />
     <Folder Include="Views\Article\" />
     <Folder Include="Views\CardTab\" />
     <Folder Include="Views\Card\" />

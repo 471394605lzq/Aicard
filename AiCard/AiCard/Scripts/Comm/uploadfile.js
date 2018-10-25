@@ -21,9 +21,11 @@ var uploader = function (target, option) {
     var server = $this.data("server");
     var fileUrls = new Array();
     var mask = comm.mask2.create(10000);
-
-    var uploadControl = comm.imgFullUrl("~/Uploader/Upload");
-    var deleteControl = comm.imgFullUrl("~/Uploader/DeleteFile");
+    var config = {
+        uploadControl: comm.imgFullUrl("~/Uploader/Upload"),
+        deleteControl: comm.imgFullUrl("~/Uploader/DeleteFile"),
+        uploadSever: "image.dtoao.com",//本地服务器填null
+    };
     $this.after(mask);
     if (option == undefined) {
         option = {
@@ -124,8 +126,9 @@ var uploader = function (target, option) {
     //文件对象（已上传文件）
     var fileListItem = function (li) {
         li = $(li);
-        li.find(".glyphicon").click(function () {
-            var url = $(this).data("img");
+        var $btnDel = li.find(".btnDelItem");
+        var url = $btnDel.data("img");
+        $btnDel.click(function () {
             delFile(url, {
                 done: function () {
                     li.remove();
@@ -134,7 +137,7 @@ var uploader = function (target, option) {
             })
         });
         function getImageUrl() {
-            return li.find("[data-img]").data("img");
+            return url;
         }
         this.getImageUrl = function () {
             return getImageUrl();
@@ -152,10 +155,19 @@ var uploader = function (target, option) {
         }
         li = $this.find(".demo_li").clone().removeClass("hidden demo_li");
         //图片地址
-        li.find("img").attr("src", fileType(loc, url));
-        li.find("img").attr("title", url.substr(url.lastIndexOf("/") + 1));
-        var $btnDel = li.find("span");
-        $btnDel.attr("data-img", url).data("img", url);
+        var $img = li.find("img")
+                .attr("src", fileType(url, url))
+                .attr("title", url.substr(url.lastIndexOf("/") + 1));
+        var $btnDel = li.find(".btnDelItem");
+        $btnDel.attrdata("img", url);
+        var ext = getFileExtension(url);
+        if (ext == ".mp4" || ext == ".mp3") {
+            var $a = $("<a>")
+                .attr("target", "_blank")
+                .addClass("glyphicon glyphicon-play-circle")
+                .attr("href", url);
+            li.append($a);
+        };
         $this.find("ul").append(li);
         uploaderVal.add(url);
         return new fileListItem(li);
@@ -210,7 +222,7 @@ var uploader = function (target, option) {
         var xhr = null;
         $.ajax({
             type: "POST",
-            url: uploadControl,
+            url: config.uploadControl,
             data: data,
             cache: false,
             dataType: "json",
@@ -286,28 +298,41 @@ var uploader = function (target, option) {
 
         return demo;
     }
+
+    function getFileExtension(filename) {
+        return filename.substr(filename.lastIndexOf("."));
+    }
+
+    function getVideoThumbnail(file) {
+        if (server == "QinQiu" && new RegExp(config.uploadSever).test(file)) {
+            return file + "?vframe/jpg/offset/1/w/120/h/70";
+        }
+        return "/Content/Images/filetype/mp4.png";
+    }
+
     //判断文件类型
-    var fileType = function (url, filename) {
+    function fileType(url, filename) {
         var previewSrc = url;
-        var fileType = filename.substr(filename.lastIndexOf(".") + 1);
-        if (fileType != "bmp" && fileType != "tif" && fileType != "png" && fileType != "jpge" && fileType != "jpg" && fileType != "gif") {
+        var fileType = getFileExtension(filename);
+        if (fileType != ".bmp" && fileType != ".tif" && fileType != ".png"
+            && fileType != ".jpeg" && fileType != ".jpg" && fileType != ".gif") {
             previewSrc = "/Content/Images/filetype/file.png"
-            if (fileType == "doc" || fileType == "docx" || fileType == "txt" || fileType == "wps") {
+            if (fileType == ".doc" || fileType == ".docx" || fileType == ".txt" || fileType == ".wps") {
                 previewSrc = "/Content/Images/filetype/doc.png";
             }
-            if (fileType == "mp3") {
+            if (fileType == ".mp3") {
                 previewSrc = "/Content/Images/filetype/mp3.png";
             }
-            if (fileType == "mp4") {
-                previewSrc = "/Content/Images/filetype/mp4.png";
+            if (fileType == ".mp4") {
+                previewSrc = getVideoThumbnail(url);
             }
-            if (fileType == "ppt") {
+            if (fileType == ".ppt") {
                 previewSrc = "/Content/Images/filetype/ppt.png";
             }
-            if (fileType == "xls" || fileType == "xlsx") {
+            if (fileType == ".xls" || fileType == ".xlsx") {
                 previewSrc = "/Content/Images/filetype/xls.png";
             }
-            if (fileType == "zip") {
+            if (fileType == ".zip") {
                 previewSrc = "/Content/Images/filetype/zip.png";
             }
         }
@@ -363,6 +388,9 @@ var uploader = function (target, option) {
 
     //删除服务器文件
     function delFile(url, option) {
+        if (!confirm("是否确认删除该文件")) {
+            return;
+        }
         if (option == undefined) {
             option.done = function () { };
             option.error = function () { };
@@ -375,7 +403,7 @@ var uploader = function (target, option) {
         }
         $.ajax({
             type: "POST",
-            url: comm.action("DeleteFile", "Uploader"),
+            url: config.deleteControl,
             data: { file: url },
             dataType: "json",
             success: function (data) {

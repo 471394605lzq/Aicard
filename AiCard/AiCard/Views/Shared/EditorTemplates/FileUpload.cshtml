@@ -13,15 +13,17 @@
     <div class="@hidCtl">
         <button class="btn btn-default btn-success btnModal" type="button"><span class="glyphicon glyphicon-upload"></span> 上传文件</button>
         <ul id="uploader_ul_@Model.Name">
-            <li class="demo_li hidden">
+            <li class="demo_li hidden" data-type>
                 <img title="" src="" />
-                <span class="glyphicon glyphicon-remove" data-img=""></span>
+                <span class="glyphicon glyphicon-remove btnDelItem" data-img=""></span>
             </li>
             @foreach (var item in Model.Images)
             {
                 var imgsrc = Url.ResizeImage(item, h: 70, w: 120, quality: 100, mode: AiCard.Enums.ResizerMode.Max);
                 var fileType = Path.GetExtension(item);
-                if (fileType != ".bmp" && fileType != ".tif" && fileType != ".png" && fileType != ".jpge" && fileType != ".jpg" && fileType != ".gif")
+                if (fileType != ".bmp" && fileType != ".tif" && fileType != ".png"
+                    && fileType != ".jpeg" && fileType != ".jpg" && fileType != ".gif"
+                    && fileType != ".mp4")
                 {
                     imgsrc = Url.ContentFull("/Content/Images/filetype/file.png");
                     if (fileType == ".doc" || fileType == ".docx" || fileType == ".txt" || fileType == ".wps")
@@ -49,12 +51,18 @@
                         imgsrc = Url.ContentFull("/Content/Images/filetype/zip.png");
                     }
                 }
-                <li>
+
+                <li data-type="@fileType">
                     <img title="@Path.GetFileName(item)" src="@imgsrc" />
-                    <span class="glyphicon glyphicon-remove" data-img="@item"></span>
+                    <span class="glyphicon glyphicon-remove btnDelItem" data-img="@item"></span>
+                    @if (fileType == ".mp3" || fileType == ".mp4")
+                    {
+                        <a href="@item" target="_blank" class="glyphicon glyphicon-play-circle"></a>
+                    }
                 </li>
             }
         </ul>
+
     </div>
     <div class="panel panel-default hidden uploader_modal">
         <div class="panel-heading">

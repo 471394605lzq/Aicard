@@ -2,15 +2,6 @@
 @{
     ViewBag.Title = "UploadTest";
     Layout = "~/Views/Shared/_LayoutBackground.cshtml";
-    //AiCard.Models.CommModels.FileUpload upload = new AiCard.Models.CommModels.FileUpload
-    //{
-    //    Max = 5,
-    //    Name = "fileUpload",
-    //    Sortable = true,
-    //    Type = AiCard.Models.CommModels.FileType.Image,
-    //    AutoInit = false,
-    //    Server = AiCard.Models.CommModels.UploadServer.QinQiu
-    //};
 }
 @using (Html.BeginForm())
 {
@@ -24,8 +15,6 @@
 }
 
 @section Scripts{
-    @Scripts.Render("~/bundles/jqueryui")
-
     <script>
         var myUploader = new uploader(".uploader", {
             uploaded: function (url) {
