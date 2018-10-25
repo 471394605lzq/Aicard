@@ -75,10 +75,11 @@ namespace AiCard.Controllers
             var query = from k in db.ProductKinds
                         from e in db.Enterprises
                         where k.EnterpriseID == e.ID && k.EnterpriseID == enterpriseid
-                        select new ProductKindsViewModels
+                        select new
                         {
                             Name = k.Name,
-                            ID = k.ID
+                            ID = k.ID,
+                            Sort=k.Sort
                         };
             var data = query.OrderBy(s => s.Sort);
             return Json(Comm.ToJsonResult("Success", "获取成功", data), JsonRequestBehavior.AllowGet);
@@ -93,7 +94,7 @@ namespace AiCard.Controllers
         {
             var query = from e in db.Enterprises
                         where e.ID == enterpriseid && e.Enable
-                        select new Enterprise
+                        select new
                         {
                             Name = e.Name,
                             Logo = e.Logo,
@@ -101,18 +102,33 @@ namespace AiCard.Controllers
                         };
             return Json(Comm.ToJsonResult("Success", "获取成功", query), JsonRequestBehavior.AllowGet);
         }
-
-        public ActionResult GetProductDetails(int enterpriseid) {
-            var query = from p in db.Products
-                        where p.EnterpriseID == enterpriseid
-                        select new
-                        {
-                            Image = p.Images,
-                            Name = p.Name,
-                            Price = p.Price,
-                            DetailContent = p.Info
-                        };
-            return Json(Comm.ToJsonResult("Success", "获取成功", query),JsonRequestBehavior.AllowGet);
+        /// <summary>
+        /// 获取商品详情
+        /// </summary>
+        /// <param name="enterpriseid">企业id</param>
+        /// <param name="productid">商品id</param>
+        /// <returns>商品信息json集合</returns>
+        [AllowCrossSiteJson]
+        public ActionResult GetProductDetails(int enterpriseid,int productid)
+        {
+            try
+            {
+                var query = from p in db.Products
+                            where p.EnterpriseID == enterpriseid&&p.ID==productid&&p.Release
+                            select new
+                            {
+                                Image = p.Images,
+                                Name = p.Name,
+                                Nowprice = p.Price,
+                                DetailContent = p.Info,
+                                Originalprice = p.OriginalPrice
+                            };
+                return Json(Comm.ToJsonResult("Success", "获取成功", query), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(Comm.ToJsonResult("Error", ex.Message));
+            }
         }
     }
 }
