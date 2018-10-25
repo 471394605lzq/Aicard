@@ -24,7 +24,7 @@ namespace AiCard
             }
             if (p.IsInRole(SysRole.EHomePageModularsManageRead))
             {
-                menus.Add(new Models.CommModels.Menu { Name = "公司首页", Title = "公司首页", Url = "~/EnterpriseManage/Index",IconImage = "shouyeshouye" });
+                menus.Add(new Models.CommModels.Menu { Name = "公司首页", Title = "公司首页", Url = "~/EnterpriseManage/Info",IconImage = "shouyeshouye" });
             }
             if (p.IsInRole(SysRole.CardManageRead) || p.IsInRole(SysRole.ECardManageRead))
             {

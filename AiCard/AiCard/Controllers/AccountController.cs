@@ -170,7 +170,7 @@ namespace AiCard.Controllers
                         }
                         else
                         {
-                            return RedirectToAction("Index", "EnterpriseManage");
+                            return RedirectToAction("Info", "EnterpriseManage");
                         }
                     }
                 case SignInStatus.LockedOut:

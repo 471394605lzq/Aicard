@@ -46,7 +46,7 @@ namespace AiCard.Models
         public string PhoneNumber { get; set; }
 
         [Display(Name = "Email")]
-        [DataType(DataType.EmailAddress,ErrorMessage = "{0}格式不正确")]
+        [RegularExpression(Reg.EMAIL,ErrorMessage = "{0}格式不正确")]
         public string Email { get; set; }
 
         [Display(Name = "微信号")]

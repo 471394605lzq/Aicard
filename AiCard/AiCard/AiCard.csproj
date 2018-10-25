@@ -292,6 +292,7 @@
     <Compile Include="Controllers\HomePageModularsManageController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ProductKindsManageController.cs" />
+    <Compile Include="Controllers\ProductsController.cs" />
     <Compile Include="Controllers\ProductsManageController.cs" />
     <Compile Include="Controllers\RoleManageController.cs" />
     <Compile Include="Controllers\TestController.cs" />
@@ -938,6 +939,7 @@
     <Folder Include="Views\Card\" />
     <Folder Include="Views\ChinaPCAS\" />
     <Folder Include="Views\HomePageManage\" />
+    <Folder Include="Views\Products\" />
     <Folder Include="Views\UserLog\" />
   </ItemGroup>
   <ItemGroup>
