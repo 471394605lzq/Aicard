@@ -218,13 +218,15 @@ namespace AiCard.Enums
         [Display(Name = "商城查看")]
         ShopRead = 70,
         [Display(Name = "手机拨打")]
-        PhoneCall = 80,
+        MobileCall = 80,
         [Display(Name = "邮件发送")]
         EmailSend = 81,
         [Display(Name = "语音播放")]
         VoicePlay = 82,
         [Display(Name = "视频播放")]
         VideoPlay = 83,
+        [Display(Name = "手机拨打")]
+        PhoneCall = 84,
         [Display(Name = "名片标签点击")]
         CardTab = 90
     }
@@ -261,7 +263,8 @@ namespace AiCard.Enums
         Purple
     }
 
-    public enum PcasType {
+    public enum PcasType
+    {
         [Display(Name = "省份")]
         Province,
         [Display(Name = "城市")]
