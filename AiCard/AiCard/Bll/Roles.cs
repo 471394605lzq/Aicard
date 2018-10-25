@@ -82,9 +82,7 @@ namespace AiCard.Bll
             addSystemERole(SysRole.ERoleManageDelete, "后台权限管理", "后台权限管理删除");
 
             addSystemERole(SysRole.EEnterpriseManageRead, "企业权限管理", "企业权限管理查看");
-            addSystemERole(SysRole.EEnterpriseManageCreate, "企业权限管理", "企业权限管理创建");
             addSystemERole(SysRole.EEnterpriseManageEdit, "企业权限管理", "企业权限管理编辑");
-            addSystemERole(SysRole.EEnterpriseManageDelete, "企业权限管理", "企业权限管理删除");
             addSystemERole(SysRole.EEnterpriseManageDeploy, "企业权限管理", "企业权限管理绑定企业微信");
             addSystemERole(SysRole.EEnterpriseManageCogradient, "企业权限管理", "企业权限管理同步企业微信用户");
 

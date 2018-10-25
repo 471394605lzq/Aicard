@@ -78,7 +78,7 @@ namespace AiCard.Controllers
             return View(paged);
         }
         //新增
-        [Authorize(Roles = SysRole.CardManageCreate + "," + SysRole.EEnterpriseManageCreate)]
+        [Authorize(Roles = SysRole.CardManageCreate)]
         public ActionResult Create()
         {
             var tempuser = db.Users.FirstOrDefault(s => s.Id == AccontData.UserID);
@@ -98,7 +98,7 @@ namespace AiCard.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = SysRole.CardManageCreate + "," + SysRole.EEnterpriseManageCreate)]
+        [Authorize(Roles = SysRole.CardManageCreate)]
         public async Task<ActionResult> Create(CardCreateEditViewModel model)
         {
             Sidebar();

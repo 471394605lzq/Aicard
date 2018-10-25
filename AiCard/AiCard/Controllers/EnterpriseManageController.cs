@@ -286,7 +286,7 @@ namespace AiCard.Controllers
         }
 
         //新增
-        [Authorize(Roles = SysRole.EnterpriseManageCreate + "," + SysRole.EEnterpriseManageCreate)]
+        [Authorize(Roles = SysRole.EnterpriseManageCreate)]
         public ActionResult Create()
         {
             Sidebar();
@@ -302,7 +302,7 @@ namespace AiCard.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = SysRole.EnterpriseManageCreate + "," + SysRole.EEnterpriseManageCreate)]
+        [Authorize(Roles = SysRole.EnterpriseManageCreate)]
         public async Task<ActionResult> Create(EnterpriseViewModels enterprise)
         {
             Sidebar();
@@ -498,7 +498,7 @@ namespace AiCard.Controllers
             return View(enterprise);
         }
         //删除
-        [Authorize(Roles = SysRole.EnterpriseManageDelete + "," + SysRole.EEnterpriseManageDelete)]
+        [Authorize(Roles = SysRole.EnterpriseManageDelete)]
         public ActionResult Delete(int id)
         {
             Enterprise enterprise = db.Enterprises.Find(id);

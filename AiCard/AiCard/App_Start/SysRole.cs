@@ -57,9 +57,7 @@ namespace AiCard
         public const string ERoleManageDelete = "ERoleManageDelete";
 
         public const string EEnterpriseManageRead = "EEnterpriseManageRead";
-        public const string EEnterpriseManageCreate = "EEnterpriseManageCreate";
         public const string EEnterpriseManageEdit = "EEnterpriseManageEdit";
-        public const string EEnterpriseManageDelete = "EEnterpriseManageDelete";
         public const string EEnterpriseManageDeploy = "EEnterpriseManageDeploy";//配置绑定企业微信
         public const string EEnterpriseManageCogradient = "EEnterpriseManageCogradient";//同步企业微信用户
 

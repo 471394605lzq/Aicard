@@ -56,11 +56,15 @@ namespace AiCard.Models
 
         [Display(Name = "官网主页")]
         public string HomePage { get; set; }
+
         [Display(Name = "简介")]
+        [DataType(DataType.MultilineText)]
         public string Info { get; set; }
+
         [Display(Name = "编号")]
         [Required]
         public string Code { get; set; }
+
         [Display(Name = "邮箱")]
         [DataType(DataType.EmailAddress, ErrorMessage = "{0}格式不正确")]
         public string Email { get; set; }
