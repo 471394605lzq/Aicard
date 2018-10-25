@@ -18,6 +18,8 @@ using PagedList;
 using PagedList.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using AiCard.Models.CommModels;
+
 namespace AiCard.Controllers
 {
     [Authorize]
@@ -75,7 +77,7 @@ namespace AiCard.Controllers
             var m = from e in db.Enterprises
                     from u in db.Users
                     where e.AdminID == u.Id
-                    select new EnterpriseViewModels
+                    select new EnterpriseShowViewModels
                     {
                         ID = e.ID,
                         Enable = e.Enable,
@@ -87,7 +89,7 @@ namespace AiCard.Controllers
                         Province = e.Province,
                         City = e.City,
                         District = e.District,
-                        Address = e.Address,
+                        //Address = e.Address,
                         HomePage = e.HomePage,
                         Info = e.Info,
                         Code = e.Code,
@@ -357,7 +359,7 @@ namespace AiCard.Controllers
                             var model = new Enterprise
                             {
                                 AdminID = user.Id,
-                                Address = enterprise.Address,
+                                Address = enterprise.Address.Address,
                                 AppID = enterprise.AppID,
                                 CardCount = enterprise.CardCount,
                                 City = enterprise.City,
@@ -367,8 +369,8 @@ namespace AiCard.Controllers
                                 Enable = enterprise.Enable,
                                 HomePage = enterprise.HomePage,
                                 Info = enterprise.Info,
-                                Lng = enterprise.Lng,
-                                Lat = enterprise.Lat,
+                                Lng = enterprise.Address.Lng,
+                                Lat = enterprise.Address.Lat,
                                 Logo = enterprise.Logo.ImageUrl,
                                 Name = enterprise.Name,
                                 PhoneNumber = enterprise.PhoneNumber,
@@ -422,7 +424,7 @@ namespace AiCard.Controllers
                 Code = model.Code,
                 Province = model.Province,
                 City = model.City,
-                Address = model.Address,
+                //Address = model.Address,
                 Email = model.Email,
                 HomePage = model.HomePage,
                 Info = model.Info,
@@ -433,14 +435,24 @@ namespace AiCard.Controllers
                 PhoneNumber = model.PhoneNumber,
                 AdminID = model.AdminID,
                 RegisterDateTime = model.RegisterDateTime,
-                AppID = model.AppID,
-                Lat = model.Lat,
-                Lng = model.Lng
+                AppID = model.AppID
+                //Lat = model.Lat,
+                //Lng = model.Lng
             };
             models.Logo.ImageUrl = model.Logo;
+            models.Address.Address = model.Address;
+            models.Address.Lat = model.Lat;
+            models.Address.Lng = model.Lng;
             ViewBag.Province = ChinaPCAS.GetP();//省份
             ViewBag.City = ChinaPCAS.GetC(model.Province);//城市
             ViewBag.District = ChinaPCAS.GetA(model.Province, model.City);//街道
+            Map te = new Map
+            {
+                Address = model.Address,
+                Lat = model.Lat,
+                Lng = model.Lng
+            };
+            models.Address = new Models.CommModels.Map(te);
             if (models == null)
             {
                 return HttpNotFound();
@@ -471,7 +483,7 @@ namespace AiCard.Controllers
                 t.Code = enterprise.Code;
                 t.Province = enterprise.Province;
                 t.City = enterprise.City;
-                t.Address = enterprise.Address;
+                t.Address = enterprise.Address.Address;
                 t.Email = enterprise.Email;
                 t.District = enterprise.District;
                 t.HomePage = enterprise.HomePage;

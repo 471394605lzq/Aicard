@@ -27,6 +27,7 @@ namespace AiCard.Models
         public string WeChatEID { get; set; }
 
         [Display(Name = "姓名")]
+        [Required]
         public string Name { get; set; }
 
         [Display(Name = "头像")]
@@ -52,6 +53,7 @@ namespace AiCard.Models
         public string WeChatCode { get; set; }
 
         [Display(Name = "手机号")]
+        [Required]
         [RegularExpression(Reg.MOBILE, ErrorMessage = "{0}格式不正确")]
         public string Mobile { get; set; }
 
