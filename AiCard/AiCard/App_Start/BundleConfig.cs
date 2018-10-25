@@ -93,7 +93,7 @@ namespace AiCard
                 js = js.Select(s => s.Contains("~") ? s : $"~/Scripts/Views/{s}").ToArray();
                 bundles.Add(new ScriptBundle($"~/bundles/{name}").Include(js));
             };
-
+            
             addViewScripts("roleGroup", new string[] { "roleGroup.js" });
             addViewScripts("userManageIndex", new string[] { "userManageIndex.js" });
             addViewScripts("cardCreate", new string[] { "cardCreate.js" });

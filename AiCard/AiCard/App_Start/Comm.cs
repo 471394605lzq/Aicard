@@ -140,6 +140,7 @@ namespace AiCard
             )
         {
             var Url = new System.Web.Mvc.UrlHelper(HttpContext.Current.Request.RequestContext);
+
             if (string.IsNullOrEmpty(url))
             {
                 return null;
@@ -178,35 +179,49 @@ namespace AiCard
                 }
                 else if (url.Contains(Qiniu.QinQiuApi.ServerLink))
                 {
-                    if (!w.HasValue && !h.HasValue)
-                    {
-                        return url;
-                    }
+                    var fileType = System.IO.Path.GetExtension(url);
+                   
                     StringBuilder sbUrl = new StringBuilder(url);
-                    sbUrl.Append("?imageView2");
-                    Dictionary<string, string> p = new Dictionary<string, string>();
-                    switch (mode)
+                    if (fileType == ".mp4")
                     {
-                        case Enums.ResizerMode.Pad:
-                        default:
-                        case Enums.ResizerMode.Crop:
-                            sbUrl.Append("/1");
-                            break;
-                        case Enums.ResizerMode.Max:
-                            sbUrl.Append("/0");
-                            break;
+                        sbUrl.Append("?vframe/jpg/offset/1");
+                        if (w.HasValue)
+                        {
+                            sbUrl.Append($"/w/{w}");
+                        }
+                        if (h.HasValue)
+                        {
+                            sbUrl.Append($"/h/{h}");
+                        }
+                        return sbUrl.ToString();
                     }
-                    if (w.HasValue)
+                    else
                     {
-                        sbUrl.Append($"/w/{w}");
+                        sbUrl.Append("?imageView2");
+                        switch (mode)
+                        {
+                            case Enums.ResizerMode.Pad:
+                            default:
+                            case Enums.ResizerMode.Crop:
+                                sbUrl.Append("/1");
+                                break;
+                            case Enums.ResizerMode.Max:
+                                sbUrl.Append("/0");
+                                break;
+                        }
+                        if (w.HasValue)
+                        {
+                            sbUrl.Append($"/w/{w}");
+                        }
+                        if (h.HasValue)
+                        {
+                            sbUrl.Append($"/h/{h}");
+                        }
+                        quality = quality ?? 100;
+                        sbUrl.Append($"/q/{quality}");
+                        return sbUrl.ToString();
                     }
-                    if (h.HasValue)
-                    {
-                        sbUrl.Append($"/h/{h}");
-                    }
-                    quality = quality ?? 100;
-                    sbUrl.Append($"/q/{quality}");
-                    return sbUrl.ToString();
+                    
                 }
                 else
                 {

@@ -89,7 +89,7 @@ namespace AiCard.Controllers
                         Province = e.Province,
                         City = e.City,
                         District = e.District,
-                        //Address = e.Address,
+                        Address = e.Address,
                         HomePage = e.HomePage,
                         Info = e.Info,
                         Code = e.Code,

@@ -76,10 +76,13 @@ namespace AiCard.Controllers
 
         public ActionResult UploadTest()
         {
-            var s = ChinaPCAS.GetP();
-            var a = ChinaPCAS.GetC("广东省");
-            var c = ChinaPCAS.GetA("广东省", "东莞市");
             var model = new TestImages();
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult UploadTest(TestImages model)
+        {
             return View(model);
         }
 
@@ -88,11 +91,6 @@ namespace AiCard.Controllers
             return View();
         }
 
-        [HttpPost]
-        public ActionResult UploadTest(TestImages model)
-        {
-            return View(model);
-        }
 
         [HttpGet]
         public ActionResult TestMap()
@@ -148,7 +146,8 @@ namespace AiCard.Controllers
 
             return View();
         }
-        public ActionResult pac() {
+        public ActionResult pac()
+        {
             var model = new Test();
             return View(model);
         }
@@ -185,7 +184,7 @@ namespace AiCard.Controllers
                     Max = 3,
                     Name = "Avatar",
                     Sortable = true,
-                    Type = AiCard.Models.CommModels.FileType.Image,
+                    Type = AiCard.Models.CommModels.FileType.Sound,
                     AutoInit = false,
                     Server = AiCard.Models.CommModels.UploadServer.QinQiu
                 };

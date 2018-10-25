@@ -56,7 +56,7 @@ namespace AiCard.Controllers
         }
         //查询名片列表信息
         // GET: Card
-        [Authorize(Roles=SysRole.CardManageRead+","+SysRole.ECardManageRead)]
+        [Authorize(Roles = SysRole.CardManageRead + "," + SysRole.ECardManageRead)]
         public ActionResult Index(string filter, bool? enable = null, int page = 1)
         {
             Sidebar();
@@ -78,7 +78,7 @@ namespace AiCard.Controllers
             return View(paged);
         }
         //新增
-        [Authorize(Roles =SysRole.CardManageCreate+","+SysRole.EEnterpriseManageCreate)]
+        [Authorize(Roles = SysRole.CardManageCreate + "," + SysRole.EEnterpriseManageCreate)]
         public ActionResult Create()
         {
             var tempuser = db.Users.FirstOrDefault(s => s.Id == AccontData.UserID);
@@ -88,9 +88,9 @@ namespace AiCard.Controllers
             {
                 return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
             }
-                Sidebar();
-                var model = new CardCreateEditViewModel();
-                return View(model);
+            Sidebar();
+            var model = new CardCreateEditViewModel();
+            return View(model);
         }
         // POST: tests/Create
         // 为了防止“过多发布”攻击，请启用要绑定到的特定属性，有关 
@@ -157,7 +157,7 @@ namespace AiCard.Controllers
             return View(model);
         }
         //加载编辑数据
-        [Authorize(Roles =SysRole.CardManageEdit+","+SysRole.ECardManageEdit)]
+        [Authorize(Roles = SysRole.CardManageEdit + "," + SysRole.ECardManageEdit)]
         public ActionResult Edit(int? id)
         {
             Sidebar();
@@ -199,7 +199,7 @@ namespace AiCard.Controllers
             };
             models.Avatar.Images = model.Avatar?.Split(',') ?? new string[0];
             models.Images.Images = model.Images?.Split(',') ?? new string[0];
-            models.Video.Images=model.Video?.Split(',') ?? new string[0];
+            models.Video.Images = model.Video?.Split(',') ?? new string[0];
             models.Voice.Images = model.Voice?.Split(',') ?? new string[0];
             if (models == null)
             {
@@ -239,7 +239,7 @@ namespace AiCard.Controllers
                 t.Info = model.Info;
                 t.Enable = model.Enable;
                 t.Voice = string.Join(",", model.Voice.Images);
-                t.Video = string.Join(",", model.Video.Images); 
+                t.Video = string.Join(",", model.Video.Images);
                 t.Images = string.Join(",", model.Images.Images);
                 db.SaveChanges();
                 return RedirectToAction("Index");

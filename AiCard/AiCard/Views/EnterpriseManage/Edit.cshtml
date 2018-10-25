@@ -3,7 +3,7 @@
     ViewBag.Title = "编辑企业";
     Layout = "~/Views/Shared/_LayoutBackground.cshtml";
 
-    SelectList province = new SelectList((List<string>)ViewBag.Province,selectedValue: Model.Province);
+    SelectList province = new SelectList((List<string>)ViewBag.Province, selectedValue: Model.Province);
     SelectList city = new SelectList((List<string>)ViewBag.City, selectedValue: Model.City);
     SelectList district = new SelectList((List<string>)ViewBag.District, selectedValue: Model.District);
 }
@@ -55,10 +55,10 @@
             <div class="form-group">
                 @Html.LabelFor(model => model.Province, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
-                    <select id="Province" name="Province" class = "form-control">
+                    <select id="Province" name="Province" class="form-control">
                         @foreach (var item in (List<string>)ViewBag.Province)
                         {
-                            var selected = item == Model.Province? "selected":"";
+                            var selected = item == Model.Province ? "selected" : "";
                             <option @selected value="@item">@item</option>
                         }
                     </select>
@@ -154,6 +154,6 @@
 </div>
 
 @section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("http://webapi.amap.com/maps?v=1.3&key=bbd4a39f7cd6e612a8b3071955eb6b40", "~/bundles/mapapi")
+    @Scripts.Render("~/bundles/jqueryval", "~/bundles/enterpriseManage")
 }
