@@ -33,6 +33,9 @@ namespace AiCard.Models
         [Display(Name = "单价")]
         public decimal Price { get; set; }
 
+        [Display(Name = "原价")]
+        public decimal OriginalPrice { get; set; }
+
         [Display(Name = "上架")]
         public bool Release { get; set; }
 

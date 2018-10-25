@@ -365,6 +365,10 @@
     <Compile Include="Migrations\201810240602250_CardAddViewAndLike.Designer.cs">
       <DependentUpon>201810240602250_CardAddViewAndLike.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201810250845464_ProductAddOriginalPrice.cs" />
+    <Compile Include="Migrations\201810250845464_ProductAddOriginalPrice.Designer.cs">
+      <DependentUpon>201810250845464_ProductAddOriginalPrice.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ArticleModels.cs" />
@@ -988,6 +992,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201810240602250_CardAddViewAndLike.resx">
       <DependentUpon>201810240602250_CardAddViewAndLike.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810250845464_ProductAddOriginalPrice.resx">
+      <DependentUpon>201810250845464_ProductAddOriginalPrice.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
