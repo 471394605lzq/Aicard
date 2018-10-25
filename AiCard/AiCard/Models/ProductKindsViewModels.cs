@@ -11,6 +11,7 @@ namespace AiCard.Models
         public int ID { get; set; }
 
         [Display(Name = "名称")]
+        [Required]
         public string Name { get; set; }
         [Display(Name = "企业名称")]
         public int EnterpriseID { get; set; }

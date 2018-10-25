@@ -16,7 +16,7 @@
     };
 }
 <ol class="breadcrumb">
-    <li><a href="@Url.Action("Index")">新增商品</a></li>
+    <li><a href="@Url.Action("Index")">商品管理</a></li>
     <li>新增商品</li>
 </ol>
 
@@ -78,7 +78,7 @@
             <div class="form-group">
                 @Html.LabelFor(model => model.Release, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
-                    <div class="checkbox">
+                    <div class="form-control-static">
                         @Html.EditorFor(model => model.Release)
                         @Html.ValidationMessageFor(model => model.Release, "", new { @class = "text-danger" })
                     </div>

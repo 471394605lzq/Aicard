@@ -14,6 +14,7 @@ namespace AiCard.Models
         public Enums.ProductType Type { get; set; }
 
         [Display(Name = "分类")]
+        [Required]
         public int KindID { get; set; }
         [Display(Name = "分类")]
         public ProductKind Kind { get; set; }
@@ -24,15 +25,18 @@ namespace AiCard.Models
         [Display(Name = "企业名称")]
         public string EnterpriseName { get; set; }
         [Display(Name = "名称")]
+        [Required]
         public string Name { get; set; }
 
         [Display(Name = "库存")]
+        [Required]
         public int Count { get; set; }
 
         [Display(Name = "总销量")]
         public int TotalSales { get; set; }
 
         [Display(Name = "单价")]
+        [Required]
         public decimal Price { get; set; }
 
         [Display(Name = "上架")]

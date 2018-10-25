@@ -14,7 +14,7 @@
     @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger editMap-address" })
     @Html.HiddenFor(model => model.Lat, new { @class = "map_lat" })
     @Html.HiddenFor(model => model.Lng, new { @class = "map_lng" })
-
+  
     <div class="modal fade" id="map_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
             <div class="modal-content">

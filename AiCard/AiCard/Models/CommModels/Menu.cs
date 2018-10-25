@@ -17,6 +17,7 @@ namespace AiCard.Models.CommModels
 
         public bool Active { get; set; }
 
+        public string IconImage { get; set; }//字体图标
         public List<Menu> Child { get; set; }
     }
 }

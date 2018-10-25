@@ -100,10 +100,16 @@ namespace AiCard.Controllers
             Models.Enterprise e = new Enterprise
             {
                 Address = "帝推科技",
-                //Lat = 23.015228,
-                //Lng = 113.74574
+                Lat = 23.015228,
+                Lng = 113.74574
             };
             var map = new Models.CommModels.Map(e);
+            return View(map);
+        }
+
+        [HttpPost]
+        public ActionResult TestMap(Models.CommModels.Map map)
+        {
             return View(map);
         }
 
