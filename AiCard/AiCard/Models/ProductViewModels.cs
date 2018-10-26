@@ -103,4 +103,13 @@ namespace AiCard.Models
         [Display(Name = "排序")]
         public int Sort { get; set; }
     }
+
+    public class ProductKindViewModel
+    {
+        public string Name { get; set; }
+
+        public int? KindID { get; set; }
+
+        public int Sort { get; set; }
+    }
 }
