@@ -28,7 +28,7 @@ namespace AiCard.Controllers
 
         // GET: ProductsManage
         [Authorize(Roles = SysRole.ProductManageRead + "," + SysRole.EProductManageRead)]
-        public ActionResult Index(string filter, int page = 1)
+        public ActionResult Index(string filter, int? page = 1)
         {
             Sidebar();
             var m = from p in db.Products
@@ -46,11 +46,12 @@ namespace AiCard.Controllers
                         Info = p.Info,
                         KindID = p.KindID,
                         Price = p.Price,
+                        OriginalPrice=p.OriginalPrice,
                         Release = p.Release,
                         TotalSales = p.TotalSales,
                         Type = p.Type,
                         Kind = p.Kind,
-                        Images=p.Images
+                        Images = p.Images
                     };
             if (!string.IsNullOrWhiteSpace(filter))
             {
@@ -61,7 +62,7 @@ namespace AiCard.Controllers
             {
                 m = m.Where(s => s.EnterpriseID == AccontData.EnterpriseID);
             }
-            var paged = m.OrderByDescending(s => s.ID).ToPagedList(page);
+            var paged = m.OrderByDescending(s => s.ID).ToPagedList(page.Value,10);
             return View(paged);
         }
 
@@ -84,7 +85,7 @@ namespace AiCard.Controllers
         [Authorize(Roles = SysRole.ProductManageCreate + "," + SysRole.EProductManageCreate)]
         public ActionResult Create()
         {
-            ViewBag.KindID = new SelectList(db.ProductKinds, "ID", "Name");
+            ViewBag.KindID = new SelectList(db.ProductKinds.Where(s=>s.EnterpriseID==AccontData.EnterpriseID), "ID", "Name");
             var model = new ProductViewModels();
             return View(model);
         }
@@ -94,6 +95,7 @@ namespace AiCard.Controllers
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [ValidateInput(false)]
         [Authorize(Roles = SysRole.ProductManageCreate + "," + SysRole.EProductManageCreate)]
         public ActionResult Create(ProductViewModels product)
         {
@@ -115,6 +117,7 @@ namespace AiCard.Controllers
                     Info = product.Info,
                     KindID = product.KindID,
                     Price = product.Price,
+                    OriginalPrice=product.OriginalPrice,
                     Release = product.Release,
                     Sort = product.Sort,
                     TotalSales = product.TotalSales,
@@ -156,6 +159,7 @@ namespace AiCard.Controllers
                 Info = model.Info,
                 KindID = model.KindID,
                 Price = model.Price,
+                OriginalPrice=model.OriginalPrice,
                 Release = model.Release,
                 Sort = model.Sort,
                 TotalSales = model.TotalSales,
@@ -166,7 +170,7 @@ namespace AiCard.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.KindID = new SelectList(db.ProductKinds, "ID", "Name", models.KindID);
+            ViewBag.KindID = new SelectList(db.ProductKinds.Where(s=>s.EnterpriseID==AccontData.EnterpriseID), "ID", "Name", models.KindID);
             return View(models);
         }
 
@@ -196,6 +200,7 @@ namespace AiCard.Controllers
                 t.Info = product.Info;
                 t.KindID = product.KindID;
                 t.Price = product.Price;
+                t.OriginalPrice = product.OriginalPrice;
                 t.Release = product.Release;
                 t.Sort = product.Sort;
                 t.TotalSales = product.TotalSales;
@@ -243,6 +248,7 @@ namespace AiCard.Controllers
                 KindID = p.KindID,
                 KindName=ps.Name,
                 Price = p.Price,
+                OriginalPrice=p.OriginalPrice,
                 Release = p.Release,
                 Sort = p.Sort,
                 TotalSales = p.TotalSales,
@@ -256,7 +262,7 @@ namespace AiCard.Controllers
 
 
             //Product product = db.Products.Find(id);
-            return View(model);
+            //return View(model);
         }
 
         // POST: ProductsManage/Delete/5

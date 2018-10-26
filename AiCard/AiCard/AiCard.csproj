@@ -937,9 +937,7 @@
     <Folder Include="Views\Article\" />
     <Folder Include="Views\CardTab\" />
     <Folder Include="Views\Card\" />
-    <Folder Include="Views\ChinaPCAS\" />
     <Folder Include="Views\HomePageManage\" />
-    <Folder Include="Views\Products\" />
     <Folder Include="Views\UserLog\" />
   </ItemGroup>
   <ItemGroup>

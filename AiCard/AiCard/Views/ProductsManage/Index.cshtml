@@ -32,7 +32,7 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Kind.Name)
+                分类名称
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Type)
@@ -48,6 +48,9 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.TotalSales)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OriginalPrice)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Price)
@@ -87,14 +90,16 @@
                 @Html.DisplayFor(modelItem => item.TotalSales)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.OriginalPrice)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.Price)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Release)
             </td>
             <td>
-                @*@Html.DisplayFor(modelItem => item.Images)*@
-                @Html.TableImg(item.Images == null ? "" : item.Images.SplitToArray<string>()[0])
+                @Html.TableImg(item.Images==""?"": item.Images.Split(',')[0].ToString())
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Sort)
@@ -107,4 +112,4 @@
     }
 
 </table>
-@Html.PageList((PagedList.IPagedList<AiCard.Models.ProductIndexViewModels>)Model, Url.Action("Index"))
+@Html.PageList((PagedList.IPagedList<AiCard.Models.ProductIndexViewModels>)Model, Url.PageUrl())

@@ -30,7 +30,7 @@ namespace AiCard.Models
         [Display(Name = "总销量")]
         public int TotalSales { get; set; }
 
-        [Display(Name = "单价")]
+        [Display(Name = "销售单价")]
         public decimal Price { get; set; }
 
         [Display(Name = "原价")]
