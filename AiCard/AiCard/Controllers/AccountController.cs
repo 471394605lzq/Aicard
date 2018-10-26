@@ -740,6 +740,10 @@ namespace AiCard.Controllers
         {
             try
             {
+                if (string.IsNullOrWhiteSpace(model.UnionID))
+                {
+                    return Json(Comm.ToJsonResult("UnionIDIsNull", "UnionID不能为空"));
+                }
                 var user = CreateByWeChat(model);
                 return Json(Comm.ToJsonResult("Success", "成功", new UserForApiViewModel(user)));
             }

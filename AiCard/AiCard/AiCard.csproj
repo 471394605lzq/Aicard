@@ -289,6 +289,7 @@
     <Compile Include="Controllers\EnterpriseController.cs" />
     <Compile Include="Controllers\EnterpriseManageController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\HomePageModularsController.cs" />
     <Compile Include="Controllers\HomePageModularsManageController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ProductKindsManageController.cs" />
@@ -407,6 +408,9 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\iconfont.css" />
+    <Content Include="Content\Images\404\avatar.png" />
+    <Content Include="Content\Images\404\default.jpg" />
+    <Content Include="Content\Images\404\placeholder_image.png" />
     <Content Include="Content\Images\filetype\doc.png" />
     <Content Include="Content\Images\filetype\file.png" />
     <Content Include="Content\Images\filetype\mp3.png" />
@@ -939,6 +943,7 @@
     <Folder Include="Views\Card\" />
     <Folder Include="Views\ChinaPCAS\" />
     <Folder Include="Views\HomePageManage\" />
+    <Folder Include="Views\HomePageModulars\" />
     <Folder Include="Views\Products\" />
     <Folder Include="Views\UserLog\" />
   </ItemGroup>
