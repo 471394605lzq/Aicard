@@ -115,17 +115,25 @@ namespace AiCard.Controllers
         {
             try
             {
-                var query = from p in db.Products
-                            where p.EnterpriseID == enterpriseid && p.ID == productid && p.Release
-                            select new
-                            {
-                                Image = p.Images,
-                                Name = p.Name,
-                                Nowprice = p.Price,
-                                DetailContent = p.Info,
-                                Originalprice = p.OriginalPrice
-                            };
-                return Json(Comm.ToJsonResult("Success", "获取成功", query), JsonRequestBehavior.AllowGet);
+                var product = (from p in db.Products
+                               where p.EnterpriseID == enterpriseid && p.ID == productid && p.Release
+                               select new
+                               {
+                                   Images = p.Images,
+                                   Name = p.Name,
+                                   Nowprice = p.Price,
+                                   DetailContent = p.Info,
+                                   Originalprice = p.OriginalPrice
+                               }).FirstOrDefault();
+                var model = new
+                {
+                    Images = product.Images.SplitToArray<string>(),
+                    Name = product.Name,
+                    Nowprice = product.Nowprice,
+                    DetailContent = product.DetailContent,
+                    Originalprice = product.Originalprice
+                };
+                return Json(Comm.ToJsonResult("Success", "获取成功", model), JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {

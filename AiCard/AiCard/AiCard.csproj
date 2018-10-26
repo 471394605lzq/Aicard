@@ -410,6 +410,7 @@
     <Content Include="Content\iconfont.css" />
     <Content Include="Content\Images\404\avatar.png" />
     <Content Include="Content\Images\404\default.jpg" />
+    <Content Include="Content\Images\404\placeholder.png" />
     <Content Include="Content\Images\404\placeholder_image.png" />
     <Content Include="Content\Images\filetype\doc.png" />
     <Content Include="Content\Images\filetype\file.png" />
@@ -946,6 +947,7 @@
     <Folder Include="Views\HomePageModulars\" />
     <Folder Include="Views\Products\" />
     <Folder Include="Views\UserLog\" />
+    <Folder Include="WeChatSessionKey\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

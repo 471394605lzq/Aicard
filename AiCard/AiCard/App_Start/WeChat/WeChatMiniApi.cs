@@ -7,6 +7,8 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Security.Cryptography;
+using System.Text;
 using System.Web;
 
 namespace AiCard.WeChat
@@ -57,12 +59,19 @@ namespace AiCard.WeChat
             {
                 throw new Exception(JsonConvert.SerializeObject(result));
             }
-            return new Jscode2sessionResult
+
+
+            var jscode2Session = new Jscode2sessionResult
             {
                 OpenID = result["openid"].Value<string>(),
-                UnionID = result["unionid"].Value<string>(),
+                UnionID = result["unionid"]?.Value<string>(),
                 Session = result["session_key"].Value<string>(),
             };
+            if (result["unionid"] == null)
+            {
+                Jscode2sessionResultList.SessionCache.Add(jscode2Session);
+            }
+            return jscode2Session;
 
         }
         /// <summary>
@@ -123,4 +132,45 @@ namespace AiCard.WeChat
         public string Session { get; set; }
 
     }
+
+    public static class Jscode2sessionResultList
+    {
+        static Jscode2sessionResultList()
+        {
+            SessionCache = new List<Jscode2sessionResult>();
+        }
+
+        public static List<Jscode2sessionResult> SessionCache { get; set; }
+
+
+        public static string AESDecrypt(string text, string session, string iv)
+        {
+            try
+            {
+                //判断是否是16位 如果不够补0
+                //text = tests(text);
+                //16进制数据转换成byte
+                byte[] encryptedData = Convert.FromBase64String(text);  // strToToHexByte(text);
+                RijndaelManaged rijndaelCipher = new RijndaelManaged();
+                rijndaelCipher.Key = Convert.FromBase64String(session); // Encoding.UTF8.GetBytes(AesKey);
+                rijndaelCipher.IV = Convert.FromBase64String(iv);// Encoding.UTF8.GetBytes(AesIV);
+                rijndaelCipher.Mode = CipherMode.CBC;
+                rijndaelCipher.Padding = PaddingMode.PKCS7;
+                ICryptoTransform transform = rijndaelCipher.CreateDecryptor();
+                byte[] plainText = transform.TransformFinalBlock(encryptedData, 0, encryptedData.Length);
+                string result = Encoding.Default.GetString(plainText);
+                //int index = result.LastIndexOf('>');
+                //result = result.Remove(index + 1);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+    }
 }
+
+
+

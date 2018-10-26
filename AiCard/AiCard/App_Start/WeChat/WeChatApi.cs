@@ -386,9 +386,19 @@ namespace AiCard.WeChat
         public string UnionID { get; set; }
 
         /// <summary>
+        /// 加密的用户信息
+        /// </summary>
+        public string EncryptedData { get; set; }
+
+
+        public string IV { get; set; }
+
+        public string OpenID { get; set; }
+
+        /// <summary>
         /// 是否已经关注
         /// </summary>
-        public bool? IsSubscribe { get; set; }
+        public bool IsSubscribe { get; set; }
     }
 
     public class AccessTokenResult

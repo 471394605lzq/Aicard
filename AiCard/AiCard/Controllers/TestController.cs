@@ -7,7 +7,8 @@ using AiCard.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
-
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 namespace AiCard.Controllers
 {
     public class TestController : Controller
@@ -34,6 +35,8 @@ namespace AiCard.Controllers
 
             return View();
         }
+
+
 
         [HttpGet]
         [AllowCrossSiteJson]
@@ -195,6 +198,8 @@ namespace AiCard.Controllers
             public AiCard.Models.CommModels.FileUpload Avatar { get; set; }
 
         }
+
+      
 
         protected override void Dispose(bool disposing)
         {
