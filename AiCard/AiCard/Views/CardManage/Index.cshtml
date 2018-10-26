@@ -7,18 +7,22 @@
     <div class="container-fluid">
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
-                <li><a href="@Url.Action("Create")">新增</a></li>
+                <li>
+                    @if (this.User.IsInRole(SysRole.CardManageCreate)|| this.User.IsInRole(SysRole.ECardManageCreate)) {
+                    <a href="@Url.Action("Create")">新增 <label style="margin-left:15px;">|</label></a>
+                    }
+                </li>
                 @*<li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">状态 <span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="@Url.WithAllPara("enable")">content</a></li>
-                            <li><a href="#">Action</a></li>
-                            <li><a href="#">Another action</a></li>
-                        </ul>
-                    </li>*@
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">状态 <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                    <li><a href="@Url.WithAllPara("enable")">content</a></li>
+                    <li><a href="#">Action</a></li>
+                    <li><a href="#">Another action</a></li>
+                </ul>
+            </li>*@
             </ul>
             <form class="navbar-form navbar-left">
-                |<div class="form-group" style="margin-left:20px;">
+                <div class="form-group" style="margin-left:20px;">
                     名片名称：<input type="text" name="filter" class="form-control" placeholder="Search" value="@Request["filter"]">
                 </div>
                 <button type="submit" class="btn btn-default">搜索</button>
@@ -84,7 +88,7 @@
             <th>
                 图片
             </th>
-            <th></th>
+            <th>操作</th>
         </tr>
     </thead>
 
@@ -136,8 +140,14 @@
                 @Html.TableImg(item.Images==null?"":item.Images.SplitToArray<string>()[0])
             </td>
             <td>
-                @Html.ActionLink("编辑", "Edit", new { id = item.ID }) |
-                @Html.ActionLink("删除", "Delete", new { id = item.ID })
+                @if (this.User.IsInRole(SysRole.CardManageEdit)|| this.User.IsInRole(SysRole.ECardManageEdit))
+                {
+                @Html.ActionLink("编辑", "Edit", new { id = item.ID })
+                }
+                @if (this.User.IsInRole(SysRole.CardMangeDelete) || this.User.IsInRole(SysRole.ECardManageDelete))
+                {
+                    <label style="margin-right:5px;">|</label>@Html.ActionLink("删除", "Delete", new { id = item.ID })
+                }
             </td>
         </tr>
     }

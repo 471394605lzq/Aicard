@@ -35,9 +35,13 @@ namespace AiCard.Models
         [Display(Name = "总销量")]
         public int TotalSales { get; set; }
 
-        [Display(Name = "单价")]
+        [Display(Name = "销售单价")]
         [Required]
         public decimal Price { get; set; }
+
+        [Display(Name = "原价")]
+        [Required]
+        public decimal OriginalPrice { get; set; }
 
         [Display(Name = "上架")]
         public bool Release { get; set; }
@@ -87,8 +91,10 @@ namespace AiCard.Models
         [Display(Name = "总销量")]
         public int TotalSales { get; set; }
 
-        [Display(Name = "单价")]
+        [Display(Name = "销售单价")]
         public decimal Price { get; set; }
+        [Display(Name = "原价")]
+        public decimal OriginalPrice { get; set; }
 
         [Display(Name = "上架")]
         public bool Release { get; set; }
