@@ -75,13 +75,15 @@ namespace AiCard.Controllers
             var query = from k in db.ProductKinds
                         from e in db.Enterprises
                         where k.EnterpriseID == e.ID && k.EnterpriseID == enterpriseid
-                        select new
+                        orderby k.Sort
+                        select new ProductKindViewModel
                         {
                             Name = k.Name,
-                            ID = k.ID,
-                            Sort=k.Sort
+                            KindID = k.ID,
+                            Sort = k.Sort
                         };
-            var data = query.OrderBy(s => s.Sort);
+            var data = query.ToList();
+            data.Insert(0, new ProductKindViewModel { KindID = null, Name = "全部", Sort = -1 });
             return Json(Comm.ToJsonResult("Success", "获取成功", data), JsonRequestBehavior.AllowGet);
         }
         /// <summary>
@@ -109,12 +111,12 @@ namespace AiCard.Controllers
         /// <param name="productid">商品id</param>
         /// <returns>商品信息json集合</returns>
         [AllowCrossSiteJson]
-        public ActionResult GetProductDetails(int enterpriseid,int productid)
+        public ActionResult GetProductDetails(int enterpriseid, int productid)
         {
             try
             {
                 var query = from p in db.Products
-                            where p.EnterpriseID == enterpriseid&&p.ID==productid&&p.Release
+                            where p.EnterpriseID == enterpriseid && p.ID == productid && p.Release
                             select new
                             {
                                 Image = p.Images,

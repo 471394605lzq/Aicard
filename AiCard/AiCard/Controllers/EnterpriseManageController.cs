@@ -30,7 +30,7 @@ namespace AiCard.Controllers
 
 
         //获取当前登录的用户信息
-        AccountData AccontData
+        AccountData AccountData
         {
             get
             {
@@ -66,6 +66,12 @@ namespace AiCard.Controllers
             ViewBag.Sidebar = name;
 
         }
+
+        public void AccountDataViewBag()
+        {
+            ViewBag.AccontData = AccountData;
+        }
+
         //列表页
         [Authorize(Roles = SysRole.EnterpriseManageRead + "," + SysRole.EEnterpriseManageRead)]
         public ActionResult Index(string filter, bool? enable = null, int page = 1)
@@ -104,9 +110,9 @@ namespace AiCard.Controllers
                 m = m.Where(s => s.Enable == enable.Value);
             }
             //如果是企业用户则只查询该企业信息
-            if (AccontData.UserType == Enums.UserType.Enterprise)
+            if (AccountData.UserType == Enums.UserType.Enterprise)
             {
-                m = m.Where(s => s.ID == AccontData.EnterpriseID);
+                m = m.Where(s => s.ID == AccountData.EnterpriseID);
             }
             var paged = m.OrderByDescending(s => s.AdminID).ToPagedList(page);
             return View(paged);
@@ -306,7 +312,7 @@ namespace AiCard.Controllers
         [Authorize(Roles = SysRole.EnterpriseManageCreate)]
         public async Task<ActionResult> Create(EnterpriseViewModels enterprise)
         {
-            Sidebar();
+      
             if (ModelState.IsValid)
             {
                 var hascode = db.Enterprises.Any(s => s.Code == enterprise.Code);
@@ -385,7 +391,7 @@ namespace AiCard.Controllers
                             //r>0表示保存企业信息成功
                             if (r > 0)
                             {
-                                var renterprise = db.Enterprises.FirstOrDefault(s=>s.Code==enterprise.Code);
+                                var renterprise = db.Enterprises.FirstOrDefault(s => s.Code == enterprise.Code);
                                 var t = db.RoleGroups.FirstOrDefault(s => s.ID == rgid);
                                 t.EnterpriseID = renterprise.ID;
                                 var u = db.Users.FirstOrDefault(s => s.Id == user.Id);
@@ -397,15 +403,18 @@ namespace AiCard.Controllers
                     }
                 }
             }
+            Sidebar();
+            AccountDataViewBag();
             return View(enterprise);
         }
         [Authorize(Roles = SysRole.EnterpriseManageEdit + "," + SysRole.EEnterpriseManageEdit)]
         public ActionResult Edit(int? id)
         {
+            AccountDataViewBag();
             var temp = db.Enterprises.FirstOrDefault(s => s.ID == id);
             //防止企业用户串号修改
-            if (AccontData.UserType == Enums.UserType.Enterprise
-                && temp.ID != AccontData.EnterpriseID)
+            if (AccountData.UserType == Enums.UserType.Enterprise
+                && temp.ID != AccountData.EnterpriseID)
             {
                 return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
             }
@@ -425,7 +434,6 @@ namespace AiCard.Controllers
                 Code = model.Code,
                 Province = model.Province,
                 City = model.City,
-                //Address = model.Address,
                 Email = model.Email,
                 HomePage = model.HomePage,
                 Info = model.Info,
@@ -471,12 +479,12 @@ namespace AiCard.Controllers
         {
             var temp = db.Enterprises.FirstOrDefault(s => s.ID == enterprise.ID);
             //防止企业用户串号修改
-            if (AccontData.UserType == Enums.UserType.Enterprise
-                && temp.ID != AccontData.EnterpriseID)
+            if (AccountData.UserType == Enums.UserType.Enterprise
+                && temp.ID != AccountData.EnterpriseID)
             {
                 return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
             }
-            Sidebar();
+
             if (ModelState.IsValid)
             {
                 var t = db.Enterprises.FirstOrDefault(s => s.ID == enterprise.ID);
@@ -496,6 +504,8 @@ namespace AiCard.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
+            Sidebar();
+            ViewBag.AccontData = AccountData;
             return View(enterprise);
         }
         //删除
@@ -504,8 +514,8 @@ namespace AiCard.Controllers
         {
             Enterprise enterprise = db.Enterprises.Find(id);
             //防止企业用户串号修改
-            if (AccontData.UserType == Enums.UserType.Enterprise
-                && enterprise.ID != AccontData.EnterpriseID)
+            if (AccountData.UserType == Enums.UserType.Enterprise
+                && enterprise.ID != AccountData.EnterpriseID)
             {
                 return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
             }
@@ -537,8 +547,8 @@ namespace AiCard.Controllers
         {
             var temp = db.Enterprises.FirstOrDefault(s => s.ID == id.Value);
             //防止企业用户串号修改
-            if (AccontData.UserType == Enums.UserType.Enterprise
-                && temp.ID != AccontData.EnterpriseID)
+            if (AccountData.UserType == Enums.UserType.Enterprise
+                && temp.ID != AccountData.EnterpriseID)
             {
                 return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
             }
@@ -573,8 +583,8 @@ namespace AiCard.Controllers
         {
             var temp = db.Enterprises.FirstOrDefault(s => s.ID == enterprise.ID);
             //防止企业用户串号修改
-            if (AccontData.UserType == Enums.UserType.Enterprise
-                && temp.ID != AccontData.EnterpriseID)
+            if (AccountData.UserType == Enums.UserType.Enterprise
+                && temp.ID != AccountData.EnterpriseID)
             {
                 return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
             }
