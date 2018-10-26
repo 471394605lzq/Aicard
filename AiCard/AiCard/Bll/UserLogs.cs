@@ -114,7 +114,9 @@ namespace AiCard.Bll
                     case Enums.UserLogType.VoicePlay:
                     case Enums.UserLogType.VideoPlay:
                         {
+
                             var c = db.Cards.FirstOrDefault(s => s.ID == log.RelationID);
+
                             if (c == null || !c.Enable)
                             {
                                 throw new Exception("卡片不存在");
@@ -125,6 +127,12 @@ namespace AiCard.Bll
                         break;
                     case Enums.UserLogType.CardTab:
                         {
+                            if (db.UserLogs.Any(s => s.Type == Enums.UserLogType.CardTab
+                               && s.RelationID == log.RelationID
+                               && s.UserID == log.UserID))
+                            {
+                                throw new Exception("该用户已经点击过此名片标签");
+                            }
                             var t = db.CardTabs.FirstOrDefault(s => s.ID == log.RelationID);
                             if (t == null)
                             {
@@ -176,7 +184,7 @@ namespace AiCard.Bll
                            .Where(s => s.Type == log.Type && s.RelationID == log.RelationID)
                            .GroupBy(s => s.UserID)
                            .Count();
-                      
+
                     }
                     if (log.Type == Enums.UserLogType.CardLike)
                     {
@@ -186,7 +194,13 @@ namespace AiCard.Bll
                     }
                     db.SaveChanges();//更新点赞数量或阅读数量
                 }
-
+                if (log.Type == Enums.UserLogType.CardTab)
+                {
+                    var t = db.CardTabs.FirstOrDefault(s => s.ID == log.RelationID);
+                    t.Count = db.UserLogs.Count(s => s.RelationID == log.RelationID
+                        && s.Type == Enums.UserLogType.CardTab);
+                    db.SaveChanges();//更新卡片标签
+                }
             }
         }
     }

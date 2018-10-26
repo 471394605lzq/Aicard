@@ -92,8 +92,8 @@ namespace AiCard.Controllers
                 .Where(s => s.Type == UserLogType.CardRead && s.RelationID == cardID)
                 .GroupBy(s => s.UserID)
                 .Count();
-            var hadLike = db.UserLogs.Any(s => s.RelationID == cardID 
-                && s.Type == UserLogType.CardLike 
+            var hadLike = db.UserLogs.Any(s => s.RelationID == cardID
+                && s.Type == UserLogType.CardLike
                 && s.UserID == userID);
             //获取最近访问的6个人头像
             var leastUsers = (from l in db.UserLogs
@@ -117,7 +117,10 @@ namespace AiCard.Controllers
                                .Take(6)
                                .ToList();
             var tab = (from t in db.CardTabs
-                       join l in db.UserLogs.Where(s => s.Type == UserLogType.CardTab && s.UserID == userID) on t.ID equals l.RelationID into tl
+                       join l in db.UserLogs.Where(s => s.Type == UserLogType.CardTab)
+                        on t.ID equals l.RelationID into tl
+                       join ul in db.UserLogs.Where(s => s.Type == UserLogType.CardTab && s.UserID == userID)
+                        on t.ID equals ul.RelationID into tl2
                        where t.CardID == cardID
                        select new
                        {
@@ -126,7 +129,7 @@ namespace AiCard.Controllers
                            t.Count,
                            t.Name,
                            t.Style,
-                           HadLike = tl.Any()
+                           HadLike = tl2.Any()
                        }).ToList();
 
             Func<int, string> stringNum = num =>
