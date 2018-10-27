@@ -54,7 +54,7 @@
     }
 
 </table>
-@Html.PageList((PagedList.IPagedList<AiCard.Models.RoleGroupViewModel>)Model, Url.Action("Index"))
+@Html.PageList((PagedList.IPagedList<AiCard.Models.RoleGroupViewModel>)Model, Url.PageUrl())
 
 @section Scripts{
     @Scripts.Render("~/Scripts/Views/roleGroup.js")
