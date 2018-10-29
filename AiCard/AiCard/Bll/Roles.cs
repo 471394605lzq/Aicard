@@ -92,6 +92,7 @@ namespace AiCard.Bll
             addSystemERole(SysRole.ECardManageDelete, "名片权限管理", "名片权限管理删除");
 
             addSystemERole(SysRole.EHomePageModularsManageRead, "公司主页", "公司主页查看");
+            addSystemERole(SysRole.EHomePageModularsManageCreate, "公司主页", "公司主页创建");
             addSystemERole(SysRole.EHomePageModularsManageEdit, "公司主页", "公司主页模块编辑");
             addSystemERole(SysRole.EHomePageModularsManageDelete, "公司主页", "公司主页模块删除");
 
@@ -104,6 +105,7 @@ namespace AiCard.Bll
             addSystemERole(SysRole.EProductManageCreate, "商品权限管理", "商品权限管理创建");
             addSystemERole(SysRole.EProductManageEdit, "商品权限管理", "商品权限管理编辑");
             addSystemERole(SysRole.EProductMangeDelete, "商品权限管理", "商品权限管理删除");
+            
             #endregion
             #region 后台权限
             Action<string, string, string> addSystemRole = (name, gourp, desc) =>

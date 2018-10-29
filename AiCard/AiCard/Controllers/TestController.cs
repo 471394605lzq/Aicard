@@ -18,21 +18,7 @@ namespace AiCard.Controllers
         // GET: Test
         public ActionResult Index()
         {
-            //var _roleManager = new RoleManager<ApplicationRole>(new RoleStore<ApplicationRole>(db));
-            //var _userManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
-
-            //var roles = _roleManager.Roles
-            //    .Where(s => s.Type == Enums.RoleType.Enterprise)
-            //    .Select(s => s.Name).ToArray();
-            //var admins = from u in db.Users
-            //             from e in db.Enterprises
-            //             where u.Id == e.AdminID
-            //             select u.Id;
-            //foreach (var item in admins)
-            //{
-            //    _userManager.AddToRoles(item, roles);
-            //}
-
+            WeChat.Jscode2sessionResultList.SetSession("1", "1231");
             return View();
         }
 
@@ -199,7 +185,7 @@ namespace AiCard.Controllers
 
         }
 
-      
+
 
         protected override void Dispose(bool disposing)
         {

@@ -77,9 +77,9 @@ namespace AiCard
         public const string EProductMangeDelete = "EProductMangeDelete";
 
         public const string EHomePageModularsManageRead = "EHomePageModularsManageRead";
+        public const string EHomePageModularsManageCreate = "EHomePageModularsManageCreate";
         public const string EHomePageModularsManageEdit = "EHomePageModularsManageEdit";
         public const string EHomePageModularsManageDelete = "EHomePageModularsManageDelete";
-
         #endregion
 
     }

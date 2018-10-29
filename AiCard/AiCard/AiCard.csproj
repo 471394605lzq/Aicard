@@ -371,9 +371,14 @@
     <Compile Include="Migrations\201810250845464_ProductAddOriginalPrice.Designer.cs">
       <DependentUpon>201810250845464_ProductAddOriginalPrice.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201810290736022_ArticleAddUpdateDateTimeAndTypeAndShare.cs" />
+    <Compile Include="Migrations\201810290736022_ArticleAddUpdateDateTimeAndTypeAndShare.Designer.cs">
+      <DependentUpon>201810290736022_ArticleAddUpdateDateTimeAndTypeAndShare.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ArticleModels.cs" />
+    <Compile Include="Models\ArticleViewModels.cs" />
     <Compile Include="Models\CardModels.cs" />
     <Compile Include="Models\CardViewModels.cs" />
     <Compile Include="Models\CommModels\Cell.cs" />
@@ -1003,6 +1008,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201810250845464_ProductAddOriginalPrice.resx">
       <DependentUpon>201810250845464_ProductAddOriginalPrice.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810290736022_ArticleAddUpdateDateTimeAndTypeAndShare.resx">
+      <DependentUpon>201810290736022_ArticleAddUpdateDateTimeAndTypeAndShare.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

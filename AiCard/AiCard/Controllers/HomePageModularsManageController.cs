@@ -27,11 +27,11 @@ namespace AiCard.Controllers
         }
 
 
-        // GET: HomePageManage
-        public ActionResult Index()
+        [Authorize(Roles = SysRole.EHomePageModularsManageRead)]
+        public ActionResult Index(int? enterpriseID)
         {
+            var eid = EnterpriseID == 0 ? enterpriseID.Value : EnterpriseID;
             Sidebar();
-            var eid = EnterpriseID;
             var model = db.HomePageModulars
                 .Where(s => s.EnterpriseID == eid)
                 .OrderBy(s => s.Sort)
@@ -43,29 +43,48 @@ namespace AiCard.Controllers
                     Type = s.Type
                 })
                 .ToList();
-            return View();
+            //if (model.Any(s => s.Type == Enums.HomePageModularType.Banner))
+            //{
+            //    model.Add(new HomePageModular
+            //    {
+            //        EnterpriseID = eid,
+            //        Sort = -1,
+            //        Title = "顶部轮播图",
+            //        Type = Enums.HomePageModularType.Banner
+            //    });
+            //    model.Add(new HomePageModular
+            //    {
+            //        EnterpriseID = eid,
+            //        Sort = 1,
+            //        Title = "联系方式",
+            //        Type = Enums.HomePageModularType.Contact
+            //    });
+            //    db.SaveChanges();
+            //}
+            model = model.OrderBy(s => s.Sort).ToList();
+            return View(model);
         }
 
-        public void InitModularList()
-        {
 
-        }
-
-        public ActionResult Check()
-        {
-            var eid = EnterpriseID;
-            var m = new Bll.HomePageModulars(eid);
-            return Json(Comm.ToJsonResult("Success", "", new { HasInit = eid }));
-        }
-
+        [Authorize(Roles = SysRole.EnterpriseManageCreate)]
         public ActionResult CreateByHtml()
         {
             var model = new HomePageModularByHtml();
             return View(model);
         }
 
+        [Authorize(Roles = SysRole.EnterpriseManageCreate)]
+        public ActionResult CreateByImage()
+        {
+            var model = new HomePageModularByImage();
+            return View(model);
+        }
+
+
+
         //不同类型的模块提交时候都统一提交到这里
         [HttpPost]
+        [Authorize(Roles = SysRole.EnterpriseManageCreate)]
         public ActionResult Create(IHomePageModular model)
         {
             if (!ModelState.IsValid)
@@ -85,6 +104,7 @@ namespace AiCard.Controllers
             return Json(Comm.ToJsonResult("Success", "成功"));
         }
 
+        [Authorize(Roles = SysRole.EHomePageModularsManageEdit)]
         public ActionResult Edit(IHomePageModular model)
         {
             if (!ModelState.IsValid)
@@ -112,6 +132,12 @@ namespace AiCard.Controllers
             return Json(Comm.ToJsonResult("Success", "成功"));
         }
 
+        [HttpPost]
+        [Authorize(Roles = SysRole.EHomePageModularsManageDelete)]
+        public ActionResult Delete(int id)
+        {
+            return Json("1");
+        }
 
 
         protected override void Dispose(bool disposing)

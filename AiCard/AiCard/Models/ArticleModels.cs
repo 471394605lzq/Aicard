@@ -13,8 +13,14 @@ namespace AiCard.Models
         [Display(Name = "标题")]
         public string Title { get; set; }
 
+        [Display(Name = "类别")]
+        public Enums.ArticleType Type { get; set; }
+
         [Display(Name = "创建时间")]
         public DateTime CreateDateTime { get; set; }
+
+        [Display(Name = "发布时间")]
+        public DateTime UpdateDateTime { get; set; }
 
         [Display(Name = "企业")]
         public int? EnterpriseID { get; set; }
@@ -36,6 +42,9 @@ namespace AiCard.Models
 
         [Display(Name = "评论数")]
         public int Comment { get; set; }
+
+        [Display(Name = "转发")]
+        public int Share { get; set; }
 
         [Display(Name = "状态")]
         public Enums.ArticleState State { get; set; }

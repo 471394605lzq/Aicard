@@ -10,13 +10,12 @@
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">添加模块 <span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        @foreach (AiCard.Enums.HomePageModularType item in modularTypes)
-                        {
-                            <li><a href="@Url.Action("Create", new { Type = item })">@item.GetDisplayName()</a></li>
-                        }
+                        <li><a href="@Url.Action("CreateByHtml")">@AiCard.Enums.HomePageModularType.Html.GetDisplayName()</a></li>
+                        <li><a href="@Url.Action("CreateByHtml")">@AiCard.Enums.HomePageModularType.Html.GetDisplayName()</a></li>
+                        <li><a href="#">@AiCard.Enums.HomePageModularType.Contact.GetDisplayName()</a></li>
                     </ul>
                 </li>
-                @*<li><a href="#">预览</a></li>*@
+                <li><a href="#">预览</a></li>
             </ul>
         </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
@@ -46,6 +45,7 @@
                 <td>
                     @Html.ActionLink("编辑", "Edit", new { id = item.ID })
                     | @Html.ActionLink("删除", "Delete", new { id = item.ID })
+                    | <span class="btnSort" title="">排序</span>
                 </td>
             </tr>
         }

@@ -717,8 +717,11 @@ namespace AiCard.Controllers
                 try
                 {
                     var result = wechat.Jscode2session(code);
-
-                    var user = db.Users.FirstOrDefault(s => result.UnionID != null && s.WeChatID == result.UnionID);
+                    Models.ApplicationUser user = null;
+                    if (!string.IsNullOrWhiteSpace(result.UnionID))
+                    {
+                        user = db.Users.FirstOrDefault(s => s.WeChatID == result.UnionID);
+                    }
 
                     return Json(Comm.ToJsonResult("Success", "成功", new
                     {
@@ -743,30 +746,33 @@ namespace AiCard.Controllers
         {
             try
             {
+
                 if (string.IsNullOrWhiteSpace(model.UnionID))
                 {
-
+                    if (string.IsNullOrWhiteSpace(model.OpenID))
+                    {
+                        return Json(Comm.ToJsonResult("OpenIDNoFound", $"OpenID不能为空"));
+                    }
                     //如果用户没关注公众号，获取不了UnionID，从EncryptedData从解密用户数据
-                    var data = WeChat.Jscode2sessionResultList.SessionCache.First(s => s.OpenID == model.OpenID);
-                    if (data == null)
-                    {
-                        return Json(Comm.ToJsonResult("OpenIDNoFound", $"服务中好不到OpenID:{model.OpenID}"));
-                    }
-                    var session = data.Session;
+                    var session = WeChat.Jscode2sessionResultList.GetSession(model.OpenID);
                     var str = WeChat.Jscode2sessionResultList.AESDecrypt(model.EncryptedData, session, model.IV);
-
-                    var jUser = JsonConvert.DeserializeObject<JObject>(str);
-                    var unionID = jUser["unionId"]?.Value<string>();
-
-                    //删除缓存
-                    WeChat.Jscode2sessionResultList.SessionCache.Remove(data);
-                    if (unionID == null)
+                    try
                     {
-                        return Json(Comm.ToJsonResult("UnionIDNoFound", "获取不了UnionID"));
+                        var jUser = JsonConvert.DeserializeObject<JObject>(str);
+                        var unionID = jUser["unionId"]?.Value<string>();
+                        if (unionID == null)
+                        {
+                            return Json(Comm.ToJsonResult("UnionIDNoFound", "获取不了UnionID"));
+                        }
+                        model.UnionID = unionID;
                     }
-                    model.UnionID = unionID;
-                }
+                    catch (Exception)
+                    {
+                        return Json(Comm.ToJsonResult("AESDecryptFail", "解密失败", new { Info = model, Aes = str, Session = session }));
+                    }
 
+
+                }
                 var user = CreateByWeChat(model);
                 return Json(Comm.ToJsonResult("Success", "成功", new UserForApiViewModel(user)));
             }
@@ -780,7 +786,11 @@ namespace AiCard.Controllers
         {
 
             string username, nickname, avart, unionId = model.UnionID;
-
+            var user = db.Users.FirstOrDefault(s => s.WeChatID == unionId);
+            if (user != null)
+            {
+                return user;
+            }
             nickname = model.NickName;
 
             avart = model.HeadImgUrl;
@@ -802,61 +812,39 @@ namespace AiCard.Controllers
             avart = new Qiniu.QinQiuApi().UploadFile(path, true);
             #endregion
 
-            ApplicationUser user = db.Users.FirstOrDefault(s => s.WeChatID == unionId);
-            if (user == null)
+
+            do
             {
-                do
-                {
-                    username = $"wc{DateTime.Now:yyyyMMddHHmmss}{Comm.Random.Next(1000, 9999)}";
-                } while (db.Users.Any(s => s.UserName == username));
-                if (string.IsNullOrWhiteSpace(nickname))
-                {
-                    nickname = username;
-                }
-                user = new ApplicationUser
-                {
-                    WeChatID = unionId,
-                    UserName = username,
-                    NickName = nickname,
-                    Avatar = avart,
-                    RegisterDateTime = DateTime.Now,
-                    LastLoginDateTime = DateTime.Now,
-                    UserType = Enums.UserType.Personal
-                };
-
-                var r = UserManager.Create(user);
-                user = db.Users.FirstOrDefault(s => s.WeChatID == unionId);
-
-                db.SaveChanges();
-                if (!r.Succeeded)
-                {
-                    throw new Exception(r.Errors.FirstOrDefault());
-                }
+                username = $"wc{DateTime.Now:yyyyMMddHHmmss}{Comm.Random.Next(1000, 9999)}";
+            } while (db.Users.Any(s => s.UserName == username));
+            if (string.IsNullOrWhiteSpace(nickname))
+            {
+                nickname = username;
             }
+            user = new ApplicationUser
+            {
+                WeChatID = unionId,
+                UserName = username,
+                NickName = nickname,
+                Avatar = avart,
+                RegisterDateTime = DateTime.Now,
+                LastLoginDateTime = DateTime.Now,
+                UserType = Enums.UserType.Personal
+            };
+
+            var r = UserManager.Create(user);
+            user = db.Users.FirstOrDefault(s => s.WeChatID == unionId);
+
+            db.SaveChanges();
+            if (!r.Succeeded)
+            {
+                throw new Exception(r.Errors.FirstOrDefault());
+            }
+
             return user;
         }
 
-        [HttpPost]
-        [AllowCrossSiteJson]
-        public ActionResult GetUnoinIDByEncryptedDataAndIV(string openID, string encryptedData, string iv)
-        {
-            var data = WeChat.Jscode2sessionResultList.SessionCache.First(s => s.OpenID == openID);
-            if (data == null)
-            {
-                return Json(Comm.ToJsonResult("OpenIDNoFound", $"服务中好不到OpenID:{openID}"));
-            }
-            var session = data.Session;
-            var str = WeChat.Jscode2sessionResultList.AESDecrypt(encryptedData, session, iv);
-            var jUser = JsonConvert.DeserializeObject<JObject>(str);
-            var unionID = jUser["unionId"]?.Value<string>();
-            WeChat.Jscode2sessionResultList.SessionCache.Remove(data);
-            if (unionID == null)
-            {
-                return Json(Comm.ToJsonResult("UnionIDNoFound", "获取不了UnionID"));
-            }
-            return Json(Comm.ToJsonResult("Success", "成功", new { UnionID = unionID }));
-
-        }
+      
 
         #endregion
     }

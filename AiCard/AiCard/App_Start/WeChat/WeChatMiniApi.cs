@@ -69,7 +69,8 @@ namespace AiCard.WeChat
             };
             if (result["unionid"] == null)
             {
-                Jscode2sessionResultList.SessionCache.Add(jscode2Session);
+                Jscode2sessionResultList.SetSession(jscode2Session.OpenID, jscode2Session.Session);
+
             }
             return jscode2Session;
 
@@ -135,13 +136,34 @@ namespace AiCard.WeChat
 
     public static class Jscode2sessionResultList
     {
-        static Jscode2sessionResultList()
+
+
+        public static void SetSession(string openID, string session)
         {
-            SessionCache = new List<Jscode2sessionResult>();
+            if (string.IsNullOrWhiteSpace(openID) || string.IsNullOrWhiteSpace(session))
+            {
+                throw new Exception($"参数有有误：openID:{openID},session:{session}");
+            }
+            var d = HttpContext.Current.Server.MapPath($"~/Session");
+            if (!Directory.Exists(d))
+            {
+                Directory.CreateDirectory(d);
+            }
+            var path = HttpContext.Current.Server.MapPath($"~/Session/{openID}.txt");
+            System.IO.File.WriteAllText(path, session);
         }
 
-        public static List<Jscode2sessionResult> SessionCache { get; set; }
-
+        public static string GetSession(string openID)
+        {
+            var path = HttpContext.Current.Server.MapPath($"~/Session/{openID}.txt");
+            if (!File.Exists(path))
+            {
+                throw new Exception($"openID：{openID}的款存不存在");
+            }
+            string session = System.IO.File.ReadAllText(path);
+            System.IO.File.Delete(path);
+            return session;
+        }
 
         public static string AESDecrypt(string text, string session, string iv)
         {
@@ -167,6 +189,40 @@ namespace AiCard.WeChat
             {
                 return null;
             }
+        }
+
+        public static string AES_decrypt(string encryptedDataStr, string key, string iv)
+        {
+            RijndaelManaged rijalg = new RijndaelManaged();
+            //-----------------    
+            //设置 cipher 格式 AES-128-CBC    
+
+            rijalg.KeySize = 128;
+
+            rijalg.Padding = PaddingMode.PKCS7;
+            rijalg.Mode = CipherMode.CBC;
+
+            rijalg.Key = Convert.FromBase64String(key);
+            rijalg.IV = Convert.FromBase64String(iv);
+
+
+            byte[] encryptedData = Convert.FromBase64String(encryptedDataStr);
+            //解密    
+            ICryptoTransform decryptor = rijalg.CreateDecryptor(rijalg.Key, rijalg.IV);
+
+            string result;
+
+            using (MemoryStream msDecrypt = new MemoryStream(encryptedData))
+            {
+                using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
+                {
+                    using (StreamReader srDecrypt = new StreamReader(csDecrypt))
+                    {
+                        result = srDecrypt.ReadToEnd();
+                    };
+                }
+            }
+            return result;
         }
 
     }

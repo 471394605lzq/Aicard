@@ -151,6 +151,12 @@ namespace AiCard.Enums
 
     }
 
+    public enum ArticleType
+    {
+        Text,
+        Html,
+    }
+
     #region 微信
     public enum WeChatAccount
     {
