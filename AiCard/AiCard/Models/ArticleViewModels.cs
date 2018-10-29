@@ -7,14 +7,16 @@ namespace AiCard.Models
 {
     public class ArticleIndexViewModels
     {
-        public int ID { get; set; }
+        public int ArticleID { get; set; }
+
+        public string Title { get; set; }
 
         /// <summary>
         /// 头像
         /// </summary>
         public string Avatar { get; set; }
 
-
+        public Enums.ArticleType Type { get; set; }
         /// <summary>
         /// 时间
         /// </summary>
@@ -65,6 +67,8 @@ namespace AiCard.Models
         /// </summary>
         public string LikeUser { get; set; }
 
-        public DateTime DateTime { get; set; }
+        public string DateTime { get; set; }
+        
+        public bool HadLike { get; set; }
     }
 }

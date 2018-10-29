@@ -10,13 +10,15 @@ namespace AiCard.Controllers
     {
         ApplicationDbContext db = new ApplicationDbContext();
 
-        // GET: Article
-        public ActionResult Index(string userID, int? enterpriseID, int page = 1, int pageSize = 20, DateTime? time = null)
+        [AllowCrossSiteJson]
+        public ActionResult Index(int cardID, string userID, int type = 0, int page = 1, int pageSize = 20, DateTime? time = null)
         {
-            if (string.IsNullOrWhiteSpace(userID) && !enterpriseID.HasValue)
+            var card = db.Cards.Where(s => s.Enable).FirstOrDefault(s => s.ID == cardID);
+            if (card == null)
             {
-                return Json(Comm.ToJsonResult("Error", "UserID和EnterpriseID不能同时为空"));
+                return Json(Comm.ToJsonResult("CardNoFound", "名片不存在"));
             }
+
             if (page != 1 && !time.HasValue)
             {
                 return Json(Comm.ToJsonResult("Error", "Page!=1的时候time参数必须传"));
@@ -35,6 +37,8 @@ namespace AiCard.Controllers
                                      orderby l.CreateDateTime descending
                                      select new { l.RelationID, l.UserID, u.NickName })
                             on a.ID equals ll.RelationID into all
+                         join lu in db.UserLogs.Where(s => s.Type == Enums.UserLogType.ArticleLike && s.UserID == userID)
+                            on a.ID equals lu.RelationID into alu
                          where a.State == Enums.ArticleState.Released
                          select new
                          {
@@ -52,11 +56,27 @@ namespace AiCard.Controllers
                              a.Share,
                              User = au.FirstOrDefault(),
                              Enterprise = ae.FirstOrDefault(),
-                             Liker = all.Take(2)
+                             Liker = all.Take(2),
+                             HadLike = alu.Any()
                          };
+
+            switch (type)
+            {
+                case 0:
+                    {
+                        filter = filter.Where(s => s.UserID == card.UserID);
+                    }
+                    break;
+                default:
+                    {
+                        filter = filter.Where(s => s.EnterpriseID == card.EnterpriseID);
+                    }
+                    break;
+            }
+
             Func<DateTime, string> dateToString = datetime =>
             {
-                var ts = datetime - DateTime.Now;
+                var ts = DateTime.Now - datetime;
                 if (ts.TotalDays > 3)
                 {
                     return datetime.ToString("yyyy/MM/dd HH:mm");
@@ -87,73 +107,57 @@ namespace AiCard.Controllers
                     return i.ToString();
                 }
             };
-            //单分页大于（往下拉取数据）
-            if (page >= 1)
+            if (time.HasValue)
             {
-                if (time.HasValue)
+                if (page > 1)
                 {
                     filter = filter.Where(s => s.UpdateDateTime < time);
                 }
-                if (!string.IsNullOrWhiteSpace(userID))
+                else
                 {
-                    filter = filter.Where(s => s.UserID == userID);
+                    filter = filter.Where(s => s.UpdateDateTime > time);
                 }
-                else if (enterpriseID.HasValue)
+            }
+            //如果Page小于1时候（往上拉更新的时候）
+            if (page < 1)
+            {
+                page = 1;
+                pageSize = 100;
+            }
+            var paged = filter
+                .OrderByDescending(s => s.UpdateDateTime)
+                .ToPagedList(page, pageSize);
+            var data = paged.Select(s =>
+            {
+                string lUser = string.Join(",", s.Liker.Select(u => u.NickName));
+                string likeStr = null;
+                if (s.Like > 0)
                 {
-                    filter = filter.Where(s => s.EnterpriseID == enterpriseID);
+                    likeStr = s.Like > 2 ? $"{lUser}等{s.Like - 2}人觉得很赞" : $"{lUser}觉得很赞";
                 }
-                var paged = filter.OrderByDescending(s => s.UpdateDateTime).ToPagedList(page, pageSize);
-                var data = paged.Select(s =>
+                var a = new ArticleIndexViewModels
                 {
-                    string lUser = string.Join(",", s.Liker.Select(u => u.NickName));
-                    var a = new ArticleIndexViewModels
-                    {
-                        ID = s.ID,
-                        Avatar = s.User.Avatar,
-                        UserName = s.User.Name,
-                        DateTimeStr = dateToString(s.UpdateDateTime),
-                        DateTime = s.UpdateDateTime,
-                        CommentCount = coutToString(s.Comment),
-                        LikeCount = coutToString(s.Like),
-                        Content = s.Content,
-                        Cover = s.Type == Enums.ArticleType.Html ? s.Images : null,
-                        Images = s.Type == Enums.ArticleType.Text ? s.Images.SplitToArray<string>().ToArray() : new string[0],
-                        LikeUser = s.Like > 2 ? $"{lUser}等{s.Like - 2}人觉得很赞" : $"{lUser}觉得很赞",
-                        Position = s.User.Position,
-                        ShareCount = coutToString(s.Share)
-                    };
-                    return a;
-                });
-                return Json(Comm.ToJsonResultForPagedList(paged, data));
-            }
-            else
-            {   //单分页小于（往上拉取数据）
-                var data = filter.Where(s => s.UpdateDateTime > time)
-                    .OrderByDescending(s => s.UpdateDateTime)
-                    .ToList()
-                    .Select(s =>
-                   {
-                       string lUser = string.Join(",", s.Liker.Select(u => u.NickName));
-                       var a = new ArticleIndexViewModels
-                       {
-                           ID = s.ID,
-                           Avatar = s.User.Avatar,
-                           UserName = s.User.Name,
-                           DateTimeStr = dateToString(s.UpdateDateTime),
-                           DateTime = s.UpdateDateTime,
-                           CommentCount = coutToString(s.Comment),
-                           LikeCount = coutToString(s.Like),
-                           Content = s.Content,
-                           Cover = s.Type == Enums.ArticleType.Html ? s.Images : null,
-                           Images = s.Type == Enums.ArticleType.Text ? s.Images.SplitToArray<string>().ToArray() : new string[0],
-                           LikeUser = s.Like > 2 ? $"{lUser}等{s.Like - 2}人觉得很赞" : $"{lUser}觉得很赞",
-                           Position = s.User.Position,
-                           ShareCount = coutToString(s.Share)
-                       };
-                       return a;
-                   }).ToList();
-                return Json(Comm.ToJsonResult("Success", "成功", data));
-            }
+                    ArticleID = s.ID,
+                    Avatar = s.User.Avatar,
+                    CommentCount = coutToString(s.Comment),
+                    Content = s.Content,
+                    Cover = s.Type == Enums.ArticleType.Html ? s.Images : null,
+                    DateTime = s.UpdateDateTime.ToString(),
+                    DateTimeStr = dateToString(s.UpdateDateTime),
+                    HadLike = s.HadLike,
+                    Images = s.Type == Enums.ArticleType.Text ? s.Images.SplitToArray<string>().ToArray() : new string[0],
+                    LikeCount = coutToString(s.Like),
+                    LikeUser = likeStr,
+                    Position = s.User.Position,
+                    ShareCount = coutToString(s.Share),
+                    Title = s.Title,
+                    Type = s.Type,
+                    UserName = s.User.Name,
+                };
+                return a;
+            });
+            return Json(Comm.ToJsonResultForPagedList(paged, data), JsonRequestBehavior.AllowGet);
+
         }
 
         protected override void Dispose(bool disposing)
