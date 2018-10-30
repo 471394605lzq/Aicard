@@ -32,10 +32,10 @@ namespace AiCard.Controllers
                                     select new { c.Position, c.Avatar, c.UserID, c.Name })
                             on a.UserID equals u.UserID into au
                          join ll in (from l in db.UserLogs
-                                     from u in db.Users.Select(s => new { s.Id, s.NickName })
+                                     from u in db.Users.Select(s => new { s.Id, s.NickName, s.Avatar })
                                      where l.UserID == u.Id && l.Type == Enums.UserLogType.ArticleLike
                                      orderby l.CreateDateTime descending
-                                     select new { l.RelationID, l.UserID, u.NickName })
+                                     select new { l.RelationID, l.UserID, u.NickName, u.Avatar })
                             on a.ID equals ll.RelationID into all
                          join lu in db.UserLogs.Where(s => s.Type == Enums.UserLogType.ArticleLike && s.UserID == userID)
                             on a.ID equals lu.RelationID into alu
@@ -56,7 +56,7 @@ namespace AiCard.Controllers
                              a.Share,
                              User = au.FirstOrDefault(),
                              Enterprise = ae.FirstOrDefault(),
-                             Liker = all.Take(2),
+                             Liker = all.Take(6),
                              HadLike = alu.Any()
                          };
 
@@ -69,44 +69,13 @@ namespace AiCard.Controllers
                     break;
                 default:
                     {
-                        filter = filter.Where(s => s.EnterpriseID == card.EnterpriseID);
+                        filter = filter.Where(s => s.UserID != card.UserID
+                            && s.EnterpriseID == card.EnterpriseID);
                     }
                     break;
             }
 
-            Func<DateTime, string> dateToString = datetime =>
-            {
-                var ts = DateTime.Now - datetime;
-                if (ts.TotalDays > 3)
-                {
-                    return datetime.ToString("yyyy/MM/dd HH:mm");
-                }
-                else if (ts.TotalDays > 1)
-                {
-                    return $"{(int)ts.TotalDays}天前";
-                }
-                else if (ts.TotalHours > 1)
-                {
-                    return $"{(int)ts.TotalHours}小时前";
-                }
-                else
-                {
-                    var min = (int)ts.TotalMinutes;
-                    return $"{(min < 1 ? 1 : min)}分钟前";
-                }
-            };
 
-            Func<int, string> coutToString = i =>
-            {
-                if (i >= 10000)
-                {
-                    return (i / 10000).ToString("#万");
-                }
-                else
-                {
-                    return i.ToString();
-                }
-            };
             if (time.HasValue)
             {
                 if (page > 1)
@@ -129,27 +98,23 @@ namespace AiCard.Controllers
                 .ToPagedList(page, pageSize);
             var data = paged.Select(s =>
             {
-                string lUser = string.Join(",", s.Liker.Select(u => u.NickName));
-                string likeStr = null;
-                if (s.Like > 0)
-                {
-                    likeStr = s.Like > 2 ? $"{lUser}等{s.Like - 2}人觉得很赞" : $"{lUser}觉得很赞";
-                }
                 var a = new ArticleIndexViewModels
                 {
                     ArticleID = s.ID,
                     Avatar = s.User.Avatar,
-                    CommentCount = coutToString(s.Comment),
+                    CommentCount = s.Comment.ToStrForm(4, "评论"),
                     Content = s.Content,
                     Cover = s.Type == Enums.ArticleType.Html ? s.Images : null,
                     DateTime = s.UpdateDateTime.ToString(),
-                    DateTimeStr = dateToString(s.UpdateDateTime),
+                    DateTimeStr = s.UpdateDateTime.ToStrForm(),
                     HadLike = s.HadLike,
-                    Images = s.Type == Enums.ArticleType.Text ? s.Images.SplitToArray<string>().ToArray() : new string[0],
-                    LikeCount = coutToString(s.Like),
-                    LikeUser = likeStr,
+                    Images = s.Type == Enums.ArticleType.Text ?
+                        (s.Images.SplitToArray<string>()?.ToArray() ?? new string[0])
+                        : new string[0],
+                    LikeCount = s.Like.ToStrForm(4, "点赞"),
+                    LikeUser = s.Liker.Select(x => x.Avatar).ToArray(),
                     Position = s.User.Position,
-                    ShareCount = coutToString(s.Share),
+                    ShareCount = s.Share.ToStrForm(4, "分享"),
                     Title = s.Title,
                     Type = s.Type,
                     UserName = s.User.Name,
@@ -159,6 +124,8 @@ namespace AiCard.Controllers
             return Json(Comm.ToJsonResultForPagedList(paged, data), JsonRequestBehavior.AllowGet);
 
         }
+
+
 
         protected override void Dispose(bool disposing)
         {

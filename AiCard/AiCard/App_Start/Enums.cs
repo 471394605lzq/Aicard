@@ -203,6 +203,8 @@ namespace AiCard.Enums
         ArticleComment = 11,
         [Display(Name = "文章查看")]
         ArticleRead = 12,
+        [Display(Name = "文章分享")]
+        ArticleShare = 13,
         [Display(Name = "在线沟通")]
         Communication = 20,
         [Display(Name = "商品查看")]
@@ -211,6 +213,14 @@ namespace AiCard.Enums
         ProductCon = 31,
         [Display(Name = "主页查看")]
         HomePageRead = 40,
+        [Display(Name = "主页座机")]
+        HomePagePhone = 41,
+        [Display(Name = "主页Email")]
+        HomePageEmail = 42,
+        [Display(Name = "主页导航")]
+        HomePageAddress = 43,
+        [Display(Name = "主页分享")]
+        HomePageShare = 44,
         [Display(Name = "微信查看")]
         WeChatOpen = 50,
         [Display(Name = "名片查看")]
@@ -221,6 +231,7 @@ namespace AiCard.Enums
         CardSave = 62,
         [Display(Name = "名片点赞数")]
         CardLike = 63,
+
         [Display(Name = "商城查看")]
         ShopRead = 70,
         [Display(Name = "手机拨打")]
@@ -233,8 +244,15 @@ namespace AiCard.Enums
         VideoPlay = 83,
         [Display(Name = "手机拨打")]
         PhoneCall = 84,
+        [Display(Name = "名片公司名称复制")]
+        CardCompany = 85,
+        [Display(Name = "名片公司导航")]
+        CardAddress = 86,
         [Display(Name = "名片标签点击")]
-        CardTab = 90
+        CardTab = 90,
+        [Display(Name = "咨询")]
+        CardCon = 100,
+
     }
 
     public enum ProductType
