@@ -125,7 +125,21 @@ namespace AiCard.Controllers
 
         }
 
-
+        [AllowCrossSiteJson]
+        public ActionResult LikeList(int articleID, int page = 1, int pageSize = 20)
+        {
+            if (!db.Articles.Any(s => s.ID == articleID))
+            {
+                return Json(Comm.ToJsonResult("CardNoFound", "动态不存在"), JsonRequestBehavior.AllowGet);
+            }
+            var paged = (from u in db.Users
+                         from l in db.UserLogs
+                         where u.Id == l.UserID && l.RelationID == articleID && l.Type == Enums.UserLogType.ArticleLike
+                         orderby l.CreateDateTime descending
+                         select new { u.Avatar, UserName = u.NickName })
+                         .ToPagedList(page, pageSize);
+            return Json(Comm.ToJsonResultForPagedList(paged, paged), JsonRequestBehavior.AllowGet);
+        }
 
         protected override void Dispose(bool disposing)
         {
