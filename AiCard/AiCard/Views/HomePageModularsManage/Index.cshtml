@@ -1,6 +1,8 @@
 ﻿@model IEnumerable<AiCard.Models.HomePageModular>
 @{
+    ViewBag.Title = "公司主页";
     var modularTypes = Enum.GetValues(typeof(AiCard.Enums.HomePageModularType));
+    Layout = "~/Views/Shared/_LayoutBackground.cshtml";
 }
 <nav class="navbar navbar-default">
     <div class="container-fluid">
@@ -11,7 +13,7 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">添加模块 <span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="@Url.Action("CreateByHtml")">@AiCard.Enums.HomePageModularType.Html.GetDisplayName()</a></li>
-                        <li><a href="@Url.Action("CreateByHtml")">@AiCard.Enums.HomePageModularType.Html.GetDisplayName()</a></li>
+                        <li><a href="@Url.Action("CreateByImage")">@AiCard.Enums.HomePageModularType.Images.GetDisplayName()</a></li>
                         <li><a href="#">@AiCard.Enums.HomePageModularType.Contact.GetDisplayName()</a></li>
                     </ul>
                 </li>
@@ -26,9 +28,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.Title)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
             <th></th>
         </tr>
     </thead>
@@ -40,12 +39,29 @@
                     @Html.DisplayFor(modelItem => item.Title)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Content)
-                </td>
-                <td>
-                    @Html.ActionLink("编辑", "Edit", new { id = item.ID })
-                    | @Html.ActionLink("删除", "Delete", new { id = item.ID })
-                    | <span class="btnSort" title="">排序</span>
+                    @switch (item.Type)
+                    {
+                        case AiCard.Enums.HomePageModularType.Html:
+                            @Html.ActionLink("编辑", "EditByHtml", new { id = item.ID })
+                            break;
+                        case AiCard.Enums.HomePageModularType.Images:
+                            @Html.ActionLink("编辑", "EditByImage", new { id = item.ID })
+                            break;
+                        case AiCard.Enums.HomePageModularType.Contact:
+
+                            break;
+                        case AiCard.Enums.HomePageModularType.Banner:
+                            @Html.ActionLink("编辑", "EditByImage", new { id = item.ID })
+                            break;
+                        default:
+                            break;
+                    }
+
+                    @if (item.Type != AiCard.Enums.HomePageModularType.Banner)
+                    {
+                        @Html.Raw("|")  @Html.ActionLink("删除", "Delete", new { id = item.ID })  @Html.Raw("|")
+                        <span class="btnSort" title="">排序</span>
+                    }
                 </td>
             </tr>
         }

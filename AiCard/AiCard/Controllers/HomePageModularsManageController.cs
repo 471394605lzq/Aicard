@@ -22,7 +22,7 @@ namespace AiCard.Controllers
 
         public void Sidebar()
         {
-            ViewBag.Sidebar = "公司首页";
+            ViewBag.Sidebar = "公司主页";
 
         }
 
@@ -32,64 +32,67 @@ namespace AiCard.Controllers
         {
             var eid = EnterpriseID == 0 ? enterpriseID.Value : EnterpriseID;
             Sidebar();
-            var model = db.HomePageModulars
+            var filter = db.HomePageModulars
                 .Where(s => s.EnterpriseID == eid)
-                .OrderBy(s => s.Sort)
+                .Select(s => new
+                {
+                    s.ID,
+                    s.Sort,
+                    s.Title,
+                    s.Type,
+                    s.EnterpriseID,
+                    s.Content
+                });
+            if (!filter.Any(s => s.Type == Enums.HomePageModularType.Banner))
+            {
+                db.HomePageModulars.Add(new HomePageModular
+                {
+                    EnterpriseID = eid,
+                    Sort = -1,
+                    Title = "顶部轮播图",
+                    Type = Enums.HomePageModularType.Banner
+                });
+                db.HomePageModulars.Add(new HomePageModular
+                {
+                    EnterpriseID = eid,
+                    Sort = 1,
+                    Title = "联系方式",
+                    Type = Enums.HomePageModularType.Contact
+                });
+                db.SaveChanges();
+            }
+
+            var model = filter.OrderBy(s => s.Sort).ToList()
                 .Select(s => new HomePageModular
                 {
-                    ID = s.ID,
+                    Content = s.Content,
                     Sort = s.Sort,
+                    EnterpriseID = s.EnterpriseID,
+                    ID = s.ID,
                     Title = s.Title,
                     Type = s.Type
-                })
-                .ToList();
-            //if (model.Any(s => s.Type == Enums.HomePageModularType.Banner))
-            //{
-            //    model.Add(new HomePageModular
-            //    {
-            //        EnterpriseID = eid,
-            //        Sort = -1,
-            //        Title = "顶部轮播图",
-            //        Type = Enums.HomePageModularType.Banner
-            //    });
-            //    model.Add(new HomePageModular
-            //    {
-            //        EnterpriseID = eid,
-            //        Sort = 1,
-            //        Title = "联系方式",
-            //        Type = Enums.HomePageModularType.Contact
-            //    });
-            //    db.SaveChanges();
-            //}
-            model = model.OrderBy(s => s.Sort).ToList();
+                });
             return View(model);
         }
 
 
-        [Authorize(Roles = SysRole.EnterpriseManageCreate)]
+        #region Html
+        [Authorize(Roles = SysRole.EHomePageModularsManageCreate)]
         public ActionResult CreateByHtml()
         {
+            Sidebar();
             var model = new HomePageModularByHtml();
             return View(model);
         }
 
-        [Authorize(Roles = SysRole.EnterpriseManageCreate)]
-        public ActionResult CreateByImage()
-        {
-            var model = new HomePageModularByImage();
-            return View(model);
-        }
-
-
-
-        //不同类型的模块提交时候都统一提交到这里
         [HttpPost]
-        [Authorize(Roles = SysRole.EnterpriseManageCreate)]
-        public ActionResult Create(IHomePageModular model)
+        [Authorize(Roles = SysRole.EHomePageModularsManageCreate)]
+        public ActionResult CreateByHtml(HomePageModularByHtml model)
         {
             if (!ModelState.IsValid)
             {
-                return Json(Comm.ToJsonResult("Error", ModelState.FirstErrorMessage()));
+                Sidebar();
+                return View(model);
             }
             var eId = EnterpriseID;
             var maxSort = db.HomePageModulars.Where(s => s.EnterpriseID == eId).Max(s => s.Sort) + 1;
@@ -101,36 +104,165 @@ namespace AiCard.Controllers
                 Title = model.Title,
                 Type = model.Type
             };
-            return Json(Comm.ToJsonResult("Success", "成功"));
+            db.HomePageModulars.Add(modular);
+            db.SaveChanges();
+            return RedirectToAction("Index");
         }
 
         [Authorize(Roles = SysRole.EHomePageModularsManageEdit)]
-        public ActionResult Edit(IHomePageModular model)
+        public ActionResult EditByHtml(int id)
+        {
+            Sidebar();
+            var eId = EnterpriseID;
+            var m = db.HomePageModulars
+                .FirstOrDefault(s => s.ID == id
+                    && s.EnterpriseID == eId);
+
+            if (m == null)
+            {
+                return this.ToError("错误", "模块不存在", Url.Action("Index"));
+            }
+            var model = new HomePageModularByHtml()
+            {
+                Content = m.Content,
+                ID = m.ID,
+                Title = m.Title
+            };
+            return View(model);
+        }
+
+
+        [HttpPost]
+        [Authorize(Roles = SysRole.EHomePageModularsManageCreate)]
+        public ActionResult EditByHtml(HomePageModularByHtml model)
         {
             if (!ModelState.IsValid)
             {
-                return Json(Comm.ToJsonResult("Error", ModelState.FirstErrorMessage()));
+                Sidebar();
+                return View(model);
             }
             var eId = EnterpriseID;
-            var modular = db.HomePageModulars
+            var m = db.HomePageModulars
                 .FirstOrDefault(s => s.ID == model.ID
-                    && s.EnterpriseID == EnterpriseID);
-            if (modular == null)
+                    && s.EnterpriseID == eId);
+            if (m == null)
             {
-                return Json(Comm.ToJsonResult("NoFound", "模块不存在"));
+                return this.ToError("错误", "模块不存在", Url.Action("Index"));
             }
-            modular.Content = model.Content;
-            modular.Title = model.Title;
-            //HomePageModular modular = new HomePageModular
-            //{
-            //    Content = model.Content,
-            //    EnterpriseID = eId,
-            //    Sort = model,
-            //    Title = model.Title,
-            //    Type = model.Type
-            //};
-            return Json(Comm.ToJsonResult("Success", "成功"));
+            m.Content = model.Content;
+            m.Title = model.Title;
+            db.SaveChanges();
+            return RedirectToAction("Index");
         }
+        #endregion
+
+        #region Image
+        [Authorize(Roles = SysRole.EHomePageModularsManageCreate)]
+        public ActionResult CreateByImage()
+        {
+            Sidebar();
+            var model = new HomePageModularByImage();
+            return View(model);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = SysRole.EHomePageModularsManageCreate)]
+        public ActionResult CreateByImage(HomePageModularByImage model)
+        {
+            if (!ModelState.IsValid)
+            {
+                Sidebar();
+                return View(model);
+            }
+            var eId = EnterpriseID;
+            var maxSort = db.HomePageModulars.Where(s => s.EnterpriseID == eId).Max(s => s.Sort) + 1;
+            HomePageModular modular = new HomePageModular
+            {
+                Content = string.Join(",", model.Images.Images),
+                EnterpriseID = eId,
+                Sort = maxSort,
+                Title = model.Title,
+                Type = model.Type
+            };
+            db.HomePageModulars.Add(modular);
+            db.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+        [Authorize(Roles = SysRole.EHomePageModularsManageEdit)]
+        public ActionResult EditByImage(int id)
+        {
+            Sidebar();
+            var eId = EnterpriseID;
+            var m = db.HomePageModulars
+                .FirstOrDefault(s => s.ID == id
+                    && s.EnterpriseID == eId);
+
+            if (m == null)
+            {
+                return this.ToError("错误", "模块不存在", Url.Action("Index"));
+            }
+            var model = new HomePageModularByImage()
+            {
+                ID = m.ID,
+                Title = m.Title
+            };
+            model.Images.Images = m.Content.SplitToArray<string>(',').ToArray();
+            return View(model);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = SysRole.EHomePageModularsManageCreate)]
+        public ActionResult EditByImage(HomePageModularByImage model)
+        {
+            if (!ModelState.IsValid)
+            {
+                Sidebar();
+                return View(model);
+            }
+            var eId = EnterpriseID;
+            var m = db.HomePageModulars
+                .FirstOrDefault(s => s.ID == model.ID
+                    && s.EnterpriseID == eId);
+            if (m == null)
+            {
+                return this.ToError("错误", "模块不存在", Url.Action("Index"));
+            }
+            m.Content = string.Join(",", model.Images.Images);
+            m.Title = model.Title;
+
+            db.SaveChanges();
+            return RedirectToAction("Index");
+        }
+        #endregion
+
+        //[Authorize(Roles = SysRole.EHomePageModularsManageEdit)]
+        //public ActionResult Edit(IHomePageModular model)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return Json(Comm.ToJsonResult("Error", ModelState.FirstErrorMessage()));
+        //    }
+        //    var eId = EnterpriseID;
+        //    var modular = db.HomePageModulars
+        //        .FirstOrDefault(s => s.ID == model.ID
+        //            && s.EnterpriseID == EnterpriseID);
+        //    if (modular == null)
+        //    {
+        //        return Json(Comm.ToJsonResult("NoFound", "模块不存在"));
+        //    }
+        //    modular.Content = model.Content;
+        //    modular.Title = model.Title;
+        //    //HomePageModular modular = new HomePageModular
+        //    //{
+        //    //    Content = model.Content,
+        //    //    EnterpriseID = eId,
+        //    //    Sort = model,
+        //    //    Title = model.Title,
+        //    //    Type = model.Type
+        //    //};
+        //    return Json(Comm.ToJsonResult("Success", "成功"));
+        //}
 
         [HttpPost]
         [Authorize(Roles = SysRole.EHomePageModularsManageDelete)]

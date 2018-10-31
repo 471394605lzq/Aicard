@@ -78,9 +78,9 @@ namespace AiCard.Controllers
 
             if (time.HasValue)
             {
-                if (page > 1)
+                if (page > 0)
                 {
-                    filter = filter.Where(s => s.UpdateDateTime < time);
+                    filter = filter.Where(s => s.UpdateDateTime <= time);
                 }
                 else
                 {
@@ -105,7 +105,7 @@ namespace AiCard.Controllers
                     CommentCount = s.Comment.ToStrForm(4, "评论"),
                     Content = s.Content,
                     Cover = s.Type == Enums.ArticleType.Html ? s.Images : null,
-                    DateTime = s.UpdateDateTime.ToString(),
+                    DateTime = s.UpdateDateTime.ToString("yyyy-MM-dd HH:mm:ss.fff"),
                     DateTimeStr = s.UpdateDateTime.ToStrForm(),
                     HadLike = s.HadLike,
                     Images = s.Type == Enums.ArticleType.Text ?
@@ -126,9 +126,82 @@ namespace AiCard.Controllers
         }
 
         [AllowCrossSiteJson]
+        public ActionResult Detail(int articleID, string userID)
+        {
+            var a = db.Articles.FirstOrDefault(s => s.ID == articleID && s.State == Enums.ArticleState.Released);
+
+            if (a == null)
+            {
+                return Json(Comm.ToJsonResult("NoFound", "动态不存在"), JsonRequestBehavior.AllowGet);
+            }
+            var c = db.Cards.FirstOrDefault(s => s.UserID == a.UserID);
+            var com = (from ac in db.ArticleComments
+                       from u in db.Users
+                       where ac.UserID == u.Id && ac.ArticleID == articleID
+                       orderby ac.CreateDateTime descending
+                       select new
+                       {
+                           ac.Content,
+                           ac.CreateDateTime,
+                           ac.ID,
+                           ac.UserID,
+                           u.Avatar,
+                           u.NickName,
+                       })
+                      .ToPagedList(1, 20);
+            var likes = (from u in db.Users
+                         from l in db.UserLogs
+                         where u.Id == l.UserID
+                         && l.Type == Enums.UserLogType.ArticleLike
+                         && l.RelationID == articleID
+                         orderby l.CreateDateTime descending
+                         select new
+                         {
+                             u.Avatar,
+                             u.NickName,
+                             l.CreateDateTime
+                         }).ToPagedList(1, 20);
+            var hadLike = db.UserLogs
+                .Any(s => s.RelationID == articleID
+                 && s.Type == Enums.UserLogType.ArticleLike
+                 && s.UserID == userID);
+            var model = new
+            {
+                ArticleID = a.ID,
+                Avatar = c.Avatar,
+                CommentCount = com.TotalItemCount.ToStrForm(4, "评论"),
+                DateTimeStr = a.UpdateDateTime.ToStrForm(),
+                HadLike = hadLike,
+                LikeCount = a.Like.ToStrForm(4, "点赞"),
+                Title = a.Title,
+                a.Content,
+                Images = a.Type == Enums.ArticleType.Html ? new string[0] : a.Images.SplitToArray<string>().ToArray(),
+                LikeUser = likes.Select(s => new
+                {
+                    s.Avatar,
+                    CreateDateTime = s.CreateDateTime.ToStrForm(),
+                    UserName = s.NickName
+                }),
+                Comments = com.Select(s => new
+                {
+                    s.Avatar,
+                    s.Content,
+                    DateTimeStr = s.CreateDateTime.ToStrForm(),
+                    UserName = s.NickName,
+                    CommentID = s.ID,
+                }),
+                a.Type,
+                ShareCount = a.Share.ToStrForm(4, "分享"),
+                c.Position,
+                Cover = a.Type == Enums.ArticleType.Html ? a.Images.SplitToArray<string>()[0] : null,
+            };
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        [AllowCrossSiteJson]
         public ActionResult LikeList(int articleID, int page = 1, int pageSize = 20)
         {
-            if (!db.Articles.Any(s => s.ID == articleID))
+            if (!db.Articles.Any(s => s.ID == articleID && s.State == Enums.ArticleState.Released))
             {
                 return Json(Comm.ToJsonResult("CardNoFound", "动态不存在"), JsonRequestBehavior.AllowGet);
             }

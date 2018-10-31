@@ -948,6 +948,9 @@
     <Content Include="Views\Shared\DisplayTemplates\ImageResizer.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\ChinaPCASCom.cshtml" />
     <Content Include="Views\Test\pac.cshtml" />
+    <Content Include="Views\HomePageModularsManage\EditByHtml.cshtml" />
+    <Content Include="Views\HomePageModularsManage\CreateByImage.cshtml" />
+    <Content Include="Views\HomePageModularsManage\EditByImage.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

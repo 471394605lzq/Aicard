@@ -18,8 +18,8 @@ namespace AiCard.Controllers
         // GET: Test
         public ActionResult Index()
         {
-            WeChat.Jscode2sessionResultList.SetSession("1", "1231");
-            return View();
+
+            return Json(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), JsonRequestBehavior.AllowGet);
         }
 
 
