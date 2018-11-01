@@ -22,10 +22,10 @@ namespace AiCard
             {
                 menus.Add(new Models.CommModels.Menu { Name = "企业管理", Title = "企业管理", Url = "~/EnterpriseManage/Index", IconImage = "iconqyxx" });
             }
-            if (p.IsInRole(SysRole.EHomePageModularsManageRead))
-            {
-                menus.Add(new Models.CommModels.Menu { Name = "公司首页", Title = "公司首页", Url = "~/EnterpriseManage/Info", IconImage = "shouyeshouye" });
-            }
+            //if (p.IsInRole(SysRole.EHomePageModularsManageRead))
+            //{
+            //    menus.Add(new Models.CommModels.Menu { Name = "公司首页", Title = "公司首页", Url = "~/EnterpriseManage/Info", IconImage = "shouyeshouye" });
+            //}
             if (p.IsInRole(SysRole.CardManageRead) || p.IsInRole(SysRole.ECardManageRead))
             {
                 menus.Add(new Models.CommModels.Menu { Name = "名片管理", Title = "名片管理", Url = "~/CardManage/Index", IconImage = "mingpianliebiao" });

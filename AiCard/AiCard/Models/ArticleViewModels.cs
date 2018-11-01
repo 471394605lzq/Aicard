@@ -65,7 +65,7 @@ namespace AiCard.Models
         /// <summary>
         /// 点赞用户
         /// </summary>
-        public string LikeUser { get; set; }
+        public string[] LikeUser { get; set; }
 
         public string DateTime { get; set; }
         

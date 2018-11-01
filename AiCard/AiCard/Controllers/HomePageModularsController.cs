@@ -47,6 +47,11 @@ namespace AiCard.Controllers
                     Content = new string[]{ "http://image.dtoao.com/QQ%E5%9B%BE%E7%89%8720181027165945.png"},
                     Type= Enums.HomePageModularType.Images,
                 },
+                new {
+                    Title = "服务客户",
+                    Content = new string[]{ "http://image.dtoao.com/123123.png"},
+                    Type= Enums.HomePageModularType.Images,
+                },
                 new
                 {
                     Title = "联系方式",

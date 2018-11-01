@@ -190,6 +190,10 @@
       <Private>True</Private>
       <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="ToolGood.Words, Version=2.3.3.2, Culture=neutral, PublicKeyToken=d330f4fd115e6143, processorArchitecture=MSIL">
+      <HintPath>..\packages\ToolGood.Words.2.3.3.2\lib\net45\ToolGood.Words.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="WebGrease, Version=1.6.5135.21930, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
       <Private>True</Private>
@@ -252,12 +256,14 @@
     <Compile Include="App_Start\Enums.cs" />
     <Compile Include="App_Start\Extensions\ActionFilterAttributes.cs" />
     <Compile Include="App_Start\Extensions\ControllerExtensions.cs" />
+    <Compile Include="App_Start\Extensions\IntExtensions.cs" />
     <Compile Include="App_Start\Extensions\DictionaryExtensions.cs" />
     <Compile Include="App_Start\Extensions\EnumExtensions.cs" />
     <Compile Include="App_Start\Extensions\ExcelHelper.cs" />
     <Compile Include="App_Start\Extensions\HtmlHelperExtensions.cs" />
     <Compile Include="App_Start\Extensions\IPrincipalExtensions.cs" />
     <Compile Include="App_Start\Extensions\ModelStateDictionaryExtensions.cs" />
+    <Compile Include="App_Start\Extensions\DateTimeExtensions.cs" />
     <Compile Include="App_Start\Extensions\StringExtensions.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />
@@ -282,6 +288,7 @@
     <Compile Include="Bll\Roles.cs" />
     <Compile Include="Bll\UserLogs.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\ArticleCommentController.cs" />
     <Compile Include="Controllers\ArticleController.cs" />
     <Compile Include="Controllers\CardController.cs" />
     <Compile Include="Controllers\CardManageController.cs" />
@@ -410,6 +417,7 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Start\IllegalWords\keywords.txt" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -943,12 +951,16 @@
     <Content Include="Views\Shared\DisplayTemplates\ImageResizer.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\ChinaPCASCom.cshtml" />
     <Content Include="Views\Test\pac.cshtml" />
+    <Content Include="Views\HomePageModularsManage\EditByHtml.cshtml" />
+    <Content Include="Views\HomePageModularsManage\CreateByImage.cshtml" />
+    <Content Include="Views\HomePageModularsManage\EditByImage.cshtml" />
     <Content Include="Views\Test\DrawingPicture.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Content\Images\temofile\" />
     <Folder Include="Upload\" />
+    <Folder Include="Views\ArticleComment\" />
     <Folder Include="Views\Article\" />
     <Folder Include="Views\CardTab\" />
     <Folder Include="Views\Card\" />
