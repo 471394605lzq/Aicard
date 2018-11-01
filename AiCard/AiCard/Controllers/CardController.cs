@@ -197,6 +197,35 @@ namespace AiCard.Controllers
             return Json(Comm.ToJsonResult("Success", "成功", model), JsonRequestBehavior.AllowGet);
         }
 
+        [AllowCrossSiteJson]
+        public ActionResult TestIndex(int enterpriseID, string filter, int page = 1, int pageSize = 20)
+        {
+            var cards = new List<CardListViewModel>();
+
+            for (int i = 0; i < 100; i++)
+            {
+                cards.Add(new CardListViewModel
+                {
+                    Avatar = "http://image.dtoao.com/201810220954316919.jpg",
+                    CardID = 100 + i,
+                    Email = $"dt_{i}@dtkj.com",
+                    Logo = "http://image.dtoao.com/201810231145024780.jpg",
+                    Mobile = $"138{i:00000000}",
+                    Name = $"吴{i}",
+                    Position = $"CEO{i}"
+                });
+            }
+            if (!string.IsNullOrWhiteSpace(filter))
+            {
+                cards = cards.Where(s => s.Name.Contains(filter)
+                    || s.Position.Contains(filter)
+                    || s.Mobile.Contains(filter)
+                    || s.Email.Contains(filter)).ToList();
+            }
+
+            var model = cards.AsQueryable().ToPagedList(page, pageSize);
+            return Json(Comm.ToJsonResultForPagedList(model, model), JsonRequestBehavior.AllowGet);
+        }
 
         protected override void Dispose(bool disposing)
         {
