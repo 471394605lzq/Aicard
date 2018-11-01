@@ -106,7 +106,7 @@
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
-                @Html.TableImg(item.Avatar!=null?item.Avatar.SplitToArray<string>()[0]:"")
+                @Html.TableImg(item.Avatar==null?"": item.Avatar==""?"":item.Avatar.SplitToArray<string>()[0])
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.PhoneNumber)
@@ -137,7 +137,7 @@
                 @Html.DisplayFor(modelItem => item.Info)
             </td>
             <td>
-                @Html.TableImg(item.Images==null?"":item.Images.SplitToArray<string>()[0])
+                @Html.TableImg(item.Images==null?"": item.Images==""?"": item.Images.SplitToArray<string>()[0])
             </td>
             <td>
                 @if (this.User.IsInRole(SysRole.CardManageEdit)|| this.User.IsInRole(SysRole.ECardManageEdit))
@@ -148,6 +148,7 @@
                 {
                     <label style="margin-right:5px;">|</label>@Html.ActionLink("删除", "Delete", new { id = item.ID })
                 }
+                <label style="margin-right:5px;">|</label>@Html.ActionLink("生成海报", "Delete", new { id = item.ID })
             </td>
         </tr>
     }

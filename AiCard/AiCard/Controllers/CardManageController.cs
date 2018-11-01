@@ -12,6 +12,8 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using AiCard.Enums;
 using System.Net;
+using AiCard.WeChat;
+
 namespace AiCard.Controllers
 {
     [Authorize]
@@ -218,6 +220,9 @@ namespace AiCard.Controllers
         {
             Sidebar();
             var temp = db.Cards.FirstOrDefault(s => s.ID == model.ID);
+
+            var tempenterprise = db.Enterprises.FirstOrDefault(s => s.ID == temp.EnterpriseID);
+            WeChatMinApi w = new WeChatMinApi(ConfigMini.AppID, ConfigMini.AppSecret);
             //防止企业用户串号修改
             if (AccontData.UserType == Enums.UserType.Enterprise
                 && temp.EnterpriseID != AccontData.EnterpriseID)
@@ -241,6 +246,10 @@ namespace AiCard.Controllers
                 t.Voice = string.Join(",", model.Voice.Images);
                 t.Video = string.Join(",", model.Video.Images);
                 t.Images = string.Join(",", model.Images.Images);
+                if (string.IsNullOrWhiteSpace(temp.WeChatMiniQrCode))
+                {
+                    t.WeChatMiniQrCode = w.GetWXACodeUnlimit(model.ID);
+                }
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }

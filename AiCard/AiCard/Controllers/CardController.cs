@@ -12,6 +12,8 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using AiCard.Enums;
 using System.Net;
+using AiCard.Models.CommModels;
+
 namespace AiCard.Controllers
 {
 
@@ -196,7 +198,60 @@ namespace AiCard.Controllers
 
             return Json(Comm.ToJsonResult("Success", "成功", model), JsonRequestBehavior.AllowGet);
         }
+        [AllowCrossSiteJson]
+        public ActionResult GetPoster(int cardID)
+        {
+            var query = (from c in db.Cards
+                         from e in db.Enterprises
+                         where c.EnterpriseID == e.ID && c.ID == cardID
+                         select c).FirstOrDefault();
 
+            var qe = (from e in db.Enterprises
+                      where e.ID == query.EnterpriseID
+                      select e).FirstOrDefault();
+
+            var cardm = (from ct in db.CardTabs
+                         where ct.CardID == cardID
+                         orderby ct.Count descending
+                         select new CardTab
+                         {
+                             Name = ct.Name,
+                             Count = ct.Count,
+                             Style = ct.Style
+                         }).Take(2).ToList();
+            List<tagmodel> listst = new List<tagmodel>();
+            if (cardm.Count > 0)
+            {
+                for (int i = 0; i < cardm.Count; i++)
+                {
+                    if (i == 0)
+                    {
+                        tagmodel tm = new tagmodel();
+                        tm.tagname = cardm[i].Name + " " + cardm[i].Count.ToString();
+                        tm.tagstyle = cardm[i].Style.GetDisplayName();
+                        listst.Add(tm);
+                    }
+                }
+            }
+            var dm = new DrawingPictureModel
+            {
+                AvatarPath = query.Avatar,
+                CompanyName = qe.Name,
+                LogoPath = qe.Logo,
+                Position = query.Position,
+                QrPath = query.WeChatMiniQrCode,
+                Remark = query.Remark,
+                UserName = query.Name,
+                taglist = listst
+            };
+            //调用生成海报方法
+            string returnpath = Comm.MergePosterImage(dm);
+            var data = new
+            {
+                Posterpath = returnpath
+            };
+            return Json(Comm.ToJsonResult("Success", "成功", data), JsonRequestBehavior.AllowGet);
+        }
 
         protected override void Dispose(bool disposing)
         {

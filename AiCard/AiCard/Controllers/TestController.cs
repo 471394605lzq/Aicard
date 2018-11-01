@@ -158,8 +158,13 @@ namespace AiCard.Controllers
             m.QrPath = qrcodePath;
             m.Remark = "既然选择了远方，便只顾风雨兼程";
             m.UserName = "吴江";
-            m.tag1 = "这就是神器啊 155885888";
-            m.tag2 = "牛逼的人物啊 155885888";
+            List<tagmodel> listst = new List<tagmodel>();
+            tagmodel tm = new tagmodel();
+            tm.tagname = "这就是神器啊 155885888";
+            tm.tagname = "牛逼的人物啊 155885888";
+            tm.tagstyle = "橙色";
+            tm.tagstyle = "绿色";
+            listst.Add(tm);
 
             string returnpath = Comm.MergePosterImage(m);
             return View();

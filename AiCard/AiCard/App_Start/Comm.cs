@@ -447,6 +447,7 @@ namespace AiCard
         /// <returns>返回海报图片地址</returns>
         public static string MergePosterImage(DrawingPictureModel model)
         {
+            List<tagmodel> taglist = model.taglist;
             string bgPath = System.Web.HttpContext.Current.Request.MapPath("~\\Content\\Images\\bg.png");
             Font f = new Font("PingFangSC-Medium", 18);
             Font f12 = new Font("PingFangSC-Medium", 12);
@@ -484,41 +485,96 @@ namespace AiCard
             //}
             //map.Dispose();
 
-            //拼接头像图片
-            FileStream avfs = new FileStream(model.AvatarPath, FileMode.Open, FileAccess.Read);
-            Image avimage = Image.FromStream(avfs);
-            avfs.Close();
-            avfs.Dispose();
-            g1.DrawImage(avimage, new Rectangle(48, 60, 834, 834));
+            if (!string.IsNullOrWhiteSpace(model.AvatarPath))
+            {
+                //拼接头像图片
+                FileStream avfs = new FileStream(model.AvatarPath, FileMode.Open, FileAccess.Read);
+                Image avimage = Image.FromStream(avfs);
+                avfs.Close();
+                avfs.Dispose();
+                g1.DrawImage(avimage, new Rectangle(48, 60, 834, 834));
+            }
 
-            //拼接二维码图片
-            FileStream fs = new FileStream(model.QrPath, FileMode.Open, FileAccess.Read);
-            Image image = Image.FromStream(fs);
-            fs.Close();
-            fs.Dispose();
-            g1.DrawImage(image, new Rectangle(670, 1230, 240, 240));
+            if (!string.IsNullOrWhiteSpace(model.QrPath))
+            {
+                //拼接二维码图片
+                FileStream fs = new FileStream(model.QrPath, FileMode.Open, FileAccess.Read);
+                Image image = Image.FromStream(fs);
+                fs.Close();
+                fs.Dispose();
+                g1.DrawImage(image, new Rectangle(670, 1230, 240, 240));
+            }
+            if (!string.IsNullOrWhiteSpace(model.LogoPath))
+            {
+                //拼接公司logo图片
+                FileStream logofs = new FileStream(model.LogoPath, FileMode.Open, FileAccess.Read);
+                Image logoimage = Image.FromStream(logofs);
+                logofs.Close();
+                logofs.Dispose();
+                g1.DrawImage(logoimage, new Rectangle(50, 1230, 96, 96));
+            }
 
-            //拼接公司logo图片
-            FileStream logofs = new FileStream(model.LogoPath, FileMode.Open, FileAccess.Read);
-            Image logoimage = Image.FromStream(logofs);
-            logofs.Close();
-            logofs.Dispose();
-            g1.DrawImage(logoimage, new Rectangle(50, 1230, 96, 96));
+            if (taglist.Count > 0)
+            {
+                for (int i = 0; i < taglist.Count; i++)
+                {
+                    tagmodel tempm = taglist[i];
+                    string tempname = tempm.tagname;
+                    int taglength = tempname.Length;
+                    int tagwidth = taglength <= 5 ? 90 : taglength <= 7 ? 120 : taglength <= 10 ? 160 : taglength <= 13 ? 190 : 220;
+                    string colorstr = tempm.tagstyle;
+                    Color bgc = new Color();
+                    Color boc = new Color();
+                    if (colorstr == "橙色")
+                    {
+                        bgc = Color.FromArgb(255, 250, 249);
+                        boc = Color.FromArgb(255, 223, 214);
+                    }
+                    else if (colorstr == "绿色")
+                    {
+                        bgc = Color.FromArgb(249, 255, 252);
+                        boc = Color.FromArgb(190, 233, 215);
+                    }
+                    else if (colorstr == "紫色")
+                    {
+                        bgc = Color.FromArgb(252, 249, 255);
+                        boc = Color.FromArgb(234, 214, 255);
+                    }
+                    else if (colorstr == "蓝色")
+                    {
+                        bgc = Color.FromArgb(249, 255, 255);
+                        boc = Color.FromArgb(214, 226, 255);
+                    }
+                    if (i == 0)
+                    {
+                        DrawingPictures.SetBox(bitMap, g1, tagwidth, 50, Color.FromArgb(255, 223, 214), Color.FromArgb(255, 250, 249), 50, 1130, 2);
+                        DrawingPictures.DrawStringWrap(g1, f12, tempname, new Rectangle(50, 1130, tagwidth, 50), 1145, 55, 18);
+                    }
+                    else
+                    {
+                        tagmodel tempm2 = taglist[i - 1];
+                        string tempname2 = tempm.tagname;
+                        int taglength2 = tempname2.Length;
+                        int tagwidth2 = taglength2 <= 5 ? 90 : taglength2 <= 7 ? 120 : taglength2 <= 10 ? 160 : taglength2 <= 13 ? 190 : 220;
+                        DrawingPictures.SetBox(bitMap, g1, tagwidth, 50, Color.FromArgb(190, 233, 215), Color.FromArgb(249, 255, 252), 70 + tagwidth2, 1130, 2);
+                        DrawingPictures.DrawStringWrap(g1, f12, tempname, new Rectangle(70 + tagwidth2, 1130, tagwidth, 50), 1145, 75 + tagwidth2, 18);
+                    }
+                }
+                //计算标签内容的字数长度
+                //int taglength1 = model.tag1.Length;
+                //int taglength2 = model.tag2.Length;
+                //int t1width = taglength1 <= 5 ? 90 : taglength1 <= 7 ? 120 : taglength1 <= 10 ? 160 : taglength1 <= 13 ? 190 : 220;
+                //int t2width = taglength2 <= 5 ? 90 : taglength2 <= 7 ? 120 : taglength2 <= 10 ? 160 : taglength2 <= 13 ? 190 : 220;
 
-            //计算标签内容的字数长度
-            int taglength1 = model.tag1.Length;
-            int taglength2 = model.tag2.Length;
-            int t1width = taglength1 <= 5 ? 90 : taglength1 <= 7 ? 120 : taglength1 <= 10 ? 160 : taglength1 <= 13 ? 190 : 220;
-            int t2width = taglength2 <= 5 ? 90 : taglength2 <= 7 ? 120 : taglength2 <= 10 ? 160 : taglength2 <= 13 ? 190 : 220;
-
-            //画第一个标签框
-            DrawingPictures.SetBox(bitMap, g1, t1width, 50, Color.FromArgb(255, 223, 214), Color.FromArgb(255, 250, 249), 50, 1130, 2);
-            //画第二个标签框
-            DrawingPictures.SetBox(bitMap, g1, t2width, 50, Color.FromArgb(190, 233, 215), Color.FromArgb(249, 255, 252), 70 + t1width, 1130, 2);
-            //第一个标签框内容
-            DrawingPictures.DrawStringWrap(g1, f12, model.tag1, new Rectangle(50, 1130, t1width, 50), 1145, 55, 18);
-            //第二个标签框内容
-            DrawingPictures.DrawStringWrap(g1, f12, model.tag2, new Rectangle(70 + t1width, 1130, t2width, 50), 1145, 75 + t1width, 18);
+                ////画第一个标签框
+                //DrawingPictures.SetBox(bitMap, g1, t1width, 50, Color.FromArgb(255, 223, 214), Color.FromArgb(255, 250, 249), 50, 1130, 2);
+                ////画第二个标签框
+                //DrawingPictures.SetBox(bitMap, g1, t2width, 50, Color.FromArgb(190, 233, 215), Color.FromArgb(249, 255, 252), 70 + t1width, 1130, 2);
+                ////第一个标签框内容
+                //DrawingPictures.DrawStringWrap(g1, f12, model.tag1, new Rectangle(50, 1130, t1width, 50), 1145, 55, 18);
+                ////第二个标签框内容
+                //DrawingPictures.DrawStringWrap(g1, f12, model.tag2, new Rectangle(70 + t1width, 1130, t2width, 50), 1145, 75 + t1width, 18);
+            }
 
             //姓名
             DrawingPictures.DrawStringWrap(g1, font26, model.UserName, new Rectangle(50, 1000, 400, 40), 950, 50, 15);

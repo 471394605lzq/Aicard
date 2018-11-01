@@ -35,16 +35,33 @@ namespace AiCard.Models.CommModels
         /// 二维码图片地址
         /// </summary>
         public string QrPath { get; set; }
+
         /// <summary>
-        /// 标签1内容
+        /// 标签内容信息
         /// </summary>
-        public string tag1 { get; set; }
-        /// <summary>
-        /// 标签2内容
-        /// </summary>
-        public string tag2 { get; set; }
+        public List<tagmodel> taglist { get; set; }
+        ///// <summary>
+        ///// 标签1内容
+        ///// </summary>
+        //public string tag1 { get; set; }
+        ///// <summary>
+        ///// 标签2内容
+        ///// </summary>
+        //public string tag2 { get; set; }
+        ///// <summary>
+        ///// 标签1的颜色样式
+        ///// </summary>
+        //public string tagstyle1 { get; set; }
+        ///// <summary>
+        ///// 标签2的颜色样式
+        ///// </summary>
+        //public string tagstyle2 { get; set; }
 
 
 
+    }
+    public class tagmodel {
+        public string tagname { get; set; }
+        public string tagstyle { get; set; }
     }
 }
