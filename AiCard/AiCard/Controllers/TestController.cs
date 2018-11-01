@@ -9,6 +9,11 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.IO;
+using System.Drawing;
+using System.Net;
+using AiCard.Models.CommModels;
+
 namespace AiCard.Controllers
 {
     public class TestController : Controller
@@ -124,6 +129,41 @@ namespace AiCard.Controllers
 
         }
 
+        public ActionResult DrawingPicture(string id)
+        {
+            
+
+            FileStream fs2 = new FileStream(System.Web.HttpContext.Current.Request.MapPath("~\\Content\\Images\\qrcode.png"), FileMode.Open, FileAccess.Read);
+            Image image2 = Image.FromStream(fs2);
+            fs2.Close();
+            System.Drawing.Image img2 = DrawingPictures.resizeImage(image2, new Size(240, 240));
+            string qrcodePath = System.Web.HttpContext.Current.Server.MapPath("~\\Content\\Images\\temofile\\") + DateTime.Now.Hour + DateTime.Now.Minute + DateTime.Now.Second + "qrcode.png";
+            img2.Save(qrcodePath);
+            img2.Dispose();
+
+            FileStream logofs = new FileStream(System.Web.HttpContext.Current.Request.MapPath("~\\Content\\Images\\logo.png"), FileMode.Open, FileAccess.Read);
+            Image logoimage = Image.FromStream(logofs);
+            logofs.Close();
+            System.Drawing.Image logoimages = DrawingPictures.resizeImage(logoimage, new Size(240, 240));
+            string logoPath = System.Web.HttpContext.Current.Server.MapPath("~\\Content\\Images\\temofile\\") + DateTime.Now.Hour + DateTime.Now.Minute + DateTime.Now.Second + "logo.png";
+            logoimages.Save(logoPath);
+            logoimages.Dispose();
+
+            string avatarPath = DrawingPictures.DownloadImg("http://image.dtoao.com/201810220954316919.jpg", "avatar.png", 834, 834);
+            DrawingPictureModel m = new DrawingPictureModel();
+            m.AvatarPath = avatarPath;
+            m.CompanyName = "广东帝推网络股份科技有限公司啊啊啊啊啊";
+            m.LogoPath = logoPath;
+            m.Position = "CEO";
+            m.QrPath = qrcodePath;
+            m.Remark = "既然选择了远方，便只顾风雨兼程";
+            m.UserName = "吴江";
+            m.tag1 = "这就是神器啊 155885888";
+            m.tag2 = "牛逼的人物啊 155885888";
+
+            string returnpath = Comm.MergePosterImage(m);
+            return View();
+        }
         public ActionResult TestQiniu()
         {
             return View();
