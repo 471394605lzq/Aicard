@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using AiCard.Qiniu;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -30,18 +31,19 @@ namespace AiCard.WeChat
         /// 获取token
         /// </summary>
         /// <returns></returns>
-        public string GetAccessToken()
-        {
-            var date = DateTime.Now;
-            var api = new Api.BaseApi($"https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid={AppID}&secret={Secret}", "GET");
-            var result = api.CreateRequestReturnJson();
-            _accessToken = new WeChat.AccessToken()
-            {
-                Code = result["access_token"].Value<string>(),
-                End = DateTime.Now.AddSeconds(3500)
-            };
-            return _accessToken.Code;
-        }
+        //public string GetAccessToken()
+        //{
+        //    var date = DateTime.Now;
+        //    var api = new Api.BaseApi($"https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid={AppID}&secret={Secret}", "GET");
+        //    var result = api.CreateRequestReturnJson();
+        //    _accessToken = new WeChat.AccessToken()
+        //    {
+        //        Code = result["access_token"].Value<string>(),
+        //        End = DateTime.Now.AddSeconds(3500)
+        //    };
+        //    return _accessToken.Code;
+        //}
+
         /// <summary>
         /// 使用Code换取OpenID和UnionID
         /// </summary>
@@ -80,29 +82,36 @@ namespace AiCard.WeChat
         /// </summary>
         /// <param name="code"></param>
         /// <returns></returns>
-        public string GetWXACodeUnlimit()
+        public string GetWXACodeUnlimit(int cardid)
         {
-            string codeimgpath = "";
             var p = new Dictionary<string, string>();
             p.Add("access_token", GetAccessToken());
-            p.Add("scene", "dtkj");
-            p.Add("is_hyaline", "true");
-            var result = new AiCard.Api.BaseApi($"POST https://api.weixin.qq.com/wxa/getwxacodeunlimit{p.ToParam("?")}", "GET").CreateRequestReturnJson();
-            using (MemoryStream ms = new MemoryStream())
+            var data = new
             {
-                IFormatter formatter = new BinaryFormatter();
-                formatter.Serialize(ms, result);
+                page = "pages/carddetail/carddetail",
+                scene = $"CardID={cardid}",
+                is_hyaline=true
+            };
 
-                if (result["errcode"] != null)
+            var result = new AiCard.Api.BaseApi($"https://api.weixin.qq.com/wxa/getwxacodeunlimit{p.ToParam("?")}", "POST", data).CreateRequest();
+            if (result.GetType() == typeof(MemoryStream))
+            {
+                using (MemoryStream ms = new MemoryStream())
                 {
-                    throw new Exception(JsonConvert.SerializeObject(result));
+                    System.Drawing.Image img = System.Drawing.Image.FromStream(result);
+                    string newimgpath = "E:" + cardid+"wxacode"+DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".png";
+                    img.Save(newimgpath, ImageFormat.Png);
+                    QinQiuApi qniu = new QinQiuApi();
+                    string resultpath = qniu.UploadFile(newimgpath, true);
+                    File.Delete(newimgpath);
+                    return resultpath;
                 }
-                else
-                {
-                    codeimgpath = ReturnImg(ms.GetBuffer());
-                }
-                return codeimgpath;
             }
+            else
+            {
+                throw new Exception(JsonConvert.SerializeObject(result));
+            }
+
         }
         public string ReturnImg(byte[] streamByte)
         {
@@ -121,6 +130,40 @@ namespace AiCard.WeChat
             var result = new AiCard.Api.BaseApi($"https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token={_accessToken}", "POST").CreateRequestReturnJson();
             return "";
 
+        }
+
+        /// <summary>
+        /// 获取Token
+        /// </summary>
+        /// <returns></returns>
+        public string GetAccessToken()
+        {
+            if (_accessToken == null || _accessToken.End <= DateTime.Now)
+            {
+                RefreshToken();
+            }
+            return _accessToken.Code;
+        }
+
+        /// <summary>
+        /// 刷新Token
+        /// </summary>
+        /// <returns></returns>
+        public string RefreshToken()
+        {
+            var date = DateTime.Now;
+            if (_accessToken != null && _accessToken.End < date)
+            {
+                return _accessToken.Code;
+            }
+            var api = new Api.BaseApi($"https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid={AppID}&secret={Secret}", "GET");
+            var result = api.CreateRequestReturnJson();
+            _accessToken = new WeChat.AccessToken()
+            {
+                Code = result["access_token"].Value<string>(),
+                End = DateTime.Now.AddSeconds(3500)
+            };
+            return _accessToken.Code;
         }
     }
 

@@ -12,6 +12,8 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using AiCard.Enums;
 using System.Net;
+using AiCard.Models.CommModels;
+
 namespace AiCard.Controllers
 {
 
@@ -196,35 +198,59 @@ namespace AiCard.Controllers
 
             return Json(Comm.ToJsonResult("Success", "成功", model), JsonRequestBehavior.AllowGet);
         }
-
         [AllowCrossSiteJson]
-        public ActionResult TestIndex(int enterpriseID, string filter, int page = 1, int pageSize = 20)
+        public ActionResult GetPoster(int cardID)
         {
-            var cards = new List<CardListViewModel>();
+            var query = (from c in db.Cards
+                         from e in db.Enterprises
+                         where c.EnterpriseID == e.ID && c.ID == cardID
+                         select c).FirstOrDefault();
 
-            for (int i = 0; i < 100; i++)
+            var qe = (from e in db.Enterprises
+                      where e.ID == query.EnterpriseID
+                      select e).FirstOrDefault();
+
+            var cardm = (from ct in db.CardTabs
+                         where ct.CardID == cardID
+                         orderby ct.Count descending
+                         select new CardTab
+                         {
+                             Name = ct.Name,
+                             Count = ct.Count,
+                             Style = ct.Style
+                         }).Take(2).ToList();
+            List<tagmodel> listst = new List<tagmodel>();
+            if (cardm.Count > 0)
             {
-                cards.Add(new CardListViewModel
+                for (int i = 0; i < cardm.Count; i++)
                 {
-                    Avatar = "http://image.dtoao.com/201810220954316919.jpg",
-                    CardID = 100 + i,
-                    Email = $"dt_{i}@dtkj.com",
-                    Logo = "http://image.dtoao.com/201810231145024780.jpg",
-                    Mobile = $"138{i:00000000}",
-                    Name = $"吴{i}",
-                    Position = $"CEO{i}"
-                });
+                    if (i == 0)
+                    {
+                        tagmodel tm = new tagmodel();
+                        tm.tagname = cardm[i].Name + " " + cardm[i].Count.ToString();
+                        tm.tagstyle = cardm[i].Style.GetDisplayName();
+                        listst.Add(tm);
+                    }
+                }
             }
-            if (!string.IsNullOrWhiteSpace(filter))
+            var dm = new DrawingPictureModel
             {
-                cards = cards.Where(s => s.Name.Contains(filter)
-                    || s.Position.Contains(filter)
-                    || s.Mobile.Contains(filter)
-                    || s.Email.Contains(filter)).ToList();
-            }
-
-            var model = cards.AsQueryable().ToPagedList(page, pageSize);
-            return Json(Comm.ToJsonResultForPagedList(model, model), JsonRequestBehavior.AllowGet);
+                AvatarPath = query.Avatar,
+                CompanyName = qe.Name,
+                LogoPath = qe.Logo,
+                Position = query.Position,
+                QrPath = query.WeChatMiniQrCode,
+                Remark = query.Remark,
+                UserName = query.Name,
+                taglist = listst
+            };
+            //调用生成海报方法
+            string returnpath = Comm.MergePosterImage(dm);
+            var data = new
+            {
+                Posterpath = returnpath
+            };
+            return Json(Comm.ToJsonResult("Success", "成功", data), JsonRequestBehavior.AllowGet);
         }
 
         protected override void Dispose(bool disposing)

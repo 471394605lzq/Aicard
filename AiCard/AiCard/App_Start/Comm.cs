@@ -6,6 +6,8 @@ using System.IO;
 using System.Drawing;
 using System.Text;
 using System.Security.Cryptography;
+using AiCard.Models.CommModels;
+using AiCard.Qiniu;
 
 namespace AiCard
 {
@@ -435,6 +437,166 @@ namespace AiCard
             memoryStream.Close();
             cryptoStream.Close();
             return Encoding.UTF8.GetString(plainTextBytes, 0, decryptedByteCount).TrimEnd("\0".ToCharArray());
+        }
+
+        /// <summary>
+        /// 生成海报方法
+        /// </summary>
+        /// <param name="strBg">背景图地址</param>
+        /// <param name="model">海报内容model</param>
+        /// <returns>返回海报图片地址</returns>
+        public static string MergePosterImage(DrawingPictureModel model)
+        {
+            List<tagmodel> taglist = model.taglist;
+            string bgPath = System.Web.HttpContext.Current.Request.MapPath("~\\Content\\Images\\bg.png");
+            Font f = new Font("PingFangSC-Medium", 18);
+            Font f12 = new Font("PingFangSC-Medium", 12);
+            Font font22 = new Font("PingFangSC-Medium", 22, FontStyle.Bold);
+            Font font26 = new Font("PingFangSC-Medium", 26, FontStyle.Bold);
+            Font font20 = new Font("PingFangSC-Medium", 20, FontStyle.Bold);
+
+            // 初始化背景图片的宽高
+            Bitmap bitMap = new Bitmap(933, 1500);
+            // 初始化画板
+            Graphics g1 = Graphics.FromImage(bitMap);
+            ////设置画布背景颜色为白色
+            //g1.FillRectangle(Brushes.White, new Rectangle(0, 0, 933, 1500));
+            //g1.Clear(Color.White);
+
+            //设置背景图
+            FileStream bgfs = new FileStream(bgPath, FileMode.Open, FileAccess.Read);
+            Image bgimage = Image.FromStream(bgfs);
+            bgfs.Close();
+            g1.DrawImage(bgimage, new Rectangle(0, 0, 933, 1500));
+
+            //用setpixel方法绘制图片
+            //Bitmap bitMap = new Bitmap(933, 1500);//初始化用来拼图的背景图并设置大小
+            //Graphics g1 = Graphics.FromImage(bitMap);//初始化用来拼图的画板
+            //Bitmap map = new Bitmap(model.AvatarPath);//读取要画到画板上的图片
+            //g1.FillRectangle(Brushes.White, new Rectangle(0, 0, 834, 834));//设置要画的图片大小
+            //循环设置好的要画的图片的宽和高来绘画图片
+            //for (int i = 0; i < map.Width; i++)
+            //{
+            //    for (int j = 0; j < map.Height; j++)
+            //    {
+            //        var temp = map.GetPixel(i, j);//取每个像素和颜色
+            //        bitMap.SetPixel(48 + i, 60 + j, temp);//将读取到的图片像素和颜色画到画板上
+            //    }
+            //}
+            //map.Dispose();
+
+            if (!string.IsNullOrWhiteSpace(model.AvatarPath))
+            {
+                //拼接头像图片
+                FileStream avfs = new FileStream(model.AvatarPath, FileMode.Open, FileAccess.Read);
+                Image avimage = Image.FromStream(avfs);
+                avfs.Close();
+                avfs.Dispose();
+                g1.DrawImage(avimage, new Rectangle(48, 60, 834, 834));
+            }
+
+            if (!string.IsNullOrWhiteSpace(model.QrPath))
+            {
+                //拼接二维码图片
+                FileStream fs = new FileStream(model.QrPath, FileMode.Open, FileAccess.Read);
+                Image image = Image.FromStream(fs);
+                fs.Close();
+                fs.Dispose();
+                g1.DrawImage(image, new Rectangle(670, 1230, 240, 240));
+            }
+            if (!string.IsNullOrWhiteSpace(model.LogoPath))
+            {
+                //拼接公司logo图片
+                FileStream logofs = new FileStream(model.LogoPath, FileMode.Open, FileAccess.Read);
+                Image logoimage = Image.FromStream(logofs);
+                logofs.Close();
+                logofs.Dispose();
+                g1.DrawImage(logoimage, new Rectangle(50, 1230, 96, 96));
+            }
+
+            if (taglist.Count > 0)
+            {
+                for (int i = 0; i < taglist.Count; i++)
+                {
+                    tagmodel tempm = taglist[i];
+                    string tempname = tempm.tagname;
+                    int taglength = tempname.Length;
+                    int tagwidth = taglength <= 5 ? 90 : taglength <= 7 ? 120 : taglength <= 10 ? 160 : taglength <= 13 ? 190 : 220;
+                    string colorstr = tempm.tagstyle;
+                    Color bgc = new Color();
+                    Color boc = new Color();
+                    if (colorstr == "橙色")
+                    {
+                        bgc = Color.FromArgb(255, 250, 249);
+                        boc = Color.FromArgb(255, 223, 214);
+                    }
+                    else if (colorstr == "绿色")
+                    {
+                        bgc = Color.FromArgb(249, 255, 252);
+                        boc = Color.FromArgb(190, 233, 215);
+                    }
+                    else if (colorstr == "紫色")
+                    {
+                        bgc = Color.FromArgb(252, 249, 255);
+                        boc = Color.FromArgb(234, 214, 255);
+                    }
+                    else if (colorstr == "蓝色")
+                    {
+                        bgc = Color.FromArgb(249, 255, 255);
+                        boc = Color.FromArgb(214, 226, 255);
+                    }
+                    if (i == 0)
+                    {
+                        DrawingPictures.SetBox(bitMap, g1, tagwidth, 50, Color.FromArgb(255, 223, 214), Color.FromArgb(255, 250, 249), 50, 1130, 2);
+                        DrawingPictures.DrawStringWrap(g1, f12, tempname, new Rectangle(50, 1130, tagwidth, 50), 1145, 55, 18);
+                    }
+                    else
+                    {
+                        tagmodel tempm2 = taglist[i - 1];
+                        string tempname2 = tempm.tagname;
+                        int taglength2 = tempname2.Length;
+                        int tagwidth2 = taglength2 <= 5 ? 90 : taglength2 <= 7 ? 120 : taglength2 <= 10 ? 160 : taglength2 <= 13 ? 190 : 220;
+                        DrawingPictures.SetBox(bitMap, g1, tagwidth, 50, Color.FromArgb(190, 233, 215), Color.FromArgb(249, 255, 252), 70 + tagwidth2, 1130, 2);
+                        DrawingPictures.DrawStringWrap(g1, f12, tempname, new Rectangle(70 + tagwidth2, 1130, tagwidth, 50), 1145, 75 + tagwidth2, 18);
+                    }
+                }
+                //计算标签内容的字数长度
+                //int taglength1 = model.tag1.Length;
+                //int taglength2 = model.tag2.Length;
+                //int t1width = taglength1 <= 5 ? 90 : taglength1 <= 7 ? 120 : taglength1 <= 10 ? 160 : taglength1 <= 13 ? 190 : 220;
+                //int t2width = taglength2 <= 5 ? 90 : taglength2 <= 7 ? 120 : taglength2 <= 10 ? 160 : taglength2 <= 13 ? 190 : 220;
+
+                ////画第一个标签框
+                //DrawingPictures.SetBox(bitMap, g1, t1width, 50, Color.FromArgb(255, 223, 214), Color.FromArgb(255, 250, 249), 50, 1130, 2);
+                ////画第二个标签框
+                //DrawingPictures.SetBox(bitMap, g1, t2width, 50, Color.FromArgb(190, 233, 215), Color.FromArgb(249, 255, 252), 70 + t1width, 1130, 2);
+                ////第一个标签框内容
+                //DrawingPictures.DrawStringWrap(g1, f12, model.tag1, new Rectangle(50, 1130, t1width, 50), 1145, 55, 18);
+                ////第二个标签框内容
+                //DrawingPictures.DrawStringWrap(g1, f12, model.tag2, new Rectangle(70 + t1width, 1130, t2width, 50), 1145, 75 + t1width, 18);
+            }
+
+            //姓名
+            DrawingPictures.DrawStringWrap(g1, font26, model.UserName, new Rectangle(50, 1000, 400, 40), 950, 50, 15);
+            //职位
+            DrawingPictures.DrawStringWrap(g1, font22, model.Position, new Rectangle(50, 1000, 400, 40), 995, 50, 15);
+            //签名
+            DrawingPictures.DrawStringWrap(g1, f, model.Remark, new Rectangle(50, 1000, 800, 60), 1050, 50, 20);
+            //公司名称            
+            DrawingPictures.DrawStringWrap(g1, font20, model.CompanyName, new Rectangle(50, 1250, 400, 160), 1350, 50, 12);
+
+            // 保存输出到本地
+            string savePath = System.Web.HttpContext.Current.Server.MapPath("~\\Content\\Images\\temofile\\") + DateTime.Now.Hour + DateTime.Now.Minute + DateTime.Now.Second + "new.jpg";
+            bitMap.Save(savePath);
+            QinQiuApi qniu = new QinQiuApi();
+            string resultpath= qniu.UploadFile(savePath,true);
+            g1.Dispose();
+            bitMap.Dispose();
+            //生成完成后删除本地缓存文件
+            File.Delete(model.LogoPath);
+            File.Delete(model.AvatarPath);
+            File.Delete(model.QrPath);
+            return resultpath;
         }
     }
 }

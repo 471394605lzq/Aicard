@@ -252,6 +252,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\ChinaPCAS.cs" />
     <Compile Include="App_Start\Comm.cs" />
+    <Compile Include="App_Start\DrawingPictures.cs" />
     <Compile Include="App_Start\Enums.cs" />
     <Compile Include="App_Start\Extensions\ActionFilterAttributes.cs" />
     <Compile Include="App_Start\Extensions\ControllerExtensions.cs" />
@@ -390,6 +391,7 @@
     <Compile Include="Models\CardViewModels.cs" />
     <Compile Include="Models\CommModels\Cell.cs" />
     <Compile Include="Models\CommModels\ChinaPCASCom.cs" />
+    <Compile Include="Models\CommModels\DrawingPictureModel.cs" />
     <Compile Include="Models\CommModels\FileUpload.cs" />
     <Compile Include="Models\CommModels\HtmlHelpModels.cs" />
     <Compile Include="Models\CommModels\ImageResizer.cs" />
@@ -425,6 +427,7 @@
     <Content Include="Content\Images\404\default.jpg" />
     <Content Include="Content\Images\404\placeholder.png" />
     <Content Include="Content\Images\404\placeholder_image.png" />
+    <Content Include="Content\Images\bg.png" />
     <Content Include="Content\Images\filetype\doc.png" />
     <Content Include="Content\Images\filetype\file.png" />
     <Content Include="Content\Images\filetype\mp3.png" />
@@ -951,9 +954,11 @@
     <Content Include="Views\HomePageModularsManage\EditByHtml.cshtml" />
     <Content Include="Views\HomePageModularsManage\CreateByImage.cshtml" />
     <Content Include="Views\HomePageModularsManage\EditByImage.cshtml" />
+    <Content Include="Views\Test\DrawingPicture.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Content\Images\temofile\" />
     <Folder Include="Upload\" />
     <Folder Include="Views\ArticleComment\" />
     <Folder Include="Views\Article\" />
