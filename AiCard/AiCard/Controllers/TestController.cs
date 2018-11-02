@@ -158,6 +158,7 @@ namespace AiCard.Controllers
             m.QrPath = qrcodePath;
             m.Remark = "既然选择了远方，便只顾风雨兼程";
             m.UserName = "吴江";
+            m.PosterImageName = "cardid_" + id;
             List<tagmodel> listst = new List<tagmodel>();
             tagmodel tm = new tagmodel();
             tm.tagname = "这就是神器啊 155885888";

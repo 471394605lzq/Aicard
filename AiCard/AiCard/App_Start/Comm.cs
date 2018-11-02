@@ -450,11 +450,12 @@ namespace AiCard
         {
             List<tagmodel> taglist = model.taglist;
             string bgPath = System.Web.HttpContext.Current.Request.MapPath("~\\Content\\Images\\bg.png");
-            Font f = new Font("PingFangSC-Medium", 18);
-            Font f12 = new Font("PingFangSC-Medium", 12);
-            Font font22 = new Font("PingFangSC-Medium", 22, FontStyle.Bold);
-            Font font26 = new Font("PingFangSC-Medium", 26, FontStyle.Bold);
-            Font font20 = new Font("PingFangSC-Medium", 20, FontStyle.Bold);
+            string fname = "微软雅黑";
+            Font f = new Font(fname, 18);
+            Font f12 = new Font(fname, 12);
+            Font font22 = new Font(fname, 22, FontStyle.Bold);
+            Font font26 = new Font(fname, 26, FontStyle.Bold);
+            Font font20 = new Font(fname, 20, FontStyle.Bold);
 
             // 初始化背景图片的宽高
             Bitmap bitMap = new Bitmap(933, 1500);
@@ -587,25 +588,34 @@ namespace AiCard
             }
 
             //姓名
-            DrawingPictures.DrawStringWrap(g1, font26, model.UserName, new Rectangle(50, 1000, 400, 40), 950, 50, 15);
+            DrawingPictures.DrawStringWrap(g1, font26, model.UserName==null?"": model.UserName, new Rectangle(50, 1000, 400, 40), 950, 50, 15);
             //职位
-            DrawingPictures.DrawStringWrap(g1, font22, model.Position, new Rectangle(50, 1000, 400, 40), 995, 50, 15);
+            DrawingPictures.DrawStringWrap(g1, font22, model.Position==null?"": model.Position, new Rectangle(50, 1000, 400, 40), 995, 50, 15);
             //签名
-            DrawingPictures.DrawStringWrap(g1, f, model.Remark, new Rectangle(50, 1000, 800, 60), 1050, 50, 20);
+            DrawingPictures.DrawStringWrap(g1, f, model.Remark==null?"": model.Remark, new Rectangle(50, 1000, 800, 60), 1050, 50, 20);
             //公司名称            
-            DrawingPictures.DrawStringWrap(g1, font20, model.CompanyName, new Rectangle(50, 1250, 400, 160), 1350, 50, 12);
+            DrawingPictures.DrawStringWrap(g1, font20, model.CompanyName==null?"": model.CompanyName, new Rectangle(50, 1250, 400, 160), 1350, 50, 12);
 
             // 保存输出到本地
-            string savePath = System.Web.HttpContext.Current.Server.MapPath("~\\Content\\Images\\temofile\\") + DateTime.Now.Hour + DateTime.Now.Minute + DateTime.Now.Second + "new.jpg";
+            string savePath = System.Web.HttpContext.Current.Server.MapPath("~\\Content\\Images\\temofile\\") + model.PosterImageName +".jpg";
             bitMap.Save(savePath);
             QinQiuApi qniu = new QinQiuApi();
             string resultpath = qniu.UploadFile(savePath, true);
             g1.Dispose();
             bitMap.Dispose();
             //生成完成后删除本地缓存文件
-            File.Delete(model.LogoPath);
-            File.Delete(model.AvatarPath);
-            File.Delete(model.QrPath);
+            if (!string.IsNullOrWhiteSpace(model.LogoPath))
+            {
+                File.Delete(model.LogoPath);
+            }
+            if (!string.IsNullOrWhiteSpace(model.AvatarPath))
+            {
+                File.Delete(model.AvatarPath);
+            }
+            if (!string.IsNullOrWhiteSpace(model.QrPath))
+            {
+                File.Delete(model.QrPath);
+            }
             return resultpath;
         }
     }

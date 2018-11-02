@@ -86,27 +86,48 @@ namespace AiCard.WeChat
         {
             var p = new Dictionary<string, string>();
             p.Add("access_token", GetAccessToken());
+            string path = $"Page=1&CardID={cardid}";
             var data = new
             {
-                page = "pages/carddetail/carddetail",
-                scene = $"CardID={cardid}",
-                is_hyaline=true,
+                page = $"pages/carddetail/carddetail",
+                scene = path,
+                is_hyaline = true,
                 //line_color= "{ 'r':'255','g':'255','b':'255'}"
             };
-
             var result = new AiCard.Api.BaseApi($"https://api.weixin.qq.com/wxa/getwxacodeunlimit{p.ToParam("?")}", "POST", data).CreateRequest();
+
+
             if (result.GetType() == typeof(MemoryStream))
             {
-                using (MemoryStream ms = new MemoryStream())
+                try
                 {
-                    System.Drawing.Image img = System.Drawing.Image.FromStream(result);
-                    string newimgpath = "E:" + cardid+"wxacode"+DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".png";
-                    img.Save(newimgpath, ImageFormat.Png);
-                    QinQiuApi qniu = new QinQiuApi();
-                    string resultpath = qniu.UploadFile(newimgpath, false);
-                    File.Delete(newimgpath);
-                    return resultpath;
+                    using (MemoryStream ms = new MemoryStream())
+                    {
+                        System.Drawing.Image img = System.Drawing.Image.FromStream(result);
+                        string newimgpath = "E:" + cardid + "wxacode" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".png";
+                        img.Save(newimgpath, ImageFormat.Png);
+                        QinQiuApi qniu = new QinQiuApi();
+                        string resultpath = qniu.UploadFile(newimgpath, false);
+                        File.Delete(newimgpath);
+                        return resultpath;
+                    }
                 }
+                catch (Exception ex)
+                {
+                    var steam = result;
+                    string txtData = "";
+                    if (steam == null)
+                    {
+                        return null;
+
+                    }
+                    using (var reader = new StreamReader(steam))
+                    {
+                        txtData = reader.ReadToEnd();
+                    }
+                    throw new Exception(txtData);
+                }
+
             }
             else
             {

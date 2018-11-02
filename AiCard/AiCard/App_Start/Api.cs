@@ -65,7 +65,6 @@ namespace AiCard.Api
                             {
                                 var stream = File.OpenRead(item.Value);
                                 HttpContent content = new StreamContent(stream);
-
                                 content.Headers.Add("Content-Type", "application/octet-stream");
                                 content.Headers.Add("Content-Disposition", $"form-data; name=\"{item.Key}\"; filename=\"{new FileInfo(item.Value).Name}\"");
                                 formData.Add(content, item.Key);

@@ -26,8 +26,8 @@ namespace AiCard
             {
                 List<string> textRows = GetStringRows(graphic, font, text, recangle.Width, widthnumber);
                 int rowHeight = (int)(Math.Ceiling(graphic.MeasureString(text, font).Height));
-
-                int maxRowCount = recangle.Height / rowHeight;
+                int temprowheight = rowHeight == 0 ? 1 : rowHeight;
+                int maxRowCount = recangle.Height / temprowheight;
                 int drawRowCount = (maxRowCount < textRows.Count) ? maxRowCount <= 1 ? 1 : maxRowCount : textRows.Count;
 
                 //int top = (recangle.Height - rowHeight * drawRowCount) / 2;

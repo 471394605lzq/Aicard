@@ -327,14 +327,15 @@ namespace AiCard.Controllers
                 }
                 var dm = new DrawingPictureModel
                 {
-                    AvatarPath = DrawingPictures.DownloadImg(query.Avatar, "avatar.png", 834, 834),
+                    AvatarPath = string.IsNullOrWhiteSpace(query.Avatar) ? "": DrawingPictures.DownloadImg(query.Avatar, "avatar.png", 834, 834),
                     CompanyName = qe.Name,
-                    LogoPath = DrawingPictures.DownloadImg(qe.Logo, "logo.png", 96, 96),
+                    LogoPath = string.IsNullOrWhiteSpace(qe.Logo) ? "": DrawingPictures.DownloadImg(qe.Logo, "logo.png", 96, 96),
                     Position = query.Position,
-                    QrPath = DrawingPictures.DownloadImg(query.WeChatMiniQrCode, "qrcode.png", 240, 240),
+                    QrPath = string.IsNullOrWhiteSpace(query.WeChatMiniQrCode) ? "":DrawingPictures.DownloadImg(query.WeChatMiniQrCode, "qrcode.png", 240, 240),
                     Remark = query.Remark,
                     UserName = query.Name,
-                    taglist = listst
+                    taglist = listst,
+                    PosterImageName = "cardid_" + id.ToString()
                 };
                 //调用生成海报方法
                 string returnpath = Comm.MergePosterImage(dm);
