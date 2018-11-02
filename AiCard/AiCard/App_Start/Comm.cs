@@ -8,6 +8,7 @@ using System.Text;
 using System.Security.Cryptography;
 using AiCard.Models.CommModels;
 using AiCard.Qiniu;
+using System.Drawing.Drawing2D;
 
 namespace AiCard
 {
@@ -497,6 +498,14 @@ namespace AiCard
 
             if (!string.IsNullOrWhiteSpace(model.QrPath))
             {
+                //拼接二维码之前画一个白色的圆底
+                Rectangle rect = new Rectangle(670, 1230, 240, 240);
+                Brush brush = new SolidBrush(Color.White);
+                g1.FillEllipse(brush, rect);
+                //描边
+                Pen pen = Pens.Black;
+                g1.DrawEllipse(pen, rect);
+
                 //拼接二维码图片
                 FileStream fs = new FileStream(model.QrPath, FileMode.Open, FileAccess.Read);
                 Image image = Image.FromStream(fs);
@@ -504,6 +513,7 @@ namespace AiCard
                 fs.Dispose();
                 g1.DrawImage(image, new Rectangle(670, 1230, 240, 240));
             }
+
             if (!string.IsNullOrWhiteSpace(model.LogoPath))
             {
                 //拼接公司logo图片
@@ -589,7 +599,7 @@ namespace AiCard
             string savePath = System.Web.HttpContext.Current.Server.MapPath("~\\Content\\Images\\temofile\\") + DateTime.Now.Hour + DateTime.Now.Minute + DateTime.Now.Second + "new.jpg";
             bitMap.Save(savePath);
             QinQiuApi qniu = new QinQiuApi();
-            string resultpath= qniu.UploadFile(savePath,true);
+            string resultpath = qniu.UploadFile(savePath, true);
             g1.Dispose();
             bitMap.Dispose();
             //生成完成后删除本地缓存文件

@@ -144,7 +144,7 @@ namespace AiCard.Controllers
             FileStream logofs = new FileStream(System.Web.HttpContext.Current.Request.MapPath("~\\Content\\Images\\logo.png"), FileMode.Open, FileAccess.Read);
             Image logoimage = Image.FromStream(logofs);
             logofs.Close();
-            System.Drawing.Image logoimages = DrawingPictures.resizeImage(logoimage, new Size(240, 240));
+            System.Drawing.Image logoimages = DrawingPictures.resizeImage(logoimage, new Size(96, 96));
             string logoPath = System.Web.HttpContext.Current.Server.MapPath("~\\Content\\Images\\temofile\\") + DateTime.Now.Hour + DateTime.Now.Minute + DateTime.Now.Second + "logo.png";
             logoimages.Save(logoPath);
             logoimages.Dispose();

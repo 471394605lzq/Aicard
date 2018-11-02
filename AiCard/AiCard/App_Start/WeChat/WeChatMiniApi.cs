@@ -90,7 +90,8 @@ namespace AiCard.WeChat
             {
                 page = "pages/carddetail/carddetail",
                 scene = $"CardID={cardid}",
-                is_hyaline=true
+                is_hyaline=true,
+                //line_color= "{ 'r':'255','g':'255','b':'255'}"
             };
 
             var result = new AiCard.Api.BaseApi($"https://api.weixin.qq.com/wxa/getwxacodeunlimit{p.ToParam("?")}", "POST", data).CreateRequest();
@@ -102,7 +103,7 @@ namespace AiCard.WeChat
                     string newimgpath = "E:" + cardid+"wxacode"+DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".png";
                     img.Save(newimgpath, ImageFormat.Png);
                     QinQiuApi qniu = new QinQiuApi();
-                    string resultpath = qniu.UploadFile(newimgpath, true);
+                    string resultpath = qniu.UploadFile(newimgpath, false);
                     File.Delete(newimgpath);
                     return resultpath;
                 }
