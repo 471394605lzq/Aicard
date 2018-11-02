@@ -183,7 +183,7 @@ namespace AiCard
                 else if (url.Contains(Qiniu.QinQiuApi.ServerLink))
                 {
                     var fileType = System.IO.Path.GetExtension(url);
-                   
+
                     StringBuilder sbUrl = new StringBuilder(url);
                     if (fileType == ".mp4")
                     {
@@ -224,7 +224,7 @@ namespace AiCard
                         sbUrl.Append($"/q/{quality}");
                         return sbUrl.ToString();
                     }
-                    
+
                 }
                 else
                 {
@@ -448,7 +448,7 @@ namespace AiCard
         /// <returns>返回海报图片地址</returns>
         public static string MergePosterImage(DrawingPictureModel model)
         {
-            List<tagmodel> taglist = model.taglist;
+            List<TagModel> taglist = model.TagList;
             string bgPath = System.Web.HttpContext.Current.Request.MapPath("~\\Content\\Images\\bg.png");
             string fname = "微软雅黑";
             Font f = new Font(fname, 18);
@@ -529,33 +529,43 @@ namespace AiCard
             {
                 for (int i = 0; i < taglist.Count; i++)
                 {
-                    tagmodel tempm = taglist[i];
-                    string tempname = tempm.tagname;
+                    TagModel tempm = taglist[i];
+                    string tempname = tempm.TagName;
                     int taglength = tempname.Length;
                     int tagwidth = taglength <= 5 ? 90 : taglength <= 7 ? 120 : taglength <= 10 ? 160 : taglength <= 13 ? 190 : 220;
-                    string colorstr = tempm.tagstyle;
+
                     Color bgc = new Color();
                     Color boc = new Color();
-                    if (colorstr == "橙色")
+                    switch (tempm.TagStyle)
                     {
-                        bgc = Color.FromArgb(255, 250, 249);
-                        boc = Color.FromArgb(255, 223, 214);
+                        case Enums.CardTabStyle.Orange:
+                            {
+                                bgc = Color.FromArgb(255, 250, 249);
+                                boc = Color.FromArgb(255, 223, 214);
+                            }
+                            break;
+                        case Enums.CardTabStyle.Green:
+                            {
+                                bgc = Color.FromArgb(249, 255, 252);
+                                boc = Color.FromArgb(190, 233, 215);
+                            }
+                            break;
+                        case Enums.CardTabStyle.Blue:
+                            {
+                                bgc = Color.FromArgb(249, 255, 255);
+                                boc = Color.FromArgb(214, 226, 255);
+                            }
+                            break;
+                        case Enums.CardTabStyle.Purple:
+                            {
+                                bgc = Color.FromArgb(252, 249, 255);
+                                boc = Color.FromArgb(234, 214, 255);
+                            }
+                            break;
+                        default:
+                            break;
                     }
-                    else if (colorstr == "绿色")
-                    {
-                        bgc = Color.FromArgb(249, 255, 252);
-                        boc = Color.FromArgb(190, 233, 215);
-                    }
-                    else if (colorstr == "紫色")
-                    {
-                        bgc = Color.FromArgb(252, 249, 255);
-                        boc = Color.FromArgb(234, 214, 255);
-                    }
-                    else if (colorstr == "蓝色")
-                    {
-                        bgc = Color.FromArgb(249, 255, 255);
-                        boc = Color.FromArgb(214, 226, 255);
-                    }
+
                     if (i == 0)
                     {
                         DrawingPictures.SetBox(bitMap, g1, tagwidth, 50, Color.FromArgb(255, 223, 214), Color.FromArgb(255, 250, 249), 50, 1130, 2);
@@ -563,8 +573,8 @@ namespace AiCard
                     }
                     else
                     {
-                        tagmodel tempm2 = taglist[i - 1];
-                        string tempname2 = tempm.tagname;
+                        TagModel tempm2 = taglist[i - 1];
+                        string tempname2 = tempm.TagName;
                         int taglength2 = tempname2.Length;
                         int tagwidth2 = taglength2 <= 5 ? 90 : taglength2 <= 7 ? 120 : taglength2 <= 10 ? 160 : taglength2 <= 13 ? 190 : 220;
                         DrawingPictures.SetBox(bitMap, g1, tagwidth, 50, Color.FromArgb(190, 233, 215), Color.FromArgb(249, 255, 252), 70 + tagwidth2, 1130, 2);
@@ -588,31 +598,31 @@ namespace AiCard
             }
 
             //姓名
-            DrawingPictures.DrawStringWrap(g1, font26, model.UserName==null?"": model.UserName, new Rectangle(50, 1000, 400, 40), 950, 50, 15);
+            DrawingPictures.DrawStringWrap(g1, font26, model.UserName == null ? "" : model.UserName, new Rectangle(50, 1000, 400, 40), 950, 50, 15);
             //职位
-            DrawingPictures.DrawStringWrap(g1, font22, model.Position==null?"": model.Position, new Rectangle(50, 1000, 400, 40), 995, 50, 15);
+            DrawingPictures.DrawStringWrap(g1, font22, model.Position == null ? "" : model.Position, new Rectangle(50, 1000, 400, 40), 995, 50, 15);
             //签名
-            DrawingPictures.DrawStringWrap(g1, f, model.Remark==null?"": model.Remark, new Rectangle(50, 1000, 800, 60), 1050, 50, 20);
+            DrawingPictures.DrawStringWrap(g1, f, model.Remark == null ? "" : model.Remark, new Rectangle(50, 1000, 800, 60), 1050, 50, 20);
             //公司名称            
-            DrawingPictures.DrawStringWrap(g1, font20, model.CompanyName==null?"": model.CompanyName, new Rectangle(50, 1250, 400, 160), 1350, 50, 12);
+            DrawingPictures.DrawStringWrap(g1, font20, model.CompanyName == null ? "" : model.CompanyName, new Rectangle(50, 1250, 400, 160), 1350, 50, 12);
 
             // 保存输出到本地
-            string savePath = System.Web.HttpContext.Current.Server.MapPath("~\\Content\\Images\\temofile\\") + model.PosterImageName +".jpg";
+            string savePath = System.Web.HttpContext.Current.Server.MapPath("~\\Content\\Images\\temofile\\") + model.PosterImageName + ".jpg";
             bitMap.Save(savePath);
             QinQiuApi qniu = new QinQiuApi();
-            string resultpath = qniu.UploadFile(savePath, true);
+            string resultpath = qniu.UploadFile(savePath, true, true);
             g1.Dispose();
             bitMap.Dispose();
             //生成完成后删除本地缓存文件
-            if (!string.IsNullOrWhiteSpace(model.LogoPath))
+            if (File.Exists(model.LogoPath))
             {
                 File.Delete(model.LogoPath);
             }
-            if (!string.IsNullOrWhiteSpace(model.AvatarPath))
+            if (File.Exists(model.AvatarPath))
             {
                 File.Delete(model.AvatarPath);
             }
-            if (!string.IsNullOrWhiteSpace(model.QrPath))
+            if (File.Exists(model.QrPath))
             {
                 File.Delete(model.QrPath);
             }

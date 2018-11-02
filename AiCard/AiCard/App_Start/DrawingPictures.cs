@@ -20,7 +20,7 @@ namespace AiCard
         /// <param name=\"font\">字体</param>
         /// <param name=\"text\">文本</param>
         /// <param name=\"recangle\">绘制范围</param>
-        public static void DrawStringWrap(Graphics graphic, Font font, string text, Rectangle recangle,int top,int left, int widthnumber)
+        public static void DrawStringWrap(Graphics graphic, Font font, string text, Rectangle recangle, int top, int left, int widthnumber)
         {
             try
             {
@@ -42,7 +42,8 @@ namespace AiCard
                     graphic.DrawString(textRows[i], font, new SolidBrush(Color.Black), fontRectanle, sf);
                 }
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 throw ex;
             }
 
@@ -56,7 +57,7 @@ namespace AiCard
         /// <param name=\"text\">文本</param>
         /// <param name=\"width\">行宽</param>
         /// <returns></returns>
-        private static List<string> GetStringRows(Graphics graphic, Font font, string text, int width,int widthnumber)
+        private static List<string> GetStringRows(Graphics graphic, Font font, string text, int width, int widthnumber)
         {
             //int RowBeginIndex = 0;
             //int rowEndIndex = 0;
@@ -67,9 +68,10 @@ namespace AiCard
             {
                 number = 1;
             }
-            else {
-                int tempn= textLength / widthnumber;
-                int yn= textLength / widthnumber;//取余数
+            else
+            {
+                int tempn = textLength / widthnumber;
+                int yn = textLength / widthnumber;//取余数
                 //如果取余数大于0则行数加1
                 if (yn > 0)
                 {
@@ -97,7 +99,7 @@ namespace AiCard
                     }
                     else if (i == number - 1)
                     {
-                        int s = widthnumber * i ;
+                        int s = widthnumber * i;
                         textRows.Add(text.Substring(s));
                     }
                     else
@@ -106,15 +108,17 @@ namespace AiCard
                     }
                 }
             }
-            catch ( Exception ex) {
+            catch (Exception ex)
+            {
                 throw ex;
             }
             return textRows;
         }
 
 
+
         //改变图片大小
-        public static System.Drawing.Image resizeImage(System.Drawing.Image imgToResize, Size size)
+        public static System.Drawing.Image ResizeImage(System.Drawing.Image imgToResize, Size size)
         {
             //获取图片宽度
             int sourceWidth = imgToResize.Width;
@@ -134,7 +138,7 @@ namespace AiCard
             else
                 nPercent = nPercentW;
             //期望的宽度
-            int destWidth =  (int)(sourceWidth * nPercent);
+            int destWidth = (int)(sourceWidth * nPercent);
             //期望的高度
             int destHeight = (int)(sourceHeight * nPercent);
 
@@ -149,7 +153,7 @@ namespace AiCard
 
 
         //下载图片
-        public static string DownloadImg(string strPath, string strName,int width,int height)
+        public static string DownloadImg(string strPath, string strName, int width, int height)
         {
             WebClient my = new WebClient();
             byte[] mybyte;
@@ -157,8 +161,13 @@ namespace AiCard
             my.Dispose();
             MemoryStream ms = new MemoryStream(mybyte);
             System.Drawing.Image img = System.Drawing.Image.FromStream(ms);
-            System.Drawing.Image tempimg = resizeImage(img, new Size(width, height));
-            string filePath = System.Web.HttpContext.Current.Server.MapPath("~\\Content\\Images\\temofile") + "\\" +DateTime.Now.Hour+DateTime.Now.Minute+DateTime.Now.Second+ strName;//Server.MapPath("../../Content/temofile/"+DateTime.Now.ToString()+ strName);
+            System.Drawing.Image tempimg = ResizeImage(img, new Size(width, height));
+            var dirPath = System.Web.HttpContext.Current.Server.MapPath("~\\Content\\Images\\temofile");
+            if (!System.IO.Directory.Exists(dirPath))
+            {
+                System.IO.Directory.CreateDirectory(dirPath);
+            }
+            string filePath = $"{dirPath}\\{DateTime.Now:hhmmss}{strName}";//Server.MapPath("../../Content/temofile/"+DateTime.Now.ToString()+ strName);
             tempimg.Save(filePath, ImageFormat.Png);   //保存
             img.Dispose();
             tempimg.Dispose();
@@ -168,7 +177,8 @@ namespace AiCard
 
 
         //画一个box
-        public static void SetBox(Bitmap bitMap, Graphics gh,int width,int height,Color cl,Color bgcl, int x,int y,int bordersize) {
+        public static void SetBox(Bitmap bitMap, Graphics gh, int width, int height, Color cl, Color bgcl, int x, int y, int bordersize)
+        {
             for (int i = 0; i < width; i++)
             {
                 for (int j = 0; j < height; j++)

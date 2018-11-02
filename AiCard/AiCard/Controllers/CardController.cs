@@ -179,8 +179,7 @@ namespace AiCard.Controllers
                     s.Style,
                     s.HadLike
                 }),
-                //WeChatMiniQrCode = card.WeChatMiniQrCode
-                WeChatMiniQrCode = "http://image.dtoao.com/WeChatQrCodeDemo.png"
+                WeChatMiniQrCode = card.WeChatMiniQrCode,
             };
             try
             {
@@ -207,7 +206,8 @@ namespace AiCard.Controllers
                              from e in db.Enterprises
                              where c.EnterpriseID == e.ID && c.ID == cardID
                              select c).FirstOrDefault();
-                if (query == null) {
+                if (query == null)
+                {
                     return Json(Comm.ToJsonResult("Error", "该名片不存在"), JsonRequestBehavior.AllowGet);
                 }
                 var qe = (from e in db.Enterprises
@@ -223,38 +223,41 @@ namespace AiCard.Controllers
                                  Count = ct.Count,
                                  Style = ct.Style
                              }).Take(2).ToList();
-                List<tagmodel> listst = new List<tagmodel>();
+                List<TagModel> listst = new List<TagModel>();
                 if (cardm.Count > 0)
                 {
                     for (int i = 0; i < cardm.Count; i++)
                     {
                         if (i == 0)
                         {
-                            tagmodel tm = new tagmodel();
-                            tm.tagname = cardm[i].Name + " " + cardm[i].Count.ToString();
-                            tm.tagstyle = cardm[i].Style.GetDisplayName();
+                            TagModel tm = new TagModel();
+                            tm.TagName = cardm[i].Name + " " + cardm[i].Count.ToStrForm(4, "");
+                            tm.TagStyle = cardm[i].Style;
                             listst.Add(tm);
                         }
                     }
                 }
                 var dm = new DrawingPictureModel
                 {
-                    AvatarPath = string.IsNullOrWhiteSpace(query.Avatar) ?"": DrawingPictures.DownloadImg(query.Avatar, "avatar.png", 834, 834),
+                    AvatarPath = string.IsNullOrWhiteSpace(query.Avatar) ? "" : DrawingPictures.DownloadImg(query.Avatar.SplitToArray<string>(',')[0], $"avatar_{cardID}.png", 834, 834),
                     CompanyName = qe.Name,
-                    LogoPath = string.IsNullOrWhiteSpace(qe.Logo) ? "": DrawingPictures.DownloadImg(qe.Logo, "logo.png", 96, 96),
+                    LogoPath = string.IsNullOrWhiteSpace(qe.Logo) ? "" : DrawingPictures.DownloadImg(qe.Logo, $"logo_{cardID}.png", 96, 96),
                     Position = query.Position,
-                    QrPath = string.IsNullOrWhiteSpace(query.WeChatMiniQrCode) ? "": DrawingPictures.DownloadImg(query.WeChatMiniQrCode, "qrcode.png", 240, 240),
+                    QrPath = string.IsNullOrWhiteSpace(query.WeChatMiniQrCode) ? "" : DrawingPictures.DownloadImg(query.WeChatMiniQrCode, $"qrcode_{cardID}.png", 240, 240),
                     Remark = query.Remark,
                     UserName = query.Name,
-                    taglist = listst,
+                    TagList = listst,
                     PosterImageName = "cardid_" + cardID.ToString()
-            };
+                };
                 //调用生成海报方法
                 string returnpath = Comm.MergePosterImage(dm);
                 var data = new
                 {
                     Posterpath = returnpath
                 };
+                var card = db.Cards.FirstOrDefault(s => s.ID == cardID);
+                card.WeChatMiniQrCode = returnpath;
+                db.SaveChanges();
                 return Json(Comm.ToJsonResult("Success", "成功", data), JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)

@@ -43,7 +43,7 @@ namespace AiCard.Models.CommModels
         /// <summary>
         /// 标签内容信息
         /// </summary>
-        public List<tagmodel> taglist { get; set; }
+        public List<TagModel> TagList { get; set; }
         ///// <summary>
         ///// 标签1内容
         ///// </summary>
@@ -64,8 +64,8 @@ namespace AiCard.Models.CommModels
 
 
     }
-    public class tagmodel {
-        public string tagname { get; set; }
-        public string tagstyle { get; set; }
+    public class TagModel {
+        public string TagName { get; set; }
+        public Enums.CardTabStyle TagStyle { get; set; }
     }
 }

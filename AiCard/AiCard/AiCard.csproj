@@ -383,6 +383,14 @@
     <Compile Include="Migrations\201810290736022_ArticleAddUpdateDateTimeAndTypeAndShare.Designer.cs">
       <DependentUpon>201810290736022_ArticleAddUpdateDateTimeAndTypeAndShare.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201811021236226_AddUserProductTop.cs" />
+    <Compile Include="Migrations\201811021236226_AddUserProductTop.Designer.cs">
+      <DependentUpon>201811021236226_AddUserProductTop.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201811021240475_AddUserCardTop.cs" />
+    <Compile Include="Migrations\201811021240475_AddUserCardTop.Designer.cs">
+      <DependentUpon>201811021240475_AddUserCardTop.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ArticleModels.cs" />
@@ -409,9 +417,11 @@
     <Compile Include="Models\RoleGroup.cs" />
     <Compile Include="Models\RolesModel.cs" />
     <Compile Include="Models\Test.cs" />
+    <Compile Include="Models\UserCardTop.cs" />
     <Compile Include="Models\UserLog.cs" />
     <Compile Include="Models\UserLogViewModels.cs" />
     <Compile Include="Models\UserManageViewModels.cs" />
+    <Compile Include="Models\UserProductTop.cs" />
     <Compile Include="Models\UserViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
@@ -958,7 +968,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Content\Images\temofile\" />
     <Folder Include="Upload\" />
     <Folder Include="Views\ArticleComment\" />
     <Folder Include="Views\Article\" />
@@ -1028,6 +1037,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201810290736022_ArticleAddUpdateDateTimeAndTypeAndShare.resx">
       <DependentUpon>201810290736022_ArticleAddUpdateDateTimeAndTypeAndShare.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201811021236226_AddUserProductTop.resx">
+      <DependentUpon>201811021236226_AddUserProductTop.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201811021240475_AddUserCardTop.resx">
+      <DependentUpon>201811021240475_AddUserCardTop.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

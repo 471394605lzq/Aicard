@@ -104,7 +104,8 @@ namespace AiCard.WeChat
                     using (MemoryStream ms = new MemoryStream())
                     {
                         System.Drawing.Image img = System.Drawing.Image.FromStream(result);
-                        string newimgpath = "E:" + cardid + "wxacode" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".png";
+                        var pDir = HttpContext.Current.Server.MapPath("~/Content/Images/temofile/");
+                        string newimgpath = $"{pDir}{cardid}wxacode.png";
                         img.Save(newimgpath, ImageFormat.Png);
                         QinQiuApi qniu = new QinQiuApi();
                         string resultpath = qniu.UploadFile(newimgpath, false);
@@ -135,14 +136,14 @@ namespace AiCard.WeChat
             }
 
         }
-        public string ReturnImg(byte[] streamByte)
-        {
-            System.IO.MemoryStream ms = new System.IO.MemoryStream(streamByte);
-            System.Drawing.Image img = System.Drawing.Image.FromStream(ms);
-            string newimgpath = "E:\"" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss:fff") + ".png";
-            img.Save(newimgpath, ImageFormat.Png);
-            return newimgpath;
-        }
+        //public string ReturnImg(byte[] streamByte)
+        //{
+        //    System.IO.MemoryStream ms = new System.IO.MemoryStream(streamByte);
+        //    System.Drawing.Image img = System.Drawing.Image.FromStream(ms);
+        //    string newimgpath = "E:\"" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss:fff") + ".png";
+        //    img.Save(newimgpath, ImageFormat.Png);
+        //    return newimgpath;
+        //}
 
         public string GetCardQrCode(int cardID)
         {

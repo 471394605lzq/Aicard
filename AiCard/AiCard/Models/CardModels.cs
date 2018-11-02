@@ -69,6 +69,9 @@ namespace AiCard.Models
         [Display(Name = "小程序分享二维码")]
         public string WeChatMiniQrCode { get; set; }
 
+        [Display(Name = "海报")]
+        public string Poster { get; set; }
+
 
         public List<CardTab> CardTabs { get; set; }
 

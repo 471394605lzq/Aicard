@@ -35,6 +35,9 @@ namespace AiCard.Models
 
         [Display(Name = "时间")]
         public DateTime CreateDateTime { get; set; }
+
+        [Display(Name = "总次数")]
+        public int Total { get; set; }
     }
 
     /// <summary>

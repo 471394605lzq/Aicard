@@ -12,7 +12,7 @@ namespace AiCard.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        // GET: ArticleComment
+        [AllowCrossSiteJson]
         public ActionResult Index(int articleID, int page = 1, int pageSize = 20)
         {
             var paged = (from c in db.ArticleComments
@@ -25,10 +25,10 @@ namespace AiCard.Controllers
             {
                 s.Avatar,
                 s.Content,
-                CreateDateTime = s.CreateDateTime.ToStrForm(),
-                s.NickName
+                DateTime = s.CreateDateTime.ToStrForm(),
+                UserName = s.NickName
             });
-            return Json(Comm.ToJsonResultForPagedList(paged, data));
+            return Json(Comm.ToJsonResultForPagedList(paged, data),JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]

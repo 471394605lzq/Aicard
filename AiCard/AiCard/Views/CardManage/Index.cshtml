@@ -148,7 +148,7 @@
                 {
                     <label style="margin-right:5px;">|</label>@Html.ActionLink("删除", "Delete", new { id = item.ID })
                 }
-                <label style="margin-right:5px;">|</label>@Html.ActionLink("生成海报", "GetPoster", new { id = item.ID })
+                <label style="margin-right:5px;">|</label>@Html.ActionLink("生成海报", "GetPoster", "Card", new { id = item.ID })
             </td>
         </tr>
     }

@@ -23,7 +23,6 @@ namespace AiCard.Controllers
         // GET: Test
         public ActionResult Index()
         {
-
             return Json(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), JsonRequestBehavior.AllowGet);
         }
 
@@ -129,47 +128,47 @@ namespace AiCard.Controllers
 
         }
 
-        public ActionResult DrawingPicture(string id)
-        {
+        //public ActionResult DrawingPicture(string id)
+        //{
 
 
-            FileStream fs2 = new FileStream(System.Web.HttpContext.Current.Request.MapPath("~\\Content\\Images\\qrcode.png"), FileMode.Open, FileAccess.Read);
-            Image image2 = Image.FromStream(fs2);
-            fs2.Close();
-            System.Drawing.Image img2 = DrawingPictures.resizeImage(image2, new Size(240, 240));
-            string qrcodePath = System.Web.HttpContext.Current.Server.MapPath("~\\Content\\Images\\temofile\\") + DateTime.Now.Hour + DateTime.Now.Minute + DateTime.Now.Second + "qrcode.png";
-            img2.Save(qrcodePath);
-            img2.Dispose();
+        //    FileStream fs2 = new FileStream(System.Web.HttpContext.Current.Request.MapPath("~\\Content\\Images\\qrcode.png"), FileMode.Open, FileAccess.Read);
+        //    Image image2 = Image.FromStream(fs2);
+        //    fs2.Close();
+        //    System.Drawing.Image img2 = DrawingPictures.ResizeImage(image2, new Size(240, 240));
+        //    string qrcodePath = System.Web.HttpContext.Current.Server.MapPath("~\\Content\\Images\\temofile\\") + DateTime.Now.Hour + DateTime.Now.Minute + DateTime.Now.Second + "qrcode.png";
+        //    img2.Save(qrcodePath);
+        //    img2.Dispose();
 
-            FileStream logofs = new FileStream(System.Web.HttpContext.Current.Request.MapPath("~\\Content\\Images\\logo.png"), FileMode.Open, FileAccess.Read);
-            Image logoimage = Image.FromStream(logofs);
-            logofs.Close();
-            System.Drawing.Image logoimages = DrawingPictures.resizeImage(logoimage, new Size(96, 96));
-            string logoPath = System.Web.HttpContext.Current.Server.MapPath("~\\Content\\Images\\temofile\\") + DateTime.Now.Hour + DateTime.Now.Minute + DateTime.Now.Second + "logo.png";
-            logoimages.Save(logoPath);
-            logoimages.Dispose();
+        //    FileStream logofs = new FileStream(System.Web.HttpContext.Current.Request.MapPath("~\\Content\\Images\\logo.png"), FileMode.Open, FileAccess.Read);
+        //    Image logoimage = Image.FromStream(logofs);
+        //    logofs.Close();
+        //    System.Drawing.Image logoimages = DrawingPictures.ResizeImage(logoimage, new Size(96, 96));
+        //    string logoPath = System.Web.HttpContext.Current.Server.MapPath("~\\Content\\Images\\temofile\\") + DateTime.Now.Hour + DateTime.Now.Minute + DateTime.Now.Second + "logo.png";
+        //    logoimages.Save(logoPath);
+        //    logoimages.Dispose();
 
-            string avatarPath = DrawingPictures.DownloadImg("http://image.dtoao.com/201810220954316919.jpg", "avatar.png", 834, 834);
-            DrawingPictureModel m = new DrawingPictureModel();
-            m.AvatarPath = avatarPath;
-            m.CompanyName = "广东帝推网络股份科技有限公司啊啊啊啊啊";
-            m.LogoPath = logoPath;
-            m.Position = "CEO";
-            m.QrPath = qrcodePath;
-            m.Remark = "既然选择了远方，便只顾风雨兼程";
-            m.UserName = "吴江";
-            m.PosterImageName = "cardid_" + id;
-            List<tagmodel> listst = new List<tagmodel>();
-            tagmodel tm = new tagmodel();
-            tm.tagname = "这就是神器啊 155885888";
-            tm.tagname = "牛逼的人物啊 155885888";
-            tm.tagstyle = "橙色";
-            tm.tagstyle = "绿色";
-            listst.Add(tm);
+        //    string avatarPath = DrawingPictures.DownloadImg("http://image.dtoao.com/201810220954316919.jpg", "avatar.png", 834, 834);
+        //    DrawingPictureModel m = new DrawingPictureModel();
+        //    m.AvatarPath = avatarPath;
+        //    m.CompanyName = "广东帝推网络股份科技有限公司啊啊啊啊啊";
+        //    m.LogoPath = logoPath;
+        //    m.Position = "CEO";
+        //    m.QrPath = qrcodePath;
+        //    m.Remark = "既然选择了远方，便只顾风雨兼程";
+        //    m.UserName = "吴江";
+        //    m.PosterImageName = "cardid_" + id;
+        //    List<TagModel> listst = new List<TagModel>();
+        //    TagModel tm = new TagModel();
+        //    tm.TagName = "这就是神器啊 155885888";
+        //    tm.TagName = "牛逼的人物啊 155885888";
+        //    tm.TagStyle = "橙色";
+        //    tm.TagStyle = "绿色";
+        //    listst.Add(tm);
 
-            string returnpath = Comm.MergePosterImage(m);
-            return View();
-        }
+        //    string returnpath = Comm.MergePosterImage(m);
+        //    return View();
+        //}
         public ActionResult TestQiniu()
         {
             return View();

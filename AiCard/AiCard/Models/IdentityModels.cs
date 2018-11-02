@@ -86,6 +86,11 @@ namespace AiCard.Models
 
         public DbSet<CardTab> CardTabs { get; set; }
 
+
+        public DbSet<UserProductTop> UserProductTops { get; set; }
+
+        public DbSet<UserCardTop> UserCardTops { get; set; }
+
         public static ApplicationDbContext Create()
         {
             return new ApplicationDbContext();
