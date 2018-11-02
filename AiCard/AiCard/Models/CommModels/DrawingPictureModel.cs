@@ -8,6 +8,10 @@ namespace AiCard.Models.CommModels
     public class DrawingPictureModel
     {
         /// <summary>
+        /// 海报图片名称
+        /// </summary>
+        public string PosterImageName { get; set; }
+        /// <summary>
         /// 用户名
         /// </summary>
         public string UserName { get; set; }

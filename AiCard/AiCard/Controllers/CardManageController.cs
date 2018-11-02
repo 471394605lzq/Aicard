@@ -13,6 +13,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using AiCard.Enums;
 using System.Net;
 using AiCard.WeChat;
+using AiCard.Models.CommModels;
 
 namespace AiCard.Controllers
 {
@@ -281,6 +282,73 @@ namespace AiCard.Controllers
             }
             db.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+
+
+        public ActionResult GetPoster(int id)
+        {
+            try
+            {
+                var query = (from c in db.Cards
+                             from e in db.Enterprises
+                             where c.EnterpriseID == e.ID && c.ID == id
+                             select c).FirstOrDefault();
+                if (query == null)
+                {
+                    return Json(Comm.ToJsonResult("Error", "该名片不存在"), JsonRequestBehavior.AllowGet);
+                }
+                var qe = (from e in db.Enterprises
+                          where e.ID == query.EnterpriseID
+                          select e).FirstOrDefault();
+
+                var cardm = (from ct in db.CardTabs
+                             where ct.CardID == id
+                             orderby ct.Count descending
+                             select new
+                             {
+                                 Name = ct.Name,
+                                 Count = ct.Count,
+                                 Style = ct.Style
+                             }).Take(2).ToList();
+                List<tagmodel> listst = new List<tagmodel>();
+                if (cardm.Count > 0)
+                {
+                    for (int i = 0; i < cardm.Count; i++)
+                    {
+                        if (i == 0)
+                        {
+                            tagmodel tm = new tagmodel();
+                            tm.tagname = cardm[i].Name + " " + cardm[i].Count.ToString();
+                            tm.tagstyle = cardm[i].Style.GetDisplayName();
+                            listst.Add(tm);
+                        }
+                    }
+                }
+                var dm = new DrawingPictureModel
+                {
+                    AvatarPath = string.IsNullOrWhiteSpace(query.Avatar) ? "": DrawingPictures.DownloadImg(query.Avatar, "avatar.png", 834, 834),
+                    CompanyName = qe.Name,
+                    LogoPath = string.IsNullOrWhiteSpace(qe.Logo) ? "": DrawingPictures.DownloadImg(qe.Logo, "logo.png", 96, 96),
+                    Position = query.Position,
+                    QrPath = string.IsNullOrWhiteSpace(query.WeChatMiniQrCode) ? "":DrawingPictures.DownloadImg(query.WeChatMiniQrCode, "qrcode.png", 240, 240),
+                    Remark = query.Remark,
+                    UserName = query.Name,
+                    taglist = listst,
+                    PosterImageName = "cardid_" + id.ToString()
+                };
+                //调用生成海报方法
+                string returnpath = Comm.MergePosterImage(dm);
+                var data = new
+                {
+                    Posterpath = returnpath
+                };
+                return Json(Comm.ToJsonResult("Success", "成功", data), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(Comm.ToJsonResult("Error", ex.Message), JsonRequestBehavior.AllowGet);
+            }
         }
         protected override void Dispose(bool disposing)
         {
