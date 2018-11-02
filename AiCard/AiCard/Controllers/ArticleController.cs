@@ -126,7 +126,7 @@ namespace AiCard.Controllers
         }
 
         [AllowCrossSiteJson]
-        public ActionResult Detail(int articleID, string userID)
+        public ActionResult Detail(int articleID, string userID, int pageSize = 20)
         {
             var a = db.Articles.FirstOrDefault(s => s.ID == articleID && s.State == Enums.ArticleState.Released);
 
@@ -148,7 +148,7 @@ namespace AiCard.Controllers
                            u.Avatar,
                            u.NickName,
                        })
-                      .ToPagedList(1, 20);
+                      .ToPagedList(1, pageSize);
             var likes = (from u in db.Users
                          from l in db.UserLogs
                          where u.Id == l.UserID
@@ -160,7 +160,7 @@ namespace AiCard.Controllers
                              u.Avatar,
                              u.NickName,
                              l.CreateDateTime
-                         }).ToPagedList(1, 20);
+                         }).ToPagedList(1, pageSize);
             var hadLike = db.UserLogs
                 .Any(s => s.RelationID == articleID
                  && s.Type == Enums.UserLogType.ArticleLike
