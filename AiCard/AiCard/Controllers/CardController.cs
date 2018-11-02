@@ -213,7 +213,7 @@ namespace AiCard.Controllers
             var cardm = (from ct in db.CardTabs
                          where ct.CardID == cardID
                          orderby ct.Count descending
-                         select new CardTab
+                         select new
                          {
                              Name = ct.Name,
                              Count = ct.Count,
