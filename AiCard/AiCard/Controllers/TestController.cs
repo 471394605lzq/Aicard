@@ -131,7 +131,7 @@ namespace AiCard.Controllers
 
         public ActionResult DrawingPicture(string id)
         {
-            
+
 
             FileStream fs2 = new FileStream(System.Web.HttpContext.Current.Request.MapPath("~\\Content\\Images\\qrcode.png"), FileMode.Open, FileAccess.Read);
             Image image2 = Image.FromStream(fs2);
@@ -185,6 +185,14 @@ namespace AiCard.Controllers
             var model = new Test();
             return View(model);
         }
+
+        [AllowCrossSiteJson]
+        public ActionResult WirteLog(object data)
+        {
+            Comm.WriteLog("Debug", JsonConvert.SerializeObject(data), Enums.DebugLogLevel.Normal);
+            return Json(Comm.ToJsonResult("Success", "成功"));
+        }
+
 
         public class MiniModel
         {

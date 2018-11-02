@@ -129,38 +129,38 @@ namespace AiCard.Controllers
         public ActionResult Detail(int articleID, string userID, int pageSize = 20)
         {
             var a = db.Articles.FirstOrDefault(s => s.ID == articleID && s.State == Enums.ArticleState.Released);
-
             if (a == null)
             {
                 return Json(Comm.ToJsonResult("NoFound", "动态不存在"), JsonRequestBehavior.AllowGet);
             }
             var c = db.Cards.FirstOrDefault(s => s.UserID == a.UserID);
-            var com = (from ac in db.ArticleComments
-                       from u in db.Users
-                       where ac.UserID == u.Id && ac.ArticleID == articleID
-                       orderby ac.CreateDateTime descending
-                       select new
-                       {
-                           ac.Content,
-                           ac.CreateDateTime,
-                           ac.ID,
-                           ac.UserID,
-                           u.Avatar,
-                           u.NickName,
-                       })
-                      .ToPagedList(1, pageSize);
-            var likes = (from u in db.Users
-                         from l in db.UserLogs
-                         where u.Id == l.UserID
-                         && l.Type == Enums.UserLogType.ArticleLike
-                         && l.RelationID == articleID
-                         orderby l.CreateDateTime descending
-                         select new
-                         {
-                             u.Avatar,
-                             u.NickName,
-                             l.CreateDateTime
-                         }).ToPagedList(1, pageSize);
+            var com = db.ArticleComments.Count(s => s.ArticleID == articleID);
+            //var com = (from ac in db.ArticleComments
+            //           from u in db.Users
+            //           where ac.UserID == u.Id && ac.ArticleID == articleID
+            //           orderby ac.CreateDateTime descending
+            //           select new
+            //           {
+            //               ac.Content,
+            //               ac.CreateDateTime,
+            //               ac.ID,
+            //               ac.UserID,
+            //               u.Avatar,
+            //               u.NickName,
+            //           })
+            //          .ToPagedList(1, pageSize);
+            //var likes = (from u in db.Users
+            //             from l in db.UserLogs
+            //             where u.Id == l.UserID
+            //             && l.Type == Enums.UserLogType.ArticleLike
+            //             && l.RelationID == articleID
+            //             orderby l.CreateDateTime descending
+            //             select new
+            //             {
+            //                 u.Avatar,
+            //                 u.NickName,
+            //                 l.CreateDateTime
+            //             }).ToPagedList(1, pageSize);
             var hadLike = db.UserLogs
                 .Any(s => s.RelationID == articleID
                  && s.Type == Enums.UserLogType.ArticleLike
@@ -169,33 +169,55 @@ namespace AiCard.Controllers
             {
                 ArticleID = a.ID,
                 Avatar = c.Avatar,
-                CommentCount = com.TotalItemCount.ToStrForm(4, "评论"),
+                CommentCount = com /*com.TotalItemCount.ToStrForm(4, "评论")*/,
                 DateTimeStr = a.UpdateDateTime.ToStrForm(),
                 HadLike = hadLike,
                 LikeCount = a.Like.ToStrForm(4, "点赞"),
                 Title = a.Title,
                 a.Content,
-                Images = a.Type == Enums.ArticleType.Html ? new string[0] : a.Images.SplitToArray<string>().ToArray(),
-                LikeUser = likes.Select(s => new
-                {
-                    s.Avatar,
-                    CreateDateTime = s.CreateDateTime.ToStrForm(),
-                    UserName = s.NickName
-                }),
-                Comments = com.Select(s => new
-                {
-                    s.Avatar,
-                    s.Content,
-                    DateTimeStr = s.CreateDateTime.ToStrForm(),
-                    UserName = s.NickName,
-                    CommentID = s.ID,
-                }),
+                Images = a.Type == Enums.ArticleType.Html ? new string[0] : (a.Images.SplitToArray<string>()?.ToArray() ?? new string[0]),
+                //LikeUser = new
+                //{
+                //    Page = new
+                //    {
+                //        likes.PageSize,
+                //        likes.PageCount,
+                //        likes.PageNumber,
+                //        likes.HasNextPage
+                //    },
+                //    Data = likes.Select(s => new
+                //    {
+                //        s.Avatar,
+                //        CreateDateTime = s.CreateDateTime.ToStrForm(),
+                //        UserName = s.NickName
+                //    })
+                //},
+                //Comments = new
+                //{
+                //    Page = new
+                //    {
+                //        com.PageSize,
+                //        com.PageCount,
+                //        com.PageNumber,
+                //        com.HasNextPage
+                //    },
+                //    Data = com.Select(s => new
+                //    {
+                //        s.Avatar,
+                //        s.Content,
+                //        DateTimeStr = s.CreateDateTime.ToStrForm(),
+                //        UserName = s.NickName,
+                //        CommentID = s.ID,
+                //    })
+                //},
                 a.Type,
                 ShareCount = a.Share.ToStrForm(4, "分享"),
                 c.Position,
                 Cover = a.Type == Enums.ArticleType.Html ? a.Images.SplitToArray<string>()[0] : null,
+                UserName = c.Name,
+
             };
-            return Json(model, JsonRequestBehavior.AllowGet);
+            return Json(Comm.ToJsonResult("Success", "成功", model), JsonRequestBehavior.AllowGet);
         }
 
         [AllowCrossSiteJson]
