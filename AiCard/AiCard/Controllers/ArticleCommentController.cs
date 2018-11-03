@@ -31,6 +31,7 @@ namespace AiCard.Controllers
                          .ToPagedList(page, pageSize);
             var data = paged.Select(s => new
             {
+                CommentID = s.Id,
                 s.Avatar,
                 s.Content,
                 DateTime = s.CreateDateTime.ToStrForm(),
