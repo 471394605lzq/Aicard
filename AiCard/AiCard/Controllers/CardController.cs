@@ -256,7 +256,7 @@ namespace AiCard.Controllers
                     Posterpath = returnpath
                 };
                 var card = db.Cards.FirstOrDefault(s => s.ID == cardID);
-                card.WeChatMiniQrCode = returnpath;
+                card.Poster = returnpath;
                 db.SaveChanges();
                 return Json(Comm.ToJsonResult("Success", "成功", data), JsonRequestBehavior.AllowGet);
             }
