@@ -83,7 +83,8 @@ namespace AiCard.Controllers
                             e.Lat,
                             e.Lng,
                             e.Logo,
-                            c.WeChatMiniQrCode
+                            c.WeChatMiniQrCode,
+                            c.Poster
                         }).FirstOrDefault();
             if (card == null)
             {
@@ -180,6 +181,7 @@ namespace AiCard.Controllers
                     s.HadLike
                 }),
                 WeChatMiniQrCode = card.WeChatMiniQrCode,
+                card.Poster
             };
             try
             {
