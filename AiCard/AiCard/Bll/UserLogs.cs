@@ -80,6 +80,7 @@ namespace AiCard.Bll
                     case Enums.UserLogType.ArticleLike:
                     case Enums.UserLogType.ArticleComment:
                     case Enums.UserLogType.ArticleRead:
+                    case Enums.UserLogType.ArticleShare:
                         {
                             var a = db.Articles.FirstOrDefault(s => s.ID == log.RelationID);
                             if (a == null || a.State != Enums.ArticleState.Released)
@@ -106,7 +107,7 @@ namespace AiCard.Bll
                     case Enums.UserLogType.ShopRead:
                     case Enums.UserLogType.WeChatOpen:
                     case Enums.UserLogType.CardRead:
-                    case Enums.UserLogType.CardForward:
+                    case Enums.UserLogType.CardShare:
                     case Enums.UserLogType.CardSave:
                     case Enums.UserLogType.CardLike:
                     case Enums.UserLogType.PhoneCall:
@@ -166,40 +167,63 @@ namespace AiCard.Bll
 
                 }
                 db.SaveChanges();//修改log
-                if (log.Type == Enums.UserLogType.ArticleLike)
+                switch (log.Type)
                 {
-                    var art = db.Articles.FirstOrDefault(s => s.ID == log.RelationID);
-                    art.Like = db.UserLogs
-                        .Count(s => s.RelationID == log.RelationID
-                         && s.Type == Enums.UserLogType.ArticleLike);
-                    db.SaveChanges();//更新点赞数量
-                }
-                if (log.Type == Enums.UserLogType.CardLike || log.Type == Enums.UserLogType.CardRead)
-                {
-                    var card = db.Cards.FirstOrDefault(s => s.ID == log.RelationID);
-                    if (log.Type == Enums.UserLogType.CardRead)
-                    {
-                        //算人头
-                        card.Like = db.UserLogs
-                           .Where(s => s.Type == log.Type && s.RelationID == log.RelationID)
-                           .GroupBy(s => s.UserID)
-                           .Count();
+                    case Enums.UserLogType.ArticleLike:
+                    case Enums.UserLogType.ArticleShare:
+                        {
+                            var art = db.Articles.FirstOrDefault(s => s.ID == log.RelationID);
+                            var count = db.UserLogs.Count(s => s.RelationID == log.RelationID && s.Type == log.Type);
+                            if (log.Type == Enums.UserLogType.ArticleShare)
+                            {
+                                art.Share = count;
+                            }
+                            if (log.Type == Enums.UserLogType.ArticleLike)
+                            {
+                                art.Like = count;
+                            }
 
-                    }
-                    if (log.Type == Enums.UserLogType.CardLike)
-                    {
-                        card.View = db.UserLogs
-                         .Count(s => s.RelationID == log.RelationID
-                          && s.Type == log.Type);
-                    }
-                    db.SaveChanges();//更新点赞数量或阅读数量
-                }
-                if (log.Type == Enums.UserLogType.CardTab)
-                {
-                    var t = db.CardTabs.FirstOrDefault(s => s.ID == log.RelationID);
-                    t.Count = db.UserLogs.Count(s => s.RelationID == log.RelationID
-                        && s.Type == Enums.UserLogType.CardTab);
-                    db.SaveChanges();//更新卡片标签
+                            db.SaveChanges();//更新点赞数量或分享数
+                            break;
+                        }
+                    case Enums.UserLogType.CardLike:
+                    case Enums.UserLogType.CardRead:
+                    case Enums.UserLogType.CardShare:
+                        {
+                            var card = db.Cards.FirstOrDefault(s => s.ID == log.RelationID);
+                            if (log.Type == Enums.UserLogType.CardRead)
+                            {
+                                //算人头
+                                card.Like = db.UserLogs
+                                   .Where(s => s.Type == log.Type && s.RelationID == log.RelationID)
+                                   .GroupBy(s => s.UserID)
+                                   .Count();
+
+                            }
+                            else
+                            {
+                                var count = db.UserLogs
+                                    .Count(s => s.RelationID == log.RelationID
+                                            && s.Type == log.Type);
+                                if (log.Type == Enums.UserLogType.CardLike)
+                                {
+                                    card.View = count;
+                                }
+                            }
+
+                            db.SaveChanges();//更新点赞数量或阅读数量
+                        }
+                        break;
+                    case Enums.UserLogType.CardTab:
+                        {
+                            var t = db.CardTabs.FirstOrDefault(s => s.ID == log.RelationID);
+                            t.Count = db.UserLogs.Count(s => s.RelationID == log.RelationID
+                                && s.Type == Enums.UserLogType.CardTab);
+                            db.SaveChanges();//更新卡片标签
+                            break;
+                        }
+                    default:
+                        break;
                 }
             }
         }

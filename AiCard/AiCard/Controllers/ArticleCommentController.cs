@@ -22,6 +22,7 @@ namespace AiCard.Controllers
                          select new
                          {
                              u.Id,
+                             CommentID = c.ID,
                              u.NickName,
                              u.Avatar,
                              c.Content,
@@ -31,7 +32,7 @@ namespace AiCard.Controllers
                          .ToPagedList(page, pageSize);
             var data = paged.Select(s => new
             {
-                CommentID = s.Id,
+                s.CommentID,
                 s.Avatar,
                 s.Content,
                 DateTime = s.CreateDateTime.ToStrForm(),
@@ -78,11 +79,11 @@ namespace AiCard.Controllers
                     Content = content
                 };
                 db.ArticleComments.Add(comment);
+                db.SaveChanges();
                 var article = db.Articles.FirstOrDefault(s => s.ID == articleID);
                 var count = db.ArticleComments.Count(s => s.ArticleID == articleID);
                 article.Comment = count;
                 db.SaveChanges();
-              
                 return Json(Comm.ToJsonResult("Success", "成功", new
                 {
                     CommentID = comment.ID,

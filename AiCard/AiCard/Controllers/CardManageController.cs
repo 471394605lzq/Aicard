@@ -249,7 +249,9 @@ namespace AiCard.Controllers
                 t.Images = string.Join(",", model.Images.Images);
                 if (string.IsNullOrWhiteSpace(temp.WeChatMiniQrCode))
                 {
-                    t.WeChatMiniQrCode = w.GetWXACodeUnlimit(model.ID);
+                    var scene = new Dictionary<string, string>();
+                    scene.Add("CardId", model.ID.ToString());
+                    t.WeChatMiniQrCode = w.GetWXACodeUnlimit(WeChatPage.CardDetail, scene);
                 }
                 db.SaveChanges();
                 return RedirectToAction("Index");

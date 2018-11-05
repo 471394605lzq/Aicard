@@ -202,6 +202,7 @@ namespace AiCard.Controllers
         [AllowCrossSiteJson]
         public ActionResult GetPoster(int cardID)
         {
+
             try
             {
                 var query = (from c in db.Cards

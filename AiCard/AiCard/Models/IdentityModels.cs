@@ -91,6 +91,14 @@ namespace AiCard.Models
 
         public DbSet<UserCardTop> UserCardTops { get; set; }
 
+        public DbSet<EnterpriseCustomer> EnterpriseCustomers { get; set; }
+
+        public DbSet<EnterpriseCustomerRemark> EnterpriseCustomerRemarks { get; set; }
+
+        public DbSet<CustomerTab> CustomerTabs { get; set; }
+
+        public DbSet<CustomerTabGroup> CustomerTabGroups { get; set; }
+
         public static ApplicationDbContext Create()
         {
             return new ApplicationDbContext();
