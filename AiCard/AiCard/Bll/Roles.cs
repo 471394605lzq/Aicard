@@ -105,7 +105,17 @@ namespace AiCard.Bll
             addSystemERole(SysRole.EProductManageCreate, "商品权限管理", "商品权限管理创建");
             addSystemERole(SysRole.EProductManageEdit, "商品权限管理", "商品权限管理编辑");
             addSystemERole(SysRole.EProductMangeDelete, "商品权限管理", "商品权限管理删除");
-            
+
+            addSystemERole(SysRole.ECustomerTabGroupsManageRead, "客户标签分组权限管理", "客户标签分组权限管理查看");
+            addSystemERole(SysRole.ECustomerTabGroupsManageCreate, "客户标签分组权限管理", "客户标签分组权限管理创建");
+            addSystemERole(SysRole.ECustomerTabGroupsManageEdit, "客户标签分组权限管理", "客户标签分组权限管理编辑");
+            addSystemERole(SysRole.ECustomerTabGroupsMangeDelete, "客户标签分组权限管理", "客户标签分组权限管理删除");
+
+            addSystemERole(SysRole.ECustomerTabManageRead, "客户标签分组权限管理", "客户标签分组权限管理查看");
+            addSystemERole(SysRole.ECustomerTabManageCreate, "客户标签分组权限管理", "客户标签分组权限管理创建");
+            addSystemERole(SysRole.ECustomerTabManageEdit, "客户标签分组权限管理", "客户标签分组权限管理编辑");
+            addSystemERole(SysRole.ECustomerTabMangeDelete, "客户标签分组权限管理", "客户标签分组权限管理删除");
+
             #endregion
             #region 后台权限
             Action<string, string, string> addSystemRole = (name, gourp, desc) =>
@@ -150,6 +160,18 @@ namespace AiCard.Bll
             addSystemRole(SysRole.ProductManageCreate, "商品权限管理", "商品权限管理创建");
             addSystemRole(SysRole.ProductManageEdit, "商品权限管理", "商品权限管理编辑");
             addSystemRole(SysRole.ProductMangeDelete, "商品权限管理", "商品权限管理删除");
+
+
+            addSystemRole(SysRole.CustomerTabGroupsManageRead, "客户标签分组权限管理", "客户标签分组权限管理查看");
+            addSystemRole(SysRole.CustomerTabGroupsManageCreate, "客户标签分组权限管理", "客户标签分组权限管理创建");
+            addSystemRole(SysRole.CustomerTabGroupsManageEdit, "客户标签分组权限管理", "客户标签分组权限管理编辑");
+            addSystemRole(SysRole.CustomerTabGroupsMangeDelete, "客户标签分组权限管理", "客户标签分组权限管理删除");
+
+
+            addSystemRole(SysRole.CustomerTabManageRead, "客户标签权限管理", "客户标签权限管理查看");
+            addSystemRole(SysRole.CustomerTabManageCreate, "客户标签权限管理", "客户标签权限管理创建");
+            addSystemRole(SysRole.CustomerTabManageEdit, "客户标签权限管理", "客户标签权限管理编辑");
+            addSystemRole(SysRole.CustomerTabMangeDelete, "客户标签权限管理", "客户标签权限管理删除");
             #endregion
 
             var dbRoles = _appRoleManager.Roles.ToList();

@@ -295,7 +295,10 @@
     <Compile Include="Controllers\CardManageController.cs" />
     <Compile Include="Controllers\CardTabController.cs" />
     <Compile Include="Controllers\ChinaPCASController.cs" />
+    <Compile Include="Controllers\CustomerTabGroupsManageController.cs" />
+    <Compile Include="Controllers\CustomerTabsManageController.cs" />
     <Compile Include="Controllers\EnterpriseController.cs" />
+    <Compile Include="Controllers\EnterpriseCustomerController.cs" />
     <Compile Include="Controllers\EnterpriseManageController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\HomePageModularsController.cs" />
@@ -984,6 +987,16 @@
     <Content Include="Views\HomePageModularsManage\CreateByImage.cshtml" />
     <Content Include="Views\HomePageModularsManage\EditByImage.cshtml" />
     <Content Include="Views\Test\DrawingPicture.cshtml" />
+    <Content Include="Views\CustomerTabsManage\Create.cshtml" />
+    <Content Include="Views\CustomerTabsManage\Delete.cshtml" />
+    <Content Include="Views\CustomerTabsManage\Details.cshtml" />
+    <Content Include="Views\CustomerTabsManage\Edit.cshtml" />
+    <Content Include="Views\CustomerTabsManage\Index.cshtml" />
+    <Content Include="Views\CustomerTabGroupsManage\Create.cshtml" />
+    <Content Include="Views\CustomerTabGroupsManage\Delete.cshtml" />
+    <Content Include="Views\CustomerTabGroupsManage\Details.cshtml" />
+    <Content Include="Views\CustomerTabGroupsManage\Edit.cshtml" />
+    <Content Include="Views\CustomerTabGroupsManage\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -992,6 +1005,7 @@
     <Folder Include="Views\Article\" />
     <Folder Include="Views\CardTab\" />
     <Folder Include="Views\Card\" />
+    <Folder Include="Views\EnterpriseCustomer\" />
     <Folder Include="Views\HomePageManage\" />
     <Folder Include="Views\HomePageModulars\" />
     <Folder Include="Views\Products\" />

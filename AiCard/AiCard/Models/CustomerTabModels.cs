@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
@@ -17,16 +18,20 @@ namespace AiCard.Models
         /// </summary>
         public int EnterpriseID { get; set; }
 
+        [Display(Name ="分组名称")]
+        [Required]
         /// <summary>
         /// 分组名称
         /// </summary>
         public string Name { get; set; }
 
+        [Display(Name = "样式")]
         /// <summary>
         /// 样式
         /// </summary>
         public Enums.CardTabStyle Style { get; set; }
 
+        [Display(Name = "排序")]
         /// <summary>
         /// 排序
         /// </summary>

@@ -43,6 +43,17 @@ namespace AiCard
         public const string ProductManageCreate = "ProductManageCreate";
         public const string ProductManageEdit = "ProductManageEdit";
         public const string ProductMangeDelete = "ProductMangeDelete";
+
+        public const string CustomerTabGroupsManageRead = "CustomerTabGroupsManageRead";
+        public const string CustomerTabGroupsManageCreate = "CustomerTabGroupsManageCreate";
+        public const string CustomerTabGroupsManageEdit = "CustomerTabGroupsManageEdit";
+        public const string CustomerTabGroupsMangeDelete = "CustomerTabGroupsMangeDelete";
+
+        public const string CustomerTabManageRead = "CustomerTabManageRead";
+        public const string CustomerTabManageCreate = "CustomerTabManageCreate";
+        public const string CustomerTabManageEdit = "CustomerTabManageEdit";
+        public const string CustomerTabMangeDelete = "CustomerTabMangeDelete";
+
         #endregion
 
         #region 企业权限
@@ -80,6 +91,17 @@ namespace AiCard
         public const string EHomePageModularsManageCreate = "EHomePageModularsManageCreate";
         public const string EHomePageModularsManageEdit = "EHomePageModularsManageEdit";
         public const string EHomePageModularsManageDelete = "EHomePageModularsManageDelete";
+
+
+        public const string ECustomerTabGroupsManageRead = "ECustomerTabGroupsManageRead";
+        public const string ECustomerTabGroupsManageCreate = "ECustomerTabGroupsManageCreate";
+        public const string ECustomerTabGroupsManageEdit = "ECustomerTabGroupsManageEdit";
+        public const string ECustomerTabGroupsMangeDelete = "ECustomerTabGroupsMangeDelete";
+
+        public const string ECustomerTabManageRead = "ECustomerTabManageRead";
+        public const string ECustomerTabManageCreate = "ECustomerTabManageCreate";
+        public const string ECustomerTabManageEdit = "ECustomerTabManageEdit";
+        public const string ECustomerTabMangeDelete = "ECustomerTabMangeDelete";
         #endregion
 
     }
