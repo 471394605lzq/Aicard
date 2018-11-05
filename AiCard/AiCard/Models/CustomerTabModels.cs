@@ -13,6 +13,11 @@ namespace AiCard.Models
         public int ID { get; set; }
 
         /// <summary>
+        /// 企业
+        /// </summary>
+        public int EnterpriseID { get; set; }
+
+        /// <summary>
         /// 分组名称
         /// </summary>
         public string Name { get; set; }

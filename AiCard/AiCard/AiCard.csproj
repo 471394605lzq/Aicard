@@ -404,6 +404,10 @@
     <Compile Include="Migrations\201811050338025_DeleteOwnerIDAndCardID.Designer.cs">
       <DependentUpon>201811050338025_DeleteOwnerIDAndCardID.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201811050353015_CustomerTabGroupAddEnterpriseID.cs" />
+    <Compile Include="Migrations\201811050353015_CustomerTabGroupAddEnterpriseID.Designer.cs">
+      <DependentUpon>201811050353015_CustomerTabGroupAddEnterpriseID.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ArticleModels.cs" />
@@ -1067,6 +1071,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201811050338025_DeleteOwnerIDAndCardID.resx">
       <DependentUpon>201811050338025_DeleteOwnerIDAndCardID.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201811050353015_CustomerTabGroupAddEnterpriseID.resx">
+      <DependentUpon>201811050353015_CustomerTabGroupAddEnterpriseID.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
