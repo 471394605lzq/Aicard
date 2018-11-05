@@ -86,7 +86,7 @@ namespace AiCard.WeChat
         {
             var p = new Dictionary<string, string>();
             p.Add("access_token", GetAccessToken());
-            string path = $"Page={(int)page}&{scene.ToParam()}";
+            string path = $"Type={(int)page}&{scene.ToParam()}";
             var data = new
             {
                 page = $"pages/test1/test1",
@@ -96,7 +96,7 @@ namespace AiCard.WeChat
             };
             var result = new AiCard.Api.BaseApi($"https://api.weixin.qq.com/wxa/getwxacodeunlimit{p.ToParam("?")}", "POST", data).CreateRequest();
 
-            string codeName = $"{path.Replace("&", "_")}.png";
+            string codeName = $"{path.Replace("&", "_").Replace("=", "_")}.png";
             var pDir = HttpContext.Current.Server.MapPath("~/Upload/");
 
             //判断返回的文件流是否是png格式

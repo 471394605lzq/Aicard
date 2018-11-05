@@ -81,6 +81,8 @@ namespace AiCard.Models
         [Display(Name = "阅览数")]
         public int View { get; set; }
 
+        [Display(Name = "排序")]
+        public int Sort { get; set; }
     }
 
     public class CardTab
