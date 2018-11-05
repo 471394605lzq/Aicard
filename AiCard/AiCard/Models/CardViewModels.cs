@@ -47,7 +47,7 @@ namespace AiCard.Models
         public string PhoneNumber { get; set; }
 
         [Display(Name = "Email")]
-        [RegularExpression(Reg.EMAIL,ErrorMessage = "{0}格式不正确")]
+        [RegularExpression(Reg.EMAIL, ErrorMessage = "{0}格式不正确")]
         public string Email { get; set; }
 
         [Display(Name = "微信号")]
@@ -125,13 +125,13 @@ namespace AiCard.Models
         /// <summary>
         /// 手机号
         /// </summary>
-       
+
         public string Mobile { get; set; }
 
         /// <summary>
         /// 职位
         /// </summary>
-      
+
         public string Email { get; set; }
 
         /// <summary>
@@ -148,8 +148,16 @@ namespace AiCard.Models
         /// 职位
         /// </summary>
         public string Position { get; set; }
+
+        /// <summary>
+        /// 是否置顶
+        /// </summary>
+        public bool IsTop { get; set; }
+
+        public DateTime? CreateDateTime { get; set; }
     }
-    public class CardEditViewModel {
+    public class CardEditViewModel
+    {
         public int CardID { get; set; }
         [Display(Name = "姓名")]
         public string Name { get; set; }
@@ -194,6 +202,7 @@ namespace AiCard.Models
 
         [Display(Name = "图片")]
         public string Images { get; set; }
+
     }
 
 

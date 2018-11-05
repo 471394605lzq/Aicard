@@ -17,7 +17,7 @@ namespace AiCard.Models
         /// </summary>
         public int EnterpriseID { get; set; }
 
-        
+
 
 
         /// <summary>
@@ -103,6 +103,8 @@ namespace AiCard.Models
 
 
         public List<EnterpriseCustomerRemark> CustomerRemarks { get; set; }
+
+        public List<EnterpriseCustomerTab> CustomerTabs { get; set; }
     }
 
     /// <summary>
@@ -129,23 +131,29 @@ namespace AiCard.Models
         /// 备注
         /// </summary>
         public string Remark { get; set; }
-
-        /// <summary>
-        /// 标签存放CustomerTabForCustomer集合的JSON
-        /// </summary>
-        public string Tabs { get; set; }
-
     }
 
     /// <summary>
-    /// 给CustomerRemark的Tabs字段做Json解析用
+    /// 企业客户标签表
     /// </summary>
-    public class HelpEnterpriseCustomerRemarkTabs
+    public class EnterpriseCustomerTab
     {
+
+        public int ID { get; set; }
+
+        public int CustomerID { get; set; }
+
+        public EnterpriseCustomer Customer { get; set; }
+
+        public string OwnerID { get; set; }
+
         public string Name { get; set; }
 
         public Enums.CardTabStyle Style { get; set; }
+
+        public DateTime CreateDateTime { get; set; }
     }
+
 
     /// <summary>
     /// 给Customer的Log字段做Json解析用

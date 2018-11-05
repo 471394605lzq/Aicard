@@ -22,10 +22,14 @@ namespace AiCard.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         [AllowCrossSiteJson]
-        public ActionResult Index(int enterpriseID, string filter, int page = 1, int pageSize = 20)
+        public ActionResult Index(int enterpriseID, string userID, string filter, int page = 1, int pageSize = 20)
         {
             var query = from c in db.Cards
                         from e in db.Enterprises
+                        join t in db.UserCardTops
+                            .Where(s => s.UserID == userID)
+                            on c.ID equals t.CardID
+                            into ct
                         where e.ID == enterpriseID
                             && c.EnterpriseID == e.ID
                             && c.Enable
@@ -37,7 +41,9 @@ namespace AiCard.Controllers
                             Logo = e.Logo,
                             Mobile = c.Mobile,
                             Name = c.Name,
-                            Position = c.Position
+                            Position = c.Position,
+                            IsTop = ct.Any(),
+                            CreateDateTime = ct.FirstOrDefault() == null ? null : (DateTime?)ct.FirstOrDefault().CreateDateTime,
                         };
             if (!string.IsNullOrWhiteSpace(filter))
             {
@@ -46,10 +52,13 @@ namespace AiCard.Controllers
                     || s.Mobile.Contains(filter)
                     || s.Email.Contains(filter));
             }
-            var paged = query.OrderBy(s => s.CardID).ToPagedList(page, pageSize);
+            var paged = query
+                .OrderByDescending(s => s.CreateDateTime)
+                .ThenBy(s => s.CardID)
+                .ToPagedList(page, pageSize);
             foreach (var item in paged)
             {
-                item.Avatar = item.Avatar.SplitToArray<string>()[0];
+                item.Avatar = item.Avatar.SplitToArray<string>()?[0];
             }
             return Json(Comm.ToJsonResultForPagedList(paged, paged), JsonRequestBehavior.AllowGet);
         }
@@ -181,7 +190,7 @@ namespace AiCard.Controllers
                     s.HadLike
                 }),
                 WeChatMiniQrCode = card.WeChatMiniQrCode,
-                card.Poster
+                Poster = Comm.ResizeImage(card.Poster)
             };
             try
             {
@@ -400,6 +409,36 @@ namespace AiCard.Controllers
                 return Json(Comm.ToJsonResult("Error500", ex.Message), JsonRequestBehavior.AllowGet);
             }
         }
+
+        [HttpPost]
+        [AllowCrossSiteJson]
+        public ActionResult Top(string userID, int cardID)
+        {
+            if (!db.Users.Any(s => s.Id == userID))
+            {
+                return Json(Comm.ToJsonResult("UserNoFound", "用户不存在"));
+            }
+            if (!db.Cards.Any(s => s.ID == cardID))
+            {
+                return Json(Comm.ToJsonResult("CardNoFound", "卡片不存在"));
+            }
+            var top = db.UserCardTops.FirstOrDefault(s => s.UserID == userID && s.CardID == cardID);
+
+            if (top == null)
+            {
+                db.UserCardTops.Add(new UserCardTop { CardID = cardID, CreateDateTime = DateTime.Now, UserID = userID });
+                db.SaveChanges();
+                return Json(Comm.ToJsonResult("Success", "置顶成功", true));
+            }
+            else
+            {
+                db.UserCardTops.Remove(top);
+                db.SaveChanges();
+                return Json(Comm.ToJsonResult("Success", "解除置顶", false));
+            }
+
+        }
+
 
 
         protected override void Dispose(bool disposing)
