@@ -199,6 +199,11 @@ namespace AiCard.Controllers
 
             return Json(Comm.ToJsonResult("Success", "成功", model), JsonRequestBehavior.AllowGet);
         }
+        /// <summary>
+        /// 生成海报
+        /// </summary>
+        /// <param name="cardID"></param>
+        /// <returns></returns>
         [AllowCrossSiteJson]
         public ActionResult GetPoster(int cardID)
         {
@@ -268,6 +273,134 @@ namespace AiCard.Controllers
                 return Json(Comm.ToJsonResult("Error", ex.Message), JsonRequestBehavior.AllowGet);
             }
         }
+
+        /// <summary>
+        /// Ai雷达 我的主页获取名片信息
+        /// </summary>
+        /// <param name="cardID"></param>
+        /// <returns></returns>
+        [AllowCrossSiteJson]
+        public ActionResult GetCardInfo(int cardID)
+        {
+            try
+            {
+                var query = (from c in db.Cards
+                             where c.ID == cardID && c.Enable
+                             select c).FirstOrDefault();
+                var data = new
+                {
+                    Name = query.Name,
+                    Avatar = query.Avatar.SplitToArray<string>(',')[0],
+                    Position = query.Position,
+                    PhoneNumber = query.PhoneNumber,
+                    Mobile = query.Mobile,
+                    Email = query.Email,
+                    WeChatCode = query.WeChatCode,
+                    Remark = query.Remark,
+                    Video = query.Video,
+                    Voice = query.Voice,
+                    Images = query.Images
+                };
+                return Json(Comm.ToJsonResult("Success", "成功", data), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(Comm.ToJsonResult("Error", ex.Message), JsonRequestBehavior.AllowGet);
+            }
+        }
+        /// <summary>
+        /// Ai雷达 编辑名片
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        [AllowCrossSiteJson]
+        public ActionResult EditCardInfo(CardEditViewModel model)
+        {
+            try
+            {
+                var t = db.Cards.FirstOrDefault(s => s.ID == model.CardID);
+                if (string.IsNullOrWhiteSpace(model.Name))
+                {
+                    return Json(Comm.ToJsonResult("Error", "姓名不能为空"), JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    t.Name = model.Name;
+                }
+                if (model.Email != null)
+                {
+                    if (string.Empty != model.Email && !Reg.IsEmail(model.Email))
+                    {
+                        return Json(Comm.ToJsonResult("Error", "邮箱格式不正确"), JsonRequestBehavior.AllowGet);
+                    }
+                    else
+                    {
+                        t.Email = model.Email;
+                    }
+                }
+                if (model.Mobile != null)
+                {
+                    if (string.Empty != model.Mobile && !Reg.IsMobile(model.Mobile))
+                    {
+                        return Json(Comm.ToJsonResult("Error", "手机号格式不正确"), JsonRequestBehavior.AllowGet);
+                    }
+                    else
+                    {
+                        t.Mobile = model.Mobile;
+                    }
+                }
+                if (model.PhoneNumber != null)
+                {
+                    if (string.Empty != model.PhoneNumber && !Reg.IsMobile(model.PhoneNumber))
+                    {
+                        return Json(Comm.ToJsonResult("Error", "座机号码格式不正确"), JsonRequestBehavior.AllowGet);
+                    }
+                    else
+                    {
+                        t.PhoneNumber = model.PhoneNumber;
+                    }
+                }
+                if (model.Position != null)
+                {
+                    t.Position = model.Position;
+                }
+                if (model.Remark != null)
+                {
+                    t.Remark = model.Remark;
+                }
+                if (model.WeChatCode != null)
+                {
+                    t.WeChatCode = model.WeChatCode;
+                }
+                if (model.Avatar != null)
+                {
+                    t.Avatar = model.Avatar;
+                }
+                if (model.Images != null)
+                {
+                    t.Images = model.Images;
+                }
+                if (model.Video != null)
+                {
+                    t.Video = model.Video;
+                }
+                if (model.Voice != null)
+                {
+                    t.Voice = model.Voice;
+                }
+                if (model.Info != null)
+                {
+                    t.Info = model.Info;
+                }
+                db.SaveChanges();
+                return Json(Comm.ToJsonResult("Success", "成功"), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(Comm.ToJsonResult("Error500", ex.Message), JsonRequestBehavior.AllowGet);
+            }
+        }
+
 
         protected override void Dispose(bool disposing)
         {

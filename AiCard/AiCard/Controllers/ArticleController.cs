@@ -236,6 +236,47 @@ namespace AiCard.Controllers
             return Json(Comm.ToJsonResultForPagedList(paged, paged), JsonRequestBehavior.AllowGet);
         }
 
+
+        /// <summary>
+        /// Ai雷达 发布动态
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        [AllowCrossSiteJson]
+        public ActionResult PushArticle(int EnterpriseID, string UserID, string Content, string Images)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(Content) && string.IsNullOrWhiteSpace(Images))
+                {
+                    return Json(Comm.ToJsonResult("Error", "发布内容或者图片不能为空"), JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    Article model = new Article();
+
+                    model.EnterpriseID = EnterpriseID;
+                    model.UserID = UserID;
+                    model.Content = Content;
+                    model.Images = Images;
+                    model.Type = Enums.ArticleType.Text;
+                    model.CreateDateTime = DateTime.Now;
+                    model.UpdateDateTime = DateTime.Now;
+                    model.State = Enums.ArticleState.Wait;
+                    model.Comment = 0;
+                    model.Share = 0;
+                    model.Like = 0;
+                    db.Articles.Add(model);
+                    db.SaveChanges();
+                    return Json(Comm.ToJsonResult("Success", "成功"), JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(Comm.ToJsonResult("Error500", ex.Message), JsonRequestBehavior.AllowGet);
+            }
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)

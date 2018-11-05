@@ -59,7 +59,28 @@ namespace AiCard.Controllers
             return Json(Comm.ToJsonResult("Success", "删除成功"));
         }
 
-        
+
+        /// <summary>
+        /// 获取我的标签
+        /// </summary>
+        /// <param name="cardID">名片id</param>
+        /// <returns>我的标签列表json集合</returns>
+        [AllowCrossSiteJson]
+        public ActionResult GetMyCardTabsList(int cardID)
+        {
+            var query = from ct in db.CardTabs
+                        where ct.CardID == cardID
+                        select new
+                        {
+                            Name = ct.Name,
+                            Count = ct.Count,
+                            Style = ct.Style
+                        };
+            var data = query.ToList();
+            return Json(Comm.ToJsonResult("Success", "获取成功", data), JsonRequestBehavior.AllowGet);
+        }
+
+
 
 
         protected override void Dispose(bool disposing)
