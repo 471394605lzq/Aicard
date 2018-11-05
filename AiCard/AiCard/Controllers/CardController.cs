@@ -43,6 +43,7 @@ namespace AiCard.Controllers
                             Name = c.Name,
                             Position = c.Position,
                             IsTop = ct.Any(),
+                            Sort = c.Sort,
                             CreateDateTime = ct.FirstOrDefault() == null ? null : (DateTime?)ct.FirstOrDefault().CreateDateTime,
                         };
             if (!string.IsNullOrWhiteSpace(filter))
@@ -54,7 +55,7 @@ namespace AiCard.Controllers
             }
             var paged = query
                 .OrderByDescending(s => s.CreateDateTime)
-                .ThenBy(s => s.CardID)
+                .ThenBy(s => s.Sort)
                 .ToPagedList(page, pageSize);
             foreach (var item in paged)
             {

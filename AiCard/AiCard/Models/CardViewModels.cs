@@ -155,6 +155,11 @@ namespace AiCard.Models
         public bool IsTop { get; set; }
 
         public DateTime? CreateDateTime { get; set; }
+
+        /// <summary>
+        /// 排序
+        /// </summary>
+        public int Sort { get; set; }
     }
     public class CardEditViewModel
     {
