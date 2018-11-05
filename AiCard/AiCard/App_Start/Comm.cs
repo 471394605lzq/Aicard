@@ -607,10 +607,12 @@ namespace AiCard
             DrawingPictures.DrawStringWrap(g1, font20, model.CompanyName == null ? "" : model.CompanyName, new Rectangle(50, 1250, 400, 160), 1350, 50, 12);
 
             // 保存输出到本地
-            string savePath = System.Web.HttpContext.Current.Server.MapPath("~\\Content\\Images\\temofile\\") + model.PosterImageName + ".jpg";
+            var path = $"~/Upload/{model.PosterImageName}.jpg";
+            string savePath = System.Web.HttpContext.Current.Server.MapPath(path);
             bitMap.Save(savePath);
-            QinQiuApi qniu = new QinQiuApi();
-            string resultpath = qniu.UploadFile(savePath, true, true);
+            //微信小程序的限制，图片放到七牛上无法缓存，然后无法把海报保存到相册
+            //QinQiuApi qniu = new QinQiuApi();
+            //string resultpath = qniu.UploadFile(savePath, true, true);
             g1.Dispose();
             bitMap.Dispose();
             //生成完成后删除本地缓存文件
@@ -626,7 +628,7 @@ namespace AiCard
             {
                 File.Delete(model.QrPath);
             }
-            return resultpath;
+            return path;
         }
     }
 }

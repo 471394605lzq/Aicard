@@ -153,7 +153,7 @@ namespace AiCard
 
 
         //下载图片
-        public static string DownloadImg(string strPath, string strName, int width, int height)
+        public static string DownloadImg(string strPath, string strName, int width, int height, string dir = "~/Upload")
         {
             WebClient my = new WebClient();
             byte[] mybyte;
@@ -162,12 +162,12 @@ namespace AiCard
             MemoryStream ms = new MemoryStream(mybyte);
             System.Drawing.Image img = System.Drawing.Image.FromStream(ms);
             System.Drawing.Image tempimg = ResizeImage(img, new Size(width, height));
-            var dirPath = System.Web.HttpContext.Current.Server.MapPath("~\\Content\\Images\\temofile");
+            var dirPath = System.Web.HttpContext.Current.Server.MapPath(dir);
             if (!System.IO.Directory.Exists(dirPath))
             {
                 System.IO.Directory.CreateDirectory(dirPath);
             }
-            string filePath = $"{dirPath}\\{DateTime.Now:hhmmss}{strName}";//Server.MapPath("../../Content/temofile/"+DateTime.Now.ToString()+ strName);
+            string filePath = $"{dirPath}/{DateTime.Now:hhmmss}{strName}";//Server.MapPath("../../Content/temofile/"+DateTime.Now.ToString()+ strName);
             tempimg.Save(filePath, ImageFormat.Png);   //保存
             img.Dispose();
             tempimg.Dispose();

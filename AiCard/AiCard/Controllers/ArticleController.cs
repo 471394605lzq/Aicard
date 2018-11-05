@@ -169,7 +169,7 @@ namespace AiCard.Controllers
             {
                 ArticleID = a.ID,
                 Avatar = c.Avatar,
-                CommentCount = com /*com.TotalItemCount.ToStrForm(4, "评论")*/,
+                CommentCount = com.ToStrForm(4, "评论"),
                 DateTimeStr = a.UpdateDateTime.ToStrForm(),
                 HadLike = hadLike,
                 LikeCount = a.Like.ToStrForm(4, "点赞"),

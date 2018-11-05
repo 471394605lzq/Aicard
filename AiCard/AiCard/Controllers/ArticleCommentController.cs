@@ -13,22 +13,33 @@ namespace AiCard.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         [AllowCrossSiteJson]
-        public ActionResult Index(int articleID, int page = 1, int pageSize = 20)
+        public ActionResult Index(int articleID, string userID, int page = 1, int pageSize = 20)
         {
             var paged = (from c in db.ArticleComments
                          from u in db.Users
                          where c.ArticleID == articleID && c.UserID == u.Id
                          orderby c.CreateDateTime descending
-                         select new { u.Id, u.NickName, u.Avatar, c.Content, c.CreateDateTime })
+                         select new
+                         {
+                             u.Id,
+                             CommentID = c.ID,
+                             u.NickName,
+                             u.Avatar,
+                             c.Content,
+                             c.CreateDateTime,
+                             CanDelete = c.UserID == userID
+                         })
                          .ToPagedList(page, pageSize);
             var data = paged.Select(s => new
             {
+                s.CommentID,
                 s.Avatar,
                 s.Content,
                 DateTime = s.CreateDateTime.ToStrForm(),
-                UserName = s.NickName
+                UserName = s.NickName,
+                s.CanDelete
             });
-            return Json(Comm.ToJsonResultForPagedList(paged, data),JsonRequestBehavior.AllowGet);
+            return Json(Comm.ToJsonResultForPagedList(paged, data), JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -60,10 +71,24 @@ namespace AiCard.Controllers
                 //{
                 //    return Json(Comm.ToJsonResult("CreateLimit", $"评论在{limitSec}s内只能评论一次"));
                 //}
-                var comment = new ArticleComment { ArticleID = articleID, UserID = userID, CreateDateTime = DateTime.Now, Content = content };
+                var comment = new ArticleComment
+                {
+                    ArticleID = articleID,
+                    UserID = userID,
+                    CreateDateTime = DateTime.Now,
+                    Content = content
+                };
                 db.ArticleComments.Add(comment);
                 db.SaveChanges();
-                return Json(Comm.ToJsonResult("Success", "成功"));
+                var article = db.Articles.FirstOrDefault(s => s.ID == articleID);
+                var count = db.ArticleComments.Count(s => s.ArticleID == articleID);
+                article.Comment = count;
+                db.SaveChanges();
+                return Json(Comm.ToJsonResult("Success", "成功", new
+                {
+                    CommentID = comment.ID,
+                    Count = count
+                }));
             }
             catch (Exception ex)
             {
@@ -71,6 +96,21 @@ namespace AiCard.Controllers
             }
 
 
+        }
+
+        [HttpPost]
+        [AllowCrossSiteJson]
+        public ActionResult Delete(int commentID, string userID)
+        {
+            var comm = db.ArticleComments.FirstOrDefault(s => s.ID == commentID && s.UserID == userID);
+            if (comm == null)
+            {
+                return Json(Comm.ToJsonResult("ArticleCommentNoFound", "评论不存在"));
+            }
+            db.ArticleComments.Remove(comm);
+            db.SaveChanges();
+            var count = db.ArticleComments.Count(s => s.ArticleID == comm.ArticleID);
+            return Json(Comm.ToJsonResult("Success", "删除成功", new { Count = count }));
         }
 
         protected override void Dispose(bool disposing)

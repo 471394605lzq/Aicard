@@ -278,6 +278,7 @@
     <Compile Include="App_Start\Reg.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="App_Start\SteamCheck.cs" />
     <Compile Include="App_Start\SysRole.cs" />
     <Compile Include="App_Start\WeChatWork\WeChatWorkApi.cs" />
     <Compile Include="App_Start\WeChatWork\WeChatWorkModel.cs" />
@@ -391,6 +392,14 @@
     <Compile Include="Migrations\201811021240475_AddUserCardTop.Designer.cs">
       <DependentUpon>201811021240475_AddUserCardTop.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201811050329097_AddEnterpriseCustomerAndEnterpriseCustomerRemark.cs" />
+    <Compile Include="Migrations\201811050329097_AddEnterpriseCustomerAndEnterpriseCustomerRemark.Designer.cs">
+      <DependentUpon>201811050329097_AddEnterpriseCustomerAndEnterpriseCustomerRemark.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201811050332306_AddCustomerTabAndCustomerTabGroup.cs" />
+    <Compile Include="Migrations\201811050332306_AddCustomerTabAndCustomerTabGroup.Designer.cs">
+      <DependentUpon>201811050332306_AddCustomerTabAndCustomerTabGroup.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ArticleModels.cs" />
@@ -405,6 +414,8 @@
     <Compile Include="Models\CommModels\ImageResizer.cs" />
     <Compile Include="Models\CommModels\Map.cs" />
     <Compile Include="Models\CommModels\Menu.cs" />
+    <Compile Include="Models\EnterpriseCustomerModels.cs" />
+    <Compile Include="Models\CustomerTabModels.cs" />
     <Compile Include="Models\EnterpriseModels.cs" />
     <Compile Include="Models\EnterpriseViewModels.cs" />
     <Compile Include="Models\HomePageModular.cs" />
@@ -1043,6 +1054,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201811021240475_AddUserCardTop.resx">
       <DependentUpon>201811021240475_AddUserCardTop.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201811050329097_AddEnterpriseCustomerAndEnterpriseCustomerRemark.resx">
+      <DependentUpon>201811050329097_AddEnterpriseCustomerAndEnterpriseCustomerRemark.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201811050332306_AddCustomerTabAndCustomerTabGroup.resx">
+      <DependentUpon>201811050332306_AddCustomerTabAndCustomerTabGroup.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

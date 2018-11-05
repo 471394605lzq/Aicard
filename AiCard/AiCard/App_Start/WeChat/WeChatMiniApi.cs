@@ -82,57 +82,59 @@ namespace AiCard.WeChat
         /// </summary>
         /// <param name="code"></param>
         /// <returns></returns>
-        public string GetWXACodeUnlimit(int cardid)
+        public string GetWXACodeUnlimit(WeChatPage page, Dictionary<string, string> scene)
         {
             var p = new Dictionary<string, string>();
             p.Add("access_token", GetAccessToken());
-            string path = $"Page=1&CardID={cardid}";
+            string path = $"Page={(int)page}&{scene.ToParam()}";
             var data = new
             {
-                page = $"pages/carddetail/carddetail",
+                page = $"pages/test1/test1",
                 scene = path,
                 is_hyaline = true,
                 //line_color= "{ 'r':'255','g':'255','b':'255'}"
             };
             var result = new AiCard.Api.BaseApi($"https://api.weixin.qq.com/wxa/getwxacodeunlimit{p.ToParam("?")}", "POST", data).CreateRequest();
 
+            string codeName = $"{path.Replace("&", "_")}.png";
+            var pDir = HttpContext.Current.Server.MapPath("~/Upload/");
 
-            if (result.GetType() == typeof(MemoryStream))
+            //判断返回的文件流是否是png格式
+            if (SteamCheck.Check.IsAllowedExtension(result, SteamCheck.FileType.Png))
             {
+                System.Drawing.Image img = System.Drawing.Image.FromStream(result);
+
+                string newimgpath = $"{pDir}{codeName}";
+                img.Save(newimgpath, ImageFormat.Png);
+                string resultpath = null;
                 try
                 {
-                    using (MemoryStream ms = new MemoryStream())
-                    {
-                        System.Drawing.Image img = System.Drawing.Image.FromStream(result);
-                        var pDir = HttpContext.Current.Server.MapPath("~/Content/Images/temofile/");
-                        string newimgpath = $"{pDir}{cardid}wxacode.png";
-                        img.Save(newimgpath, ImageFormat.Png);
-                        QinQiuApi qniu = new QinQiuApi();
-                        string resultpath = qniu.UploadFile(newimgpath, false);
-                        File.Delete(newimgpath);
-                        return resultpath;
-                    }
+                    QinQiuApi qniu = new QinQiuApi();
+                    resultpath = qniu.UploadFile(newimgpath, false, true);
                 }
                 catch (Exception ex)
                 {
-                    var steam = result;
-                    string txtData = "";
-                    if (steam == null)
-                    {
-                        return null;
-
-                    }
-                    using (var reader = new StreamReader(steam))
-                    {
-                        txtData = reader.ReadToEnd();
-                    }
-                    throw new Exception(txtData);
+                    throw ex;
                 }
+                finally
+                {
+                    File.Delete(newimgpath);
+                }
+                return resultpath;
 
             }
             else
             {
-                throw new Exception(JsonConvert.SerializeObject(result));
+                string txtData = "";
+                if (result == null)
+                {
+                    return null;
+                }
+                using (var reader = new StreamReader(result))
+                {
+                    txtData = reader.ReadToEnd();
+                }
+                throw new Exception(txtData);
             }
 
         }
@@ -257,39 +259,12 @@ namespace AiCard.WeChat
             }
         }
 
-        public static string AES_decrypt(string encryptedDataStr, string key, string iv)
-        {
-            RijndaelManaged rijalg = new RijndaelManaged();
-            //-----------------    
-            //设置 cipher 格式 AES-128-CBC    
 
-            rijalg.KeySize = 128;
+    }
 
-            rijalg.Padding = PaddingMode.PKCS7;
-            rijalg.Mode = CipherMode.CBC;
-
-            rijalg.Key = Convert.FromBase64String(key);
-            rijalg.IV = Convert.FromBase64String(iv);
-
-
-            byte[] encryptedData = Convert.FromBase64String(encryptedDataStr);
-            //解密    
-            ICryptoTransform decryptor = rijalg.CreateDecryptor(rijalg.Key, rijalg.IV);
-
-            string result;
-
-            using (MemoryStream msDecrypt = new MemoryStream(encryptedData))
-            {
-                using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
-                {
-                    using (StreamReader srDecrypt = new StreamReader(csDecrypt))
-                    {
-                        result = srDecrypt.ReadToEnd();
-                    };
-                }
-            }
-            return result;
-        }
+    public enum WeChatPage
+    {
+        CardDetail = 1
 
     }
 }

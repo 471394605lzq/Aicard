@@ -226,7 +226,7 @@ namespace AiCard.Enums
         [Display(Name = "名片查看")]
         CardRead = 60,
         [Display(Name = "转发名片")]
-        CardForward = 61,
+        CardShare = 61,
         [Display(Name = "名片保存")]
         CardSave = 62,
         [Display(Name = "名片点赞数")]
