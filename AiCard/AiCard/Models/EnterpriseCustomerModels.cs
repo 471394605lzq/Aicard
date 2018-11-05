@@ -26,16 +26,6 @@ namespace AiCard.Models
         public string UserID { get; set; }
 
         /// <summary>
-        /// 对应的名片
-        /// </summary>
-        public int CardID { get; set; }
-
-        /// <summary>
-        /// 对应的员工
-        /// </summary>
-        public string OwnerID { get; set; }
-
-        /// <summary>
         /// 真实姓名
         /// </summary>
         public string RealName { get; set; }
