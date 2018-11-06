@@ -15,7 +15,7 @@
                         <ul class="dropdown-menu">
                             <li><a href="@Url.Action("CreateByHtml")">@AiCard.Enums.HomePageModularType.Html.GetDisplayName()</a></li>
                             <li><a href="@Url.Action("CreateByImage")">@AiCard.Enums.HomePageModularType.Images.GetDisplayName()</a></li>
-                            <li><a href="#">@AiCard.Enums.HomePageModularType.Contact.GetDisplayName()</a></li>
+                            <li><a href="@Url.Action("CreateByContact")">@AiCard.Enums.HomePageModularType.Contact.GetDisplayName()</a></li>
                         </ul>
                     </li>
                     <li><a id="btnSaveSort" href="#">保存排序</a></li>
@@ -44,6 +44,7 @@
                         url = Url.Action("EditByHtml", new { id = item.ID });
                         break;
                     case AiCard.Enums.HomePageModularType.Contact:
+                        url = Url.Action("EditByContact", new { id = item.ID });
                         break;
                     case AiCard.Enums.HomePageModularType.Images:
                     case AiCard.Enums.HomePageModularType.Banner:

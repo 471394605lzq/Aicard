@@ -14,6 +14,7 @@ namespace AiCard.Models
     {
         public int ID { get; set; }
 
+        [Required]
         [Display(Name = "标题")]
         public string Title { get; set; }
 
@@ -34,6 +35,7 @@ namespace AiCard.Models
 
         public int ID { get; set; }
 
+        [Required]
         [Display(Name = "标题")]
         public string Title { get; set; }
 
@@ -49,6 +51,28 @@ namespace AiCard.Models
 
         [Display(Name = "类型")]
         public HomePageModularType Type { get { return HomePageModularType.Images; } }
+
+    }
+
+    public class HomePageModularByContact
+    {
+        public int ID { get; set; }
+
+        [Required]
+        [Display(Name = "标题")]
+        public string Title { get; set; }
+
+        [Display(Name = "Email")]
+        public string Email { get; set; }
+
+        [Display(Name = "座机")]
+        public string Phone { get; set; }
+
+        [Display(Name = "地址")]
+        public string Address { get; set; }
+
+        [Display(Name = "类别")]
+        public Enums.HomePageModularType Type { get { return HomePageModularType.Contact; } }
 
     }
 }
