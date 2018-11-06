@@ -10,6 +10,7 @@ using AiCard.Models;
 
 namespace AiCard.Controllers
 {
+    [Authorize]
     public class CustomerTabGroupsManageController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
@@ -29,9 +30,33 @@ namespace AiCard.Controllers
         }
 
         // GET: CustomerTabGroupsManage
-        public ActionResult Index()
+        [Authorize(Roles = SysRole.CustomerTabGroupsManageRead + "," + SysRole.ECustomerTabGroupsManageRead)]
+        public ActionResult Index(string filter,int? page=1)
         {
-            return View(db.CustomerTabGroups.ToList());
+            Sidebar();
+            var query = from ct in db.CustomerTabGroups
+                        from e in db.Enterprises
+                        where ct.EnterpriseID == e.ID
+                        select new CustomerTabGroupViewModel
+                        {
+                            EnterpriseID = ct.EnterpriseID,
+                            ID = ct.ID,
+                            EnterpriseName = e.Name,
+                            Name = ct.Name,
+                            Sort = ct.Sort,
+                            Style = ct.Style
+                        };
+            if (!string.IsNullOrWhiteSpace(filter))
+            {
+                query = query.Where(s => s.Name.Contains(filter));
+            }
+            //如果是企业用户则只查询该企业信息
+            if (AccontData.UserType == Enums.UserType.Enterprise)
+            {
+                query = query.Where(s => s.EnterpriseID == AccontData.EnterpriseID);
+            }
+            var paged = query.OrderByDescending(s => s.ID).ToPagedList(page.Value, 10);
+            return View(paged);
         }
 
         // GET: CustomerTabGroupsManage/Details/5
@@ -50,8 +75,10 @@ namespace AiCard.Controllers
         }
 
         // GET: CustomerTabGroupsManage/Create
+        [Authorize(Roles = SysRole.CustomerTabGroupsManageCreate + "," + SysRole.ECustomerTabGroupsManageCreate)]
         public ActionResult Create()
         {
+            Sidebar();
             return View();
         }
 
@@ -60,21 +87,39 @@ namespace AiCard.Controllers
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = SysRole.CustomerTabGroupsManageCreate + "," + SysRole.ECustomerTabGroupsManageCreate)]
         public ActionResult Create(CustomerTabGroup customerTabGroup)
         {
+            var tempuser = db.Users.FirstOrDefault(s => s.Id == AccontData.UserID);
+            //防止企业用户串号修改
+            if ((AccontData.UserType == Enums.UserType.Enterprise
+                && tempuser.EnterpriseID != AccontData.EnterpriseID)||AccontData.EnterpriseID<=0)
+            {
+                return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
+            }
+            Sidebar();
             if (ModelState.IsValid)
             {
+                customerTabGroup.EnterpriseID = AccontData.EnterpriseID;
                 db.CustomerTabGroups.Add(customerTabGroup);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-
             return View(customerTabGroup);
         }
 
         // GET: CustomerTabGroupsManage/Edit/5
+        [Authorize(Roles = SysRole.CustomerTabGroupsManageEdit + "," + SysRole.ECustomerTabGroupsManageEdit)]
         public ActionResult Edit(int? id)
         {
+            var tempuser = db.Users.FirstOrDefault(s => s.Id == AccontData.UserID);
+            //防止企业用户串号修改
+            if ((AccontData.UserType == Enums.UserType.Enterprise
+                && tempuser.EnterpriseID != AccontData.EnterpriseID) || AccontData.EnterpriseID <= 0)
+            {
+                return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
+            }
+            Sidebar();
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -92,11 +137,25 @@ namespace AiCard.Controllers
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,EnterpriseID,Name,Style,Sort")] CustomerTabGroup customerTabGroup)
+        [Authorize(Roles = SysRole.CustomerTabGroupsManageEdit + "," + SysRole.ECustomerTabGroupsManageEdit)]
+        public ActionResult Edit(CustomerTabGroup customerTabGroup)
         {
+            var tempuser = db.Users.FirstOrDefault(s => s.Id == AccontData.UserID);
+            //防止企业用户串号修改
+            if ((AccontData.UserType == Enums.UserType.Enterprise
+                && tempuser.EnterpriseID != AccontData.EnterpriseID) || AccontData.EnterpriseID <= 0)
+            {
+                return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
+            }
+            Sidebar();
+            var temp = db.CustomerTabGroups.FirstOrDefault(s=>s.ID== customerTabGroup.ID);
             if (ModelState.IsValid)
             {
-                db.Entry(customerTabGroup).State = EntityState.Modified;
+                temp.Name = customerTabGroup.Name;
+                temp.Sort = customerTabGroup.Sort;
+                temp.Style = customerTabGroup.Style;
+                temp.EnterpriseID = AccontData.EnterpriseID;
+                //db.Entry(customerTabGroup).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -104,25 +163,54 @@ namespace AiCard.Controllers
         }
 
         // GET: CustomerTabGroupsManage/Delete/5
+        [Authorize(Roles = SysRole.CustomerTabGroupsMangeDelete + "," + SysRole.ECustomerTabGroupsMangeDelete)]
         public ActionResult Delete(int? id)
         {
+            var tempuser = db.Users.FirstOrDefault(s => s.Id == AccontData.UserID);
+            //防止企业用户串号修改
+            if ((AccontData.UserType == Enums.UserType.Enterprise
+                && tempuser.EnterpriseID != AccontData.EnterpriseID) || AccontData.EnterpriseID <= 0)
+            {
+                return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
+            }
+            Sidebar();
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            CustomerTabGroup customerTabGroup = db.CustomerTabGroups.Find(id);
-            if (customerTabGroup == null)
+            var query =(from ct in db.CustomerTabGroups
+                        from e in db.Enterprises
+                        where ct.EnterpriseID == e.ID&& ct.ID==id
+                        select new CustomerTabGroupViewModel
+                        {
+                            EnterpriseID = ct.EnterpriseID,
+                            ID = ct.ID,
+                            EnterpriseName = e.Name,
+                            Name = ct.Name,
+                            Sort = ct.Sort,
+                            Style = ct.Style
+                        }).FirstOrDefault();
+            if (query == null)
             {
                 return HttpNotFound();
             }
-            return View(customerTabGroup);
+            return View(query);
         }
 
         // POST: CustomerTabGroupsManage/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = SysRole.CustomerTabGroupsMangeDelete + "," + SysRole.ECustomerTabGroupsMangeDelete)]
         public ActionResult DeleteConfirmed(int id)
         {
+            var tempuser = db.Users.FirstOrDefault(s => s.Id == AccontData.UserID);
+            //防止企业用户串号修改
+            if ((AccontData.UserType == Enums.UserType.Enterprise
+                && tempuser.EnterpriseID != AccontData.EnterpriseID) || AccontData.EnterpriseID <= 0)
+            {
+                return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
+            }
+            Sidebar();
             CustomerTabGroup customerTabGroup = db.CustomerTabGroups.Find(id);
             db.CustomerTabGroups.Remove(customerTabGroup);
             db.SaveChanges();

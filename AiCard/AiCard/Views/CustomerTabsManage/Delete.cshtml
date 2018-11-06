@@ -1,49 +1,52 @@
-﻿@model AiCard.Models.CustomerTab
+﻿@model AiCard.Models.CustomerTabViewModel
 
 @{
-    ViewBag.Title = "Delete";
+    ViewBag.Title = "删除客户标签";
     Layout = "~/Views/Shared/_LayoutBackground.cshtml";
 }
 
-<h2>Delete</h2>
+<ol class="breadcrumb">
+    <li><a href="@Url.Action("Index")">客户标签</a></li>
+    <li>删除客户标签</li>
+</ol>
+<div class="roleGroupCreateEdit">
+    <h3>请确认以下信息是否要删除?</h3>
+    <div>
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.GroupName)
+            </dt>
 
-<h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>CustomerTab</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Group.Name)
-        </dt>
+            <dd>
+                @Html.DisplayFor(model => model.GroupName)
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.Group.Name)
-        </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Name)
+            </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Name)
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.Name)
-        </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Sort)
+            </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Sort)
-        </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Sort)
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.Sort)
-        </dd>
+        </dl>
 
-    </dl>
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
 
-    @using (Html.BeginForm()) {
-        @Html.AntiForgeryToken()
-
-        <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-default" /> |
-            @Html.ActionLink("Back to List", "Index")
-        </div>
-    }
-</div>
+            <div class="form-actions no-color">
+                <input type="submit" value="Delete" class="btn btn-default" /> |
+                @Html.ActionLink("Back to List", "Index")
+            </div>
+        }
+    </div>
+    </div>

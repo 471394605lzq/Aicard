@@ -42,6 +42,14 @@ namespace AiCard
             {
                 menus.Add(new Models.CommModels.Menu { Name = "公司主页", Title = "公司主页", Url = "~/HomePageModularsManage/Index", IconImage = "shouyeshouye" });
             }
+            if (p.IsInRole(SysRole.CustomerTabGroupsManageRead) || p.IsInRole(SysRole.ECustomerTabGroupsManageRead))
+            {
+                menus.Add(new Models.CommModels.Menu { Name = "客户标签分组", Title = "客户标签分组", Url = "~/CustomerTabGroupsManage/Index", IconImage = "fenzu" });
+            }
+            if (p.IsInRole(SysRole.CustomerTabManageRead) || p.IsInRole(SysRole.ECustomerTabManageRead))
+            {
+                menus.Add(new Models.CommModels.Menu { Name = "客户标签", Title = "客户标签", Url = "~/CustomerTabsManage/Index", IconImage = "biaoqian" });
+            }
             return menus;
         }
     }
