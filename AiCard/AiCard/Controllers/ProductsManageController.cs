@@ -10,6 +10,7 @@ using AiCard.Models;
 
 namespace AiCard.Controllers
 {
+    [Authorize]
     public class ProductsManageController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
