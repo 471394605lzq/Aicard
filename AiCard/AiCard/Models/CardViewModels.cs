@@ -107,6 +107,9 @@ namespace AiCard.Models
             Sortable = true,
             Type = CommModels.FileType.Image,
         };
+
+        [Display(Name = "排序")]
+        public int Sort { get; set; }
     }
 
     public class CardListViewModel

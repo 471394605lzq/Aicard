@@ -21,9 +21,13 @@ namespace AiCard.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Test
-        public ActionResult Index()
+        public ActionResult Index(int eid)
         {
-            return Json(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), JsonRequestBehavior.AllowGet);
+            var max = db.Cards
+                .Where(s => s.EnterpriseID == eid)
+                .Max(s => (int?)s.Sort) ?? 0;
+            var sort = max / 10 * 10 + 10;
+            return Json(sort, JsonRequestBehavior.AllowGet);
         }
 
 
@@ -60,8 +64,6 @@ namespace AiCard.Controllers
                 Style = Enums.CellStyle.CellList,
                 Title = "企业资讯",
             };
-
-
             list.Add(model3);
 
             return Json(Comm.ToJsonResult("Success", "成功", list), JsonRequestBehavior.AllowGet);
@@ -82,6 +84,18 @@ namespace AiCard.Controllers
         public ActionResult PcasTest()
         {
             return View();
+        }
+
+        [AllowCrossSiteJson]
+        public ActionResult DeleteUser()
+        {
+            var user = db.Users.FirstOrDefault(s => s.NickName == "hot pink");
+
+            var log = db.UserLogs.Where(s => s.UserID == user.Id).ToList();
+            db.UserLogs.RemoveRange(log);
+            db.Users.Remove(user);
+            db.SaveChanges();
+            return Json(Comm.ToJsonResult("Success", "消息"), JsonRequestBehavior.AllowGet);
         }
 
 

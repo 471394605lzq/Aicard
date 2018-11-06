@@ -81,7 +81,7 @@ namespace AiCard.Controllers
             return View(paged);
         }
         //新增
-        [Authorize(Roles = SysRole.CardManageCreate)]
+        [Authorize(Roles = SysRole.CardManageCreate + "," + SysRole.ECardManageCreate)]
         public ActionResult Create()
         {
             var tempuser = db.Users.FirstOrDefault(s => s.Id == AccontData.UserID);
@@ -93,6 +93,9 @@ namespace AiCard.Controllers
             }
             Sidebar();
             var model = new CardCreateEditViewModel();
+            model.Sort = (db.Cards
+                .Where(s => s.EnterpriseID == AccontData.EnterpriseID)
+                .Max(s => (int?)s.Sort) ?? 0) / 10 * 10 + 10;
             return View(model);
         }
         // POST: tests/Create
@@ -101,7 +104,7 @@ namespace AiCard.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = SysRole.CardManageCreate)]
+        [Authorize(Roles = SysRole.CardManageCreate + "," + SysRole.ECardManageCreate)]
         public async Task<ActionResult> Create(CardCreateEditViewModel model)
         {
             Sidebar();
@@ -146,7 +149,8 @@ namespace AiCard.Controllers
                             Remark = model.Remark,
                             Video = string.Join(",", model.Video.Images),
                             Voice = string.Join(",", model.Voice.Images),
-                            WeChatCode = model.WeChatCode
+                            WeChatCode = model.WeChatCode,
+                            Sort = model.Sort
                         };
                         db.Cards.Add(card);
                         db.SaveChanges();
@@ -199,6 +203,7 @@ namespace AiCard.Controllers
                 UserID = model.UserID,
                 EnterpriseID = model.EnterpriseID,
                 //AdminName = model.User.UserName,
+                Sort = model.Sort
             };
             models.Avatar.Images = model.Avatar?.Split(',') ?? new string[0];
             models.Images.Images = model.Images?.Split(',') ?? new string[0];
@@ -247,6 +252,7 @@ namespace AiCard.Controllers
                 t.Voice = string.Join(",", model.Voice.Images);
                 t.Video = string.Join(",", model.Video.Images);
                 t.Images = string.Join(",", model.Images.Images);
+                t.Sort = model.Sort;
                 if (string.IsNullOrWhiteSpace(temp.WeChatMiniQrCode))
                 {
                     var scene = new Dictionary<string, string>();

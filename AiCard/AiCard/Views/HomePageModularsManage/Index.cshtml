@@ -4,69 +4,68 @@
     var modularTypes = Enum.GetValues(typeof(AiCard.Enums.HomePageModularType));
     Layout = "~/Views/Shared/_LayoutBackground.cshtml";
 }
-<nav class="navbar navbar-default">
-    <div class="container-fluid">
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav">
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">添加模块 <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="@Url.Action("CreateByHtml")">@AiCard.Enums.HomePageModularType.Html.GetDisplayName()</a></li>
-                        <li><a href="@Url.Action("CreateByImage")">@AiCard.Enums.HomePageModularType.Images.GetDisplayName()</a></li>
-                        <li><a href="#">@AiCard.Enums.HomePageModularType.Contact.GetDisplayName()</a></li>
-                    </ul>
-                </li>
-                <li><a href="#">预览</a></li>
-            </ul>
-        </div><!-- /.navbar-collapse -->
-    </div><!-- /.container-fluid -->
-</nav>
-<table class="table table-hover table-striped">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Title)
-                </td>
-                <td>
-                    @switch (item.Type)
-                    {
-                        case AiCard.Enums.HomePageModularType.Html:
-                            @Html.ActionLink("编辑", "EditByHtml", new { id = item.ID })
-                            break;
-                        case AiCard.Enums.HomePageModularType.Images:
-                            @Html.ActionLink("编辑", "EditByImage", new { id = item.ID })
-                            break;
-                        case AiCard.Enums.HomePageModularType.Contact:
-
-                            break;
-                        case AiCard.Enums.HomePageModularType.Banner:
-                            @Html.ActionLink("编辑", "EditByImage", new { id = item.ID })
-                            break;
-                        default:
-                            break;
-                    }
-
-                    @if (item.Type != AiCard.Enums.HomePageModularType.Banner)
-                    {
-                        @Html.Raw("|")  @Html.ActionLink("删除", "Delete", new { id = item.ID })  @Html.Raw("|")
-                        <span class="btnSort" title="">排序</span>
-                    }
-                </td>
-            </tr>
+<div class="homePageModularsManageIndex">
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">添加模块 <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="@Url.Action("CreateByHtml")">@AiCard.Enums.HomePageModularType.Html.GetDisplayName()</a></li>
+                            <li><a href="@Url.Action("CreateByImage")">@AiCard.Enums.HomePageModularType.Images.GetDisplayName()</a></li>
+                            <li><a href="#">@AiCard.Enums.HomePageModularType.Contact.GetDisplayName()</a></li>
+                        </ul>
+                    </li>
+                    <li><a id="btnSaveSort" href="#">保存排序</a></li>
+                </ul>
+            </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+    </nav>
+    <div class="homePageModularsManageIndex-list">
+        @{
+            var bannner = Model.FirstOrDefault(s => s.Type == AiCard.Enums.HomePageModularType.Banner);
         }
-    </tbody>
-</table>
+        <div class="homePageModularsManageIndex-list-top" data-id="@bannner.ID" data-type="@((int)bannner.Type)">
+            <div>@bannner.Title</div>
+            <a href="@Url.Action("EditByImage", new { id = bannner.ID })">
+                <span class="glyphicon glyphicon-edit btnEdit" title="编辑"></span>
+            </a>
+            <span class="glyphicon glyphicon-remove btnDelete" data-id="@bannner.ID" title="删除"></span>
+        </div>
+        <ul class="">
+            @foreach (var item in Model.Where(s => s.Type != AiCard.Enums.HomePageModularType.Banner))
+            {
+                string url = null;
+                switch (item.Type)
+                {
+                    case AiCard.Enums.HomePageModularType.Html:
+                        url = Url.Action("EditByHtml", new { id = item.ID });
+                        break;
+                    case AiCard.Enums.HomePageModularType.Contact:
+                        break;
+                    case AiCard.Enums.HomePageModularType.Images:
+                    case AiCard.Enums.HomePageModularType.Banner:
+                        url = Url.Action("EditByImage", new { id = item.ID });
+                        break;
+                    default:
+                        break;
+                }
+                string edithid = url == null ? "hidden" : null;
+                <li data-id="@item.ID" data-type="@((int)item.Type)">
+                    <div>@item.Title</div>
+                    <a href="@url">
+                        <span class="glyphicon glyphicon-edit btnEdit @edithid" title="编辑"></span>
+                    </a>
+                    <span class="glyphicon glyphicon-remove btnDelete" title="删除"></span>
+                    <span class="glyphicon glyphicon-sort btnSort" title="拖动排序"></span>
+                </li>
+            }
+        </ul>
+    </div>
+
+</div>
 @section Scripts{
     @Scripts.Render("~/bundles/homePageModularIndex")
 }

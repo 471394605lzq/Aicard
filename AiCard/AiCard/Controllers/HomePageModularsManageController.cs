@@ -207,7 +207,7 @@ namespace AiCard.Controllers
                 ID = m.ID,
                 Title = m.Title
             };
-            model.Images.Images = m.Content.SplitToArray<string>(',').ToArray();
+            model.Images.Images = m.Content.SplitToArray<string>(',')?.ToArray() ?? new string[0];
             return View(model);
         }
 
@@ -236,41 +236,49 @@ namespace AiCard.Controllers
         }
         #endregion
 
-        //[Authorize(Roles = SysRole.EHomePageModularsManageEdit)]
-        //public ActionResult Edit(IHomePageModular model)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return Json(Comm.ToJsonResult("Error", ModelState.FirstErrorMessage()));
-        //    }
-        //    var eId = EnterpriseID;
-        //    var modular = db.HomePageModulars
-        //        .FirstOrDefault(s => s.ID == model.ID
-        //            && s.EnterpriseID == EnterpriseID);
-        //    if (modular == null)
-        //    {
-        //        return Json(Comm.ToJsonResult("NoFound", "模块不存在"));
-        //    }
-        //    modular.Content = model.Content;
-        //    modular.Title = model.Title;
-        //    //HomePageModular modular = new HomePageModular
-        //    //{
-        //    //    Content = model.Content,
-        //    //    EnterpriseID = eId,
-        //    //    Sort = model,
-        //    //    Title = model.Title,
-        //    //    Type = model.Type
-        //    //};
-        //    return Json(Comm.ToJsonResult("Success", "成功"));
-        //}
+        #region Contact
+        //public ActionResult EditBy
+        #endregion
 
         [HttpPost]
         [Authorize(Roles = SysRole.EHomePageModularsManageDelete)]
         public ActionResult Delete(int id)
         {
-            return Json("1");
+            var modular = db.HomePageModulars
+                .FirstOrDefault(s => s.ID == id && s.EnterpriseID == EnterpriseID);
+            if (modular == null)
+            {
+                return Json(Comm.ToJsonResult("ModularNoFound", "成功"));
+            }
+            else
+            {
+                db.HomePageModulars.Remove(modular);
+                db.SaveChanges();
+                return Json(Comm.ToJsonResult("Success", "成功"));
+            }
         }
 
+        [HttpPost]
+        [Authorize(Roles = SysRole.EHomePageModularsManageEdit)]
+        public ActionResult Sort(string ids)
+        {
+            var idsList = ids.SplitToArray<int>();
+            var modular = db.HomePageModulars
+                .Where(s => s.EnterpriseID == EnterpriseID
+                    && idsList.Contains(s.ID))
+                .ToList();
+            foreach (var item in modular)
+            {
+                var i = idsList.FirstOrDefault(s => s == item.ID);
+                var index = idsList.IndexOf(i);
+                if (index >= 0)
+                {
+                    item.Sort = index;
+                }
+            }
+            var res = db.SaveChanges();
+            return Json(Comm.ToJsonResult("Success", "成功"));
+        }
 
         protected override void Dispose(bool disposing)
         {

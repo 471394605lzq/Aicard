@@ -1,0 +1,71 @@
+﻿@import "../base";
+
+.homePageModularsManageIndex {
+    .btnSort {
+        cursor: ns-resize;
+    }
+
+    .table {
+        tbody {
+            td:nth-child(1) {
+                width: 250px;
+            }
+
+            td:nth-child(2) {
+                width: 150px;
+            }
+
+            .ui-sortable-helper {
+                .clearfix();
+            }
+        }
+    }
+
+
+
+    .homePageModularsManageIndex-list {
+        .item() {
+            @h: 50px;
+            @fs: @h/3;
+            border: @border-bc;
+            .one-line-vertical-mid(@h);
+            font-size: @fs;
+            width: 250px;
+            padding-left: 5px;
+            margin-bottom: 5px;
+            position: relative;
+            background-color: #fff;
+
+            .btnDelete {
+                .block-vertical-mid();
+                right: 5px;
+                cursor: pointer;
+                color: @text-danger;
+            }
+
+            .btnSort {
+                .block-vertical-mid();
+                right: @fs+ 10px;
+                cursor: grab;
+            }
+
+            .btnEdit {
+                .block-vertical-mid();
+                right: (@fs+10)*2;
+                cursor: pointer;
+            }
+        }
+
+        .homePageModularsManageIndex-list-top {
+            .item();
+        }
+
+        > ul {
+            .clean-ul();
+
+            li {
+                .item();
+            }
+        }
+    }
+}

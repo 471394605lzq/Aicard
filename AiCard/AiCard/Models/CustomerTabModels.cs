@@ -58,6 +58,6 @@ namespace AiCard.Models
         /// <summary>
         /// 排序
         /// </summary>
-        public string Sort { get; set; }
+        public int Sort { get; set; }
     }
 }

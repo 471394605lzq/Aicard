@@ -412,6 +412,10 @@
     <Compile Include="Migrations\201811050907409_CardAddSortAndAddEnterpriseCustomerTab.Designer.cs">
       <DependentUpon>201811050907409_CardAddSortAndAddEnterpriseCustomerTab.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201811060206298_CustomerTabChangeSortType.cs" />
+    <Compile Include="Migrations\201811060206298_CustomerTabChangeSortType.Designer.cs">
+      <DependentUpon>201811060206298_CustomerTabChangeSortType.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ArticleModels.cs" />
@@ -770,6 +774,7 @@
     <Content Include="Content\Less\map.less" />
     <Content Include="Content\iconfont.ttf" />
     <Content Include="Content\Less\View\enterpriseManage.less" />
+    <Content Include="Content\Less\View\homePageModularsManageIndex.less" />
     <None Include="Properties\PublishProfiles\AiCardRelease.pubxml" />
     <Content Include="Scripts\ChinaPCAS\pcas.json" />
     <Content Include="Scripts\ChinaPCAS\pcas - 复制.json" />
@@ -1081,6 +1086,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201811050907409_CardAddSortAndAddEnterpriseCustomerTab.resx">
       <DependentUpon>201811050907409_CardAddSortAndAddEnterpriseCustomerTab.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201811060206298_CustomerTabChangeSortType.resx">
+      <DependentUpon>201811060206298_CustomerTabChangeSortType.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
