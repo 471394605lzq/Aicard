@@ -1,0 +1,29 @@
+﻿
+@{
+    ViewBag.Title = "腾讯1对1聊天测试";
+    Layout = "~/Views/Shared/_LayoutBackground.cshtml";
+    AiCard.Models.TxImViewModels.User from = ViewBag.From;
+    AiCard.Models.TxImViewModels.User to = ViewBag.To;
+}
+
+<ul>
+    <li id="from" data-name="@from.UserName" data-sign="@from.SignUser" data-nick="@from.NickName"><img src="@Url.ResizeImage(from.Avatar, 50)" /></li>
+    <li id="to" data-name="@to.UserName" data-sign="@to.SignUser" data-nick="@to.NickName"><img src="@Url.ResizeImage(to.Avatar, 50)" /></li>
+</ul>
+<div class="msg"></div>
+<div>
+    <textarea id="txtContent" name="txtContent" cols="50" rows="50" style="max-width:none" class="form-control"></textarea>
+    <br />
+    <input id="btnSend" type="button" value="发送" />
+</div>
+@section Scripts{
+    <script src="~/Scripts/TxIm/base.js"></script>
+    <script src="~/Scripts/TxIm/json2.js"></script>
+    <script src="~/Scripts/TxIm/webim.js"></script>
+    <script src="~/Scripts/TxIm/login/login.js"></script>
+    <script src="~/Scripts/TxIm/msg/get_history_msg.js"></script>
+    <script src="~/Scripts/TxIm/msg/send_common_msg.js"></script>
+    <script src="~/Scripts/TxIm/msg/upload_and_send_file_msg.js"></script>
+    <script src="~/Scripts/TxIm/msg/upload_and_send_pic_msg.js"></script>
+    <script src="~/Scripts/Views/testIm.js"></script>
+}

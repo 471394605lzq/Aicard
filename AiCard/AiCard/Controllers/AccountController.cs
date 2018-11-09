@@ -758,6 +758,15 @@ namespace AiCard.Controllers
                     var str = WeChat.Jscode2sessionResultList.AESDecrypt(model.EncryptedData, session, model.IV);
                     try
                     {
+
+                        string debug = JsonConvert.SerializeObject(new
+                        {
+                            model.EncryptedData,
+                            session,
+                            model.IV,
+                            AES = str
+                        });
+                        Comm.WriteLog("WeiXin", debug, Enums.DebugLogLevel.Normal);
                         var jUser = JsonConvert.DeserializeObject<JObject>(str);
                         var unionID = jUser["unionId"]?.Value<string>();
                         if (unionID == null)
@@ -768,7 +777,21 @@ namespace AiCard.Controllers
                     }
                     catch (Exception)
                     {
-                        return Json(Comm.ToJsonResult("AESDecryptFail", "解密失败", new { Info = model, Aes = str, Session = session }));
+                        //如果解密后发现昵称有乱码
+                        //如"nickName\":\"涓€鐪兼湜宸?,\"gender\":1,
+                        //把乱码部分全部去掉重新解析
+                        try
+                        {
+                            var index = str.IndexOf("\"unionId\"");
+                            var newStr = str.Remove(1, index - 1);
+                            var jUser = JsonConvert.DeserializeObject<JObject>(newStr);
+                            var unionID = jUser["unionId"]?.Value<string>();
+                            model.UnionID = unionID;
+                        }
+                        catch (Exception)
+                        {
+                            return Json(Comm.ToJsonResult("AESDecryptFail", "解密失败", new { Info = model, Aes = str, Session = session }));
+                        }
                     }
 
 
@@ -844,7 +867,7 @@ namespace AiCard.Controllers
             return user;
         }
 
-      
+
 
         #endregion
     }

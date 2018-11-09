@@ -35,6 +35,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -280,6 +281,9 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\SteamCheck.cs" />
     <Compile Include="App_Start\SysRole.cs" />
+    <Compile Include="App_Start\TxIm\Api.cs" />
+    <Compile Include="App_Start\TxIm\Config.cs" />
+    <Compile Include="App_Start\TxIm\Sign.cs" />
     <Compile Include="App_Start\WeChatWork\WeChatWorkApi.cs" />
     <Compile Include="App_Start\WeChatWork\WeChatWorkModel.cs" />
     <Compile Include="App_Start\WeChat\WeChatMiniApi.cs" />
@@ -447,6 +451,7 @@
     <Compile Include="Models\RoleGroup.cs" />
     <Compile Include="Models\RolesModel.cs" />
     <Compile Include="Models\Test.cs" />
+    <Compile Include="Models\TxImViewModels.cs" />
     <Compile Include="Models\UserCardTop.cs" />
     <Compile Include="Models\UserLog.cs" />
     <Compile Include="Models\UserLogViewModels.cs" />
@@ -899,11 +904,46 @@
     <Content Include="Scripts\npm.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\TxIm\base.js" />
+    <Content Include="Scripts\TxIm\common\show_one_msg.js" />
+    <Content Include="Scripts\TxIm\friend\friend_black_list_manager.js" />
+    <Content Include="Scripts\TxIm\friend\friend_manager.js" />
+    <Content Include="Scripts\TxIm\friend\friend_pendency_manager.js" />
+    <Content Include="Scripts\TxIm\group\group_manager.js" />
+    <Content Include="Scripts\TxIm\group\group_member_manager.js" />
+    <Content Include="Scripts\TxIm\group\group_pendency_manager.js" />
+    <Content Include="Scripts\TxIm\json2.js" />
+    <Content Include="Scripts\TxIm\lib\audiojs\audio.min.js" />
+    <Content Include="Scripts\TxIm\lib\audiojs\audio.min_my.js" />
+    <Content Include="Scripts\TxIm\lib\audiojs\audiojs.swf" />
+    <Content Include="Scripts\TxIm\lib\audiojs\player-graphics.gif" />
+    <Content Include="Scripts\TxIm\lib\base64\base64.js" />
+    <Content Include="Scripts\TxIm\lib\base64\base64.min.js" />
+    <Content Include="Scripts\TxIm\lib\lodash.min.js" />
+    <Content Include="Scripts\TxIm\lib\md5\spark-md5.js" />
+    <Content Include="Scripts\TxIm\lib\xss.js" />
+    <Content Include="Scripts\TxIm\login\login.js" />
+    <Content Include="Scripts\TxIm\logout\logout.js" />
+    <Content Include="Scripts\TxIm\msg\get_history_msg.js" />
+    <Content Include="Scripts\TxIm\msg\receive_friend_system_msg.js" />
+    <Content Include="Scripts\TxIm\msg\receive_group_system_msg.js" />
+    <Content Include="Scripts\TxIm\msg\receive_new_msg.js" />
+    <Content Include="Scripts\TxIm\msg\receive_profile_system_msg.js" />
+    <Content Include="Scripts\TxIm\msg\send_common_msg.js" />
+    <Content Include="Scripts\TxIm\msg\send_custom_group_notify_msg.js" />
+    <Content Include="Scripts\TxIm\msg\send_custom_msg.js" />
+    <Content Include="Scripts\TxIm\msg\switch_play_sound_msg.js" />
+    <Content Include="Scripts\TxIm\msg\upload_and_send_file_msg.js" />
+    <Content Include="Scripts\TxIm\msg\upload_and_send_pic_msg.js" />
+    <Content Include="Scripts\TxIm\profile\profile_manager.js" />
+    <Content Include="Scripts\TxIm\recentcontact\recent_contact_list_manager.js" />
+    <Content Include="Scripts\TxIm\webim.js" />
     <Content Include="Scripts\Views\Deploy.js" />
     <Content Include="Scripts\Views\homePageModular.js" />
     <Content Include="Scripts\Views\homePageModularIndex.js" />
     <Content Include="Scripts\Views\enterpriseManage.js" />
     <Content Include="Scripts\Views\roleGroup.js" />
+    <Content Include="Scripts\Views\testIm.js" />
     <Content Include="Scripts\Views\userManageIndex.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Views\Shared\phone.jpg" />
@@ -1008,6 +1048,7 @@
     <Content Include="Views\CustomerTabGroupsManage\Index.cshtml" />
     <Content Include="Views\HomePageModularsManage\CreateByContact.cshtml" />
     <Content Include="Views\HomePageModularsManage\EditByContact.cshtml" />
+    <Content Include="Views\Test\TestTxImChat.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -1020,6 +1061,7 @@
     <Folder Include="Views\HomePageManage\" />
     <Folder Include="Views\HomePageModulars\" />
     <Folder Include="Views\Products\" />
+    <Folder Include="Views\TsIm\" />
     <Folder Include="Views\UserLog\" />
     <Folder Include="WeChatSessionKey\" />
   </ItemGroup>

@@ -147,14 +147,32 @@ namespace AiCard.WeChat
         //    return newimgpath;
         //}
 
-        public string GetCardQrCode(int cardID)
+        public Stream GetCardQrCode(Dictionary<string, string> para)
         {
             var p = new Dictionary<string, string>();
-            p.Add("page", "");
-            p.Add("scene", Secret);
-            var result = new AiCard.Api.BaseApi($"https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token={_accessToken}", "POST").CreateRequestReturnJson();
-            return "";
+            p.Add("access_token", GetAccessToken());
+            var data = new
+            {
+                page = $"pages/test1/test1",
+                scene = para.ToParam(),
+                is_hyaline = true,
+                //line_color= "{ 'r':'255','g':'255','b':'255'}"
+            };
+            return new AiCard.Api.BaseApi($"https://api.weixin.qq.com/wxa/getwxacodeunlimit{p.ToParam("?")}", "POST", data).CreateRequest();
+        }
 
+        public Stream GetCardQrCode(string para)
+        {
+            var p = new Dictionary<string, string>();
+            p.Add("access_token", GetAccessToken());
+            var data = new
+            {
+                page = $"pages/test1/test1",
+                scene = para,
+                is_hyaline = true,
+                //line_color= "{ 'r':'255','g':'255','b':'255'}"
+            };
+            return new AiCard.Api.BaseApi($"https://api.weixin.qq.com/wxa/getwxacodeunlimit{p.ToParam("?")}", "POST", data).CreateRequest();
         }
 
         /// <summary>
@@ -226,10 +244,10 @@ namespace AiCard.WeChat
             var path = HttpContext.Current.Server.MapPath($"~/Session/{openID}.txt");
             if (!File.Exists(path))
             {
-                throw new Exception($"openID：{openID}的款存不存在");
+                throw new Exception($"openID：{openID}的缓存不存在");
             }
             string session = System.IO.File.ReadAllText(path);
-            System.IO.File.Delete(path);
+            //System.IO.File.Delete(path);
             return session;
         }
 
@@ -237,6 +255,9 @@ namespace AiCard.WeChat
         {
             try
             {
+                text = text.Replace(" ", "+");
+                session = session.Replace(" ", "+");
+                iv = iv.Replace(" ", "+");
                 //判断是否是16位 如果不够补0
                 //text = tests(text);
                 //16进制数据转换成byte
@@ -258,7 +279,7 @@ namespace AiCard.WeChat
                 return null;
             }
         }
-
+        
 
     }
 

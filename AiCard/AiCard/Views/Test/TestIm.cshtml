@@ -1,0 +1,49 @@
+﻿
+@{
+    ViewBag.Title = "TestIm";
+    Layout = "~/Views/Shared/_LayoutBackground.cshtml";
+    var send = (AiCard.Models.ApplicationUser)ViewBag.Send;
+    var to = (AiCard.Models.ApplicationUser)ViewBag.To;
+}
+<div>
+    <ul>
+        <li>
+            <img id="send" data-id="@send.Id" src="@send.Avatar" data-name="@send.UserName" data-nick="@send.NickName" alt="" style="width:32px" />
+            发送人
+        </li>
+        <li>
+            <img id="to" data-id="@to.Id" src="@to.Avatar" data-name="@to.UserName" data-nick="@to.NickName" alt="" style="width:32px" />
+            接收人
+        </li>
+    </ul>
+
+
+</div>
+<ul></ul>
+<div class="msgflow"></div>
+<p>
+    <textarea id="content" name="content" cols="10" rows="5"></textarea>
+</p>
+
+<button class="btn btn-default" id="btnSend">发送</button>
+@section Scripts{
+    <script src="~/Scripts/TxIm/base.js"></script>
+    <script src="~/Scripts/TxIm/json2.js"></script>
+    <script src="~/Scripts/TxIm/webim.js"></script>
+    <script src="~/Scripts/TxIm/common/show_one_msg.js"></script>
+    <script src="~/Scripts/TxIm/msg/get_history_msg.js"></script>
+    <script src="~/Scripts/TxIm/friend/friend_black_list_manager.js"></script>
+    <script src="~/Scripts/TxIm/friend/friend_manager.js"></script>
+    <script src="~/Scripts/TxIm/lib/md5/spark-md5.js"></script>
+    <script src="~/Scripts/TxIm/friend/friend_pendency_manager.js"></script>
+    <script src="~/Scripts/TxIm/msg/receive_friend_system_msg.js"></script>
+    <script src="~/Scripts/TxIm/msg/receive_group_system_msg.js"></script>
+    <script src="~/Scripts/TxIm/msg/receive_new_msg.js"></script>
+    <script src="~/Scripts/TxIm/msg/receive_profile_system_msg.js"></script>
+    <script src="~/Scripts/TxIm/msg/send_common_msg.js"></script>
+    <script src="~/Scripts/TxIm/msg/switch_play_sound_msg.js"></script>
+    <script src="~/Scripts/TxIm/msg/upload_and_send_pic_msg.js"></script>
+    <script src="~/Scripts/TxIm/login/login.js"></script>
+    <script src="~/Scripts/TxIm/logout/logout.js"></script>
+    <script src="~/Scripts/Views/testIm.js"></script>
+}

@@ -21,53 +21,39 @@ namespace AiCard.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Test
-        public ActionResult Index(int eid)
+        public ActionResult Index(string userName)
         {
-            var max = db.Cards
-                .Where(s => s.EnterpriseID == eid)
-                .Max(s => (int?)s.Sort) ?? 0;
-            var sort = max / 10 * 10 + 10;
-            return Json(sort, JsonRequestBehavior.AllowGet);
+            return View();
+
         }
+        #region 腾讯IM
 
-
-
-        [HttpGet]
-        [AllowCrossSiteJson]
-        public ActionResult MiniTest()
+        /// <summary>
+        /// 1对1聊天
+        /// </summary>
+        /// <param name="from">发送人昵称</param>
+        /// <param name="to">接收人昵称</param>
+        /// <returns></returns>
+        public ActionResult TestTxImChat(string from, string to)
         {
-            List<MiniModel> list = new List<MiniModel>();
-
-            var model1 = new MiniModel
+            var userNicks = new string[] { from, to };
+            var users = db.Users.Where(s => userNicks.Contains(s.NickName))
+                .Select(s => new Models.TxImViewModels.User
             {
-                ID = "Info",
-                Style = Enums.CellStyle.RichText,
-                Title = "公司简介",
-                Data = "<p>联系方式</p>" + $"<img src='{Url.ResizeImage("~/Upload/1.png")}'/>"
-            };
-            list.Add(model1);
-            var model2 = new MiniModel
-            {
-                ID = "Phone",
-                Style = Enums.CellStyle.RichText,
-                Title = "联系方式",
-                Data = "<p>22222222</p>"
-            };
-            list.Add(model2);
-            List<ImageListViewModel> alist = new List<ImageListViewModel>();
-            alist.Add(new ImageListViewModel { Date = DateTime.Now.ToString("yyyy-MM-dd"), ID = 1, Title = "新闻1", Image = Url.ResizeImage("~/Upload/1.png") });
-            alist.Add(new ImageListViewModel { Date = DateTime.Now.ToString("yyyy-MM-dd"), ID = 2, Title = "新闻2", Image = Url.ResizeImage("~/Upload/2.png") });
-            var model3 = new MiniModel
-            {
-                ID = "ArticleList",
-                Data = alist,
-                Style = Enums.CellStyle.CellList,
-                Title = "企业资讯",
-            };
-            list.Add(model3);
-
-            return Json(Comm.ToJsonResult("Success", "成功", list), JsonRequestBehavior.AllowGet);
+                ID = s.Id,
+                Avatar = s.Avatar,
+                NickName = s.NickName,
+                UserName = s.UserName
+            }).ToList();
+            var fromUser = users.FirstOrDefault(s => s.NickName == from);
+            fromUser.SignUser = TxIm.SigCheck.Sign(fromUser.UserName);
+            ViewBag.From = users.FirstOrDefault(s => s.NickName == from);
+            ViewBag.To = users.FirstOrDefault(s => s.NickName == to);
+            return View();
         }
+        #endregion
+
+
 
         public ActionResult UploadTest()
         {

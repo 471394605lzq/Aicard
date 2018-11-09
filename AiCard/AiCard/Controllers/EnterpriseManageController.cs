@@ -312,7 +312,7 @@ namespace AiCard.Controllers
         [Authorize(Roles = SysRole.EnterpriseManageCreate)]
         public async Task<ActionResult> Create(EnterpriseViewModels enterprise)
         {
-      
+
             if (ModelState.IsValid)
             {
                 var hascode = db.Enterprises.Any(s => s.Code == enterprise.Code);
@@ -484,12 +484,20 @@ namespace AiCard.Controllers
             {
                 return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
             }
+            if (AccountData.EnterpriseID != 0)
+            {
+                ModelState.Remove("Code");
+            }
 
             if (ModelState.IsValid)
             {
                 var t = db.Enterprises.FirstOrDefault(s => s.ID == enterprise.ID);
                 t.Name = enterprise.Name;
-                t.Code = enterprise.Code;
+                if (AccountData.EnterpriseID != 0)
+                {
+                    t.Code = enterprise.Code;
+                    t.CardCount = enterprise.CardCount;
+                }
                 t.Province = enterprise.Province;
                 t.City = enterprise.City;
                 t.Address = enterprise.Address.Address;
@@ -498,13 +506,15 @@ namespace AiCard.Controllers
                 t.HomePage = enterprise.HomePage;
                 t.Info = enterprise.Info;
                 t.Enable = enterprise.Enable;
-                t.CardCount = enterprise.CardCount;
                 t.PhoneNumber = enterprise.PhoneNumber;
                 t.Logo = enterprise.Logo.ImageUrl; //enterprise.Logo;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
             Sidebar();
+            ViewBag.Province = ChinaPCAS.GetP();//省份
+            ViewBag.City = ChinaPCAS.GetC(enterprise.Province);//城市
+            ViewBag.District = ChinaPCAS.GetA(enterprise.Province, enterprise.City);//街道
             ViewBag.AccontData = AccountData;
             return View(enterprise);
         }
