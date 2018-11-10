@@ -51,6 +51,13 @@ namespace AiCard.Controllers
             ViewBag.To = users.FirstOrDefault(s => s.NickName == to);
             return View();
         }
+
+        public ActionResult TestTxImList()
+        {
+
+            return View();
+        }
+
         #endregion
 
 

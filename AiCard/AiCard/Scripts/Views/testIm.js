@@ -80,15 +80,66 @@ var app = {
 };
 sdkLogin(this, app, to.name, {
     success: function () {
-        getC2CHistoryMsgs(to.name, {
-            adding: function (msg) {
-                var user = msg.isSend ? from : to;
-                selSess = msg.getSession();
-                var onemsg = addMsg(msg, user);
-                $message.append(onemsg);
-            },
-            complete: function () {
+        getC2CHistoryMsgs({
+            toUserID: to.name,
+            complete: function (res) {
+                //反转数组
+                var msgList = res.MsgList.reverse();
+                for (var j in msgList) { //遍历新消息
+                    var msg = msgList[j];
+                    if (msg.getSession().id() == to.name) { //为当前聊天对象的消息
+                        var user = msg.isSend ? from : to;
+                        var onemsg = addMsg(msg, user);
+                        if ($message.children().length > 0) {
+                            $($message.children()[0]).before(onemsg);
+                        }
+                        else {
+                            $message.append(onemsg);
+                        }
+                    }
+                }
                 $message.scrollTop($message.height());
+                //如果有历史记录
+                if (!res.IsComplete) {
+                    var lastMsgTime = res.LastMsgTime;
+                    var msgKey = res.MsgKey;
+                    $message.scroll(function () {
+                        //滚动到顶部就加载历史记录
+                        if ($message.scrollTop() == 0) {
+                            getC2CHistoryMsgs({
+                                toUserID: to.name,
+                                lastMsgTime: lastMsgTime,
+                                msgKey: msgKey,
+                                complete: function (res) {
+                                    var $top = $($message.children()[0]);
+                                    //反转数组
+                                    var msgList = res.MsgList.reverse();
+                                    for (var j in msgList) { //遍历新消息
+                                        var msg = msgList[j];
+                                        if (msg.getSession().id() == to.name) { //为当前聊天对象的消息
+                                            var user = msg.isSend ? from : to;
+                                            var onemsg = addMsg(msg, user);
+                                            $top.before(onemsg);
+                                            //console.log($top.offset().top);
+                                        }
+                                    }
+                                    //debugger;
+                                    //console.log($message.height()+$message.sr );
+                                    //$message.scrollTop($top.offset().top);
+                                    //更新lastMsgTime和msgKey
+                                    lastMsgTime = res.LastMsgTime;
+                                    msgKey = res.MsgKey;
+                                    if (res.IsComplete) {
+                                        //如果已经加载完就注销滚动事件
+                                        $message.unbind("scroll");
+                                    }
+                                }
+                            })
+                        }
+                    });
+                }
+
+
             }
         });
         //注册发送按钮
@@ -111,21 +162,35 @@ sdkLogin(this, app, to.name, {
     }
 });
 
-var msgKey = '';
-var lastMsgTime = 0;
 //获取最新的 C2C 历史消息,用于切换好友聊天，重新拉取好友的聊天消息
-function getC2CHistoryMsgs(toUserID, msgKey, lastMsgTime, callback) {
-    if (!callback) {
-        callback = {};
+//option
+//--toUserID 收消息的对象的用户名
+//--complete({MsgKey,LastMsgTime,IsComplete})加载完成事件
+//--error(err) 错误事件
+//--reqMsgCount[int] 加载数量
+//--lastMsgTime[int] 最后加载的消息时间结点默认为0
+//--msgKey[string] 最后加载的消息的KEY，默认为空
+function getC2CHistoryMsgs(option) {
+    if (!option.complete) {
+        option.complete = function () { };
     }
-    if (!callback.complete) {
-        callback.complete = function () { };
+    if (!option.error) {
+        option.error = function () { };
     }
-    if (!callback.error) {
-        callback.error = function () { };
+    if (!option.adding) {
+        option.adding = function () { };
     }
-    if (!callback.adding) {
-        callback.adding = function () { };
+    if (!option.toUserID) {
+        throw "toUserID不能为空";
+    }
+    if (!option.reqMsgCount) {
+        option.reqMsgCount = 5;
+    }
+    if (!option.lastMsgTime) {
+        option.lastMsgTime = 0;
+    }
+    if (!option.msgKey) {
+        option.msgKey = "";
     }
     currentMsgsArray = [];
     if (selType == webim.SESSION_TYPE.GROUP) {
@@ -139,34 +204,32 @@ function getC2CHistoryMsgs(toUserID, msgKey, lastMsgTime, callback) {
     }
     //第一次拉取好友历史消息时，必须传0
     //var msgKey = wx.getStorageSync('msgKey') || '';
-    msgKey = '';
     var reqMsgCount = 5;
     var options = {
-        'Peer_Account': toUserID, //好友帐号
-        'MaxCnt': reqMsgCount, //拉取消息条数
-        'LastMsgTime': lastMsgTime, //最近的消息时间，即从这个时间点向前拉取历史消息
-        'MsgKey': msgKey
+        'Peer_Account': option.toUserID, //好友帐号
+        'MaxCnt': option.reqMsgCount, //拉取消息条数
+        'LastMsgTime': option.lastMsgTime, //最近的消息时间，即从这个时间点向前拉取历史消息
+        'MsgKey': option.msgKey//消息的ID第一次取时候传空
     };
-    selSess = null;
-    webim.MsgStore.delSessByTypeId(selType, toUserID);
+    //selSess = null;
+    webim.MsgStore.delSessByTypeId(selType, option.toUserID);
     webim.getC2CHistoryMsgs(
         options,
         function (resp) {
             var complete = resp.Complete; //是否还有历史消息可以拉取，1-表示没有，0-表示有
+            
             if (resp.MsgList.length == 0) {
                 return
             }
             //拉取消息后，要将下一次拉取信息所需要的东西给存在缓存中
             //wx.setStorageSync('lastMsgTime', resp.LastMsgTime);
             //wx.setStorageSync('msgKey', resp.MsgKey);
-            var msgList = resp.MsgList;
-            for (var j in msgList) { //遍历新消息
-                var msg = msgList[j];
-                if (msg.getSession().id() == toUserID) { //为当前聊天对象的消息
-                    callback.adding(msg);
-                }
-            }
-            callback.complete(resp.MsgKey, resp.LastMsgTime);
+            option.complete({
+                MsgKey: resp.MsgKey,
+                LastMsgTime: resp.LastMsgTime,
+                IsComplete: resp.Complete == 1,
+                MsgList: resp.MsgList
+            });
         }
     )
 }
