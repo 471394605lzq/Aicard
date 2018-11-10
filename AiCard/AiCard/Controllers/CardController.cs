@@ -17,6 +17,8 @@ using System.Data;
 using System.Data.SqlClient;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using PagedList;
+
 namespace AiCard.Controllers
 {
 
@@ -419,22 +421,20 @@ namespace AiCard.Controllers
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        public ActionResult GetRankingsList(string type)
+        [AllowCrossSiteJson]
+        public ActionResult GetRankingsList(string type, int? page = 1, int? pageSize = 20)
         {
             try
             {
+                int starpagesize = page.Value * pageSize.Value - pageSize.Value;
+                int endpagesize = page.Value * pageSize.Value;
                 if (type == Enums.RankingsType.Activity.GetDisplayName())
                 {
-
-
-
-
-
-                    string sqlstr = @"SELECT row_number() over(order by COUNT(c.Name) DESC) AS ornumber, c.Name, c.Avatar, COUNT(c.Name) counts FROM dbo.UserLogs ul
+                    string sqlstr = string.Format(@"SELECT * FROM (SELECT CAST(ROW_NUMBER() over(order by COUNT(c.Name) DESC) AS INTEGER) AS ornumber, c.Name, c.Avatar, COUNT(c.Name) counts FROM dbo.UserLogs ul
                                   INNER JOIN dbo.Cards c ON c.UserID = ul.TargetUserID WHERE ul.CreateDateTime BETWEEN dateadd(ms, 0, DATEADD(dd, DATEDIFF(dd, 0, getdate()), 0)) AND dateadd(ms, -3, DATEADD(dd, DATEDIFF(dd, -1, getdate()), 0))
-                                  GROUP BY c.Name, c.Avatar";
-                    var dt = db.Database.SqlQuery<JToken>(sqlstr).ToList();
-                    return Json(Comm.ToJsonResult("Success", "成功", dt), JsonRequestBehavior.AllowGet);
+                                  GROUP BY c.Name, c.Avatar) t WHERE t.ornumber > {0} AND t.ornumber<={1}", starpagesize, endpagesize);
+                    List<RankingModel> data = db.Database.SqlQuery<RankingModel>(sqlstr).ToList();
+                    return Json(Comm.ToJsonResult("Success", "成功", data), JsonRequestBehavior.AllowGet);
                 }
                 else
                 {
@@ -446,7 +446,13 @@ namespace AiCard.Controllers
                 return Json(Comm.ToJsonResult("Error", ex.Message), JsonRequestBehavior.AllowGet);
             }
         }
-
+        private class RankingModel
+        {
+            public int Ornumber { get; set; }
+            public string Name { get; set; }
+            public string Avatar { get; set; }
+            public int Counts { get; set; }
+        }
         
 
 
