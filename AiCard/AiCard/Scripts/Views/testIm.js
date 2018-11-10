@@ -1,218 +1,179 @@
-﻿var $send = $("#send");
+﻿
+// #region 初始化
+var $send = $("#from");
 var $to = $("#to");
 var selType = webim.SESSION_TYPE.C2C;
-var selID, selToID;
-var accountMode = 0;
-var sdkAppID = 1400157072;
-var accountType = 29887;
-var AdminAcount = 'admin';
-var recentSessMap = {}; //保存最近会话列表
-var reqRecentSessCount = 50; //每次请求的最近会话条数，业务可以自定义
-var isPeerRead = 1; //是否需要支持APP端已读回执的功能,默认为0。是：1，否：0。
-var send = {
+var from = {
     userid: $send.data("id"),
     name: $send.data("name"),
     nick: $send.data("nick"),
-    avatar: $send.attr("src"),
-    sign: null,
+    avatar: $send.data("avatar"),
+    sign: $send.data("sign"),
 }
 var to = {
     userid: $to.data("id"),
     name: $to.data("name"),
     nick: $to.data("nick"),
-    avatar: $to.attr("src"),
+    avatar: $to.data("avatar"),
     sign: null,
 }
-
-//当前用户身份
-var loginInfo = {
-    'sdkAppID': sdkAppID, //用户所属应用id,必填
-    'identifier': send.name, //当前用户ID,必须是否字符串类型，必填
-    // 'identifier': "user_b", //当前用户ID,必须是否字符串类型，必填
-    'accountType': accountType, //用户所属应用帐号类型，必填
-    'userSig': send.sign,
-    //当前用户身份凭证，必须是字符串类型，必填
-    'identifierNick': send.nick, //当前用户昵称，不用填写，登录接口会返回用户的昵称，如果没有设置，则返回用户的id
-    'headurl': send.avatar //当前用户默认头像，选填，如果设置过头像，则可以通过拉取个人资料接口来得到头像信息
-};
-selID = send.name;
-selToID = to.name;
-
-// #region 初始化
-//默认好友头像
-var friendHeadUrl = to.avatar; //仅demo使用，用于没有设置过头像的好友
-//默认群头像
-var groupHeadUrl = 'img/group.jpg'; //仅demo使用，用于没有设置过群头像的情况
-
-
-
-//存放c2c或者群信息（c2c用户：c2c用户id，昵称，头像；群：群id，群名称，群头像）
-var infoMap = {}; //初始化时，可以先拉取我的好友和我的群组信息
-
-var pageSize = 15; //表格的每页条数，bootstrap table 分页时用到
-var totalCount = 200; //每次接口请求的条数，bootstrap table 分页时用到
-
-var emotionFlag = false; //是否打开过表情选择框
-
-var curPlayAudio = null; //当前正在播放的audio对象
-
-var getPrePageC2CHistroyMsgInfoMap = {}; //保留下一次拉取好友历史消息的信息
-var getPrePageGroupHistroyMsgInfoMap = {}; //保留下一次拉取群历史消息的信息
-
-var defaultSelGroupId = null; //登录默认选中的群id，选填，仅demo用得到
-
-//监听（多终端同步）群系统消息方法，方法都定义在receive_group_system_msg.js文件中
-//注意每个数字代表的含义，比如，
-//1表示监听申请加群消息，2表示监听申请加群被同意消息，3表示监听申请加群被拒绝消息
-var onGroupSystemNotifys = {
-    "1": onApplyJoinGroupRequestNotify, //申请加群请求（只有管理员会收到）
-    "2": onApplyJoinGroupAcceptNotify, //申请加群被同意（只有申请人能够收到）
-    "3": onApplyJoinGroupRefuseNotify, //申请加群被拒绝（只有申请人能够收到）
-    "4": onKickedGroupNotify, //被管理员踢出群(只有被踢者接收到)
-    "5": onDestoryGroupNotify, //群被解散(全员接收)
-    "6": onCreateGroupNotify, //创建群(创建者接收)
-    "7": onInvitedJoinGroupNotify, //邀请加群(被邀请者接收)
-    "8": onQuitGroupNotify, //主动退群(主动退出者接收)
-    "9": onSetedGroupAdminNotify, //设置管理员(被设置者接收)
-    "10": onCanceledGroupAdminNotify, //取消管理员(被取消者接收)
-    "11": onRevokeGroupNotify, //群已被回收(全员接收)
-    "15": onReadedSyncGroupNotify, //群消息已读同步通知
-    "255": onCustomGroupNotify, //用户自定义通知(默认全员接收)
-    "12": onInvitedJoinGroupNotifyRequest //邀请加群(被邀请者接收,接收者需要同意)
-};
-
-//监听好友系统通知函数对象，方法都定义在receive_friend_system_msg.js文件中
-var onFriendSystemNotifys = {
-    "1": onFriendAddNotify, //好友表增加
-    "2": onFriendDeleteNotify, //好友表删除
-    "3": onPendencyAddNotify, //未决增加
-    "4": onPendencyDeleteNotify, //未决删除
-    "5": onBlackListAddNotify, //黑名单增加
-    "6": onBlackListDeleteNotify //黑名单删除
-};
-
-var onC2cEventNotifys = {
-    "92": onMsgReadedNotify, //消息已读通知,
-    "96": onMultipleDeviceKickedOut
-};
-
-//监听资料系统通知函数对象，方法都定义在receive_profile_system_msg.js文件中
-var onProfileSystemNotifys = {
-    "1": onProfileModifyNotify //资料修改
-};
-
-//监听连接状态回调变化事件
-var onConnNotify = function (resp) {
-    var info;
-    switch (resp.ErrorCode) {
-        case webim.CONNECTION_STATUS.ON:
-            webim.Log.warn('建立连接成功: ' + resp.ErrorInfo);
-            break;
-        case webim.CONNECTION_STATUS.OFF:
-            info = '连接已断开，无法收到新消息，请检查下你的网络是否正常: ' + resp.ErrorInfo;
-            // alert(info);
-            webim.Log.warn(info);
-            break;
-        case webim.CONNECTION_STATUS.RECONNECT:
-            info = '连接状态恢复正常: ' + resp.ErrorInfo;
-            // alert(info);
-            webim.Log.warn(info);
-            break;
-        default:
-            webim.Log.error('未知连接状态: =' + resp.ErrorInfo);
-            break;
-    }
-};
-
-//IE9(含)以下浏览器用到的jsonp回调函数
-function jsonpCallback(rspData) {
-    webim.setJsonpLastRspData(rspData);
-}
-
-//监听事件
-var listeners = {
-    "onConnNotify": onConnNotify //监听连接状态回调变化事件,必填
-    ,
-    "jsonpCallback": jsonpCallback //IE9(含)以下浏览器用到的jsonp回调函数，
-    ,
-    "onMsgNotify": onMsgNotify //监听新消息(私聊，普通群(非直播聊天室)消息，全员推送消息)事件，必填
-    ,
-    "onBigGroupMsgNotify": onBigGroupMsgNotify //监听新消息(直播聊天室)事件，直播场景下必填
-    ,
-    "onGroupSystemNotifys": onGroupSystemNotifys //监听（多终端同步）群系统消息事件，如果不需要监听，可不填
-    ,
-    "onGroupInfoChangeNotify": onGroupInfoChangeNotify //监听群资料变化事件，选填
-    ,
-    "onFriendSystemNotifys": onFriendSystemNotifys //监听好友系统通知事件，选填
-    ,
-    "onProfileSystemNotifys": onProfileSystemNotifys //监听资料系统（自己或好友）通知事件，选填
-    ,
-    "onKickedEventCall": onKickedEventCall //被其他登录实例踢下线
-    ,
-    "onC2cEventNotifys": onC2cEventNotifys //监听C2C系统消息通道
-    ,
-    "onAppliedDownloadUrl": onAppliedDownloadUrl //申请文件/音频下载地址的回调
-    ,
-    "onLongPullingNotify": function (data) {
-        console.debug('onLongPullingNotify', data)
-    }
-};
-
-var isAccessFormalEnv = true; //是否访问正式环境
-var isLogOn = false; //是否开启sdk在控制台打印日志
-
-//初始化时，其他对象，选填
-var options = {
-    'isAccessFormalEnv': isAccessFormalEnv, //是否访问正式环境，默认访问正式，选填
-    'isLogOn': isLogOn //是否开启控制台打印日志,默认开启，选填
-}
-
-var msgflow = document.getElementsByClassName("msgflow")[0];
-var bindScrollHistoryEvent = {
-    init: function () {
-        msgflow.onscroll = function () {
-            if (msgflow.scrollTop == 0) {
-                msgflow.scrollTop = 10;
-                if (selType == webim.SESSION_TYPE.C2C) {
-                    getPrePageC2CHistoryMsgs();
-                } else {
-                    getPrePageGroupHistoryMsgs();
-                }
-
-            }
-        }
-    },
-    reset: function () {
-        msgflow.onscroll = null;
-    }
-};
+var $content = $("#txtContent");
+var $message = $(".msg");
 // #endregion
 
 // #region 调用代码
-//对发送人信息进行签名，使用发送人的ID调用接口去获取签名
-$.ajax({
-    type: "POST",
-    url: comm.action("Sign", "TsIm"),
-    data: {
-        UserID: $send.data("id")
-    },
-    dataType: "json",
-    success: function (data) {
-        if (data.State == "Success") {
-            //获取签名
-            loginInfo.userSig = data.Result;
-            webimLogin();
+//1v1单聊的话，一般只需要 'onConnNotify' 和 'onMsgNotify'就行了。
+//监听连接状态回调变化事件
+var onConnNotify = function (resp) {
+    switch (resp.ErrorCode) {
+        case webim.CONNECTION_STATUS.ON:
+            //webim.Log.warn('连接状态正常...');
+            break;
+        case webim.CONNECTION_STATUS.OFF:
+            webim.Log.warn('连接已断开，无法收到新消息，请检查下你的网络是否正常');
+            break;
+        default:
+            webim.Log.error('未知连接状态,status=' + resp.ErrorCode);
+            break;
+    }
+};
+///监听聊天
+var onMsgNotify = function (newMsgList) {
+    //console.warn(newMsgList);
+    var sess, newMsg;
+    //获取所有聊天会话
+    var sessMap = webim.MsgStore.sessMap();
+    for (var j in newMsgList) {//遍历新消息
+        newMsg = newMsgList[j];
+        if (newMsg.getSession().id() == to.name) {//为当前聊天对象的消息
+            selSess = newMsg.getSession();
+            //在聊天窗体中新增一条消息
+            //console.warn(newMsg);
+            var onemsg = addMsg(newMsg, to);
+            $message.append(onemsg);
         }
+    }
+    //消息已读上报，以及设置会话自动已读标记
+    webim.setAutoRead(selSess, true, true);
+    for (var i in sessMap) {
+        sess = sessMap[i];
+        if (to.name != sess.id()) {//更新其他聊天对象的未读消息数
+            updateSessDiv(sess.type(), sess.id(), sess.unread());
+        }
+    }
+}
+
+var app = {
+    data: {
+        Config: {
+            accountMode: 0,
+            accountType: 29887,
+            sdkappid: 1400157072,
+        },
+        userInfo: from,
+        //监听事件（1V1监听这两个事件就够了）
+        listeners: {
+            "onConnNotify": onConnNotify, //监听连接状态回调变化事件,必填
+            "onMsgNotify": onMsgNotify
+        },
+    }
+};
+sdkLogin(this, app, to.name, {
+    success: function () {
+        getC2CHistoryMsgs(to.name, {
+            adding: function (msg) {
+                var user = msg.isSend ? from : to;
+                selSess = msg.getSession();
+                var onemsg = addMsg(msg, user);
+                $message.append(onemsg);
+            },
+            complete: function () {
+                $message.scrollTop($message.height());
+            }
+        });
+        //注册发送按钮
+        $("#btnSend").click(function (e) {
+            //发消息
+            onSendMsg(to, selType, $content.val(), {
+                success: function (msg) {
+                    var onemsg = addMsg(msg, app.data.userInfo);
+                    $message.append(onemsg);
+                    $content.val("");
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            })
+        });
+    },
+    error: function () {
+        console.log();
     }
 });
 
+var msgKey = '';
+var lastMsgTime = 0;
+//获取最新的 C2C 历史消息,用于切换好友聊天，重新拉取好友的聊天消息
+function getC2CHistoryMsgs(toUserID, msgKey, lastMsgTime, callback) {
+    if (!callback) {
+        callback = {};
+    }
+    if (!callback.complete) {
+        callback.complete = function () { };
+    }
+    if (!callback.error) {
+        callback.error = function () { };
+    }
+    if (!callback.adding) {
+        callback.adding = function () { };
+    }
+    currentMsgsArray = [];
+    if (selType == webim.SESSION_TYPE.GROUP) {
+        alert('当前的聊天类型为群聊天，不能进行拉取好友历史消息操作');
+        return;
+    }
+
+    if (selType == webim.SESSION_TYPE.GROUP) {
+        alert('当前的聊天类型为群聊天，不能进行拉取好友历史消息操作');
+        return;
+    }
+    //第一次拉取好友历史消息时，必须传0
+    //var msgKey = wx.getStorageSync('msgKey') || '';
+    msgKey = '';
+    var reqMsgCount = 5;
+    var options = {
+        'Peer_Account': toUserID, //好友帐号
+        'MaxCnt': reqMsgCount, //拉取消息条数
+        'LastMsgTime': lastMsgTime, //最近的消息时间，即从这个时间点向前拉取历史消息
+        'MsgKey': msgKey
+    };
+    selSess = null;
+    webim.MsgStore.delSessByTypeId(selType, toUserID);
+    webim.getC2CHistoryMsgs(
+        options,
+        function (resp) {
+            var complete = resp.Complete; //是否还有历史消息可以拉取，1-表示没有，0-表示有
+            if (resp.MsgList.length == 0) {
+                return
+            }
+            //拉取消息后，要将下一次拉取信息所需要的东西给存在缓存中
+            //wx.setStorageSync('lastMsgTime', resp.LastMsgTime);
+            //wx.setStorageSync('msgKey', resp.MsgKey);
+            var msgList = resp.MsgList;
+            for (var j in msgList) { //遍历新消息
+                var msg = msgList[j];
+                if (msg.getSession().id() == toUserID) { //为当前聊天对象的消息
+                    callback.adding(msg);
+                }
+            }
+            callback.complete(resp.MsgKey, resp.LastMsgTime);
+        }
+    )
+}
 
 
 // #endregion
 
-var $content = $("#content");
 
-$("#btnSend").click(function (e) {
-    //发消息
-    onSendMsg("#content");
-});
+
+

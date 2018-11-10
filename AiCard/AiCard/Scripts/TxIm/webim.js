@@ -2128,7 +2128,7 @@ var webim = { // namespace object webim
     //日志对象
     var log = new function () {
 
-        var on = true;
+        var on = false;
 
         this.setOn = function (onFlag) {
             on = onFlag;

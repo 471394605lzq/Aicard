@@ -32,7 +32,7 @@ namespace AiCard.Controllers
                             && p.Release
                         select new
                         {
-                            ID = p.ID,
+                            ProductID = p.ID,
                             Images = p.Images,
                             Name = p.Name,
                             Price = p.Price,
@@ -53,7 +53,7 @@ namespace AiCard.Controllers
             var paged = query.OrderBy(s => s.Sort).ToPagedList(page, pageSize);
             var data = paged.Select(s => new
             {
-                s.ID,
+                s.ProductID,
                 Image = s.Images.SplitToArray<string>()?[0],
                 s.KindID,
                 s.KindName,
@@ -100,7 +100,7 @@ namespace AiCard.Controllers
                         {
                             Name = e.Name,
                             Logo = e.Logo,
-                            ID = e.ID
+                            EnterpriseID = e.ID
                         };
             return Json(Comm.ToJsonResult("Success", "获取成功", query), JsonRequestBehavior.AllowGet);
         }
@@ -119,20 +119,25 @@ namespace AiCard.Controllers
                                where p.EnterpriseID == enterpriseid && p.ID == productid && p.Release
                                select new
                                {
+                                   p.ID,
                                    Images = p.Images,
                                    Name = p.Name,
                                    Nowprice = p.Price,
                                    DetailContent = p.Info,
-                                   Originalprice = p.OriginalPrice
+                                   Originalprice = p.OriginalPrice,
+                                   p.EnterpriseID,
                                }).FirstOrDefault();
                 var model = new
                 {
+                    ProductID = product.ID,
                     Images = product.Images.SplitToArray<string>(),
                     Name = product.Name,
                     Nowprice = product.Nowprice,
                     DetailContent = product.DetailContent,
-                    Originalprice = product.Originalprice
+                    Originalprice = product.Originalprice,
+                    product.EnterpriseID
                 };
+
                 return Json(Comm.ToJsonResult("Success", "获取成功", model), JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)

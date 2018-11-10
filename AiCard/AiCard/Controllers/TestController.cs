@@ -39,12 +39,12 @@ namespace AiCard.Controllers
             var userNicks = new string[] { from, to };
             var users = db.Users.Where(s => userNicks.Contains(s.NickName))
                 .Select(s => new Models.TxImViewModels.User
-            {
-                ID = s.Id,
-                Avatar = s.Avatar,
-                NickName = s.NickName,
-                UserName = s.UserName
-            }).ToList();
+                {
+                    ID = s.Id,
+                    Avatar = s.Avatar,
+                    NickName = s.NickName,
+                    UserName = s.UserName
+                }).ToList();
             var fromUser = users.FirstOrDefault(s => s.NickName == from);
             fromUser.SignUser = TxIm.SigCheck.Sign(fromUser.UserName);
             ViewBag.From = users.FirstOrDefault(s => s.NickName == from);
