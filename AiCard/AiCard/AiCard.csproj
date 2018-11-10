@@ -1006,6 +1006,8 @@
     <Content Include="Views\CustomerTabGroupsManage\Details.cshtml" />
     <Content Include="Views\CustomerTabGroupsManage\Edit.cshtml" />
     <Content Include="Views\CustomerTabGroupsManage\Index.cshtml" />
+    <Content Include="Views\HomePageModularsManage\CreateByContact.cshtml" />
+    <Content Include="Views\HomePageModularsManage\EditByContact.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

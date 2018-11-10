@@ -237,7 +237,109 @@ namespace AiCard.Controllers
         #endregion
 
         #region Contact
-        //public ActionResult EditBy
+        [Authorize(Roles = SysRole.EHomePageModularsManageCreate)]
+        public ActionResult CreateByContact()
+        {
+            Sidebar();
+            var contact = db.HomePageModulars
+                .FirstOrDefault(s => s.EnterpriseID == EnterpriseID
+                && s.Type == Enums.HomePageModularType.Contact);
+            if (contact != null)
+            {
+                return this.ToError("警告", "联系方式模块已存在", Url.Action("Index"));
+            }
+            else
+            {
+                var enterprise = db.Enterprises.FirstOrDefault(s => s.ID == EnterpriseID);
+                var modlur = new HomePageModularByContact
+                {
+                    Address = $"{enterprise.Province}{enterprise.City}{enterprise.District}{enterprise.Address}",
+                    Email = enterprise.Email,
+                    Phone = enterprise.PhoneNumber,
+                    Title = "联系方式",
+                };
+                return View(modlur);
+            }
+
+        }
+
+        [HttpPost]
+        [Authorize(Roles = SysRole.EHomePageModularsManageCreate)]
+        public ActionResult CreateByContact(HomePageModularByContact model)
+        {
+            Sidebar();
+            var contact = db.HomePageModulars
+                .FirstOrDefault(s => s.EnterpriseID == EnterpriseID
+                && s.Type == Enums.HomePageModularType.Contact);
+            if (contact != null)
+            {
+                return this.ToError("警告", "联系方式模块已存在", Url.Action("Index"));
+            }
+            else
+            {
+                var enterprise = db.Enterprises.FirstOrDefault(s => s.ID == EnterpriseID);
+                var modular = new HomePageModular
+                {
+                    Type = model.Type,
+                    Sort = db.HomePageModulars.Where(s => s.EnterpriseID == EnterpriseID).Max(s => s.Sort) + 1,
+                    Title = model.Title,
+                    EnterpriseID = EnterpriseID,
+                };
+                db.HomePageModulars.Add(modular);
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+
+        }
+
+        [Authorize(Roles = SysRole.EHomePageModularsManageEdit)]
+        public ActionResult EditByContact(int id)
+        {
+            Sidebar();
+            var contact = db.HomePageModulars
+                .FirstOrDefault(s => s.ID == id 
+                && s.EnterpriseID == EnterpriseID
+                && s.Type == Enums.HomePageModularType.Contact);
+            if (contact == null)
+            {
+                return this.ToError("错误", "模块不存在", Url.Action("Index"));
+            }
+            else
+            {
+                var enterprise = db.Enterprises.FirstOrDefault(s => s.ID == EnterpriseID);
+                var modlur = new HomePageModularByContact
+                {
+                    Address = $"{enterprise.Province}{enterprise.City}{enterprise.District}{enterprise.Address}",
+                    Email = enterprise.Email,
+                    Phone = enterprise.PhoneNumber,
+                    Title = contact.Title,
+                };
+                return View(modlur);
+            }
+
+        }
+
+        [HttpPost]
+        [Authorize(Roles = SysRole.EHomePageModularsManageEdit)]
+        public ActionResult EditByContact(HomePageModularByContact model)
+        {
+            Sidebar();
+            var contact = db.HomePageModulars
+                .FirstOrDefault(s => s.ID == model.ID 
+                && s.EnterpriseID == EnterpriseID
+                && s.Type == Enums.HomePageModularType.Contact);
+            if (contact == null)
+            {
+                return this.ToError("错误", "模块不存在", Url.Action("Index"));
+            }
+            else
+            {
+                contact.Title = model.Title;
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+
+        }
         #endregion
 
         [HttpPost]

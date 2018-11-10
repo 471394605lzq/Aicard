@@ -458,24 +458,33 @@ namespace AiCard.Controllers
             {
                 return Json(Comm.ToJsonResult("UserNoFound", "用户不存在"));
             }
-            if (!db.Cards.Any(s => s.ID == cardID))
+            var card = db.Cards.FirstOrDefault(s => s.ID == cardID);
+            if (card == null)
             {
                 return Json(Comm.ToJsonResult("CardNoFound", "卡片不存在"));
             }
             var top = db.UserCardTops.FirstOrDefault(s => s.UserID == userID && s.CardID == cardID);
 
+         
+            bool isTop;
             if (top == null)
             {
                 db.UserCardTops.Add(new UserCardTop { CardID = cardID, CreateDateTime = DateTime.Now, UserID = userID });
                 db.SaveChanges();
-                return Json(Comm.ToJsonResult("Success", "置顶成功", true));
+                isTop = true;
             }
             else
             {
                 db.UserCardTops.Remove(top);
                 db.SaveChanges();
-                return Json(Comm.ToJsonResult("Success", "解除置顶", false));
+                isTop = false;
             }
+            var cardIDs = db.Cards
+             .Where(s => s.EnterpriseID == card.EnterpriseID)
+             .Select(s => s.ID);
+            var topCount = db.UserCardTops.Count(s => s.UserID == userID
+                && cardIDs.Contains(s.CardID));
+            return Json(Comm.ToJsonResult("Success", isTop ? "置顶成功" : "解除置顶", new { IsTop = isTop, TopCount = topCount }));
 
         }
 
