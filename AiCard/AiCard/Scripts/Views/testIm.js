@@ -80,16 +80,19 @@ var app = {
 };
 sdkLogin(this, app, to.name, {
     success: function () {
+        //加载第一页的聊天记录
         getC2CHistoryMsgs({
             toUserID: to.name,
             complete: function (res) {
                 //反转数组
                 var msgList = res.MsgList.reverse();
+
                 for (var j in msgList) { //遍历新消息
                     var msg = msgList[j];
                     if (msg.getSession().id() == to.name) { //为当前聊天对象的消息
                         var user = msg.isSend ? from : to;
                         var onemsg = addMsg(msg, user);
+
                         if ($message.children().length > 0) {
                             $($message.children()[0]).before(onemsg);
                         }
@@ -98,14 +101,18 @@ sdkLogin(this, app, to.name, {
                         }
                     }
                 }
-                $message.scrollTop($message.height());
-                //如果有历史记录
+
+                $message.scrollTop($message.prop("scrollHeight"));
+                //如果还有历史记录
                 if (!res.IsComplete) {
                     var lastMsgTime = res.LastMsgTime;
                     var msgKey = res.MsgKey;
+
+                    //滚动到顶部就加载历史记录
                     $message.scroll(function () {
                         //滚动到顶部就加载历史记录
                         if ($message.scrollTop() == 0) {
+                            var height = 0;
                             getC2CHistoryMsgs({
                                 toUserID: to.name,
                                 lastMsgTime: lastMsgTime,
@@ -120,6 +127,7 @@ sdkLogin(this, app, to.name, {
                                             var user = msg.isSend ? from : to;
                                             var onemsg = addMsg(msg, user);
                                             $top.before(onemsg);
+                                            height += $(onemsg).height();
                                             //console.log($top.offset().top);
                                         }
                                     }
@@ -127,6 +135,7 @@ sdkLogin(this, app, to.name, {
                                     //console.log($message.height()+$message.sr );
                                     //$message.scrollTop($top.offset().top);
                                     //更新lastMsgTime和msgKey
+                                    $message.scrollTop(height);
                                     lastMsgTime = res.LastMsgTime;
                                     msgKey = res.MsgKey;
                                     if (res.IsComplete) {
@@ -138,8 +147,6 @@ sdkLogin(this, app, to.name, {
                         }
                     });
                 }
-
-
             }
         });
         //注册发送按钮
@@ -161,7 +168,9 @@ sdkLogin(this, app, to.name, {
         console.log();
     }
 });
+function setHistoryMegs(msgList) {
 
+}
 //获取最新的 C2C 历史消息,用于切换好友聊天，重新拉取好友的聊天消息
 //option
 //--toUserID 收消息的对象的用户名
@@ -217,7 +226,7 @@ function getC2CHistoryMsgs(option) {
         options,
         function (resp) {
             var complete = resp.Complete; //是否还有历史消息可以拉取，1-表示没有，0-表示有
-            
+
             if (resp.MsgList.length == 0) {
                 return
             }

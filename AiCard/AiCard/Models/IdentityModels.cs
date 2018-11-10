@@ -94,7 +94,7 @@ namespace AiCard.Models
 
         public DbSet<EnterpriseCustomer> EnterpriseCustomers { get; set; }
 
-        public DbSet<EnterpriseCustomerRemark> EnterpriseCustomerRemarks { get; set; }
+        public DbSet<EnterpriseUserCustomer> EnterpriseCustomerRemarks { get; set; }
 
         public DbSet<CustomerTab> CustomerTabs { get; set; }
 

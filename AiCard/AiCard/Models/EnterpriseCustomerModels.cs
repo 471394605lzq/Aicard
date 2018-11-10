@@ -102,7 +102,7 @@ namespace AiCard.Models
         public string Log { get; set; }
 
 
-        public List<EnterpriseCustomerRemark> CustomerRemarks { get; set; }
+        public List<EnterpriseUserCustomer> CustomerRemarks { get; set; }
 
         public List<EnterpriseCustomerTab> CustomerTabs { get; set; }
     }
@@ -110,7 +110,7 @@ namespace AiCard.Models
     /// <summary>
     /// 员工的公司客户备注表
     /// </summary>
-    public class EnterpriseCustomerRemark
+    public class EnterpriseUserCustomer
     {
         public int ID { get; set; }
 
@@ -131,6 +131,12 @@ namespace AiCard.Models
         /// 备注
         /// </summary>
         public string Remark { get; set; }
+
+        /// <summary>
+        /// 创建时间
+        /// </summary>
+        public DateTime CreateDateTime { get; set; }
+        
     }
 
     /// <summary>
