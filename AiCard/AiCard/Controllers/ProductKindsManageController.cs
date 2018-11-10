@@ -141,7 +141,7 @@ namespace AiCard.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = SysRole.ProductKindManageEdit + "," + SysRole.EProductKindManageEdit)]
-        public ActionResult Edit([Bind(Include = "ID,Name,EnterpriseID,Sort")] ProductKind productKind)
+        public ActionResult Edit(ProductKind productKind)
         {
             var temp = db.ProductKinds.FirstOrDefault(s => s.ID == productKind.ID);
             //防止企业用户串号修改
@@ -152,8 +152,11 @@ namespace AiCard.Controllers
             }
             if (ModelState.IsValid)
             {
-                productKind.EnterpriseID = AccontData.EnterpriseID;
-                db.Entry(productKind).State = EntityState.Modified;
+                //productKind.EnterpriseID = AccontData.EnterpriseID;
+                //db.Entry(productKind).State = EntityState.Modified;
+                temp.EnterpriseID = AccontData.EnterpriseID;
+                temp.Name = productKind.Name;
+                temp.Sort = productKind.Sort;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
