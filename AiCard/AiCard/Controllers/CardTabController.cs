@@ -29,7 +29,7 @@ namespace AiCard.Controllers
             {
                 return Json(Comm.ToJsonResult("CardNoFound", "卡片不存在"));
             }
-            if (db.Cards.Any(s => s.ID == cardID && s.Name == name))
+            if (db.CardTabs.Any(s => s.CardID == cardID && s.Name == name))
             {
                 return Json(Comm.ToJsonResult("HadAdd", $"{name}已经存在"));
             }
@@ -68,6 +68,7 @@ namespace AiCard.Controllers
         [AllowCrossSiteJson]
         public ActionResult GetMyCardTabsList(int cardID)
         {
+            //db.Database.SqlQuery()
             var query = from ct in db.CardTabs
                         where ct.CardID == cardID
                         select new

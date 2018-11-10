@@ -5,6 +5,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System.ComponentModel.DataAnnotations;
 using System;
+using System.Data.SqlClient;
 
 namespace AiCard.Models
 {
@@ -98,6 +99,9 @@ namespace AiCard.Models
         public DbSet<CustomerTab> CustomerTabs { get; set; }
 
         public DbSet<CustomerTabGroup> CustomerTabGroups { get; set; }
+
+        public DbSet<EnterpriseCustomerTab> EnterpriseCustomerTabs { get; set; }
+        public SqlConnection Connection { get; internal set; }
 
         public static ApplicationDbContext Create()
         {

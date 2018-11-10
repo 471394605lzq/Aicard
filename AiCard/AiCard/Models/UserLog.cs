@@ -13,6 +13,9 @@ namespace AiCard.Models
     {
         public int ID { get; set; }
 
+        /// <summary>
+        /// 行为用户ID
+        /// </summary>
         public string UserID { get; set; }
 
         [Display(Name = "关联ID")]
@@ -27,6 +30,9 @@ namespace AiCard.Models
         [Display(Name = "备注")]
         public string Remark { get; set; }
 
+        /// <summary>
+        /// 被操作用户ID
+        /// </summary>
         [Display(Name = "对象用户")]
         public string TargetUserID { get; set; }
 

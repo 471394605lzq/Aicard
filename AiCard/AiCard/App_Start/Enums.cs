@@ -296,4 +296,14 @@ namespace AiCard.Enums
         [Display(Name = "城镇")]
         County
     }
+
+    /// <summary>
+    /// 排行类型
+    /// </summary>
+    public enum RankingsType {
+        [Display(Name = "活跃度")]
+        Activity,
+        [Display(Name = "客户数")]
+        CustNumber
+    }
 }

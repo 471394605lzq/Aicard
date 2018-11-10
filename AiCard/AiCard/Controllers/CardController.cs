@@ -13,7 +13,10 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using AiCard.Enums;
 using System.Net;
 using AiCard.Models.CommModels;
-
+using System.Data;
+using System.Data.SqlClient;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 namespace AiCard.Controllers
 {
 
@@ -410,6 +413,42 @@ namespace AiCard.Controllers
                 return Json(Comm.ToJsonResult("Error500", ex.Message), JsonRequestBehavior.AllowGet);
             }
         }
+
+        /// <summary>
+        /// 根据类型获取排行榜数据
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public ActionResult GetRankingsList(string type)
+        {
+            try
+            {
+                if (type == Enums.RankingsType.Activity.GetDisplayName())
+                {
+
+
+
+
+
+                    string sqlstr = @"SELECT row_number() over(order by COUNT(c.Name) DESC) AS ornumber, c.Name, c.Avatar, COUNT(c.Name) counts FROM dbo.UserLogs ul
+                                  INNER JOIN dbo.Cards c ON c.UserID = ul.TargetUserID WHERE ul.CreateDateTime BETWEEN dateadd(ms, 0, DATEADD(dd, DATEDIFF(dd, 0, getdate()), 0)) AND dateadd(ms, -3, DATEADD(dd, DATEDIFF(dd, -1, getdate()), 0))
+                                  GROUP BY c.Name, c.Avatar";
+                    var dt = db.Database.SqlQuery<JToken>(sqlstr).ToList();
+                    return Json(Comm.ToJsonResult("Success", "成功", dt), JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    return Json(Comm.ToJsonResult("Error", "失败"), JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(Comm.ToJsonResult("Error", ex.Message), JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        
+
 
         [HttpPost]
         [AllowCrossSiteJson]
