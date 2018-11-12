@@ -50,6 +50,11 @@ namespace AiCard
             {
                 menus.Add(new Models.CommModels.Menu { Name = "客户标签", Title = "客户标签", Url = "~/CustomerTabsManage/Index", IconImage = "biaoqian" });
             }
+            if (p.IsInRole(SysRole.ArticlesManageRead) || p.IsInRole(SysRole.EArticlesManageRead))
+            {
+                menus.Add(new Models.CommModels.Menu { Name = "动态管理", Title = "动态管理", Url = "~/ArticlesManage/Index", IconImage = "gongsidongtai" });
+            }
+            
             return menus;
         }
     }

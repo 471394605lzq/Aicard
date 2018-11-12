@@ -116,6 +116,11 @@ namespace AiCard.Bll
             addSystemERole(SysRole.ECustomerTabManageEdit, "客户标签分组权限管理", "客户标签分组权限管理编辑");
             addSystemERole(SysRole.ECustomerTabMangeDelete, "客户标签分组权限管理", "客户标签分组权限管理删除");
 
+            addSystemERole(SysRole.EArticlesManageRead, "动态管理", "动态管理查看");
+            addSystemERole(SysRole.EArticlesManageCreate, "动态管理", "动态管理创建");
+            addSystemERole(SysRole.EArticlesManageEdit, "动态管理", "动态管理编辑");
+            addSystemERole(SysRole.EArticlesMangeDelete, "动态管理", "动态管理删除");
+
             #endregion
             #region 后台权限
             Action<string, string, string> addSystemRole = (name, gourp, desc) =>
@@ -172,6 +177,11 @@ namespace AiCard.Bll
             addSystemRole(SysRole.CustomerTabManageCreate, "客户标签权限管理", "客户标签权限管理创建");
             addSystemRole(SysRole.CustomerTabManageEdit, "客户标签权限管理", "客户标签权限管理编辑");
             addSystemRole(SysRole.CustomerTabMangeDelete, "客户标签权限管理", "客户标签权限管理删除");
+
+            addSystemRole(SysRole.ArticlesManageRead, "动态管理", "动态管理查看");
+            addSystemRole(SysRole.ArticlesManageCreate, "动态管理", "动态管理创建");
+            addSystemRole(SysRole.ArticlesManageEdit, "动态管理", "动态管理编辑");
+            addSystemRole(SysRole.ArticlesMangeDelete, "动态管理", "动态管理删除");
             #endregion
 
             var dbRoles = _appRoleManager.Roles.ToList();

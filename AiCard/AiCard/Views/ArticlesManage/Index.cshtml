@@ -1,0 +1,91 @@
+﻿@model IEnumerable<AiCard.Models.ArticleViewModel>
+
+@{
+    ViewBag.Title = "动态管理";
+    Layout = "~/Views/Shared/_LayoutBackground.cshtml";
+}
+
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li><a href="@Url.Action("Create")">新增</a></li>
+                @*<li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">可续 <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">用户动态</a></li>
+                            <li><a href="#">后台发布</a></li>
+                        </ul>
+                    </li>*@
+            </ul>
+            <form class="navbar-form navbar-left">
+                <i style="float:left;margin-top:5px;">|</i>
+                <div class="form-group" style="margin-left:20px;float:left;">
+                    动态标题：<input type="text" name="filter" class="form-control" placeholder="Search" value="@Request["filter"]">
+                </div>
+                <ul class="nav navbar-nav" style="width:100px; margin-left:15px;margin-top:-10px;">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">选择类型 <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="@Url.Action("Index", new { type =AiCard.Enums.ArticleType.Text  })">用户动态</a></li>
+                            <li><a href="@Url.Action("Index", new { type = AiCard.Enums.ArticleType.Html })">后台发布</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <button type="submit" class="btn btn-default">搜索</button>
+            </form>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>
+<div class="toperrormsgdiv">@ViewBag.errormsg</div>
+<table class="table  table-hover table-striped">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EnterpriseName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Type)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.State)
+            </th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        @foreach (var item in Model)
+        {
+            var isdisplay = item.Type == AiCard.Enums.ArticleType.Html ? "display:block" : "display:none";
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EnterpriseName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserName)
+                </td>
+                <td>
+                    @item.Type.GetDisplayName()
+                </td>
+                <td>
+                    @item.State.GetDisplayName()
+                </td>
+                <td>
+                    <a href="@Url.Action("Edit", new { id = item.ID })" class="btn btn-default" style="width:50px; height:25px;line-height:12px;float:left;@isdisplay">编辑</a>
+                    <a href="@Url.Action("Delete", new { id = item.ID })" class="btn btn-default" style="margin-left:15px;width:50px;height:25px;line-height:12px;float:left;@isdisplay">删除</a>
+                    @*@Html.ActionLink("编辑", "Edit", new { id = item.ID }) |*@
+                    @*@Html.ActionLink("删除", "Delete", new { id = item.ID })*@
+                </td>
+            </tr>
+        }
+
+</table>
+@Html.PageList((PagedList.IPagedList<AiCard.Models.ArticleViewModel>)Model, Url.PageUrl())

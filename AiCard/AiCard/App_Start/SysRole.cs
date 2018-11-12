@@ -54,6 +54,11 @@ namespace AiCard
         public const string CustomerTabManageEdit = "CustomerTabManageEdit";
         public const string CustomerTabMangeDelete = "CustomerTabMangeDelete";
 
+        public const string ArticlesManageRead = "ArticlesManageRead";
+        public const string ArticlesManageCreate = "ArticlesManageCreate";
+        public const string ArticlesManageEdit = "ArticlesManageEdit";
+        public const string ArticlesMangeDelete = "ArticlesMangeDelete";
+
         #endregion
 
         #region 企业权限
@@ -102,6 +107,11 @@ namespace AiCard
         public const string ECustomerTabManageCreate = "ECustomerTabManageCreate";
         public const string ECustomerTabManageEdit = "ECustomerTabManageEdit";
         public const string ECustomerTabMangeDelete = "ECustomerTabMangeDelete";
+
+        public const string EArticlesManageRead = "EArticlesManageRead";
+        public const string EArticlesManageCreate = "EArticlesManageCreate";
+        public const string EArticlesManageEdit = "EArticlesManageEdit";
+        public const string EArticlesMangeDelete = "EArticlesMangeDelete";
         #endregion
 
     }

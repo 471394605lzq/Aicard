@@ -1,0 +1,61 @@
+﻿@model AiCard.Models.Article
+
+@{
+    ViewBag.Title = "编辑动态";
+    Layout = "~/Views/Shared/_LayoutBackground.cshtml";
+
+    var ckImgUpload = new AiCard.Models.CommModels.FileUpload
+    {
+        AutoInit = false,
+        Max = 20,
+        Mode = AiCard.Models.CommModels.FileUploadMode.ModalOnly,
+        Name = "ckupload",
+        Server = AiCard.Models.CommModels.UploadServer.QinQiu,
+        Sortable = false,
+        Type = AiCard.Models.CommModels.FileType.Image,
+    };
+}
+<ol class="breadcrumb">
+    <li><a href="@Url.Action("Index")">商品动态</a></li>
+    <li>编辑动态</li>
+</ol>
+<div class="roleGroupCreateEdit">
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        <div class="form-horizontal">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @Html.HiddenFor(model => model.ID)
+            @Html.HiddenFor(model => model.Type)
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Content, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    <textarea name="Content" rows="10">@Model.Content</textarea>
+                    @Html.EditorFor(s => ckImgUpload)
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="保存" class="btn btn-default" />
+                    <a href="@Url.Action("Index")" class="btn btn-default" style="margin-left:60px;">返回</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+@section Scripts{
+    @Scripts.Render("~/Scripts/ckeditor/ckeditor.js")
+    <script>
+        var editor = CKEDITOR.replace('Content', { height: 250 });
+    </script>
+}

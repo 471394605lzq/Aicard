@@ -153,7 +153,9 @@ namespace AiCard.Enums
 
     public enum ArticleType
     {
+        [Display(Name = "用户动态")]
         Text,
+        [Display(Name = "后台发布")]
         Html,
     }
 
@@ -252,6 +254,11 @@ namespace AiCard.Enums
         CardTab = 90,
         [Display(Name = "咨询")]
         CardCon = 100,
+
+        [Display(Name = "客户跟进")]
+        FollowUp = 101,
+        [Display(Name = "新增标签")]
+        AddCustTab = 102,
 
     }
 

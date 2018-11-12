@@ -24,7 +24,7 @@ namespace AiCard.Controllers
                 return this.GetAccountData();
             }
         }
-        public void Sidebar(string name = "商品分类")
+        public void Sidebar(string name = "商品分类管理")
         {
             ViewBag.Sidebar = name;
 

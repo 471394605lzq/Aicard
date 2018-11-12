@@ -1,0 +1,44 @@
+﻿@model AiCard.Models.Article
+
+@{
+    ViewBag.Title = "删除动态";
+    Layout = "~/Views/Shared/_LayoutBackground.cshtml";
+}
+
+<ol class="breadcrumb">
+    <li><a href="@Url.Action("Index")">动态管理</a></li>
+    <li>删除动态</li>
+</ol>
+
+<div class="roleGroupCreateEdit">
+    <h3>请确认以下信息是否要删除？</h3>
+    <div>
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Title)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Title)
+            </dd>
+            @*<dt>
+                @Html.DisplayNameFor(model => model.Content)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Content)
+            </dd>*@
+        </dl>
+
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-actions no-color">
+                <input type="submit" value="删除" class="btn btn-default" /> 
+                <a href="@Url.Action("Index")" class="btn btn-default" style="margin-left:60px;">返回</a>
+            </div>
+        }
+    </div>
+</div>

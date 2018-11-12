@@ -295,6 +295,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ArticleCommentController.cs" />
     <Compile Include="Controllers\ArticleController.cs" />
+    <Compile Include="Controllers\ArticlesManageController.cs" />
     <Compile Include="Controllers\CardController.cs" />
     <Compile Include="Controllers\CardManageController.cs" />
     <Compile Include="Controllers\CardTabController.cs" />
@@ -1053,6 +1054,11 @@
     <Content Include="Views\HomePageModularsManage\CreateByContact.cshtml" />
     <Content Include="Views\HomePageModularsManage\EditByContact.cshtml" />
     <Content Include="Views\Test\TestTxImChat.cshtml" />
+    <Content Include="Views\ArticlesManage\Create.cshtml" />
+    <Content Include="Views\ArticlesManage\Delete.cshtml" />
+    <Content Include="Views\ArticlesManage\Details.cshtml" />
+    <Content Include="Views\ArticlesManage\Edit.cshtml" />
+    <Content Include="Views\ArticlesManage\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
