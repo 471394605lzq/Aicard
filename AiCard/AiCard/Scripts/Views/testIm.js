@@ -78,7 +78,7 @@ var app = {
         },
     }
 };
-sdkLogin(this, app, to.name, {
+sdkLogin(this, app, {
     success: function () {
         //加载第一页的聊天记录
         getC2CHistoryMsgs({

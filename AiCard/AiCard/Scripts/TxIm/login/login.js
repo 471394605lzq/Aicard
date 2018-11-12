@@ -4,13 +4,13 @@
  * selToID(对方账号id,列表不设置所以这里传空)
  * callback(登录成功之后的回调) 返回{State:成功Success|错误Error,Error:错误}
 */
-function sdkLogin(that, app, selToID, callback) {
+function sdkLogin(that, app, callback) {
     if (!callback) {
         callback = () => {
 
         }
         callback.success = function () { };
-        callback.error = function () {  }
+        callback.error = function () { }
     }
     if (!callback.success) {
         callback.success = function () { };
@@ -59,6 +59,6 @@ function sdkLogin(that, app, selToID, callback) {
     webim.login(loginInfo, listeners, options, function (resp) {
         callback.success();
     }, function (err) {
-        callback(err);
+        callback.error(err);
     });
 }

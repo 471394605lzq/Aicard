@@ -947,6 +947,7 @@
     <Content Include="Scripts\Views\homePageModularIndex.js" />
     <Content Include="Scripts\Views\enterpriseManage.js" />
     <Content Include="Scripts\Views\roleGroup.js" />
+    <Content Include="Scripts\Views\testImList.js" />
     <Content Include="Scripts\Views\testIm.js" />
     <Content Include="Scripts\Views\userManageIndex.js" />
     <Content Include="Scripts\_references.js" />
@@ -1053,6 +1054,7 @@
     <Content Include="Views\HomePageModularsManage\CreateByContact.cshtml" />
     <Content Include="Views\HomePageModularsManage\EditByContact.cshtml" />
     <Content Include="Views\Test\TestTxImChat.cshtml" />
+    <Content Include="Views\Test\TestTxImList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
