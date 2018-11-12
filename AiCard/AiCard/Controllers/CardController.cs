@@ -334,11 +334,10 @@ namespace AiCard.Controllers
             try
             {
                 var t = db.Cards.FirstOrDefault(s => s.ID == model.CardID);
-                if (string.IsNullOrWhiteSpace(model.Name))
-                {
-                    return Json(Comm.ToJsonResult("Error", "姓名不能为空"), JsonRequestBehavior.AllowGet);
+                if (t==null) {
+                    return Json(Comm.ToJsonResult("Error", "名片不存在"), JsonRequestBehavior.AllowGet);
                 }
-                else
+                if (model.Name!=null)
                 {
                     t.Name = model.Name;
                 }
