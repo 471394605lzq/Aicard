@@ -29,35 +29,12 @@ var onConnNotify = function (resp) {
 };
 ///监听聊天
 var onMsgNotify = function (newMsgList) {
-    //var newMsg;
-    //获取所有聊天会话
-
-    for (var j in newMsgList) {//遍历新消息
-        //newMsg = newMsgList[j];
-
-        //selSess = newMsg.getSession();
-        //handlderMsg(newMsg, false);
-        //currentMsgsArray = currentMsgsArray.map((item, index) => {
-        //    if (!item.isSelfSend) {
-        //        item.avatar = myAvatar
-        //    } else {
-        //        item.avatar = friendAvatar
-        //    }
-        //    return item;
-        //})
-        //var myMessages = that.setDatas(currentMsgsArray);
-        //that.setData({
-        //    myMessages: myMessages,
-
-        //})
-        //setTimeout(function () {
-        //    if (that.data.is_chat) {
-        //        that.pageScrollToBottom()
-        //    }
-        //}, 100)
-
-    }
-    //getUnread()
+    loadUserList({
+        count: 100,
+        success: function (data) {
+            initList(data);
+        }
+    });
 }
 //获取消息未读数并更新到会话列表
 function getUnread() {
@@ -126,7 +103,12 @@ var app = {
 sdkLogin(this, app, {
     success: function () {
         //获取最近的聊天列表
-
+        loadUserList({
+            count: 100,
+            success: function (data) {
+                initList(data);
+            }
+        });
     },
     error: function () {
         console.log();
@@ -288,7 +270,7 @@ function loadUserList(option) {
         //    contactList: contactList
         //})
         option.success(data);
-        initList(data);
+        
     })
 }
 
