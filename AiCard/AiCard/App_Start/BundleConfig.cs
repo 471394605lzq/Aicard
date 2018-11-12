@@ -100,6 +100,7 @@ namespace AiCard
             addViewScripts("homePageModular", new string[] { "homePageModular.js" });
             addViewScripts("homePageModularIndex", new string[] { "homePageModularIndex.js" });
             addViewScripts("enterpriseManage", new string[] { "enterpriseManage.js" });
+            addViewScripts("ArticlesManage", new string[] { "ArticlesManage.js" });
             #endregion
 
 

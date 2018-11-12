@@ -120,6 +120,7 @@ namespace AiCard.Bll
             addSystemERole(SysRole.EArticlesManageCreate, "动态管理", "动态管理创建");
             addSystemERole(SysRole.EArticlesManageEdit, "动态管理", "动态管理编辑");
             addSystemERole(SysRole.EArticlesMangeDelete, "动态管理", "动态管理删除");
+            addSystemERole(SysRole.EArticlesMangeCheck, "动态管理", "动态管理审核");
 
             #endregion
             #region 后台权限
@@ -182,6 +183,7 @@ namespace AiCard.Bll
             addSystemRole(SysRole.ArticlesManageCreate, "动态管理", "动态管理创建");
             addSystemRole(SysRole.ArticlesManageEdit, "动态管理", "动态管理编辑");
             addSystemRole(SysRole.ArticlesMangeDelete, "动态管理", "动态管理删除");
+            addSystemRole(SysRole.ArticlesMangeCheck, "动态管理", "动态管理审核");
             #endregion
 
             var dbRoles = _appRoleManager.Roles.ToList();

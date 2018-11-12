@@ -58,6 +58,7 @@ namespace AiCard
         public const string ArticlesManageCreate = "ArticlesManageCreate";
         public const string ArticlesManageEdit = "ArticlesManageEdit";
         public const string ArticlesMangeDelete = "ArticlesMangeDelete";
+        public const string ArticlesMangeCheck = "ArticlesMangeCheck";
 
         #endregion
 
@@ -112,6 +113,7 @@ namespace AiCard
         public const string EArticlesManageCreate = "EArticlesManageCreate";
         public const string EArticlesManageEdit = "EArticlesManageEdit";
         public const string EArticlesMangeDelete = "EArticlesMangeDelete";
+        public const string EArticlesMangeCheck = "EArticlesMangeCheck";
         #endregion
 
     }
