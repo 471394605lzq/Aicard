@@ -171,6 +171,7 @@ namespace AiCard.Controllers
                 }
                 else
                 {
+                    t.ID = model.ID;
                     t.Name = model.Name;
                     db.SaveChanges();
                     return Json(Comm.ToJsonResult("Success", "设置成功"), JsonRequestBehavior.AllowGet);
@@ -199,6 +200,7 @@ namespace AiCard.Controllers
                 }
                 else
                 {
+                    t.ID = model.ID;
                     t.Content = model.Content;
                     db.SaveChanges();
                     return Json(Comm.ToJsonResult("Success", "设置成功"), JsonRequestBehavior.AllowGet);

@@ -305,7 +305,7 @@ namespace AiCard.Controllers
                 var data = new
                 {
                     Name = query.Name,
-                    Avatar = query.Avatar.SplitToArray<string>(',')[0],
+                    Avatar = query.Avatar,
                     Position = query.Position,
                     PhoneNumber = query.PhoneNumber,
                     Mobile = query.Mobile,
