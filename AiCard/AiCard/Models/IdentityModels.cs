@@ -101,7 +101,14 @@ namespace AiCard.Models
         public DbSet<CustomerTabGroup> CustomerTabGroups { get; set; }
 
         public DbSet<EnterpriseCustomerTab> EnterpriseCustomerTabs { get; set; }
+
+        public DbSet<UserSpeech> UserSpeechs { get; set; }
+
+        public DbSet<UserSpeechType> UserSpeechTypes { get; set; }
+
         public SqlConnection Connection { get; internal set; }
+
+
 
         public static ApplicationDbContext Create()
         {

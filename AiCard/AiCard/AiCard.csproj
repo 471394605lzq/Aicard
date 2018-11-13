@@ -428,6 +428,10 @@
     <Compile Include="Migrations\201811100917083_AddEnterpriseCustomerRemarkChangeName.Designer.cs">
       <DependentUpon>201811100917083_AddEnterpriseCustomerRemarkChangeName.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201811130218454_AddUserSpeechsAndUserSpeechTypes.cs" />
+    <Compile Include="Migrations\201811130218454_AddUserSpeechsAndUserSpeechTypes.Designer.cs">
+      <DependentUpon>201811130218454_AddUserSpeechsAndUserSpeechTypes.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ArticleModels.cs" />
@@ -455,6 +459,7 @@
     <Compile Include="Models\ProductModels.cs" />
     <Compile Include="Models\RoleGroup.cs" />
     <Compile Include="Models\RolesModel.cs" />
+    <Compile Include="Models\UserSpeechModels.cs" />
     <Compile Include="Models\Test.cs" />
     <Compile Include="Models\TxImViewModels.cs" />
     <Compile Include="Models\UserCardTop.cs" />
@@ -1163,6 +1168,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201811100917083_AddEnterpriseCustomerRemarkChangeName.resx">
       <DependentUpon>201811100917083_AddEnterpriseCustomerRemarkChangeName.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201811130218454_AddUserSpeechsAndUserSpeechTypes.resx">
+      <DependentUpon>201811130218454_AddUserSpeechsAndUserSpeechTypes.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
