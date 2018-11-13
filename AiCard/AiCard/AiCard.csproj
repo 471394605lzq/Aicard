@@ -943,6 +943,7 @@
     <Content Include="Scripts\TxIm\profile\profile_manager.js" />
     <Content Include="Scripts\TxIm\recentcontact\recent_contact_list_manager.js" />
     <Content Include="Scripts\TxIm\webim.js" />
+    <Content Include="Scripts\Views\ArticlesManage.js" />
     <Content Include="Scripts\Views\Deploy.js" />
     <Content Include="Scripts\Views\homePageModular.js" />
     <Content Include="Scripts\Views\homePageModularIndex.js" />

@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using AiCard.Models;
+using Newtonsoft.Json;
 
 namespace AiCard.Controllers
 {
@@ -46,7 +47,9 @@ namespace AiCard.Controllers
                         Images = a.Images,
                         Title = a.Title,
                         UserName = u.UserName,
-                        Type = a.Type
+                        Type = a.Type,
+                        State=a.State
+                         
                     };
             if (!string.IsNullOrWhiteSpace(filter))
             {
@@ -237,6 +240,45 @@ namespace AiCard.Controllers
             db.Articles.Remove(article);
             db.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        [AllowCrossSiteJson]
+        [ValidateInput(false)]
+        [Authorize(Roles = SysRole.ArticlesMangeCheck + "," + SysRole.EArticlesMangeCheck)]
+        // GET: ArticlesManage/Edit/5
+        public ActionResult Check(string listu)
+        {
+
+            var article = JsonConvert.DeserializeObject<List<Article>>(listu);//post过来需要保存数据库的数据
+            Sidebar();
+            //var temp = db.Articles.FirstOrDefault(s => s.ID == id);
+            ////防止企业用户串号修改
+            //if (AccontData.UserType == Enums.UserType.Enterprise
+            //    && temp.EnterpriseID != AccontData.EnterpriseID)
+            //{
+            //    return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
+            //}
+            //else if (temp.Type == Enums.ArticleType.Text)
+            //{
+            //    return this.ToError("错误", "用户动态不可编辑", Url.Action("Index"));
+            //}
+
+            foreach (var item in article)
+            {
+                try
+                {
+                    var t = db.Articles.FirstOrDefault(s => s.ID == item.ID);
+                    t.ID = item.ID;
+                    t.State = Enums.ArticleState.Released;
+                    db.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    return Json(Comm.ToJsonResult("Error", ex.Message), JsonRequestBehavior.AllowGet);
+                }
+            }
+            return Json(Comm.ToJsonResult("Success", "同步成功", new { data = article }), JsonRequestBehavior.AllowGet);
         }
 
         protected override void Dispose(bool disposing)
