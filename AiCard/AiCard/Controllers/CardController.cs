@@ -343,7 +343,7 @@ namespace AiCard.Controllers
                 }
                 if (model.Email != null)
                 {
-                    if (string.Empty != model.Email && !Reg.IsEmail(model.Email))
+                    if (string.Empty != model.Email.Trim() && !Reg.IsEmail(model.Email))
                     {
                         return Json(Comm.ToJsonResult("Error", "邮箱格式不正确"), JsonRequestBehavior.AllowGet);
                     }
@@ -354,7 +354,7 @@ namespace AiCard.Controllers
                 }
                 if (model.Mobile != null)
                 {
-                    if (string.Empty != model.Mobile && !Reg.IsMobile(model.Mobile))
+                    if (string.Empty != model.Mobile.Trim() && !Reg.IsMobile(model.Mobile))
                     {
                         return Json(Comm.ToJsonResult("Error", "手机号格式不正确"), JsonRequestBehavior.AllowGet);
                     }
@@ -365,7 +365,7 @@ namespace AiCard.Controllers
                 }
                 if (model.PhoneNumber != null)
                 {
-                    if (string.Empty != model.PhoneNumber && !Reg.IsPhone(model.PhoneNumber))
+                    if (string.Empty != model.PhoneNumber.Trim() && !Reg.IsPhone(model.PhoneNumber))
                     {
                         return Json(Comm.ToJsonResult("Error", "座机号码格式不正确"), JsonRequestBehavior.AllowGet);
                     }
