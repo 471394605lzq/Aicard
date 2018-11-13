@@ -73,6 +73,7 @@ namespace AiCard.Controllers
                         where ct.CardID == cardID
                         select new
                         {
+                            ID=ct.ID,
                             Name = ct.Name,
                             Count = ct.Count,
                             Style = ct.Style
