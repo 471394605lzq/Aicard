@@ -23,6 +23,9 @@ namespace AiCard.Controllers
         // GET: Test
         public ActionResult Index(string userName)
         {
+
+
+
             return View();
 
         }
