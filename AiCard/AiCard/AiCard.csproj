@@ -317,6 +317,7 @@
     <Compile Include="Controllers\UploaderController.cs" />
     <Compile Include="Controllers\UserLogController.cs" />
     <Compile Include="Controllers\UserManageController.cs" />
+    <Compile Include="Controllers\UserSpeechController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -1081,6 +1082,7 @@
     <Folder Include="Views\Products\" />
     <Folder Include="Views\TsIm\" />
     <Folder Include="Views\UserLog\" />
+    <Folder Include="Views\UserSpeech\" />
     <Folder Include="WeChatSessionKey\" />
   </ItemGroup>
   <ItemGroup>

@@ -365,7 +365,7 @@ namespace AiCard.Controllers
                 }
                 if (model.PhoneNumber != null)
                 {
-                    if (string.Empty != model.PhoneNumber && !Reg.IsMobile(model.PhoneNumber))
+                    if (string.Empty != model.PhoneNumber && !Reg.IsPhone(model.PhoneNumber))
                     {
                         return Json(Comm.ToJsonResult("Error", "座机号码格式不正确"), JsonRequestBehavior.AllowGet);
                     }
