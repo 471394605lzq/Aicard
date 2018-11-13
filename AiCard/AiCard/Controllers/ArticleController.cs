@@ -113,7 +113,7 @@ namespace AiCard.Controllers
                         : new string[0],
                     LikeCount = s.Like.ToStrForm(4, "点赞"),
                     LikeUser = s.Liker.Select(x => x.Avatar).ToArray(),
-                    Position = s.Type == Enums.ArticleType.Text ? s.User.Position : null,
+                    Position = s.Type == Enums.ArticleType.Text ? s.User.Position : "",
                     ShareCount = s.Share.ToStrForm(4, "分享"),
                     Title = s.Title,
                     Type = s.Type,
@@ -134,6 +134,7 @@ namespace AiCard.Controllers
                 return Json(Comm.ToJsonResult("NoFound", "动态不存在"), JsonRequestBehavior.AllowGet);
             }
             var c = db.Cards.FirstOrDefault(s => s.UserID == a.UserID);
+            var e = db.Enterprises.FirstOrDefault(s => s.ID == a.EnterpriseID);
             var com = db.ArticleComments.Count(s => s.ArticleID == articleID);
             //var com = (from ac in db.ArticleComments
             //           from u in db.Users
@@ -168,7 +169,7 @@ namespace AiCard.Controllers
             var model = new
             {
                 ArticleID = a.ID,
-                Avatar = c.Avatar,
+                Avatar = a.Type == Enums.ArticleType.Text ? c.Avatar : e.Logo,
                 CommentCount = com.ToStrForm(4, "评论"),
                 DateTimeStr = a.UpdateDateTime.ToStrForm(),
                 HadLike = hadLike,
@@ -212,9 +213,9 @@ namespace AiCard.Controllers
                 //},
                 a.Type,
                 ShareCount = a.Share.ToStrForm(4, "分享"),
-                c.Position,
-                Cover = a.Type == Enums.ArticleType.Html ? a.Images.SplitToArray<string>()[0] : null,
-                UserName = c.Name,
+                Position = a.Type == Enums.ArticleType.Text ? c.Position : "",
+                Cover = a.Type == Enums.ArticleType.Html ? a.Images.SplitToArray<string>()?[0] : null,
+                UserName = a.Type == Enums.ArticleType.Text ? c.Name : e.Name,
 
             };
             return Json(Comm.ToJsonResult("Success", "成功", model), JsonRequestBehavior.AllowGet);
