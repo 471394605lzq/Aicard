@@ -307,10 +307,38 @@ namespace AiCard.Enums
     /// <summary>
     /// 排行类型
     /// </summary>
-    public enum RankingsType {
+    public enum RankingsType
+    {
         [Display(Name = "活跃度")]
         Activity,
         [Display(Name = "客户数")]
         CustNumber
+    }
+
+    public enum PayType
+    {
+        [Display(Name = "微信支付")]
+        WeiXinPay,
+        [Display(Name = "支付宝")]
+        AliPay
+
+    }
+
+    public enum OrderType
+    {
+        [Display(Name = "VIP")]
+        Vip
+    }
+
+    public enum OrderState
+    {
+        [Display(Name = "待支付")]
+        Waiting,
+        [Display(Name = "已支付")]
+        Paid,
+        [Display(Name = "已完成")]
+        Completed,
+        [Display(Name = "已退款")]
+        Refunded
     }
 }
