@@ -165,9 +165,15 @@ namespace AiCard.Controllers
             try
             {
                 var t = db.UserSpeechTypes.FirstOrDefault(s => s.ID == model.ID && s.UserID == model.UserID);
+                var hasname = db.UserSpeechTypes.Any(s => s.Name == model.Name && s.UserID == model.UserID);
                 if (t == null)
                 {
                     return Json(Comm.ToJsonResult("Error", "话术分类不存在"), JsonRequestBehavior.AllowGet);
+                }
+                //检验话术分类是否存在
+                else if (hasname)
+                {
+                    return Json(Comm.ToJsonResult("Error", "话术分类已存在"), JsonRequestBehavior.AllowGet);
                 }
                 else
                 {
@@ -224,6 +230,7 @@ namespace AiCard.Controllers
             {
                 UserSpeech speech = db.UserSpeechs.Find(id);
                 db.UserSpeechs.Remove(speech);
+                db.SaveChanges();
                 return Json(Comm.ToJsonResult("Success", "删除成功"), JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
