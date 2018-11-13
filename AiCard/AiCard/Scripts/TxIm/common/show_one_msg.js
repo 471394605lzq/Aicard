@@ -111,24 +111,6 @@ function addMsg(msg, userInfo, prepend) {
     onemsg.appendChild(msgbody);
 
     return onemsg;
-    //消息列表
-    var msgflow = document.getElementsByClassName("msgflow")[0];
-    if (prepend) {
-        //300ms后,等待图片加载完，滚动条自动滚动到底部
-        msgflow.insertBefore(onemsg, msgflow.firstChild);
-        if (msgflow.scrollTop == 0) {
-            setTimeout(function () {
-                msgflow.scrollTop = 0;
-            }, 300);
-        }
-    } else {
-        msgflow.appendChild(onemsg);
-        //300ms后,等待图片加载完，滚动条自动滚动到底部
-        setTimeout(function () {
-            msgflow.scrollTop = msgflow.scrollHeight;
-        }, 300);
-    }
-
 
 }
 //把消息转换成Html

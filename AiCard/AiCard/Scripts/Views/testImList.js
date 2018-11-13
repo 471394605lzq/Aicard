@@ -29,6 +29,8 @@ var onConnNotify = function (resp) {
 };
 ///监听聊天
 var onMsgNotify = function (newMsgList) {
+    var sessMap = webim.MsgStore.sessMap();
+    console.log(sessMap);
     loadUserList({
         count: 100,
         success: function (data) {
@@ -36,60 +38,12 @@ var onMsgNotify = function (newMsgList) {
         }
     });
 }
-//获取消息未读数并更新到会话列表
-function getUnread() {
-    var sess = {};
-    var sessMap = webim.MsgStore.sessMap();
-    //if (that.data.contactList) {//这里判断是否存在会话列表，或者在会话列表的页面
-    // 更新消息的未读数
-    console.log(sessMap);
-    for (var i in sessMap) {
-        sess = sessMap[i];
-        //var contactList = that.data.contactList.map((item, index) => {
-        //    if (item.To_Account == sess.id()) {
-        //        item.UnreadMsgCount = sess.unread()
-        //    }
-        //    return item;
-        //})
-        //先把未读数赋值
-        //that.setData({
-        //    contactList: contactList
-        //})
-        // 获取最新的会话消息（把最新的一条赋值到会话列表）
-        webim.getRecentContactList({
-            'Count': 10 //最近的会话数 ,最大为 100
-        }, function (resp) {
-            var MsgShow = resp.SessionItem.filter((item, index) => {
-                if (item.To_Account == sess.id())
-                    return item;
-            })
 
-            //var contactList = that.data.contactList.map((item, index) => {
-            //    if (item.To_Account == sess.id()) {
-            //        // 获取最新消息
-            //        if (MsgShow[0].MsgShow == '[其他]') {
-            //            MsgShow[0].MsgShow = '[房源信息]'
-            //        }
-            //        item.MsgShow = MsgShow[0].MsgShow
-
-            //    }
-            //    return item;
-            //})
-
-            that.setData({
-                contactList: contactList
-            })
-
-        })
-
-    }
-    //}
-}
 var app = {
     data: {
         Config: {
             accountMode: 0,
-            accountType: 29887,
+            accountType: 36862,
             sdkappid: 1400157072,
         },
         userInfo: from,
@@ -131,7 +85,6 @@ function loadUserList(option) {
         var data = [];
         var tempSess, tempSessMap = {}; //临时会话变量
         if (resp.SessionItem && resp.SessionItem.length > 0) {
-
             for (var i in resp.SessionItem) {
                 var item = resp.SessionItem[i];
                 var type = item.Type; //接口返回的会话类型
@@ -246,29 +199,7 @@ function loadUserList(option) {
                 }
             }
         }
-        //$('#get_recent_contact_list_table').bootstrapTable('load', data);
-        //$('#get_recent_contact_list_dialog').modal('show');
-
-        //var MsgShow = resp.SessionItem.filter((item, index) => {
-        //    if (item.To_Account == sess.id())
-        //        return item;
-        //})
-
-        //var contactList = that.data.contactList.map((item, index) => {
-        //    if (item.To_Account == sess.id()) {
-        //        // 获取最新消息
-        //        if (MsgShow[0].MsgShow == '[其他]') {
-        //            MsgShow[0].MsgShow = '[房源信息]'
-        //        }
-        //        item.MsgShow = MsgShow[0].MsgShow
-
-        //    }
-        //    return item;
-        //})
-
-        //that.setData({
-        //    contactList: contactList
-        //})
+       
         option.success(data);
         
     })
