@@ -101,7 +101,7 @@ namespace AiCard.Controllers
                 var a = new ArticleIndexViewModels
                 {
                     ArticleID = s.ID,
-                    Avatar = s.User.Avatar,
+                    Avatar = s.Type == Enums.ArticleType.Text ? s.User?.Avatar : s.Enterprise.Logo,
                     CommentCount = s.Comment.ToStrForm(4, "评论"),
                     Content = s.Content,
                     Cover = s.Type == Enums.ArticleType.Html ? s.Images : null,
@@ -113,11 +113,11 @@ namespace AiCard.Controllers
                         : new string[0],
                     LikeCount = s.Like.ToStrForm(4, "点赞"),
                     LikeUser = s.Liker.Select(x => x.Avatar).ToArray(),
-                    Position = s.User.Position,
+                    Position = s.Type == Enums.ArticleType.Text ? s.User.Position : null,
                     ShareCount = s.Share.ToStrForm(4, "分享"),
                     Title = s.Title,
                     Type = s.Type,
-                    UserName = s.User.Name,
+                    UserName = s.Type == Enums.ArticleType.Text ? s.User.Name : s.Enterprise.Name,
                 };
                 return a;
             });
