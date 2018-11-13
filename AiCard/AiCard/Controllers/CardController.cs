@@ -187,6 +187,7 @@ namespace AiCard.Controllers
                 ViewCount = stringNum(viewCount),
                 Viewers = leastUsers.Select(s => s.Avatar).ToList(),
                 WeChatCode = card.WeChatCode,
+                card.Remark,
                 CardTabs = tab.Select(s => new
                 {
                     TabID = s.ID,
@@ -334,10 +335,11 @@ namespace AiCard.Controllers
             try
             {
                 var t = db.Cards.FirstOrDefault(s => s.ID == model.CardID);
-                if (t==null) {
+                if (t == null)
+                {
                     return Json(Comm.ToJsonResult("Error", "名片不存在"), JsonRequestBehavior.AllowGet);
                 }
-                if (model.Name!=null)
+                if (model.Name != null)
                 {
                     t.Name = model.Name;
                 }
@@ -460,7 +462,7 @@ namespace AiCard.Controllers
             public string Avatar { get; set; }
             public int Counts { get; set; }
         }
-        
+
 
 
         [HttpPost]
@@ -478,7 +480,7 @@ namespace AiCard.Controllers
             }
             var top = db.UserCardTops.FirstOrDefault(s => s.UserID == userID && s.CardID == cardID);
 
-         
+
             bool isTop;
             if (top == null)
             {
