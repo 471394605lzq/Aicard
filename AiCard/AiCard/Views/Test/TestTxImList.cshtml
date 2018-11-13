@@ -1,0 +1,42 @@
+﻿
+@{
+    ViewBag.Title = "腾讯未读消息列表";
+    Layout = "~/Views/Shared/_LayoutBackground.cshtml";
+    AiCard.Models.TxImViewModels.User from = ViewBag.From;
+}
+<style>
+    .userList {
+        list-style: none;
+    }
+
+        .userList .userList-item {
+            width: 500px;
+        }
+         .userList .userList-item .userList-item-avatar {
+            width: 50px;
+        }
+</style>
+<ul>
+    <li id="from" data-name="@from.UserName" data-sign="@from.SignUser" data-nick="@from.NickName" data-avatar="@from.Avatar">
+        <img src="@Url.ResizeImage(from.Avatar, 50)" />
+    </li>
+</ul>
+
+
+<ul id="userList" class="userList">
+    <li id="temp" class="userList-item hidden">
+        <img class="userList-item-avatar" src="" alt="" />
+        <span class="userList-item-nick"></span>
+        <span class="userList-item-count"></span>
+        <span class="userList-item-lastMsg"></span>
+    </li>
+</ul>
+
+@section Scripts{
+    <script src="~/Scripts/TxIm/base.js"></script>
+    <script src="~/Scripts/TxIm/json2.js"></script>
+    <script src="~/Scripts/TxIm/webim.js"></script>
+    <script src="~/Scripts/TxIm/login/login.js"></script>
+    <script src="~/Scripts/TxIm/msg/get_history_msg.js"></script>
+    <script src="~/Scripts/Views/testImList.js"></script>
+}
