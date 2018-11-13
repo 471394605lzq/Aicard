@@ -55,19 +55,19 @@ var onMsgNotify = function (newMsgList) {
     }
     //消息已读上报，以及设置会话自动已读标记
     webim.setAutoRead(selSess, true, true);
-    for (var i in sessMap) {
-        sess = sessMap[i];
-        if (to.name != sess.id()) {//更新其他聊天对象的未读消息数
-            updateSessDiv(sess.type(), sess.id(), sess.unread());
-        }
-    }
+    //for (var i in sessMap) {
+    //    sess = sessMap[i];
+    //    if (to.name != sess.id()) {//更新其他聊天对象的未读消息数
+    //        updateSessDiv(sess.type(), sess.id(), sess.unread());
+    //    }
+    //}
 }
 
 var app = {
     data: {
         Config: {
             accountMode: 0,
-            accountType: 29887,
+            accountType: 36862,
             sdkappid: 1400157072,
         },
         userInfo: from,
@@ -78,7 +78,7 @@ var app = {
         },
     }
 };
-sdkLogin(this, app, to.name, {
+sdkLogin(this, app, {
     success: function () {
         //加载第一页的聊天记录
         getC2CHistoryMsgs({
@@ -157,6 +157,7 @@ sdkLogin(this, app, to.name, {
                     var onemsg = addMsg(msg, app.data.userInfo);
                     $message.append(onemsg);
                     $content.val("");
+                    $message.scrollTop($message.prop("scrollHeight"));
                 },
                 error: function (error) {
                     console.log(error);

@@ -52,9 +52,24 @@ namespace AiCard.Controllers
             return View();
         }
 
-        public ActionResult TestTxImList()
+        public ActionResult ImportUser(string userID)
         {
+            var user = db.Users.FirstOrDefault(s => s.Id == userID);
+            new TxIm.Api().ImportUser(user.UserName, user.NickName, user.Avatar);
+            return Json(1, JsonRequestBehavior.AllowGet);
+        }
 
+        public ActionResult TestTxImList(string from)
+        {
+            var fromUser = db.Users.Select(s => new Models.TxImViewModels.User
+            {
+                ID = s.Id,
+                Avatar = s.Avatar,
+                NickName = s.NickName,
+                UserName = s.UserName
+            }).FirstOrDefault(s => s.NickName == from);
+            fromUser.SignUser = TxIm.SigCheck.Sign(fromUser.UserName);
+            ViewBag.From = fromUser;
             return View();
         }
 

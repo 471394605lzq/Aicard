@@ -428,6 +428,10 @@
     <Compile Include="Migrations\201811100917083_AddEnterpriseCustomerRemarkChangeName.Designer.cs">
       <DependentUpon>201811100917083_AddEnterpriseCustomerRemarkChangeName.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201811130218454_AddUserSpeechsAndUserSpeechTypes.cs" />
+    <Compile Include="Migrations\201811130218454_AddUserSpeechsAndUserSpeechTypes.Designer.cs">
+      <DependentUpon>201811130218454_AddUserSpeechsAndUserSpeechTypes.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ArticleModels.cs" />
@@ -455,6 +459,7 @@
     <Compile Include="Models\ProductModels.cs" />
     <Compile Include="Models\RoleGroup.cs" />
     <Compile Include="Models\RolesModel.cs" />
+    <Compile Include="Models\UserSpeechModels.cs" />
     <Compile Include="Models\Test.cs" />
     <Compile Include="Models\TxImViewModels.cs" />
     <Compile Include="Models\UserCardTop.cs" />
@@ -949,6 +954,7 @@
     <Content Include="Scripts\Views\homePageModularIndex.js" />
     <Content Include="Scripts\Views\enterpriseManage.js" />
     <Content Include="Scripts\Views\roleGroup.js" />
+    <Content Include="Scripts\Views\testImList.js" />
     <Content Include="Scripts\Views\testIm.js" />
     <Content Include="Scripts\Views\userManageIndex.js" />
     <Content Include="Scripts\_references.js" />
@@ -1055,6 +1061,7 @@
     <Content Include="Views\HomePageModularsManage\CreateByContact.cshtml" />
     <Content Include="Views\HomePageModularsManage\EditByContact.cshtml" />
     <Content Include="Views\Test\TestTxImChat.cshtml" />
+    <Content Include="Views\Test\TestTxImList.cshtml" />
     <Content Include="Views\ArticlesManage\Create.cshtml" />
     <Content Include="Views\ArticlesManage\Delete.cshtml" />
     <Content Include="Views\ArticlesManage\Details.cshtml" />
@@ -1161,6 +1168,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201811100917083_AddEnterpriseCustomerRemarkChangeName.resx">
       <DependentUpon>201811100917083_AddEnterpriseCustomerRemarkChangeName.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201811130218454_AddUserSpeechsAndUserSpeechTypes.resx">
+      <DependentUpon>201811130218454_AddUserSpeechsAndUserSpeechTypes.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
