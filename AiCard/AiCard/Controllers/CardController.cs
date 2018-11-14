@@ -318,7 +318,7 @@ namespace AiCard.Controllers
                     Remark = query.Remark,
                     Video = query.Video,
                     Voice = query.Voice,
-                    Info=query.Info,
+                    Info = query.Info,
                     Images = query.Images
                 };
                 return Json(Comm.ToJsonResult("Success", "成功", data), JsonRequestBehavior.AllowGet);
@@ -427,7 +427,7 @@ namespace AiCard.Controllers
         /// <param name="type"></param>
         /// <returns></returns>
         [AllowCrossSiteJson]
-        public ActionResult GetRankingsList(Enums.RankingsType? type, int enterpriseID, int? page = 1, int? pageSize = 20)
+        public ActionResult GetRankingsList(RankingsType? type, int enterpriseID, int? page = 1, int? pageSize = 20)
         {
             try
             {
@@ -442,13 +442,13 @@ namespace AiCard.Controllers
                 parameters[0].Value = enterpriseID;
                 parameters[1].Value = starpagesize;
                 parameters[2].Value = endpagesize;
-                if (type == Enums.RankingsType.Activity)
+                if (type == Common.Enums.RankingsType.Activity)
                 {
                     string sqlstr = string.Format(@"SELECT * FROM (SELECT CAST(ROW_NUMBER() over(order by COUNT(c.Name) DESC) AS INTEGER) AS Ornumber, c.Name, c.Avatar, COUNT(c.Name) Counts FROM dbo.UserLogs ul
                                   INNER JOIN dbo.Cards c ON c.UserID = ul.TargetUserID WHERE ul.CreateDateTime BETWEEN dateadd(ms, 0, DATEADD(dd, DATEDIFF(dd, 0, getdate()), 0)) AND dateadd(ms, -3, DATEADD(dd, DATEDIFF(dd, -1, getdate()), 0))
                                    AND c.EnterpriseID=@enterpriseID 
                                   GROUP BY c.Name, c.Avatar) t WHERE t.Ornumber > @starpagesize AND t.Ornumber<=@endpagesize");
-                    
+
                     List<RankingModel> data = db.Database.SqlQuery<RankingModel>(sqlstr, parameters).ToList();
                     return Json(Comm.ToJsonResult("Success", "成功", data), JsonRequestBehavior.AllowGet);
                 }
@@ -457,7 +457,7 @@ namespace AiCard.Controllers
                     string sqlstr = string.Format(@"SELECT* FROM (SELECT CAST(ROW_NUMBER() over(order by COUNT(u.UserName) DESC) AS INTEGER) AS Ornumber, u.UserName, u.Id, COUNT(cus.ID) AS Counts FROM dbo.AspNetUsers u
                                                     LEFT JOIN dbo.EnterpriseUserCustomers cus ON cus.OwnerID = u.Id
                                                     WHERE UserType = 1 AND u.EnterpriseID=@enterpriseID GROUP BY u.UserName, u.Id)t WHERE t.ornumber WHERE t.Ornumber > @starpagesize AND t.Ornumber<=@endpagesize");
-                    List<RankingModel> data = db.Database.SqlQuery<RankingModel>(sqlstr,parameters).ToList();
+                    List<RankingModel> data = db.Database.SqlQuery<RankingModel>(sqlstr, parameters).ToList();
                     return Json(Comm.ToJsonResult("Success", "成功", data), JsonRequestBehavior.AllowGet);
                 }
                 else

@@ -43,7 +43,7 @@ namespace AiCard.Models
         /// 支付类型
         /// </summary>
         [Display(Name = "支付类型")]
-        public Enums.PayType PayType { get; set; }
+        public Common.Enums.PayType PayType { get; set; }
 
         /// <summary>
         /// 创建时间

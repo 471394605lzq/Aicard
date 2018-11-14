@@ -307,10 +307,18 @@ namespace AiCard.Common.Enums
     /// <summary>
     /// 排行类型
     /// </summary>
-    public enum RankingsType {
+    public enum RankingsType
+    {
         [Display(Name = "活跃度")]
         Activity,
         [Display(Name = "客户数")]
         CustNumber
+    }
+
+    public enum PayType
+    {
+        WiXinPay,
+        AliPay
+
     }
 }

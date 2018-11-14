@@ -4,11 +4,13 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using AiCard.Models;
+using AiCard.DAL.Models;
+
 namespace AiCard.Controllers
 {
     public class ChatImController : Controller
     {
-        ApplicationDbContext db = new ApplicationDbContext();
+        ApplicationDbContext db = new  ApplicationDbContext();
 
         /// <summary>
         /// 获取聊天说话用到用户信息

@@ -10,7 +10,7 @@
                 <li>
                     @if (User.IsInRole(SysRole.ECustomerTabGroupsManageCreate))
                     {
-                    <a href="@Url.Action("Create")">新增<label style="margin-left:15px;">|</label></a>
+                        <a href="@Url.Action("Create")">新增<label style="margin-left:15px;">|</label></a>
                     }
                 </li>
                 @*<li class="dropdown">
@@ -59,24 +59,24 @@
             <th></th>
         </tr>
     </thead>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.GroupName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Sort)
-                </td>
-                <td>
-                    @Html.ActionLink("编辑", "Edit", new { id = item.ID }) |
-                    @Html.ActionLink("删除", "Delete", new { id = item.ID })
-                </td>
-            </tr>
-        }
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.GroupName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Sort)
+            </td>
+            <td>
+                @Html.ActionLink("编辑", "Edit", new { id = item.ID }) |
+                @Html.ActionLink("删除", "Delete", new { id = item.ID })
+            </td>
+        </tr>
+    }
 
 </table>
 @Html.PageList((PagedList.IPagedList<AiCard.Models.CustomerTabViewModel>)Model, Url.PageUrl())
