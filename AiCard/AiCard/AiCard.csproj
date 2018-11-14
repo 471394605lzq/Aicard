@@ -291,6 +291,7 @@
     <Compile Include="Controllers\CardController.cs" />
     <Compile Include="Controllers\CardManageController.cs" />
     <Compile Include="Controllers\CardTabController.cs" />
+    <Compile Include="Controllers\ChatImController.cs" />
     <Compile Include="Controllers\ChinaPCASController.cs" />
     <Compile Include="Controllers\CustomerTabGroupsManageController.cs" />
     <Compile Include="Controllers\CustomerTabsManageController.cs" />
@@ -436,6 +437,7 @@
     <Compile Include="Models\EnterpriseViewModels.cs" />
     <Compile Include="Models\HomePageModularViewModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\Order.cs" />
     <Compile Include="Models\ProductKindsViewModels.cs" />
     <Compile Include="Models\ProductViewModels.cs" />
     <Compile Include="Models\RoleGroupViewModel.cs" />
@@ -1051,6 +1053,7 @@
     <Folder Include="Views\Article\" />
     <Folder Include="Views\CardTab\" />
     <Folder Include="Views\Card\" />
+    <Folder Include="Views\ChatIm\" />
     <Folder Include="Views\EnterpriseCustomer\" />
     <Folder Include="Views\HomePageManage\" />
     <Folder Include="Views\HomePageModulars\" />

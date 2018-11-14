@@ -190,6 +190,7 @@ namespace AiCard.Controllers
                 ViewCount = stringNum(viewCount),
                 Viewers = leastUsers.Select(s => s.Avatar).ToList(),
                 WeChatCode = card.WeChatCode,
+                card.Remark,
                 CardTabs = tab.Select(s => new
                 {
                     TabID = s.ID,
@@ -308,7 +309,7 @@ namespace AiCard.Controllers
                 var data = new
                 {
                     Name = query.Name,
-                    Avatar = query.Avatar.SplitToArray<string>(',')[0],
+                    Avatar = query.Avatar,
                     Position = query.Position,
                     PhoneNumber = query.PhoneNumber,
                     Mobile = query.Mobile,
@@ -317,6 +318,7 @@ namespace AiCard.Controllers
                     Remark = query.Remark,
                     Video = query.Video,
                     Voice = query.Voice,
+                    Info=query.Info,
                     Images = query.Images
                 };
                 return Json(Comm.ToJsonResult("Success", "成功", data), JsonRequestBehavior.AllowGet);
@@ -337,10 +339,11 @@ namespace AiCard.Controllers
             try
             {
                 var t = db.Cards.FirstOrDefault(s => s.ID == model.CardID);
-                if (t==null) {
+                if (t == null)
+                {
                     return Json(Comm.ToJsonResult("Error", "名片不存在"), JsonRequestBehavior.AllowGet);
                 }
-                if (model.Name!=null)
+                if (model.Name != null)
                 {
                     t.Name = model.Name;
                 }
@@ -424,26 +427,37 @@ namespace AiCard.Controllers
         /// <param name="type"></param>
         /// <returns></returns>
         [AllowCrossSiteJson]
-        public ActionResult GetRankingsList(RankingsType? type, int? page = 1, int? pageSize = 20)
+        public ActionResult GetRankingsList(Enums.RankingsType? type, int enterpriseID, int? page = 1, int? pageSize = 20)
         {
             try
             {
                 int starpagesize = page.Value * pageSize.Value - pageSize.Value;
                 int endpagesize = page.Value * pageSize.Value;
-                if (type == RankingsType.Activity)
+                //拼接参数
+                SqlParameter[] parameters = {
+                        new SqlParameter("@enterpriseID", SqlDbType.Int),
+                        new SqlParameter("@starpagesize", SqlDbType.Int),
+                        new SqlParameter("@endpagesize", SqlDbType.Int)
+                    };
+                parameters[0].Value = enterpriseID;
+                parameters[1].Value = starpagesize;
+                parameters[2].Value = endpagesize;
+                if (type == Enums.RankingsType.Activity)
                 {
-                    string sqlstr = string.Format(@"SELECT * FROM (SELECT CAST(ROW_NUMBER() over(order by COUNT(c.Name) DESC) AS INTEGER) AS ornumber, c.Name, c.Avatar, COUNT(c.Name) counts FROM dbo.UserLogs ul
+                    string sqlstr = string.Format(@"SELECT * FROM (SELECT CAST(ROW_NUMBER() over(order by COUNT(c.Name) DESC) AS INTEGER) AS Ornumber, c.Name, c.Avatar, COUNT(c.Name) Counts FROM dbo.UserLogs ul
                                   INNER JOIN dbo.Cards c ON c.UserID = ul.TargetUserID WHERE ul.CreateDateTime BETWEEN dateadd(ms, 0, DATEADD(dd, DATEDIFF(dd, 0, getdate()), 0)) AND dateadd(ms, -3, DATEADD(dd, DATEDIFF(dd, -1, getdate()), 0))
-                                  GROUP BY c.Name, c.Avatar) t WHERE t.ornumber > @starpagesize AND t.ornumber<=@endpagesize", new SqlParameter("@starpagesize", starpagesize), new SqlParameter("@endpagesize", endpagesize));
-                    List<RankingModel> data = db.Database.SqlQuery<RankingModel>(sqlstr).ToList();
+                                   AND c.EnterpriseID=@enterpriseID 
+                                  GROUP BY c.Name, c.Avatar) t WHERE t.Ornumber > @starpagesize AND t.Ornumber<=@endpagesize");
+                    
+                    List<RankingModel> data = db.Database.SqlQuery<RankingModel>(sqlstr, parameters).ToList();
                     return Json(Comm.ToJsonResult("Success", "成功", data), JsonRequestBehavior.AllowGet);
                 }
                 else if (type == RankingsType.CustNumber)
                 {
-                    string sqlstr = string.Format(@"SELECT* FROM (SELECT CAST(ROW_NUMBER() over(order by COUNT(u.UserName) DESC) AS INTEGER) AS ornumber, u.UserName, u.Id, COUNT(cus.ID) AS counts FROM dbo.AspNetUsers u
+                    string sqlstr = string.Format(@"SELECT* FROM (SELECT CAST(ROW_NUMBER() over(order by COUNT(u.UserName) DESC) AS INTEGER) AS Ornumber, u.UserName, u.Id, COUNT(cus.ID) AS Counts FROM dbo.AspNetUsers u
                                                     LEFT JOIN dbo.EnterpriseUserCustomers cus ON cus.OwnerID = u.Id
-                                                    WHERE UserType = 1 GROUP BY u.UserName, u.Id)t WHERE t.ornumber WHERE t.ornumber > @starpagesize AND t.ornumber<=@endpagesize", new SqlParameter("@starpagesize", starpagesize), new SqlParameter("@endpagesize", endpagesize));
-                    List<RankingModel> data = db.Database.SqlQuery<RankingModel>(sqlstr).ToList();
+                                                    WHERE UserType = 1 AND u.EnterpriseID=@enterpriseID GROUP BY u.UserName, u.Id)t WHERE t.ornumber WHERE t.Ornumber > @starpagesize AND t.Ornumber<=@endpagesize");
+                    List<RankingModel> data = db.Database.SqlQuery<RankingModel>(sqlstr,parameters).ToList();
                     return Json(Comm.ToJsonResult("Success", "成功", data), JsonRequestBehavior.AllowGet);
                 }
                 else
@@ -463,7 +477,7 @@ namespace AiCard.Controllers
             public string Avatar { get; set; }
             public int Counts { get; set; }
         }
-        
+
 
 
         [HttpPost]
@@ -481,7 +495,7 @@ namespace AiCard.Controllers
             }
             var top = db.UserCardTops.FirstOrDefault(s => s.UserID == userID && s.CardID == cardID);
 
-         
+
             bool isTop;
             if (top == null)
             {
