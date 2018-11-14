@@ -1,4 +1,6 @@
-﻿using System;
+﻿using AiCard.Common;
+using AiCard.Common.CommModels;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -6,11 +8,11 @@ using System.Web;
 
 namespace AiCard.Models.CommModels
 {
-    public class ImageResizer : AiCard.BaseFileUpload
+    public class ImageResizer : BaseFileUpload
     {
         public ImageResizer(string name, int width, int height, string image = null,
             int pWidth = 0, int pHeight = 0,
-            CommModels.UploadServer server = UploadServer.QinQiu)
+            UploadServer server = UploadServer.QinQiu)
         {
             Name = name;
             Width = width;

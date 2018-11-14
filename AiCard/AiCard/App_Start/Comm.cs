@@ -9,6 +9,8 @@ using System.Security.Cryptography;
 using AiCard.Models.CommModels;
 using AiCard.Qiniu;
 using System.Drawing.Drawing2D;
+using AiCard.Common.Enums;
+using AiCard.Common.CommModels;
 
 namespace AiCard
 {
@@ -83,11 +85,11 @@ namespace AiCard
         /// <param name="type">不同类别保存在不同文件里面</param>
         /// <param name="message">正文</param>
         /// <param name="url">请求地址</param>
-        public static void WriteLog(string type, string message, Enums.DebugLogLevel lv, string url = "", Exception ex = null)
+        public static void WriteLog(string type, string message, DebugLogLevel lv, string url = "", Exception ex = null)
         {
             var setting = GetConfig<string>("DebugLog");
-            Enums.DebugLog sysDebugLog;
-            Enum.TryParse<Enums.DebugLog>(setting, out sysDebugLog);
+            DebugLog sysDebugLog;
+            Enum.TryParse<DebugLog>(setting, out sysDebugLog);
 
             Action writeLog = () =>
             {
@@ -102,20 +104,20 @@ namespace AiCard
 
             switch (sysDebugLog)
             {
-                case Enums.DebugLog.All:
+                case DebugLog.All:
                     writeLog();
                     break;
                 default:
-                case Enums.DebugLog.No:
+                case DebugLog.No:
                     break;
-                case Enums.DebugLog.Warning:
-                    if (lv == Enums.DebugLogLevel.Warning || lv == Enums.DebugLogLevel.Error)
+                case DebugLog.Warning:
+                    if (lv == DebugLogLevel.Warning || lv == DebugLogLevel.Error)
                     {
                         writeLog();
                     }
                     break;
-                case Enums.DebugLog.Error:
-                    if (lv == Enums.DebugLogLevel.Error)
+                case DebugLog.Error:
+                    if (lv == DebugLogLevel.Error)
                     {
                         writeLog();
                     }
@@ -137,9 +139,9 @@ namespace AiCard
         /// <returns>地址为空返回null</returns>
         public static string ResizeImage(string url, int? w = null, int? h = null,
             int? quality = null,
-            Enums.DummyImage? image = Enums.DummyImage.Default,
-            Enums.ResizerMode? mode = null,
-            Enums.ReszieScale? scale = null
+            DummyImage? image = DummyImage.Default,
+            ResizerMode? mode = null,
+            ReszieScale? scale = null
             )
         {
             var Url = new System.Web.Mvc.UrlHelper(HttpContext.Current.Request.RequestContext);
@@ -203,12 +205,12 @@ namespace AiCard
                         sbUrl.Append("?imageView2");
                         switch (mode)
                         {
-                            case Enums.ResizerMode.Pad:
+                            case ResizerMode.Pad:
                             default:
-                            case Enums.ResizerMode.Crop:
+                            case ResizerMode.Crop:
                                 sbUrl.Append("/1");
                                 break;
-                            case Enums.ResizerMode.Max:
+                            case ResizerMode.Max:
                                 sbUrl.Append("/0");
                                 break;
                         }
@@ -268,26 +270,26 @@ namespace AiCard
         }
 
 
-        public static Enums.DriveType GetDriveType()
+        public static Common.Enums.DriveType GetDriveType()
         {
             string userAgent = HttpContext.Current.Request.UserAgent.ToLower();
             if (userAgent.Contains("windows phone"))
             {
-                return Enums.DriveType.Windows;
+                return Common.Enums.DriveType.Windows;
             }
             if (userAgent.Contains("iphone;"))
             {
-                return Enums.DriveType.IPhone;
+                return Common.Enums.DriveType.IPhone;
             }
             if (userAgent.Contains("ipad;"))
             {
-                return Enums.DriveType.IPad;
+                return Common.Enums.DriveType.IPad;
             }
             if (userAgent.Contains("android"))
             {
-                return Enums.DriveType.Android;
+                return Common.Enums.DriveType.Android;
             }
-            return Enums.DriveType.Windows;
+            return Common.Enums.DriveType.Windows;
         }
 
 
@@ -538,25 +540,25 @@ namespace AiCard
                     Color boc = new Color();
                     switch (tempm.TagStyle)
                     {
-                        case Enums.CardTabStyle.Orange:
+                        case CardTabStyle.Orange:
                             {
                                 bgc = Color.FromArgb(255, 250, 249);
                                 boc = Color.FromArgb(255, 223, 214);
                             }
                             break;
-                        case Enums.CardTabStyle.Green:
+                        case CardTabStyle.Green:
                             {
                                 bgc = Color.FromArgb(249, 255, 252);
                                 boc = Color.FromArgb(190, 233, 215);
                             }
                             break;
-                        case Enums.CardTabStyle.Blue:
+                        case CardTabStyle.Blue:
                             {
                                 bgc = Color.FromArgb(249, 255, 255);
                                 boc = Color.FromArgb(214, 226, 255);
                             }
                             break;
-                        case Enums.CardTabStyle.Purple:
+                        case CardTabStyle.Purple:
                             {
                                 bgc = Color.FromArgb(252, 249, 255);
                                 boc = Color.FromArgb(234, 214, 255);

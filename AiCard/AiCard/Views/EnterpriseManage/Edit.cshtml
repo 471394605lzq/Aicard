@@ -1,4 +1,5 @@
-﻿@model AiCard.Models.EnterpriseViewModels
+﻿@using AiCard.Common.Enums
+@model AiCard.Models.EnterpriseViewModels
 @{
     ViewBag.Title = "编辑企业";
     Layout = "~/Views/Shared/_LayoutBackground.cshtml";
@@ -21,7 +22,7 @@
         <div class="form-horizontal">
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             @Html.HiddenFor(model => model.ID)
-            @if (ad.UserType == AiCard.Enums.UserType.Admin)
+            @if (ad.UserType == UserType.Admin)
             {
                 <div class="form-group">
                     @Html.LabelFor(model => model.Code, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -133,7 +134,7 @@
                     @Html.ValidationMessageFor(model => model.HomePage, "", new { @class = "text-danger" })
                 </div>
             </div>
-            @if (ad.UserType == AiCard.Enums.UserType.Admin)
+            @if (ad.UserType == UserType.Admin)
             {
                 <div class="form-group">
                     @Html.LabelFor(model => model.CardCount, htmlAttributes: new { @class = "control-label col-md-2" })

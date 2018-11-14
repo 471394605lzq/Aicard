@@ -33,8 +33,8 @@
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">选择类型 <span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="@Url.Action("Index", new { type =AiCard.Enums.ArticleType.Text  })">用户动态</a></li>
-                            <li><a href="@Url.Action("Index", new { type = AiCard.Enums.ArticleType.Html })">后台发布</a></li>
+                            <li><a href="@Url.Action("Index", new { type =AiCard.Common.Enums.ArticleType.Text  })">用户动态</a></li>
+                            <li><a href="@Url.Action("Index", new { type = AiCard.Common.Enums.ArticleType.Html })">后台发布</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -70,7 +70,7 @@
         </thead>
         @foreach (var item in Model)
         {
-            var isdisplay = item.Type == AiCard.Enums.ArticleType.Html ? "display:block" : "display:none";
+            var isdisplay = item.Type == AiCard.Common.Enums.ArticleType.Html ? "display:block" : "display:none";
             <tr>
                 <td>
                     <input data-id="@item.ID" data-item="@Newtonsoft.Json.JsonConvert.SerializeObject(item)" class="chk" type="checkbox" name="chkItem" value="" />

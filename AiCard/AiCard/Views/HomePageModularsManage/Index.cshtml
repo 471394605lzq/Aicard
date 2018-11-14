@@ -1,7 +1,7 @@
-﻿@model IEnumerable<AiCard.Models.HomePageModular>
+﻿@model IEnumerable<AiCard.DAL.Models.HomePageModular>
 @{
     ViewBag.Title = "公司主页";
-    var modularTypes = Enum.GetValues(typeof(AiCard.Enums.HomePageModularType));
+    var modularTypes = Enum.GetValues(typeof(AiCard.Common.Enums.HomePageModularType));
     Layout = "~/Views/Shared/_LayoutBackground.cshtml";
 }
 <div class="homePageModularsManageIndex">
@@ -13,9 +13,9 @@
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">添加模块 <span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="@Url.Action("CreateByHtml")">@AiCard.Enums.HomePageModularType.Html.GetDisplayName()</a></li>
-                            <li><a href="@Url.Action("CreateByImage")">@AiCard.Enums.HomePageModularType.Images.GetDisplayName()</a></li>
-                            <li><a href="@Url.Action("CreateByContact")">@AiCard.Enums.HomePageModularType.Contact.GetDisplayName()</a></li>
+                            <li><a href="@Url.Action("CreateByHtml")">@AiCard.Common.Enums.HomePageModularType.Html.GetDisplayName()</a></li>
+                            <li><a href="@Url.Action("CreateByImage")">@AiCard.Common.Enums.HomePageModularType.Images.GetDisplayName()</a></li>
+                            <li><a href="@Url.Action("CreateByContact")">@AiCard.Common.Enums.HomePageModularType.Contact.GetDisplayName()</a></li>
                         </ul>
                     </li>
                     <li><a id="btnSaveSort" href="#">保存排序</a></li>
@@ -25,7 +25,7 @@
     </nav>
     <div class="homePageModularsManageIndex-list">
         @{
-            var bannner = Model.FirstOrDefault(s => s.Type == AiCard.Enums.HomePageModularType.Banner);
+            var bannner = Model.FirstOrDefault(s => s.Type == AiCard.Common.Enums.HomePageModularType.Banner);
         }
         <div class="homePageModularsManageIndex-list-top" data-id="@bannner.ID" data-type="@((int)bannner.Type)">
             <div>@bannner.Title</div>
@@ -35,19 +35,19 @@
             <span class="glyphicon glyphicon-remove btnDelete" data-id="@bannner.ID" title="删除"></span>
         </div>
         <ul class="">
-            @foreach (var item in Model.Where(s => s.Type != AiCard.Enums.HomePageModularType.Banner))
+            @foreach (var item in Model.Where(s => s.Type != AiCard.Common.Enums.HomePageModularType.Banner))
             {
                 string url = null;
                 switch (item.Type)
                 {
-                    case AiCard.Enums.HomePageModularType.Html:
+                    case AiCard.Common.Enums.HomePageModularType.Html:
                         url = Url.Action("EditByHtml", new { id = item.ID });
                         break;
-                    case AiCard.Enums.HomePageModularType.Contact:
+                    case AiCard.Common.Enums.HomePageModularType.Contact:
                         url = Url.Action("EditByContact", new { id = item.ID });
                         break;
-                    case AiCard.Enums.HomePageModularType.Images:
-                    case AiCard.Enums.HomePageModularType.Banner:
+                    case AiCard.Common.Enums.HomePageModularType.Images:
+                    case AiCard.Common.Enums.HomePageModularType.Banner:
                         url = Url.Action("EditByImage", new { id = item.ID });
                         break;
                     default:

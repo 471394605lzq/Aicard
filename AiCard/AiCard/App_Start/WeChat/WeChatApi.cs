@@ -10,6 +10,7 @@ using System.Net.Http;
 using System.Net;
 using System.Text;
 using System.IO;
+using AiCard.Common.Enums;
 
 namespace AiCard.WeChat
 {
@@ -287,11 +288,11 @@ namespace AiCard.WeChat
                 try
                 {
                     var r2 = api.CreateRequestReturnJson();
-                    Comm.WriteLog("wechat", $"OpenID:{openID},Result:{JsonConvert.SerializeObject(r2)}", Enums.DebugLogLevel.Normal);
+                    Comm.WriteLog("wechat", $"OpenID:{openID},Result:{JsonConvert.SerializeObject(r2)}", DebugLogLevel.Normal);
                 }
                 catch (Exception ex)
                 {
-                    Comm.WriteLog("wechat", $"OpenID:{openID},Error:{ex.Message}", Enums.DebugLogLevel.Error);
+                    Comm.WriteLog("wechat", $"OpenID:{openID},Error:{ex.Message}", DebugLogLevel.Error);
                 }
 
             }

@@ -8,6 +8,7 @@ using Microsoft.AspNet.Identity;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Net;
+using AiCard.Common.Enums;
 
 namespace AiCard
 {
@@ -43,7 +44,7 @@ namespace AiCard
         /// <param name="returnUrl"></param>
         /// <returns></returns>
         public static ActionResult ToError(this Controller controller, string head,
-            string message, string returnUrl = null, Enums.Layout layout = Enums.Layout.Manage)
+            string message, string returnUrl = null, Layout layout = Layout.Manage)
         {
             var view = new ViewResult();
             view.ViewName = "Error";

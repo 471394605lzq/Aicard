@@ -4,6 +4,9 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using AiCard.Models;
+using AiCard.Common.Enums;
+using AiCard.DAL.Models;
+
 namespace AiCard.Controllers
 {
     public class ArticleController : Controller
@@ -33,13 +36,13 @@ namespace AiCard.Controllers
                             on a.UserID equals u.UserID into au
                          join ll in (from l in db.UserLogs
                                      from u in db.Users.Select(s => new { s.Id, s.NickName, s.Avatar })
-                                     where l.UserID == u.Id && l.Type == Enums.UserLogType.ArticleLike
+                                     where l.UserID == u.Id && l.Type == UserLogType.ArticleLike
                                      orderby l.CreateDateTime descending
                                      select new { l.RelationID, l.UserID, u.NickName, u.Avatar })
                             on a.ID equals ll.RelationID into all
-                         join lu in db.UserLogs.Where(s => s.Type == Enums.UserLogType.ArticleLike && s.UserID == userID)
+                         join lu in db.UserLogs.Where(s => s.Type == UserLogType.ArticleLike && s.UserID == userID)
                             on a.ID equals lu.RelationID into alu
-                         where a.State == Enums.ArticleState.Released
+                         where a.State == ArticleState.Released
                          select new
                          {
                              a.ID,
@@ -104,11 +107,11 @@ namespace AiCard.Controllers
                     Avatar = s.User.Avatar,
                     CommentCount = s.Comment.ToStrForm(4, "评论"),
                     Content = s.Content,
-                    Cover = s.Type == Enums.ArticleType.Html ? s.Images : null,
+                    Cover = s.Type == ArticleType.Html ? s.Images : null,
                     DateTime = s.UpdateDateTime.ToString("yyyy-MM-dd HH:mm:ss.fff"),
                     DateTimeStr = s.UpdateDateTime.ToStrForm(),
                     HadLike = s.HadLike,
-                    Images = s.Type == Enums.ArticleType.Text ?
+                    Images = s.Type == ArticleType.Text ?
                         (s.Images.SplitToArray<string>()?.ToArray() ?? new string[0])
                         : new string[0],
                     LikeCount = s.Like.ToStrForm(4, "点赞"),
@@ -128,7 +131,7 @@ namespace AiCard.Controllers
         [AllowCrossSiteJson]
         public ActionResult Detail(int articleID, string userID, int pageSize = 20)
         {
-            var a = db.Articles.FirstOrDefault(s => s.ID == articleID && s.State == Enums.ArticleState.Released);
+            var a = db.Articles.FirstOrDefault(s => s.ID == articleID && s.State == ArticleState.Released);
             if (a == null)
             {
                 return Json(Comm.ToJsonResult("NoFound", "动态不存在"), JsonRequestBehavior.AllowGet);
@@ -152,7 +155,7 @@ namespace AiCard.Controllers
             //var likes = (from u in db.Users
             //             from l in db.UserLogs
             //             where u.Id == l.UserID
-            //             && l.Type == Enums.UserLogType.ArticleLike
+            //             && l.Type == UserLogType.ArticleLike
             //             && l.RelationID == articleID
             //             orderby l.CreateDateTime descending
             //             select new
@@ -163,7 +166,7 @@ namespace AiCard.Controllers
             //             }).ToPagedList(1, pageSize);
             var hadLike = db.UserLogs
                 .Any(s => s.RelationID == articleID
-                 && s.Type == Enums.UserLogType.ArticleLike
+                 && s.Type == UserLogType.ArticleLike
                  && s.UserID == userID);
             var model = new
             {
@@ -175,7 +178,7 @@ namespace AiCard.Controllers
                 LikeCount = a.Like.ToStrForm(4, "点赞"),
                 Title = a.Title,
                 a.Content,
-                Images = a.Type == Enums.ArticleType.Html ? new string[0] : (a.Images.SplitToArray<string>()?.ToArray() ?? new string[0]),
+                Images = a.Type == ArticleType.Html ? new string[0] : (a.Images.SplitToArray<string>()?.ToArray() ?? new string[0]),
                 //LikeUser = new
                 //{
                 //    Page = new
@@ -213,7 +216,7 @@ namespace AiCard.Controllers
                 a.Type,
                 ShareCount = a.Share.ToStrForm(4, "分享"),
                 c.Position,
-                Cover = a.Type == Enums.ArticleType.Html ? a.Images.SplitToArray<string>()[0] : null,
+                Cover = a.Type == ArticleType.Html ? a.Images.SplitToArray<string>()[0] : null,
                 UserName = c.Name,
 
             };
@@ -223,13 +226,13 @@ namespace AiCard.Controllers
         [AllowCrossSiteJson]
         public ActionResult LikeList(int articleID, int page = 1, int pageSize = 20)
         {
-            if (!db.Articles.Any(s => s.ID == articleID && s.State == Enums.ArticleState.Released))
+            if (!db.Articles.Any(s => s.ID == articleID && s.State == ArticleState.Released))
             {
                 return Json(Comm.ToJsonResult("CardNoFound", "动态不存在"), JsonRequestBehavior.AllowGet);
             }
             var paged = (from u in db.Users
                          from l in db.UserLogs
-                         where u.Id == l.UserID && l.RelationID == articleID && l.Type == Enums.UserLogType.ArticleLike
+                         where u.Id == l.UserID && l.RelationID == articleID && l.Type == UserLogType.ArticleLike
                          orderby l.CreateDateTime descending
                          select new { u.Avatar, UserName = u.NickName })
                          .ToPagedList(page, pageSize);
@@ -259,10 +262,10 @@ namespace AiCard.Controllers
                     model.UserID = UserID;
                     model.Content = Content;
                     model.Images = Images;
-                    model.Type = Enums.ArticleType.Text;
+                    model.Type = ArticleType.Text;
                     model.CreateDateTime = DateTime.Now;
                     model.UpdateDateTime = DateTime.Now;
-                    model.State = Enums.ArticleState.Wait;
+                    model.State = ArticleState.Wait;
                     model.Comment = 0;
                     model.Share = 0;
                     model.Like = 0;

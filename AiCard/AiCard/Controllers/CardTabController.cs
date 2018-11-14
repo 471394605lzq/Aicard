@@ -4,6 +4,9 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using AiCard.Models;
+using AiCard.Common.Enums;
+using AiCard.DAL.Models;
+
 namespace AiCard.Controllers
 {
     public class CardTabController : Controller
@@ -34,7 +37,7 @@ namespace AiCard.Controllers
                 return Json(Comm.ToJsonResult("HadAdd", $"{name}已经存在"));
             }
             var randam = Comm.Random.Next(3);
-            var tab = new CardTab { CardID = cardID, Name = name, Style = (Enums.CardTabStyle)randam };
+            var tab = new CardTab { CardID = cardID, Name = name, Style = (CardTabStyle)randam };
             db.CardTabs.Add(tab);
             db.SaveChanges();
             return Json(Comm.ToJsonResult("Success", "添加成功"));

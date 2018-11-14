@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using AiCard.Models;
+using AiCard.Common.Enums;
+using AiCard.DAL.Models;
+
 namespace AiCard.Bll
 {
     public class HomePageModulars : IDisposable
@@ -29,10 +32,10 @@ namespace AiCard.Bll
         public List<HomePageModular> Init()
         {
             var modulars = new HomePageModular[] {
-                 new HomePageModular { Title = "头部轮播",Type= Enums.HomePageModularType.Banner },
-                 new HomePageModular { Title = "公司简介",Type= Enums.HomePageModularType.Images },
-                 new HomePageModular { Title = "产品介绍",Type= Enums.HomePageModularType.Images },
-                 new HomePageModular { Title = "联系方式" ,Type= Enums.HomePageModularType.Contact },
+                 new HomePageModular { Title = "头部轮播",Type= HomePageModularType.Banner },
+                 new HomePageModular { Title = "公司简介",Type= HomePageModularType.Images },
+                 new HomePageModular { Title = "产品介绍",Type= HomePageModularType.Images },
+                 new HomePageModular { Title = "联系方式" ,Type= HomePageModularType.Contact },
             };
             for (int i = 0; i < modulars.Length; i++)
             {

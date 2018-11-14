@@ -1,4 +1,7 @@
-﻿using System;
+﻿using AiCard.Common;
+using AiCard.Common.CommModels;
+using AiCard.Common.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
@@ -12,7 +15,7 @@ namespace AiCard.Models
 
         public CardCreateEditViewModel()
         {
-
+            
         }
 
         public string UserID { get; set; }
@@ -32,14 +35,14 @@ namespace AiCard.Models
         public string Name { get; set; }
 
         [Display(Name = "头像")]
-        public Models.CommModels.FileUpload Avatar { get; set; } = new CommModels.FileUpload
+        public FileUpload Avatar { get; set; } = new FileUpload
         {
             AutoInit = true,
             Max = 5,
             Name = "Avatar",
-            Server = CommModels.UploadServer.QinQiu,
+            Server = UploadServer.QinQiu,
             Sortable = true,
-            Type = CommModels.FileType.Image,
+            Type = Common.CommModels.FileType.Image,
         };
 
         [Display(Name = "座机")]
@@ -65,7 +68,7 @@ namespace AiCard.Models
         public string Position { get; set; }
 
         [Display(Name = "性别")]
-        public Enums.Gender Gender { get; set; }
+        public Gender Gender { get; set; }
 
         [Display(Name = "签名")]
         public string Remark { get; set; }
@@ -75,37 +78,37 @@ namespace AiCard.Models
 
         [Display(Name = "语音")]
         //public string Voice { get; set; }
-        public Models.CommModels.FileUpload Voice { get; set; } = new CommModels.FileUpload
+        public FileUpload Voice { get; set; } = new FileUpload
         {
             AutoInit = true,
             Max = 5,
             Name = "Voice",
-            Server = CommModels.UploadServer.QinQiu,
+            Server = UploadServer.QinQiu,
             Sortable = true,
-            Type = CommModels.FileType.Sound,
+            Type = Common.CommModels.FileType.Sound,
         };
 
         [Display(Name = "视频")]
         //public string Video { get; set; }
-        public Models.CommModels.FileUpload Video { get; set; } = new CommModels.FileUpload
+        public FileUpload Video { get; set; } = new FileUpload
         {
             AutoInit = true,
             Max = 5,
             Name = "Video",
-            Server = CommModels.UploadServer.QinQiu,
+            Server = UploadServer.QinQiu,
             Sortable = true,
-            Type = CommModels.FileType.Video,
+            Type = Common.CommModels.FileType.Video,
         };
 
         [Display(Name = "图片")]
-        public Models.CommModels.FileUpload Images { get; set; } = new CommModels.FileUpload
+        public FileUpload Images { get; set; } = new FileUpload
         {
             AutoInit = true,
             Max = 5,
             Name = "Images",
-            Server = CommModels.UploadServer.QinQiu,
+            Server = UploadServer.QinQiu,
             Sortable = true,
-            Type = CommModels.FileType.Image,
+            Type = Common.CommModels.FileType.Image,
         };
 
         [Display(Name = "排序")]
@@ -192,7 +195,7 @@ namespace AiCard.Models
         public string Position { get; set; }
 
         [Display(Name = "性别")]
-        public Enums.Gender Gender { get; set; }
+        public Gender Gender { get; set; }
 
         [Display(Name = "签名")]
         public string Remark { get; set; }

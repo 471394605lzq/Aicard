@@ -1,0 +1,322 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{1EE23CC6-A120-4730-AAA2-7295BD1A108A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>AiCard.DAL</RootNamespace>
+    <AssemblyName>AiCard.DAL</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.2\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.EntityFramework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.2\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.6\lib\net45\System.Web.Helpers.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.6\lib\net45\System.Web.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.6\lib\net45\System.Web.WebPages.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.6\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.6\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Migrations\201810030625179_AddUserAndRole.cs" />
+    <Compile Include="Migrations\201810030625179_AddUserAndRole.designer.cs">
+      <DependentUpon>201810030625179_AddUserAndRole.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201810030629596_RoleAddTypeGroupDesc.cs" />
+    <Compile Include="Migrations\201810030629596_RoleAddTypeGroupDesc.designer.cs">
+      <DependentUpon>201810030629596_RoleAddTypeGroupDesc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201810040802295_AddRoleGroup.cs" />
+    <Compile Include="Migrations\201810040802295_AddRoleGroup.designer.cs">
+      <DependentUpon>201810040802295_AddRoleGroup.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201810050232520_UserAddEnterpriseID.cs" />
+    <Compile Include="Migrations\201810050232520_UserAddEnterpriseID.designer.cs">
+      <DependentUpon>201810050232520_UserAddEnterpriseID.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201810050639377_UserChnageEniterpriseID.cs" />
+    <Compile Include="Migrations\201810050639377_UserChnageEniterpriseID.designer.cs">
+      <DependentUpon>201810050639377_UserChnageEniterpriseID.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201810060930252_AddEnterprises.cs" />
+    <Compile Include="Migrations\201810060930252_AddEnterprises.designer.cs">
+      <DependentUpon>201810060930252_AddEnterprises.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201810090656140_UserAddNickNameAndAvatar.cs" />
+    <Compile Include="Migrations\201810090656140_UserAddNickNameAndAvatar.designer.cs">
+      <DependentUpon>201810090656140_UserAddNickNameAndAvatar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201810110834161_AddCard.cs" />
+    <Compile Include="Migrations\201810110834161_AddCard.designer.cs">
+      <DependentUpon>201810110834161_AddCard.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201810111030337_AddArticle.cs" />
+    <Compile Include="Migrations\201810111030337_AddArticle.designer.cs">
+      <DependentUpon>201810111030337_AddArticle.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201810111156517_ArticleDeleteEnableAddState.cs" />
+    <Compile Include="Migrations\201810111156517_ArticleDeleteEnableAddState.designer.cs">
+      <DependentUpon>201810111156517_ArticleDeleteEnableAddState.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201810130255490_AddUserLogs.cs" />
+    <Compile Include="Migrations\201810130255490_AddUserLogs.designer.cs">
+      <DependentUpon>201810130255490_AddUserLogs.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201810130303156_AddProductsAndProductKind.cs" />
+    <Compile Include="Migrations\201810130303156_AddProductsAndProductKind.designer.cs">
+      <DependentUpon>201810130303156_AddProductsAndProductKind.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201810180133010_EnterpriseAddWeChatWorkCorpIDAndWeChatWorkSecret.cs" />
+    <Compile Include="Migrations\201810180133010_EnterpriseAddWeChatWorkCorpIDAndWeChatWorkSecret.designer.cs">
+      <DependentUpon>201810180133010_EnterpriseAddWeChatWorkCorpIDAndWeChatWorkSecret.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201810180706124_AddHomePageModulars.cs" />
+    <Compile Include="Migrations\201810180706124_AddHomePageModulars.designer.cs">
+      <DependentUpon>201810180706124_AddHomePageModulars.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201810230915321_AddCardTabs.cs" />
+    <Compile Include="Migrations\201810230915321_AddCardTabs.designer.cs">
+      <DependentUpon>201810230915321_AddCardTabs.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201810240602250_CardAddViewAndLike.cs" />
+    <Compile Include="Migrations\201810240602250_CardAddViewAndLike.designer.cs">
+      <DependentUpon>201810240602250_CardAddViewAndLike.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201810250845464_ProductAddOriginalPrice.cs" />
+    <Compile Include="Migrations\201810250845464_ProductAddOriginalPrice.designer.cs">
+      <DependentUpon>201810250845464_ProductAddOriginalPrice.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201810290736022_ArticleAddUpdateDateTimeAndTypeAndShare.cs" />
+    <Compile Include="Migrations\201810290736022_ArticleAddUpdateDateTimeAndTypeAndShare.designer.cs">
+      <DependentUpon>201810290736022_ArticleAddUpdateDateTimeAndTypeAndShare.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201811021236226_AddUserProductTop.cs" />
+    <Compile Include="Migrations\201811021236226_AddUserProductTop.designer.cs">
+      <DependentUpon>201811021236226_AddUserProductTop.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201811021240475_AddUserCardTop.cs" />
+    <Compile Include="Migrations\201811021240475_AddUserCardTop.designer.cs">
+      <DependentUpon>201811021240475_AddUserCardTop.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201811050329097_AddEnterpriseCustomerAndEnterpriseCustomerRemark.cs" />
+    <Compile Include="Migrations\201811050329097_AddEnterpriseCustomerAndEnterpriseCustomerRemark.designer.cs">
+      <DependentUpon>201811050329097_AddEnterpriseCustomerAndEnterpriseCustomerRemark.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201811050332306_AddCustomerTabAndCustomerTabGroup.cs" />
+    <Compile Include="Migrations\201811050332306_AddCustomerTabAndCustomerTabGroup.designer.cs">
+      <DependentUpon>201811050332306_AddCustomerTabAndCustomerTabGroup.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201811050338025_DeleteOwnerIDAndCardID.cs" />
+    <Compile Include="Migrations\201811050338025_DeleteOwnerIDAndCardID.designer.cs">
+      <DependentUpon>201811050338025_DeleteOwnerIDAndCardID.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201811050353015_CustomerTabGroupAddEnterpriseID.cs" />
+    <Compile Include="Migrations\201811050353015_CustomerTabGroupAddEnterpriseID.designer.cs">
+      <DependentUpon>201811050353015_CustomerTabGroupAddEnterpriseID.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201811050907409_CardAddSortAndAddEnterpriseCustomerTab.cs" />
+    <Compile Include="Migrations\201811050907409_CardAddSortAndAddEnterpriseCustomerTab.designer.cs">
+      <DependentUpon>201811050907409_CardAddSortAndAddEnterpriseCustomerTab.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201811060206298_CustomerTabChangeSortType.cs" />
+    <Compile Include="Migrations\201811060206298_CustomerTabChangeSortType.designer.cs">
+      <DependentUpon>201811060206298_CustomerTabChangeSortType.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201811100917083_AddEnterpriseCustomerRemarkChangeName.cs" />
+    <Compile Include="Migrations\201811100917083_AddEnterpriseCustomerRemarkChangeName.designer.cs">
+      <DependentUpon>201811100917083_AddEnterpriseCustomerRemarkChangeName.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201811130218454_AddUserSpeechsAndUserSpeechTypes.cs" />
+    <Compile Include="Migrations\201811130218454_AddUserSpeechsAndUserSpeechTypes.designer.cs">
+      <DependentUpon>201811130218454_AddUserSpeechsAndUserSpeechTypes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\ArticleModels.cs" />
+    <Compile Include="Models\CardModels.cs" />
+    <Compile Include="Models\CustomerTabModels.cs" />
+    <Compile Include="Models\EnterpriseCustomerModels.cs" />
+    <Compile Include="Models\EnterpriseModels.cs" />
+    <Compile Include="Models\HomePageModular.cs" />
+    <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\ProductModels.cs" />
+    <Compile Include="Models\RoleGroup.cs" />
+    <Compile Include="Models\RolesModel.cs" />
+    <Compile Include="Models\UserCardTop.cs" />
+    <Compile Include="Models\UserLog.cs" />
+    <Compile Include="Models\UserProductTop.cs" />
+    <Compile Include="Models\UserSpeechModels.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AiCard.Commom\AiCard.Common.csproj">
+      <Project>{B5FF40C2-CEE8-43ED-8722-99638716BBB1}</Project>
+      <Name>AiCard.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201810030625179_AddUserAndRole.resx">
+      <DependentUpon>201810030625179_AddUserAndRole.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810030629596_RoleAddTypeGroupDesc.resx">
+      <DependentUpon>201810030629596_RoleAddTypeGroupDesc.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810040802295_AddRoleGroup.resx">
+      <DependentUpon>201810040802295_AddRoleGroup.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810050232520_UserAddEnterpriseID.resx">
+      <DependentUpon>201810050232520_UserAddEnterpriseID.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810050639377_UserChnageEniterpriseID.resx">
+      <DependentUpon>201810050639377_UserChnageEniterpriseID.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810060930252_AddEnterprises.resx">
+      <DependentUpon>201810060930252_AddEnterprises.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810090656140_UserAddNickNameAndAvatar.resx">
+      <DependentUpon>201810090656140_UserAddNickNameAndAvatar.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810110834161_AddCard.resx">
+      <DependentUpon>201810110834161_AddCard.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810111030337_AddArticle.resx">
+      <DependentUpon>201810111030337_AddArticle.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810111156517_ArticleDeleteEnableAddState.resx">
+      <DependentUpon>201810111156517_ArticleDeleteEnableAddState.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810130255490_AddUserLogs.resx">
+      <DependentUpon>201810130255490_AddUserLogs.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810130303156_AddProductsAndProductKind.resx">
+      <DependentUpon>201810130303156_AddProductsAndProductKind.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810180133010_EnterpriseAddWeChatWorkCorpIDAndWeChatWorkSecret.resx">
+      <DependentUpon>201810180133010_EnterpriseAddWeChatWorkCorpIDAndWeChatWorkSecret.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810180706124_AddHomePageModulars.resx">
+      <DependentUpon>201810180706124_AddHomePageModulars.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810230915321_AddCardTabs.resx">
+      <DependentUpon>201810230915321_AddCardTabs.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810240602250_CardAddViewAndLike.resx">
+      <DependentUpon>201810240602250_CardAddViewAndLike.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810250845464_ProductAddOriginalPrice.resx">
+      <DependentUpon>201810250845464_ProductAddOriginalPrice.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810290736022_ArticleAddUpdateDateTimeAndTypeAndShare.resx">
+      <DependentUpon>201810290736022_ArticleAddUpdateDateTimeAndTypeAndShare.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201811021236226_AddUserProductTop.resx">
+      <DependentUpon>201811021236226_AddUserProductTop.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201811021240475_AddUserCardTop.resx">
+      <DependentUpon>201811021240475_AddUserCardTop.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201811050329097_AddEnterpriseCustomerAndEnterpriseCustomerRemark.resx">
+      <DependentUpon>201811050329097_AddEnterpriseCustomerAndEnterpriseCustomerRemark.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201811050332306_AddCustomerTabAndCustomerTabGroup.resx">
+      <DependentUpon>201811050332306_AddCustomerTabAndCustomerTabGroup.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201811050338025_DeleteOwnerIDAndCardID.resx">
+      <DependentUpon>201811050338025_DeleteOwnerIDAndCardID.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201811050353015_CustomerTabGroupAddEnterpriseID.resx">
+      <DependentUpon>201811050353015_CustomerTabGroupAddEnterpriseID.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201811050907409_CardAddSortAndAddEnterpriseCustomerTab.resx">
+      <DependentUpon>201811050907409_CardAddSortAndAddEnterpriseCustomerTab.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201811060206298_CustomerTabChangeSortType.resx">
+      <DependentUpon>201811060206298_CustomerTabChangeSortType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201811100917083_AddEnterpriseCustomerRemarkChangeName.resx">
+      <DependentUpon>201811100917083_AddEnterpriseCustomerRemarkChangeName.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201811130218454_AddUserSpeechsAndUserSpeechTypes.resx">
+      <DependentUpon>201811130218454_AddUserSpeechsAndUserSpeechTypes.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

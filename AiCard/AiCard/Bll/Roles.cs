@@ -5,6 +5,8 @@ using System.Web;
 using AiCard.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using AiCard.Common.Enums;
+using AiCard.DAL.Models;
 
 namespace AiCard.Bll
 {
@@ -67,7 +69,7 @@ namespace AiCard.Bll
                     Description = desc,
                     Group = gourp,
                     Name = name,
-                    Type = Enums.RoleType.Enterprise
+                    Type = RoleType.Enterprise
                 });
             };
 
@@ -131,7 +133,7 @@ namespace AiCard.Bll
                     Description = desc,
                     Group = gourp,
                     Name = name,
-                    Type = Enums.RoleType.System
+                    Type = RoleType.System
                 });
 
             };

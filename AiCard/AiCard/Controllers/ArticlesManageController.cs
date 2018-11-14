@@ -8,6 +8,8 @@ using System.Web;
 using System.Web.Mvc;
 using AiCard.Models;
 using Newtonsoft.Json;
+using AiCard.Common.Enums;
+using AiCard.DAL.Models;
 
 namespace AiCard.Controllers
 {
@@ -30,7 +32,7 @@ namespace AiCard.Controllers
 
         [Authorize(Roles = SysRole.ArticlesManageRead + "," + SysRole.EArticlesManageRead)]
         // GET: ArticlesManage
-        public ActionResult Index(string filter, Enums.ArticleType type=Enums.ArticleType.Html, int? page = 1)
+        public ActionResult Index(string filter, ArticleType type=ArticleType.Html, int? page = 1)
         {
             Sidebar();
             var m = from a in db.Articles
@@ -56,7 +58,7 @@ namespace AiCard.Controllers
                 m = m.Where(s => s.Title.Contains(filter));
             }
             //如果是企业用户则只查询该企业信息
-            if (AccontData.UserType == Enums.UserType.Enterprise)
+            if (AccontData.UserType == UserType.Enterprise)
             {
                 m = m.Where(s => s.EnterpriseID == AccontData.EnterpriseID);
             }
@@ -101,7 +103,7 @@ namespace AiCard.Controllers
             Sidebar();
             var tempuser = db.Users.FirstOrDefault(s => s.Id == AccontData.UserID);
             //防止企业用户串号修改
-            if (AccontData.UserType == Enums.UserType.Enterprise
+            if (AccontData.UserType == UserType.Enterprise
                 && tempuser.EnterpriseID != AccontData.EnterpriseID)
             {
                 return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
@@ -114,13 +116,13 @@ namespace AiCard.Controllers
                     Images = "",
                     Like = 0,
                     Share = 0,
-                    State = Enums.ArticleState.Wait,
+                    State = ArticleState.Wait,
                     Comment = 0,
                     Content = article.Content,
                     CreateDateTime = DateTime.Now,
                     EnterpriseID = AccontData.EnterpriseID,
                     Title = article.Title,
-                    Type = Enums.ArticleType.Html,
+                    Type = ArticleType.Html,
                     UpdateDateTime = DateTime.Now,
                     UserID = AccontData.UserID,
                     Video = ""
@@ -144,12 +146,12 @@ namespace AiCard.Controllers
             Sidebar();
             var temp = db.Articles.FirstOrDefault(s => s.ID == id);
             //防止企业用户串号修改
-            if (AccontData.UserType == Enums.UserType.Enterprise
+            if (AccontData.UserType == UserType.Enterprise
                 && temp.EnterpriseID != AccontData.EnterpriseID)
             {
                 return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
             }
-            else if (temp.Type==Enums.ArticleType.Text) {
+            else if (temp.Type==ArticleType.Text) {
                 return this.ToError("错误", "用户动态不可编辑", Url.Action("Index"));
             }
             var models = new Article
@@ -177,14 +179,14 @@ namespace AiCard.Controllers
         {
             var temp = db.Articles.FirstOrDefault(s => s.ID == article.ID);
             //防止企业用户串号修改
-            if (AccontData.UserType == Enums.UserType.Enterprise
+            if (AccontData.UserType == UserType.Enterprise
                 && temp.EnterpriseID != AccontData.EnterpriseID)
             {
                 return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
             }
             if (ModelState.IsValid)
             {
-                if (article.Type == Enums.ArticleType.Html)
+                if (article.Type == ArticleType.Html)
                 {
                     var t = db.Articles.FirstOrDefault(s => s.ID == article.ID);
                     t.ID = article.ID;
@@ -206,7 +208,7 @@ namespace AiCard.Controllers
         {
             var temp = db.Articles.FirstOrDefault(s => s.ID == id);
             //防止企业用户串号修改
-            if (AccontData.UserType == Enums.UserType.Enterprise
+            if (AccontData.UserType == UserType.Enterprise
                 && temp.EnterpriseID != AccontData.EnterpriseID)
             {
                 return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
@@ -231,7 +233,7 @@ namespace AiCard.Controllers
         {
             var temp = db.Articles.FirstOrDefault(s => s.ID == id);
             //防止企业用户串号修改
-            if (AccontData.UserType == Enums.UserType.Enterprise
+            if (AccontData.UserType == UserType.Enterprise
                 && temp.EnterpriseID != AccontData.EnterpriseID)
             {
                 return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
@@ -254,12 +256,12 @@ namespace AiCard.Controllers
             Sidebar();
             //var temp = db.Articles.FirstOrDefault(s => s.ID == id);
             ////防止企业用户串号修改
-            //if (AccontData.UserType == Enums.UserType.Enterprise
+            //if (AccontData.UserType == UserType.Enterprise
             //    && temp.EnterpriseID != AccontData.EnterpriseID)
             //{
             //    return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
             //}
-            //else if (temp.Type == Enums.ArticleType.Text)
+            //else if (temp.Type == ArticleType.Text)
             //{
             //    return this.ToError("错误", "用户动态不可编辑", Url.Action("Index"));
             //}
@@ -270,7 +272,7 @@ namespace AiCard.Controllers
                 {
                     var t = db.Articles.FirstOrDefault(s => s.ID == item.ID);
                     t.ID = item.ID;
-                    t.State = Enums.ArticleState.Released;
+                    t.State = ArticleState.Released;
                     db.SaveChanges();
                 }
                 catch (Exception ex)

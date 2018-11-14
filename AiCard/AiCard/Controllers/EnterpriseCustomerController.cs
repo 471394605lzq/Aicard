@@ -1,4 +1,6 @@
-﻿using AiCard.Models;
+﻿using AiCard.Common.Enums;
+using AiCard.DAL.Models;
+using AiCard.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -125,7 +127,7 @@ namespace AiCard.Controllers
                     return Json(Comm.ToJsonResult("HadAdd", $"{tabsName}已经存在"));
                 }
                 var randam = Comm.Random.Next(3);
-                var tab = new EnterpriseCustomerTab { CreateDateTime = DateTime.Now, Name = tabsName, Style = (Enums.CardTabStyle)randam, CustomerID = customerID, OwnerID = ownerID };
+                var tab = new EnterpriseCustomerTab { CreateDateTime = DateTime.Now, Name = tabsName, Style = (CardTabStyle)randam, CustomerID = customerID, OwnerID = ownerID };
                 db.EnterpriseCustomerTabs.Add(tab);
                 db.SaveChanges();
                 var returndata = new

@@ -10,7 +10,6 @@ using Microsoft.Owin.Security;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
-using AiCard.Enums;
 using System.Net;
 using AiCard.Models.CommModels;
 using System.Data;
@@ -18,6 +17,10 @@ using System.Data.SqlClient;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using PagedList;
+using AiCard.Common.Enums;
+using AiCard.Common.CommModels;
+using AiCard.Common;
+using AiCard.DAL.Models;
 
 namespace AiCard.Controllers
 {
@@ -421,13 +424,13 @@ namespace AiCard.Controllers
         /// <param name="type"></param>
         /// <returns></returns>
         [AllowCrossSiteJson]
-        public ActionResult GetRankingsList(Enums.RankingsType? type, int? page = 1, int? pageSize = 20)
+        public ActionResult GetRankingsList(RankingsType? type, int? page = 1, int? pageSize = 20)
         {
             try
             {
                 int starpagesize = page.Value * pageSize.Value - pageSize.Value;
                 int endpagesize = page.Value * pageSize.Value;
-                if (type == Enums.RankingsType.Activity)
+                if (type == RankingsType.Activity)
                 {
                     string sqlstr = string.Format(@"SELECT * FROM (SELECT CAST(ROW_NUMBER() over(order by COUNT(c.Name) DESC) AS INTEGER) AS ornumber, c.Name, c.Avatar, COUNT(c.Name) counts FROM dbo.UserLogs ul
                                   INNER JOIN dbo.Cards c ON c.UserID = ul.TargetUserID WHERE ul.CreateDateTime BETWEEN dateadd(ms, 0, DATEADD(dd, DATEDIFF(dd, 0, getdate()), 0)) AND dateadd(ms, -3, DATEADD(dd, DATEDIFF(dd, -1, getdate()), 0))
@@ -435,7 +438,7 @@ namespace AiCard.Controllers
                     List<RankingModel> data = db.Database.SqlQuery<RankingModel>(sqlstr).ToList();
                     return Json(Comm.ToJsonResult("Success", "成功", data), JsonRequestBehavior.AllowGet);
                 }
-                else if (type == Enums.RankingsType.CustNumber)
+                else if (type == RankingsType.CustNumber)
                 {
                     string sqlstr = string.Format(@"SELECT* FROM (SELECT CAST(ROW_NUMBER() over(order by COUNT(u.UserName) DESC) AS INTEGER) AS ornumber, u.UserName, u.Id, COUNT(cus.ID) AS counts FROM dbo.AspNetUsers u
                                                     LEFT JOIN dbo.EnterpriseUserCustomers cus ON cus.OwnerID = u.Id

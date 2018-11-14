@@ -8,6 +8,8 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using AiCard.WeChatWork;
+using AiCard.Common.Enums;
+using AiCard.DAL.Models;
 
 namespace AiCard.Controllers
 {
@@ -54,7 +56,7 @@ namespace AiCard.Controllers
         }
 
         [Authorize(Roles = SysRole.UserManageRead + "," + SysRole.EUserManageRead)]
-        public ActionResult Index(string filter, Enums.UserType? userType, int page = 1)
+        public ActionResult Index(string filter, UserType? userType, int page = 1)
         {
             Sidebar();
 
@@ -71,7 +73,7 @@ namespace AiCard.Controllers
                             Role = r
                         };
 
-            if (usertype == Enums.UserType.Enterprise)
+            if (usertype == UserType.Enterprise)
             {
                 users = users.Where(s => s.User.EnterpriseID == enterpriseID);
             }
@@ -125,7 +127,7 @@ namespace AiCard.Controllers
             var hasUser = db.Users.Any(s => s.UserName == model.Name);
             var userType = AccountData.UserType;
             //企业用户添加的用户企业ID为0，企业用户添加的和当前用户一致
-            var enterpriseID = userType == Enums.UserType.Admin ? 0 : AccountData.EnterpriseID;
+            var enterpriseID = userType == UserType.Admin ? 0 : AccountData.EnterpriseID;
             if (hasUser)
             {
                 ModelState.AddModelError("Name", "帐号已经存在");
@@ -140,7 +142,7 @@ namespace AiCard.Controllers
             var user = new ApplicationUser
             {
                 UserName = model.Name,
-                UserType = Enums.UserType.Admin,
+                UserType = UserType.Admin,
                 RegisterDateTime = DateTime.Now,
                 RoleGroupID = model.RoleGroupID,
                 LastLoginDateTime = DateTime.Now,

@@ -4,6 +4,9 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using AiCard.Models;
+using AiCard.Common.Enums;
+using AiCard.DAL.Models;
+
 namespace AiCard.Controllers
 {
     [Authorize]
@@ -43,21 +46,21 @@ namespace AiCard.Controllers
                     s.EnterpriseID,
                     s.Content
                 });
-            if (!filter.Any(s => s.Type == Enums.HomePageModularType.Banner))
+            if (!filter.Any(s => s.Type == HomePageModularType.Banner))
             {
                 db.HomePageModulars.Add(new HomePageModular
                 {
                     EnterpriseID = eid,
                     Sort = -1,
                     Title = "顶部轮播图",
-                    Type = Enums.HomePageModularType.Banner
+                    Type = HomePageModularType.Banner
                 });
                 db.HomePageModulars.Add(new HomePageModular
                 {
                     EnterpriseID = eid,
                     Sort = 1,
                     Title = "联系方式",
-                    Type = Enums.HomePageModularType.Contact
+                    Type = HomePageModularType.Contact
                 });
                 db.SaveChanges();
             }
@@ -243,7 +246,7 @@ namespace AiCard.Controllers
             Sidebar();
             var contact = db.HomePageModulars
                 .FirstOrDefault(s => s.EnterpriseID == EnterpriseID
-                && s.Type == Enums.HomePageModularType.Contact);
+                && s.Type == HomePageModularType.Contact);
             if (contact != null)
             {
                 return this.ToError("警告", "联系方式模块已存在", Url.Action("Index"));
@@ -270,7 +273,7 @@ namespace AiCard.Controllers
             Sidebar();
             var contact = db.HomePageModulars
                 .FirstOrDefault(s => s.EnterpriseID == EnterpriseID
-                && s.Type == Enums.HomePageModularType.Contact);
+                && s.Type == HomePageModularType.Contact);
             if (contact != null)
             {
                 return this.ToError("警告", "联系方式模块已存在", Url.Action("Index"));
@@ -299,7 +302,7 @@ namespace AiCard.Controllers
             var contact = db.HomePageModulars
                 .FirstOrDefault(s => s.ID == id 
                 && s.EnterpriseID == EnterpriseID
-                && s.Type == Enums.HomePageModularType.Contact);
+                && s.Type == HomePageModularType.Contact);
             if (contact == null)
             {
                 return this.ToError("错误", "模块不存在", Url.Action("Index"));
@@ -327,7 +330,7 @@ namespace AiCard.Controllers
             var contact = db.HomePageModulars
                 .FirstOrDefault(s => s.ID == model.ID 
                 && s.EnterpriseID == EnterpriseID
-                && s.Type == Enums.HomePageModularType.Contact);
+                && s.Type == HomePageModularType.Contact);
             if (contact == null)
             {
                 return this.ToError("错误", "模块不存在", Url.Action("Index"));

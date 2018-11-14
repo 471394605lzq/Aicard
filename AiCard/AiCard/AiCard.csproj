@@ -99,8 +99,8 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Qiniu.7.3.1.1\lib\Net40\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="NPOI, Version=2.3.0.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
@@ -251,10 +251,8 @@
     <Compile Include="App_Start\ActionFilterAttributes.cs" />
     <Compile Include="App_Start\Api.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
-    <Compile Include="App_Start\ChinaPCAS.cs" />
     <Compile Include="App_Start\Comm.cs" />
     <Compile Include="App_Start\DrawingPictures.cs" />
-    <Compile Include="App_Start\Enums.cs" />
     <Compile Include="App_Start\Extensions\ActionFilterAttributes.cs" />
     <Compile Include="App_Start\Extensions\ControllerExtensions.cs" />
     <Compile Include="App_Start\Extensions\IntExtensions.cs" />
@@ -268,15 +266,9 @@
     <Compile Include="App_Start\Extensions\StringExtensions.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />
-    <Compile Include="App_Start\Interface\IDistrict.cs" />
-    <Compile Include="App_Start\Interface\IErrorReusult.cs" />
-    <Compile Include="App_Start\Interface\IFileUpload.cs" />
-    <Compile Include="App_Start\Interface\IGprs.cs" />
-    <Compile Include="App_Start\Interface\ISms.cs" />
     <Compile Include="App_Start\Log.cs" />
     <Compile Include="App_Start\Qiniu\QinQiuApi.cs" />
     <Compile Include="App_Start\QrCode.cs" />
-    <Compile Include="App_Start\Reg.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\SteamCheck.cs" />
@@ -435,39 +427,23 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
-    <Compile Include="Models\ArticleModels.cs" />
+    <Compile Include="Models\ArticleViewModel.cs" />
     <Compile Include="Models\ArticleViewModels.cs" />
-    <Compile Include="Models\CardModels.cs" />
     <Compile Include="Models\CardViewModels.cs" />
-    <Compile Include="Models\CommModels\Cell.cs" />
-    <Compile Include="Models\CommModels\ChinaPCASCom.cs" />
-    <Compile Include="Models\CommModels\DrawingPictureModel.cs" />
-    <Compile Include="Models\CommModels\FileUpload.cs" />
-    <Compile Include="Models\CommModels\HtmlHelpModels.cs" />
     <Compile Include="Models\CommModels\ImageResizer.cs" />
-    <Compile Include="Models\CommModels\Map.cs" />
-    <Compile Include="Models\CommModels\Menu.cs" />
-    <Compile Include="Models\EnterpriseCustomerModels.cs" />
-    <Compile Include="Models\CustomerTabModels.cs" />
-    <Compile Include="Models\EnterpriseModels.cs" />
+    <Compile Include="Models\CustomerTabGroupViewModel.cs" />
+    <Compile Include="Models\CustomerTabViewModel.cs" />
     <Compile Include="Models\EnterpriseViewModels.cs" />
-    <Compile Include="Models\HomePageModular.cs" />
     <Compile Include="Models\HomePageModularViewModels.cs" />
-    <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\ProductKindsViewModels.cs" />
     <Compile Include="Models\ProductViewModels.cs" />
-    <Compile Include="Models\ProductModels.cs" />
-    <Compile Include="Models\RoleGroup.cs" />
-    <Compile Include="Models\RolesModel.cs" />
-    <Compile Include="Models\UserSpeechModels.cs" />
-    <Compile Include="Models\Test.cs" />
+    <Compile Include="Models\RoleGroupViewModel.cs" />
+    <Compile Include="Models\SelectRoleListViewModel.cs" />
+    <Compile Include="Models\SelectRoleView.cs" />
     <Compile Include="Models\TxImViewModels.cs" />
-    <Compile Include="Models\UserCardTop.cs" />
-    <Compile Include="Models\UserLog.cs" />
     <Compile Include="Models\UserLogViewModels.cs" />
     <Compile Include="Models\UserManageViewModels.cs" />
-    <Compile Include="Models\UserProductTop.cs" />
     <Compile Include="Models\UserViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
@@ -1044,7 +1020,6 @@
     <Content Include="Views\Shared\DisplayTemplates\FileUpload.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\ImageResizer.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\ChinaPCASCom.cshtml" />
-    <Content Include="Views\Test\pac.cshtml" />
     <Content Include="Views\HomePageModularsManage\EditByHtml.cshtml" />
     <Content Include="Views\HomePageModularsManage\CreateByImage.cshtml" />
     <Content Include="Views\HomePageModularsManage\EditByImage.cshtml" />
@@ -1174,6 +1149,16 @@
     <EmbeddedResource Include="Migrations\201811130218454_AddUserSpeechsAndUserSpeechTypes.resx">
       <DependentUpon>201811130218454_AddUserSpeechsAndUserSpeechTypes.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AiCard.Commom\AiCard.Common.csproj">
+      <Project>{B5FF40C2-CEE8-43ED-8722-99638716BBB1}</Project>
+      <Name>AiCard.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AiCard.DAL\AiCard.DAL.csproj">
+      <Project>{1ee23cc6-a120-4730-aaa2-7295bd1a108a}</Project>
+      <Name>AiCard.DAL</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

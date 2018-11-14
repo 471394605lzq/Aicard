@@ -8,6 +8,8 @@ using System.Web.Mvc;
 using AiCard.Models;
 using PagedList;
 using PagedList.Mvc;
+using AiCard.Common.Enums;
+using AiCard.DAL.Models;
 
 namespace AiCard.Controllers
 {
@@ -73,7 +75,7 @@ namespace AiCard.Controllers
                              UserNames = ru.Select(s => s.UserName)
                          });
             //如果是企业用户则只查询该企业信息
-            if (usertype == Enums.UserType.Enterprise)
+            if (usertype == UserType.Enterprise)
             {
                 modle = modle.Where(s => s.EnterpriseID == enterpriseID);
             }
@@ -123,7 +125,7 @@ namespace AiCard.Controllers
             RoleGroupViewModel model = new RoleGroupViewModel();
             var rg = db.RoleGroups.FirstOrDefault(s => s.ID == id);
             //防止企业用户串号修改
-            if (aData.UserType == Enums.UserType.Enterprise
+            if (aData.UserType == UserType.Enterprise
                 && rg.EnterpriseID != enterpriseID)
             {
                 return this.ToError("错误", "没有权限修改当前角色", Url.Action("Index"));
@@ -142,7 +144,7 @@ namespace AiCard.Controllers
         {
             var rg = db.RoleGroups.FirstOrDefault(s => s.ID == model.ID);
             //防止企业用户串号修改
-            if (AccontData.UserType == Enums.UserType.Enterprise
+            if (AccontData.UserType == UserType.Enterprise
                 && rg.EnterpriseID != AccontData.EnterpriseID)
             {
                 return this.ToError("错误", "没有权限修改当前角色", Url.Action("Index"));
@@ -180,7 +182,7 @@ namespace AiCard.Controllers
             RoleGroupViewModel model = new RoleGroupViewModel();
             var rg = db.RoleGroups.FirstOrDefault(s => s.ID == id);
             //防止企业用户串号修改
-            if (AccontData.UserType == Enums.UserType.Enterprise
+            if (AccontData.UserType == UserType.Enterprise
                 && rg.EnterpriseID != AccontData.EnterpriseID)
             {
                 return this.ToError("错误", "没有权限修改当前角色", Url.Action("Index"));
@@ -198,7 +200,7 @@ namespace AiCard.Controllers
         {
             var rg = db.RoleGroups.FirstOrDefault(s => s.ID == id);
             //防止企业用户串号修改
-            if (AccontData.UserType == Enums.UserType.Enterprise
+            if (AccontData.UserType == UserType.Enterprise
                 && rg.EnterpriseID != AccontData.EnterpriseID)
             {
                 return this.ToError("错误", "没有权限修改当前角色", Url.Action("Index"));
@@ -221,13 +223,13 @@ namespace AiCard.Controllers
             //根据不同类型读取不同的权限
             switch (userType)
             {
-                case Enums.UserType.Admin:
-                    roles = roles.Where(s => s.Type == Enums.RoleType.System);
+                case UserType.Admin:
+                    roles = roles.Where(s => s.Type == RoleType.System);
                     break;
-                case Enums.UserType.Enterprise:
-                    roles = roles.Where(s => s.Type == Enums.RoleType.Enterprise);
+                case UserType.Enterprise:
+                    roles = roles.Where(s => s.Type == RoleType.Enterprise);
                     break;
-                case Enums.UserType.Personal:
+                case UserType.Personal:
                 default:
                     throw new Exception("普通用户没有权限获取");
                     break;

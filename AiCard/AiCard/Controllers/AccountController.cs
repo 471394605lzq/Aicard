@@ -12,6 +12,8 @@ using AiCard.Models;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using AiCard.Common.Enums;
+using AiCard.DAL.Models;
 
 namespace AiCard.Controllers
 {
@@ -90,7 +92,7 @@ namespace AiCard.Controllers
             {
                 case SignInStatus.Success:
                     {
-                        var user = db.Users.FirstOrDefault(s => s.UserName == model.UserName && s.UserType == Enums.UserType.Admin);
+                        var user = db.Users.FirstOrDefault(s => s.UserName == model.UserName && s.UserType == UserType.Admin);
                         if (user == null)
                         {
                             ModelState.AddModelError("", "帐号不存在或密码错误！");
@@ -150,7 +152,7 @@ namespace AiCard.Controllers
                 case SignInStatus.Success:
                     {
                         var user = db.Users.FirstOrDefault(s => s.UserName == model.UserName
-                            && s.UserType == Enums.UserType.Enterprise);
+                            && s.UserType == UserType.Enterprise);
 
                         if (user == null)
                         {
@@ -605,11 +607,11 @@ namespace AiCard.Controllers
         /// <returns></returns>
         [HttpPost]
         [AllowCrossSiteJson]
-        public ActionResult LoginByWeiXin(string code, string state = null, Enums.WeChatAccount type = Enums.WeChatAccount.AiCardMini)
+        public ActionResult LoginByWeiXin(string code, string state = null, WeChatAccount type = WeChatAccount.AiCardMini)
         {
             Func<string, string, ActionResult> error = (content, detail) =>
              {
-                 if (type != Enums.WeChatAccount.PC)
+                 if (type != WeChatAccount.PC)
                  {
                      return Json(Comm.ToJsonResult("Error", content, detail));
                  }
@@ -623,13 +625,13 @@ namespace AiCard.Controllers
                 return error("请求有误", "Code不能为空");
             }
 
-            if (type != Enums.WeChatAccount.AiCardMini)
+            if (type != WeChatAccount.AiCardMini)
             {
                 //非小程序
                 switch (type)
                 {
                     default:
-                    case Enums.WeChatAccount.PC:
+                    case WeChatAccount.PC:
                         {
                             WeChat.WeChatApi wechat = new WeChat.WeChatApi(AiCard.WeChat.ConfigPc.AppID, AiCard.WeChat.ConfigPc.AppSecret);
                             WeChat.AccessTokenResult result;
@@ -681,7 +683,7 @@ namespace AiCard.Controllers
                                         }
 
                                     }
-                                    if (type != Enums.WeChatAccount.PC)
+                                    if (type != WeChatAccount.PC)
                                     {
                                         return Json(Comm.ToJsonResult("Success", "成功", new UserForApiViewModel(user)));
                                     }
@@ -717,7 +719,7 @@ namespace AiCard.Controllers
                 try
                 {
                     var result = wechat.Jscode2session(code);
-                    Models.ApplicationUser user = null;
+                    DAL.Models.ApplicationUser user = null;
                     if (!string.IsNullOrWhiteSpace(result.UnionID))
                     {
                         user = db.Users.FirstOrDefault(s => s.WeChatID == result.UnionID);
@@ -766,7 +768,7 @@ namespace AiCard.Controllers
                             model.IV,
                             AES = str
                         });
-                        Comm.WriteLog("WeiXin", debug, Enums.DebugLogLevel.Normal);
+                        Comm.WriteLog("WeiXin", debug, DebugLogLevel.Normal);
                         var jUser = JsonConvert.DeserializeObject<JObject>(str);
                         var unionID = jUser["unionId"]?.Value<string>();
                         if (unionID == null)
@@ -852,7 +854,7 @@ namespace AiCard.Controllers
                 Avatar = avart,
                 RegisterDateTime = DateTime.Now,
                 LastLoginDateTime = DateTime.Now,
-                UserType = Enums.UserType.Personal
+                UserType = UserType.Personal
             };
 
             var r = UserManager.Create(user);

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AiCard.Common.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -16,7 +17,7 @@ namespace AiCard.Models
         /// </summary>
         public string Avatar { get; set; }
 
-        public Enums.ArticleType Type { get; set; }
+        public ArticleType Type { get; set; }
         /// <summary>
         /// 时间
         /// </summary>

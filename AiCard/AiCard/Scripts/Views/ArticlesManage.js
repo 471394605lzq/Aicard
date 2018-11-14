@@ -9,6 +9,7 @@
 });
 
 
+
 $("body").on("click", ".chk", function () {
     var id = $(this).data("id");
 });
