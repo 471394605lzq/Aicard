@@ -69,6 +69,10 @@ namespace AiCard.Controllers
         public ActionResult GetMyCardTabsList(int cardID)
         {
             //db.Database.SqlQuery()
+            if (!db.Cards.Any(s => s.ID == cardID))
+            {
+                return Json(Comm.ToJsonResult("CardNoFound", "名片不存在"));
+            }
             var query = from ct in db.CardTabs
                         where ct.CardID == cardID
                         select new

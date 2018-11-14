@@ -107,7 +107,7 @@ namespace AiCard.Controllers
         /// <param name="userID">客户对应用户表id</param>
         /// <param name="tabsname">客户自定义标签名称</param>
         /// <returns></returns>
-
+        [AllowCrossSiteJson]
         public ActionResult SetCustomerTabs(int customerID, string ownerID, string tabsName)
         {
             try
@@ -142,10 +142,110 @@ namespace AiCard.Controllers
         }
 
 
-        // GET: EnterpriseCustomer
-        public ActionResult Index()
+        /// <summary>
+        /// Ai雷达 客户详情
+        /// </summary>
+        /// <param name="custID"></param>
+        /// <returns></returns>
+        [AllowCrossSiteJson]
+        public ActionResult GetCustInfo(int custID,string userID)
         {
-            return View();
+            try
+            {
+                var query = (from c in db.EnterpriseCustomers
+                             from u in db.Users
+                             join cut in db.EnterpriseCustomerTabs.Where(s=>s.OwnerID== userID) on c.ID equals cut.CustomerID  into cuta
+                             where c.ID == custID
+                             select  new {
+                                 Name=c.RealName,
+                                 Avater=u.Avatar,
+                                 CustTabs = cuta.Select(s=>s.Name).Take(3)
+                             }).FirstOrDefault();
+                return Json(Comm.ToJsonResult("Success", "成功", query), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(Comm.ToJsonResult("Error", ex.Message), JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        /// <summary>
+        /// Ai雷达 编辑客户资料
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        [AllowCrossSiteJson]
+        public ActionResult EditCustInfo(EnterpriseCustomer model)
+        {
+            try
+            {
+                var t = db.EnterpriseCustomers.FirstOrDefault(s => s.ID == model.ID);
+                if (t == null)
+                {
+                    return Json(Comm.ToJsonResult("Error", "客户不存在"), JsonRequestBehavior.AllowGet);
+                }
+                if (model.RealName != null)
+                {
+                    t.RealName = model.RealName;
+                }
+                if (model.Email != null)
+                {
+                    if (string.Empty != model.Email.Trim() && !Reg.IsEmail(model.Email))
+                    {
+                        return Json(Comm.ToJsonResult("Error", "邮箱格式不正确"), JsonRequestBehavior.AllowGet);
+                    }
+                    else
+                    {
+                        t.Email = model.Email;
+                    }
+                }
+                if (model.Mobile != null)
+                {
+                    if (string.Empty != model.Mobile.Trim() && !Reg.IsMobile(model.Mobile))
+                    {
+                        return Json(Comm.ToJsonResult("Error", "手机号格式不正确"), JsonRequestBehavior.AllowGet);
+                    }
+                    else
+                    {
+                        t.Mobile = model.Mobile;
+                    }
+                }
+               
+                if (model.Position != null)
+                {
+                    t.Position = model.Position;
+                }
+
+                t.Gender = model.Gender;
+                if (model.Birthday!=null)
+                {
+                    t.Birthday = model.Birthday;
+                }
+
+                if (model.Company != null)
+                {
+                    t.Company = model.Company;
+                }
+                if (model.Address != null)
+                {
+                    t.Address = model.Address;
+                }
+                db.SaveChanges();
+                return Json(Comm.ToJsonResult("Success", "成功"), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(Comm.ToJsonResult("Error500", ex.Message), JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
         }
     }
 }

@@ -312,6 +312,7 @@
     <Compile Include="Controllers\ProductKindsManageController.cs" />
     <Compile Include="Controllers\ProductsController.cs" />
     <Compile Include="Controllers\ProductsManageController.cs" />
+    <Compile Include="Controllers\RadarPoolController.cs" />
     <Compile Include="Controllers\RoleManageController.cs" />
     <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Controllers\UploaderController.cs" />
@@ -1081,6 +1082,7 @@
     <Folder Include="Views\HomePageManage\" />
     <Folder Include="Views\HomePageModulars\" />
     <Folder Include="Views\Products\" />
+    <Folder Include="Views\RadarPool\" />
     <Folder Include="Views\TsIm\" />
     <Folder Include="Views\UserLog\" />
     <Folder Include="Views\UserSpeech\" />

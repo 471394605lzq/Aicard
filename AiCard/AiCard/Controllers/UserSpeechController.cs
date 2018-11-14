@@ -173,7 +173,7 @@ namespace AiCard.Controllers
                 //检验话术分类是否存在
                 else if (hasname)
                 {
-                    return Json(Comm.ToJsonResult("Error", "话术分类已存在"), JsonRequestBehavior.AllowGet);
+                    return Json(Comm.ToJsonResult("Error", "话术分类名称已存在"), JsonRequestBehavior.AllowGet);
                 }
                 else
                 {
@@ -224,10 +224,15 @@ namespace AiCard.Controllers
         /// <returns></returns>
         [HttpPost]
         [AllowCrossSiteJson]
-        public ActionResult DeleteSpeechInfo(int id)
+        public ActionResult DeleteSpeechInfo(int id, string userID)
         {
             try
             {
+                var tab = db.UserSpeechs.FirstOrDefault(s => s.ID==id && s.UserID == userID);
+                if (tab == null)
+                {
+                    return Json(Comm.ToJsonResult("NoFound", "话术不存在"));
+                }
                 UserSpeech speech = db.UserSpeechs.Find(id);
                 db.UserSpeechs.Remove(speech);
                 db.SaveChanges();

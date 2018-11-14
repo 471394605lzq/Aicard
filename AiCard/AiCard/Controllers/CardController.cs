@@ -419,12 +419,12 @@ namespace AiCard.Controllers
         }
 
         /// <summary>
-        /// 根据类型获取排行榜数据
+        /// 根据类型获取每日排行榜数据
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
         [AllowCrossSiteJson]
-        public ActionResult GetRankingsList(Enums.RankingsType? type, int enterpriseID, int? page = 1, int? pageSize = 20)
+        public ActionResult GetRankingsList(Enums.RankingsType? type, int enterpriseID,string userID, int? page = 1, int? pageSize = 20)
         {
             try
             {
@@ -439,23 +439,58 @@ namespace AiCard.Controllers
                 parameters[0].Value = enterpriseID;
                 parameters[1].Value = starpagesize;
                 parameters[2].Value = endpagesize;
+
+                SqlParameter[] myparameters = {
+                        new SqlParameter("@enterpriseID", SqlDbType.Int),
+                        new SqlParameter("@userID", SqlDbType.NVarChar)
+                    };
+                myparameters[0].Value = enterpriseID;
+                myparameters[1].Value = userID;
+
                 if (type == Enums.RankingsType.Activity)
                 {
-                    string sqlstr = string.Format(@"SELECT * FROM (SELECT CAST(ROW_NUMBER() over(order by COUNT(c.Name) DESC) AS INTEGER) AS Ornumber, c.Name, c.Avatar, COUNT(c.Name) Counts FROM dbo.UserLogs ul
+                    string sqlstr = string.Format(@"SELECT * FROM (SELECT CAST(ROW_NUMBER() over(order by COUNT(c.Name) DESC) AS INTEGER) AS Ornumber, c.Name, c.Avatar, COUNT(c.Name) Counts,c.UserID AS ID,c.Position FROM dbo.UserLogs ul
                                   INNER JOIN dbo.Cards c ON c.UserID = ul.TargetUserID WHERE ul.CreateDateTime BETWEEN dateadd(ms, 0, DATEADD(dd, DATEDIFF(dd, 0, getdate()), 0)) AND dateadd(ms, -3, DATEADD(dd, DATEDIFF(dd, -1, getdate()), 0))
                                    AND c.EnterpriseID=@enterpriseID 
-                                  GROUP BY c.Name, c.Avatar) t WHERE t.Ornumber > @starpagesize AND t.Ornumber<=@endpagesize");
-                    
+                                  GROUP BY c.Name, c.Avatar,c.ID,c.Position,c.UserID) t WHERE t.Ornumber > @starpagesize AND t.Ornumber<=@endpagesize");
                     List<RankingModel> data = db.Database.SqlQuery<RankingModel>(sqlstr, parameters).ToList();
-                    return Json(Comm.ToJsonResult("Success", "成功", data), JsonRequestBehavior.AllowGet);
+                    
+                    string mysqlstr = string.Format(@"SELECT CAST(ROW_NUMBER() over(order by COUNT(c.Name) DESC) AS INTEGER) AS Ornumber, c.Name, c.Avatar, COUNT(c.Name) Counts,c.UserID AS ID,c.Position
+                                  FROM dbo.UserLogs ul
+                                  INNER JOIN dbo.Cards c ON c.UserID = ul.TargetUserID 
+								  WHERE ul.CreateDateTime BETWEEN dateadd(ms, 0, DATEADD(dd, DATEDIFF(dd, 0, getdate()), 0)) AND dateadd(ms, -3, DATEADD(dd, DATEDIFF(dd, -1, getdate()), 0))
+                                   AND c.EnterpriseID=@enterpriseID AND ul.TargetUserID=@userID
+                                  GROUP BY c.Name, c.Avatar,c.ID,c.Position,c.UserID");
+                    List<RankingModel> mydata = db.Database.SqlQuery<RankingModel>(mysqlstr, myparameters).ToList();
+                    var resultdata = new
+                    {
+                        listdata = data,
+                        mydata= mydata
+                    };
+                    return Json(Comm.ToJsonResult("Success", "成功", resultdata), JsonRequestBehavior.AllowGet);
                 }
                 else if (type == Enums.RankingsType.CustNumber)
                 {
-                    string sqlstr = string.Format(@"SELECT* FROM (SELECT CAST(ROW_NUMBER() over(order by COUNT(u.UserName) DESC) AS INTEGER) AS Ornumber, u.UserName, u.Id, COUNT(cus.ID) AS Counts FROM dbo.AspNetUsers u
+                    string sqlstr = string.Format(@"SELECT* FROM (SELECT CAST(ROW_NUMBER() over(order by COUNT(u.UserName) DESC) AS INTEGER) AS Ornumber, u.UserName, COUNT(cus.ID) AS Counts,u.id AS ID,c.Position
+								 FROM dbo.AspNetUsers u
+								 INNER JOIN dbo.Cards c ON c.UserID=u.Id
                                                     LEFT JOIN dbo.EnterpriseUserCustomers cus ON cus.OwnerID = u.Id
-                                                    WHERE UserType = 1 AND u.EnterpriseID=@enterpriseID GROUP BY u.UserName, u.Id)t WHERE t.ornumber WHERE t.Ornumber > @starpagesize AND t.Ornumber<=@endpagesize");
+                                                    WHERE UserType = 1 AND u.EnterpriseID=@enterpriseID GROUP BY u.UserName, u.Id,c.Position)t  WHERE t.Ornumber > @starpagesize AND t.Ornumber<=@endpagesize");
                     List<RankingModel> data = db.Database.SqlQuery<RankingModel>(sqlstr,parameters).ToList();
-                    return Json(Comm.ToJsonResult("Success", "成功", data), JsonRequestBehavior.AllowGet);
+
+                    string mysqlstr = string.Format(@"SELECT CAST(ROW_NUMBER() over(order by COUNT(u.UserName) DESC) AS INTEGER) AS Ornumber, u.UserName, COUNT(cus.ID) AS Counts,u.id AS ID,c.Position
+								 FROM dbo.AspNetUsers u
+								 INNER JOIN dbo.Cards c ON c.UserID=u.Id
+                                                    LEFT JOIN dbo.EnterpriseUserCustomers cus ON cus.OwnerID = u.Id
+                                                    WHERE UserType = 1 AND u.EnterpriseID=@enterpriseID and u.Id=@userID GROUP BY u.UserName, u.Id,c.Position");
+                    List<RankingModel> mydata = db.Database.SqlQuery<RankingModel>(mysqlstr, myparameters).ToList();
+                    var resultdata = new
+                    {
+                        listdata = data,
+                        mydata = mydata
+                    };
+
+                    return Json(Comm.ToJsonResult("Success", "成功", resultdata), JsonRequestBehavior.AllowGet);
                 }
                 else
                 {
@@ -473,6 +508,8 @@ namespace AiCard.Controllers
             public string Name { get; set; }
             public string Avatar { get; set; }
             public int Counts { get; set; }
+            public string Position { get; set; }
+            public string ID { get; set; }
         }
 
 
