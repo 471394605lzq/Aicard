@@ -78,8 +78,6 @@ namespace AiCard.Controllers
 
         #endregion
 
-
-
         public ActionResult UploadTest()
         {
             var model = new TestImages();
@@ -97,17 +95,17 @@ namespace AiCard.Controllers
             return View();
         }
 
-        [AllowCrossSiteJson]
-        public ActionResult DeleteUser()
-        {
-            var user = db.Users.FirstOrDefault(s => s.NickName == "hot pink");
+        //[AllowCrossSiteJson]
+        //public ActionResult DeleteUser()
+        //{
+        //    var user = db.Users.FirstOrDefault(s => s.NickName == "hot pink");
 
-            var log = db.UserLogs.Where(s => s.UserID == user.Id).ToList();
-            db.UserLogs.RemoveRange(log);
-            db.Users.Remove(user);
-            db.SaveChanges();
-            return Json(Comm.ToJsonResult("Success", "消息"), JsonRequestBehavior.AllowGet);
-        }
+        //    var log = db.UserLogs.Where(s => s.UserID == user.Id).ToList();
+        //    db.UserLogs.RemoveRange(log);
+        //    db.Users.Remove(user);
+        //    db.SaveChanges();
+        //    return Json(Comm.ToJsonResult("Success", "消息"), JsonRequestBehavior.AllowGet);
+        //}
 
 
         [HttpGet]
