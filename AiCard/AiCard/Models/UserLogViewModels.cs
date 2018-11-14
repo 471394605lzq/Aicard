@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AiCard.Common.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -26,7 +27,7 @@ namespace AiCard.Models
 
         public DateTime CreateDateTime { get; set; }
 
-        public Enums.UserLogType Type { get; set; }
+        public UserLogType Type { get; set; }
 
 
         public int RelationID { get; set; }

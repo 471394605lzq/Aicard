@@ -7,6 +7,8 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using AiCard.Models;
+using AiCard.Common.Enums;
+using AiCard.DAL.Models;
 
 namespace AiCard.Controllers
 {
@@ -51,7 +53,7 @@ namespace AiCard.Controllers
                 query = query.Where(s => s.Name.Contains(filter));
             }
             //如果是企业用户则只查询该企业信息
-            if (AccontData.UserType == Enums.UserType.Enterprise)
+            if (AccontData.UserType == UserType.Enterprise)
             {
                 query = query.Where(s => s.EnterpriseID == AccontData.EnterpriseID);
             }
@@ -92,7 +94,7 @@ namespace AiCard.Controllers
         {
             var tempuser = db.Users.FirstOrDefault(s => s.Id == AccontData.UserID);
             //防止企业用户串号修改
-            if ((AccontData.UserType == Enums.UserType.Enterprise
+            if ((AccontData.UserType == UserType.Enterprise
                 && tempuser.EnterpriseID != AccontData.EnterpriseID)||AccontData.EnterpriseID<=0)
             {
                 return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
@@ -114,7 +116,7 @@ namespace AiCard.Controllers
         {
             var tempuser = db.Users.FirstOrDefault(s => s.Id == AccontData.UserID);
             //防止企业用户串号修改
-            if ((AccontData.UserType == Enums.UserType.Enterprise
+            if ((AccontData.UserType == UserType.Enterprise
                 && tempuser.EnterpriseID != AccontData.EnterpriseID) || AccontData.EnterpriseID <= 0)
             {
                 return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
@@ -142,7 +144,7 @@ namespace AiCard.Controllers
         {
             var tempuser = db.Users.FirstOrDefault(s => s.Id == AccontData.UserID);
             //防止企业用户串号修改
-            if ((AccontData.UserType == Enums.UserType.Enterprise
+            if ((AccontData.UserType == UserType.Enterprise
                 && tempuser.EnterpriseID != AccontData.EnterpriseID) || AccontData.EnterpriseID <= 0)
             {
                 return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
@@ -168,7 +170,7 @@ namespace AiCard.Controllers
         {
             var tempuser = db.Users.FirstOrDefault(s => s.Id == AccontData.UserID);
             //防止企业用户串号修改
-            if ((AccontData.UserType == Enums.UserType.Enterprise
+            if ((AccontData.UserType == UserType.Enterprise
                 && tempuser.EnterpriseID != AccontData.EnterpriseID) || AccontData.EnterpriseID <= 0)
             {
                 return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
@@ -205,7 +207,7 @@ namespace AiCard.Controllers
         {
             var tempuser = db.Users.FirstOrDefault(s => s.Id == AccontData.UserID);
             //防止企业用户串号修改
-            if ((AccontData.UserType == Enums.UserType.Enterprise
+            if ((AccontData.UserType == UserType.Enterprise
                 && tempuser.EnterpriseID != AccontData.EnterpriseID) || AccontData.EnterpriseID <= 0)
             {
                 return this.ToError("错误", "没有该操作权限", Url.Action("Index"));

@@ -7,6 +7,8 @@ using AiCard.Models;
 using Microsoft.AspNet.Identity;
 using System.IO;
 using AiCard;
+using AiCard.Common;
+using AiCard.Common.CommModels;
 
 namespace AiCard.Controllers
 {
@@ -87,7 +89,7 @@ namespace AiCard.Controllers
             {
 
                 default:
-                case Models.CommModels.UploadServer.Local:
+                case UploadServer.Local:
                     {
                         return Json(Comm.ToJsonResult("Success", "成功", new
                         {
@@ -95,7 +97,7 @@ namespace AiCard.Controllers
                             FileFullUrls = filename.Select(s => Url.ContentFull(s))
                         }));
                     }
-                case Models.CommModels.UploadServer.QinQiu:
+                case UploadServer.QinQiu:
                     {
                         List<string> fileList = new List<string>();
                         var qinniu = new Qiniu.QinQiuApi();

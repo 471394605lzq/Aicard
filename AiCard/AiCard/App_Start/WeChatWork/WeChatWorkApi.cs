@@ -4,6 +4,8 @@ using System.Linq;
 using System.Web;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using AiCard.Common.Enums;
+
 namespace AiCard.WeChatWork
 {
     public class WeChatWorkApi
@@ -84,7 +86,7 @@ namespace AiCard.WeChatWork
                     {
                         Avatar = s["avatar"].Value<string>(),
                         Email = s["email"].Value<string>(),
-                        Gender = (Enums.Gender)Enum.Parse(typeof(Enums.Gender), s["gender"].Value<string>()),
+                        Gender = (Gender)Enum.Parse(typeof(Gender), s["gender"].Value<string>()),
                         ID = s["userid"].Value<string>(),
                         Mobile = s["mobile"].Value<string>(),
                         Name = s["name"].Value<string>(),

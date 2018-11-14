@@ -4,6 +4,9 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using AiCard.Models;
+using AiCard.Common.Enums;
+using AiCard.DAL.Models;
+
 namespace AiCard.Controllers
 {
     public class HomePageModularsController : Controller
@@ -33,7 +36,7 @@ namespace AiCard.Controllers
                 switch (s.Type)
                 {
                     default:
-                    case Enums.HomePageModularType.Html:
+                    case HomePageModularType.Html:
                         item = new
                         {
                             Title = s.Title,
@@ -41,8 +44,8 @@ namespace AiCard.Controllers
                             Type = s.Type,
                         };
                         break;
-                    case Enums.HomePageModularType.Banner:
-                    case Enums.HomePageModularType.Images:
+                    case HomePageModularType.Banner:
+                    case HomePageModularType.Images:
                         item = new
                         {
                             Title = s.Title,
@@ -50,7 +53,7 @@ namespace AiCard.Controllers
                             Type = s.Type,
                         };
                         break;
-                    case Enums.HomePageModularType.Contact:
+                    case HomePageModularType.Contact:
                         item = new
                         {
                             Title = s.Title,

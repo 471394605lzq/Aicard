@@ -7,7 +7,8 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using AiCard.Models;
-using AiCard.Enums;
+using AiCard.Common.Enums;
+using AiCard.DAL.Models;
 
 namespace AiCard.Controllers
 {
@@ -50,7 +51,7 @@ namespace AiCard.Controllers
                 m = m.Where(s => s.Name.Contains(filter));
             }
             //如果是企业用户则只查询该企业信息
-            if (AccontData.UserType == Enums.UserType.Enterprise)
+            if (AccontData.UserType == UserType.Enterprise)
             {
                 m = m.Where(s => s.EnterpriseID == AccontData.EnterpriseID);
             }
@@ -92,7 +93,7 @@ namespace AiCard.Controllers
         {
             var tempuser = db.Users.FirstOrDefault(s => s.Id == AccontData.UserID);
             //防止企业用户串号修改
-            if (AccontData.UserType == Enums.UserType.Enterprise
+            if (AccontData.UserType == UserType.Enterprise
                 && tempuser.EnterpriseID != AccontData.EnterpriseID)
             {
                 return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
@@ -115,7 +116,7 @@ namespace AiCard.Controllers
             Sidebar();
             var temp = db.ProductKinds.FirstOrDefault(s => s.ID == id.Value);
             //防止企业用户串号修改
-            if (AccontData.UserType == Enums.UserType.Enterprise
+            if (AccontData.UserType == UserType.Enterprise
                 && temp.EnterpriseID != AccontData.EnterpriseID)
             {
                 return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
@@ -145,7 +146,7 @@ namespace AiCard.Controllers
         {
             var temp = db.ProductKinds.FirstOrDefault(s => s.ID == productKind.ID);
             //防止企业用户串号修改
-            if (AccontData.UserType == Enums.UserType.Enterprise
+            if (AccontData.UserType == UserType.Enterprise
                 && temp.EnterpriseID != AccontData.EnterpriseID)
             {
                 return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
@@ -169,7 +170,7 @@ namespace AiCard.Controllers
         {
             var temp = db.ProductKinds.FirstOrDefault(s => s.ID == id.Value);
             //防止企业用户串号修改
-            if (AccontData.UserType == Enums.UserType.Enterprise
+            if (AccontData.UserType == UserType.Enterprise
                 && temp.EnterpriseID != AccontData.EnterpriseID)
             {
                 return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
@@ -198,7 +199,7 @@ namespace AiCard.Controllers
         {
             var temp = db.ProductKinds.FirstOrDefault(s => s.ID == id);
             //防止企业用户串号修改
-            if (AccontData.UserType == Enums.UserType.Enterprise
+            if (AccontData.UserType == UserType.Enterprise
                 && temp.EnterpriseID != AccontData.EnterpriseID)
             {
                 return this.ToError("错误", "没有该操作权限", Url.Action("Index"));

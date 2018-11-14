@@ -11,7 +11,6 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System.Data.Entity;
 using System.Net;
-using AiCard.Enums;
 using AiCard.WeChatWork;
 using AiCard.WeChatWork.Models;
 using PagedList;
@@ -19,6 +18,10 @@ using PagedList.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using AiCard.Models.CommModels;
+using AiCard.Common.Enums;
+using AiCard.Common;
+using AiCard.Common.CommModels;
+using AiCard.DAL.Models;
 
 namespace AiCard.Controllers
 {
@@ -110,7 +113,7 @@ namespace AiCard.Controllers
                 m = m.Where(s => s.Enable == enable.Value);
             }
             //如果是企业用户则只查询该企业信息
-            if (AccountData.UserType == Enums.UserType.Enterprise)
+            if (AccountData.UserType == UserType.Enterprise)
             {
                 m = m.Where(s => s.ID == AccountData.EnterpriseID);
             }
@@ -413,7 +416,7 @@ namespace AiCard.Controllers
             AccountDataViewBag();
             var temp = db.Enterprises.FirstOrDefault(s => s.ID == id);
             //防止企业用户串号修改
-            if (AccountData.UserType == Enums.UserType.Enterprise
+            if (AccountData.UserType == UserType.Enterprise
                 && temp.ID != AccountData.EnterpriseID)
             {
                 return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
@@ -461,7 +464,7 @@ namespace AiCard.Controllers
                 Lat = model.Lat,
                 Lng = model.Lng
             };
-            models.Address = new Models.CommModels.Map(te);
+            models.Address = new Map(te);
             if (models == null)
             {
                 return HttpNotFound();
@@ -479,7 +482,7 @@ namespace AiCard.Controllers
         {
             var temp = db.Enterprises.FirstOrDefault(s => s.ID == enterprise.ID);
             //防止企业用户串号修改
-            if (AccountData.UserType == Enums.UserType.Enterprise
+            if (AccountData.UserType == UserType.Enterprise
                 && temp.ID != AccountData.EnterpriseID)
             {
                 return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
@@ -524,7 +527,7 @@ namespace AiCard.Controllers
         {
             Enterprise enterprise = db.Enterprises.Find(id);
             //防止企业用户串号修改
-            if (AccountData.UserType == Enums.UserType.Enterprise
+            if (AccountData.UserType == UserType.Enterprise
                 && enterprise.ID != AccountData.EnterpriseID)
             {
                 return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
@@ -557,7 +560,7 @@ namespace AiCard.Controllers
         {
             var temp = db.Enterprises.FirstOrDefault(s => s.ID == id.Value);
             //防止企业用户串号修改
-            if (AccountData.UserType == Enums.UserType.Enterprise
+            if (AccountData.UserType == UserType.Enterprise
                 && temp.ID != AccountData.EnterpriseID)
             {
                 return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
@@ -593,7 +596,7 @@ namespace AiCard.Controllers
         {
             var temp = db.Enterprises.FirstOrDefault(s => s.ID == enterprise.ID);
             //防止企业用户串号修改
-            if (AccountData.UserType == Enums.UserType.Enterprise
+            if (AccountData.UserType == UserType.Enterprise
                 && temp.ID != AccountData.EnterpriseID)
             {
                 return this.ToError("错误", "没有该操作权限", Url.Action("Index"));

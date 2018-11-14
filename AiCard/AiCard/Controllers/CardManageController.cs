@@ -10,10 +10,11 @@ using Microsoft.Owin.Security;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
-using AiCard.Enums;
 using System.Net;
 using AiCard.WeChat;
 using AiCard.Models.CommModels;
+using AiCard.Common.Enums;
+using AiCard.DAL.Models;
 
 namespace AiCard.Controllers
 {
@@ -73,7 +74,7 @@ namespace AiCard.Controllers
                 m = m.Where(s => s.Enable == enable.Value);
             }
             //如果是企业用户则只查询该企业信息
-            if (AccontData.UserType == Enums.UserType.Enterprise)
+            if (AccontData.UserType == UserType.Enterprise)
             {
                 m = m.Where(s => s.EnterpriseID == AccontData.EnterpriseID);
             }
@@ -86,7 +87,7 @@ namespace AiCard.Controllers
         {
             var tempuser = db.Users.FirstOrDefault(s => s.Id == AccontData.UserID);
             //防止企业用户串号修改
-            if (AccontData.UserType == Enums.UserType.Enterprise
+            if (AccontData.UserType == UserType.Enterprise
                 && tempuser.EnterpriseID != AccontData.EnterpriseID)
             {
                 return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
@@ -121,7 +122,7 @@ namespace AiCard.Controllers
                 {
                     var tempuser = db.Users.FirstOrDefault(s => s.Id == AccontData.UserID);
                     //防止企业用户串号修改
-                    if (AccontData.UserType == Enums.UserType.Enterprise
+                    if (AccontData.UserType == UserType.Enterprise
                         && tempuser.EnterpriseID != AccontData.EnterpriseID)
                     {
                         return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
@@ -174,7 +175,7 @@ namespace AiCard.Controllers
             }
             var temp = db.Cards.FirstOrDefault(s => s.ID == id);
             //防止企业用户串号修改
-            if (AccontData.UserType == Enums.UserType.Enterprise
+            if (AccontData.UserType == UserType.Enterprise
                 && temp.EnterpriseID != AccontData.EnterpriseID)
             {
                 return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
@@ -230,7 +231,7 @@ namespace AiCard.Controllers
             var tempenterprise = db.Enterprises.FirstOrDefault(s => s.ID == temp.EnterpriseID);
             WeChatMinApi w = new WeChatMinApi(ConfigMini.AppID, ConfigMini.AppSecret);
             //防止企业用户串号修改
-            if (AccontData.UserType == Enums.UserType.Enterprise
+            if (AccontData.UserType == UserType.Enterprise
                 && temp.EnterpriseID != AccontData.EnterpriseID)
             {
                 return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
@@ -270,7 +271,7 @@ namespace AiCard.Controllers
         {
             var temp = db.Cards.FirstOrDefault(s => s.ID == id);
             //防止企业用户串号修改
-            if (AccontData.UserType == Enums.UserType.Enterprise
+            if (AccontData.UserType == UserType.Enterprise
                 && temp.EnterpriseID != AccontData.EnterpriseID)
             {
                 return this.ToError("错误", "没有该操作权限", Url.Action("Index"));

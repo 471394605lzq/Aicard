@@ -22,15 +22,15 @@ namespace AiCard.WeChat
 
     //public abstract class Config
     //{
-    //    public Config(Enums.WeChatAccount account)
+    //    public Config(WeChatAccount account)
     //    {
     //        switch (account)
     //        {
-    //            case Enums.WeChatAccount.PC:
+    //            case WeChatAccount.PC:
     //                AppID = "wxbd54d6bab8add1e0";
     //                AppSecret = "";
     //                break;
-    //            case Enums.WeChatAccount.AiCardMini:
+    //            case WeChatAccount.AiCardMini:
     //            default:
     //                AppID = "wx4f0894f87f291778";
     //                AppSecret = "b186bd1fe13e8a2fd1d2c66893941462";

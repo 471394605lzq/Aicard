@@ -10,7 +10,6 @@ using Microsoft.Owin.Security;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
-using AiCard.Enums;
 using System.Net;
 using AiCard.Models.CommModels;
 using System.Data;
@@ -18,6 +17,10 @@ using System.Data.SqlClient;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using PagedList;
+using AiCard.Common.Enums;
+using AiCard.Common.CommModels;
+using AiCard.Common;
+using AiCard.DAL.Models;
 
 namespace AiCard.Controllers
 {
@@ -315,7 +318,7 @@ namespace AiCard.Controllers
                     Remark = query.Remark,
                     Video = query.Video,
                     Voice = query.Voice,
-                    Info=query.Info,
+                    Info = query.Info,
                     Images = query.Images
                 };
                 return Json(Comm.ToJsonResult("Success", "成功", data), JsonRequestBehavior.AllowGet);
@@ -469,7 +472,7 @@ namespace AiCard.Controllers
                     };
                     return Json(Comm.ToJsonResult("Success", "成功", resultdata), JsonRequestBehavior.AllowGet);
                 }
-                else if (type == Enums.RankingsType.CustNumber)
+                else if (type == RankingsType.CustNumber)
                 {
                     string sqlstr = string.Format(@"SELECT* FROM (SELECT CAST(ROW_NUMBER() over(order by COUNT(u.UserName) DESC) AS INTEGER) AS Ornumber, u.UserName, COUNT(cus.ID) AS Counts,u.id AS ID,c.Position
 								 FROM dbo.AspNetUsers u

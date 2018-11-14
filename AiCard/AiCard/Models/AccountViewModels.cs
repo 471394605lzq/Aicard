@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using AiCard.Common.Enums;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace AiCard.Models
@@ -113,7 +114,7 @@ namespace AiCard.Models
     {
         public string UserID { get; set; }
 
-        public Enums.UserType UserType { get; set; }
+        public UserType UserType { get; set; }
 
         public int EnterpriseID { get; set; }
 

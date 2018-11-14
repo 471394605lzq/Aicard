@@ -4,6 +4,9 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using AiCard.Models;
+using AiCard.Common.Enums;
+using AiCard.DAL.Models;
+
 namespace AiCard.Controllers
 {
     public class UserLogController : Controller
@@ -13,7 +16,7 @@ namespace AiCard.Controllers
         [AllowCrossSiteJson]
         public ActionResult CardLikeList(int cardID, int page = 1, int pageSize = 20)
         {
-            var likes = Bll.UserLogs.Search(relationID: cardID, type: Enums.UserLogType.CardLike, page: page, pageSize: pageSize);
+            var likes = Bll.UserLogs.Search(relationID: cardID, type: UserLogType.CardLike, page: page, pageSize: pageSize);
             var data = likes.Select(s => new { s.UserAvatar, s.UserNickName });
             return Json(Comm.ToJsonResultForPagedList(likes, data), JsonRequestBehavior.AllowGet);
         }

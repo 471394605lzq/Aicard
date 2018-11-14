@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AiCard.Common.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -35,7 +36,7 @@ namespace AiCard.WeChatWork.Models
         public string Mobile { get; set; }
 
         [Display(Name = "性别")]
-        public Enums.Gender Gender { get; set; }
+        public Gender Gender { get; set; }
 
         [Display(Name = "邮箱")]
         public string Email { get; set; }

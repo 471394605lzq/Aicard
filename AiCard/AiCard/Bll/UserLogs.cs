@@ -4,12 +4,14 @@ using System.Linq;
 using System.Web;
 using PagedList;
 using AiCard.Models;
+using AiCard.Common.Enums;
+using AiCard.DAL.Models;
 
 namespace AiCard.Bll
 {
     public static class UserLogs
     {
-        public static IPagedList<UserLogListViewModel> Search(int? relationID = null, string targetUserID = null, int? enterpriseID = null, Enums.UserLogType? type = null, int page = 1, int pageSize = 20)
+        public static IPagedList<UserLogListViewModel> Search(int? relationID = null, string targetUserID = null, int? enterpriseID = null, UserLogType? type = null, int page = 1, int pageSize = 20)
         {
             using (ApplicationDbContext db = new ApplicationDbContext())
             {
@@ -77,13 +79,13 @@ namespace AiCard.Bll
                 ///验证
                 switch (log.Type)
                 {
-                    case Enums.UserLogType.ArticleLike:
-                    case Enums.UserLogType.ArticleComment:
-                    case Enums.UserLogType.ArticleRead:
-                    case Enums.UserLogType.ArticleShare:
+                    case UserLogType.ArticleLike:
+                    case UserLogType.ArticleComment:
+                    case UserLogType.ArticleRead:
+                    case UserLogType.ArticleShare:
                         {
                             var a = db.Articles.FirstOrDefault(s => s.ID == log.RelationID);
-                            if (a == null || a.State != Enums.ArticleState.Released)
+                            if (a == null || a.State != ArticleState.Released)
                             {
                                 throw new Exception("文章不存在");
                             }
@@ -91,8 +93,8 @@ namespace AiCard.Bll
                             log.TargetUserID = a.UserID;
                         }
                         break;
-                    case Enums.UserLogType.ProductRead:
-                    case Enums.UserLogType.ProductCon:
+                    case UserLogType.ProductRead:
+                    case UserLogType.ProductCon:
                         {
                             var p = db.Products.FirstOrDefault(s => s.ID == log.RelationID);
                             if (p == null)
@@ -102,18 +104,18 @@ namespace AiCard.Bll
                             log.TargetEnterpriseID = p.EnterpriseID;
                         }
                         break;
-                    case Enums.UserLogType.Communication:
-                    case Enums.UserLogType.HomePageRead:
-                    case Enums.UserLogType.ShopRead:
-                    case Enums.UserLogType.WeChatOpen:
-                    case Enums.UserLogType.CardRead:
-                    case Enums.UserLogType.CardShare:
-                    case Enums.UserLogType.CardSave:
-                    case Enums.UserLogType.CardLike:
-                    case Enums.UserLogType.PhoneCall:
-                    case Enums.UserLogType.EmailSend:
-                    case Enums.UserLogType.VoicePlay:
-                    case Enums.UserLogType.VideoPlay:
+                    case UserLogType.Communication:
+                    case UserLogType.HomePageRead:
+                    case UserLogType.ShopRead:
+                    case UserLogType.WeChatOpen:
+                    case UserLogType.CardRead:
+                    case UserLogType.CardShare:
+                    case UserLogType.CardSave:
+                    case UserLogType.CardLike:
+                    case UserLogType.PhoneCall:
+                    case UserLogType.EmailSend:
+                    case UserLogType.VoicePlay:
+                    case UserLogType.VideoPlay:
                         {
 
                             var c = db.Cards.FirstOrDefault(s => s.ID == log.RelationID);
@@ -126,9 +128,9 @@ namespace AiCard.Bll
                             log.TargetUserID = c.UserID;
                         }
                         break;
-                    case Enums.UserLogType.CardTab:
+                    case UserLogType.CardTab:
                         {
-                            if (db.UserLogs.Any(s => s.Type == Enums.UserLogType.CardTab
+                            if (db.UserLogs.Any(s => s.Type == UserLogType.CardTab
                                && s.RelationID == log.RelationID
                                && s.UserID == log.UserID))
                             {
@@ -147,7 +149,7 @@ namespace AiCard.Bll
                     default:
                         break;
                 }
-                if (log.Type == Enums.UserLogType.ArticleLike || log.Type == Enums.UserLogType.CardLike)
+                if (log.Type == UserLogType.ArticleLike || log.Type == UserLogType.CardLike)
                 {
                     var dbLog = db.UserLogs.FirstOrDefault(s => s.RelationID == log.RelationID
                                 && s.UserID == log.UserID
@@ -169,16 +171,16 @@ namespace AiCard.Bll
                 db.SaveChanges();//修改log
                 switch (log.Type)
                 {
-                    case Enums.UserLogType.ArticleLike:
-                    case Enums.UserLogType.ArticleShare:
+                    case UserLogType.ArticleLike:
+                    case UserLogType.ArticleShare:
                         {
                             var art = db.Articles.FirstOrDefault(s => s.ID == log.RelationID);
                             var count = db.UserLogs.Count(s => s.RelationID == log.RelationID && s.Type == log.Type);
-                            if (log.Type == Enums.UserLogType.ArticleShare)
+                            if (log.Type == UserLogType.ArticleShare)
                             {
                                 art.Share = count;
                             }
-                            if (log.Type == Enums.UserLogType.ArticleLike)
+                            if (log.Type == UserLogType.ArticleLike)
                             {
                                 art.Like = count;
                             }
@@ -186,12 +188,12 @@ namespace AiCard.Bll
                             db.SaveChanges();//更新点赞数量或分享数
                             break;
                         }
-                    case Enums.UserLogType.CardLike:
-                    case Enums.UserLogType.CardRead:
-                    case Enums.UserLogType.CardShare:
+                    case UserLogType.CardLike:
+                    case UserLogType.CardRead:
+                    case UserLogType.CardShare:
                         {
                             var card = db.Cards.FirstOrDefault(s => s.ID == log.RelationID);
-                            if (log.Type == Enums.UserLogType.CardRead)
+                            if (log.Type == UserLogType.CardRead)
                             {
                                 //算人头
                                 card.Like = db.UserLogs
@@ -205,7 +207,7 @@ namespace AiCard.Bll
                                 var count = db.UserLogs
                                     .Count(s => s.RelationID == log.RelationID
                                             && s.Type == log.Type);
-                                if (log.Type == Enums.UserLogType.CardLike)
+                                if (log.Type == UserLogType.CardLike)
                                 {
                                     card.View = count;
                                 }
@@ -214,11 +216,11 @@ namespace AiCard.Bll
                             db.SaveChanges();//更新点赞数量或阅读数量
                         }
                         break;
-                    case Enums.UserLogType.CardTab:
+                    case UserLogType.CardTab:
                         {
                             var t = db.CardTabs.FirstOrDefault(s => s.ID == log.RelationID);
                             t.Count = db.UserLogs.Count(s => s.RelationID == log.RelationID
-                                && s.Type == Enums.UserLogType.CardTab);
+                                && s.Type == UserLogType.CardTab);
                             db.SaveChanges();//更新卡片标签
                             break;
                         }

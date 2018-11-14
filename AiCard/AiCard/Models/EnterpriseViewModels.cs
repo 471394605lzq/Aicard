@@ -1,4 +1,6 @@
-﻿using AiCard.Models.CommModels;
+﻿using AiCard.Common;
+using AiCard.Common.CommModels;
+using AiCard.Models.CommModels;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -20,7 +22,7 @@ namespace AiCard.Models
         {
             AutoInit = true,
             Name = "Logo",
-            Server = CommModels.UploadServer.QinQiu,
+            Server = UploadServer.QinQiu,
         };
         [Display(Name = "小程序AppID")]
         public string AppID { get; set; }
@@ -97,7 +99,7 @@ namespace AiCard.Models
         {
             AutoInit = true,
             Name = "Logo",
-            Server = CommModels.UploadServer.QinQiu,
+            Server = UploadServer.QinQiu,
         };
         [Display(Name = "小程序AppID")]
         public string AppID { get; set; }

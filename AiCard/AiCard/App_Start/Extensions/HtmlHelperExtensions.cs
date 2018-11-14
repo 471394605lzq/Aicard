@@ -1,4 +1,5 @@
-﻿using PagedList;
+﻿using AiCard.Common.Enums;
+using PagedList;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -174,9 +175,9 @@ namespace AiCard
         /// <returns>地址为空返回null</returns>
         public static string ResizeImage(this UrlHelper source, string url, int? w = null, int? h = null,
             int? quality = null,
-            Enums.DummyImage? img = Enums.DummyImage.Default,
-            Enums.ResizerMode? mode = null,
-            Enums.ReszieScale? scale = Enums.ReszieScale.Both)
+            DummyImage? img = DummyImage.Default,
+            ResizerMode? mode = null,
+            ReszieScale? scale = ReszieScale.Both)
         {
             return Comm.ResizeImage(url, w, h, quality, img, mode, scale);
         }
@@ -333,7 +334,7 @@ namespace AiCard
             else
             {
                 var img = Comm.ResizeImage(url);
-                var tableImg = Comm.ResizeImage(url, h: 23, w: 23, mode: Enums.ResizerMode.Crop);
+                var tableImg = Comm.ResizeImage(url, h: 23, w: 23, mode: ResizerMode.Crop);
                 var tableImgBig = Comm.ResizeImage(url, h: 120);
                 return new MvcHtmlString($"<a class='table-img' href='{img}'  target='_blank'><img src='{tableImg}'/><img src='{tableImgBig}'/></a>");
             }

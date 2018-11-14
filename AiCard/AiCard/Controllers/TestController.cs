@@ -13,6 +13,9 @@ using System.IO;
 using System.Drawing;
 using System.Net;
 using AiCard.Models.CommModels;
+using AiCard.Common.CommModels;
+using AiCard.Common.Enums;
+using AiCard.DAL.Models;
 
 namespace AiCard.Controllers
 {
@@ -78,8 +81,6 @@ namespace AiCard.Controllers
 
         #endregion
 
-
-
         public ActionResult UploadTest()
         {
             var model = new TestImages();
@@ -97,34 +98,34 @@ namespace AiCard.Controllers
             return View();
         }
 
-        [AllowCrossSiteJson]
-        public ActionResult DeleteUser()
-        {
-            var user = db.Users.FirstOrDefault(s => s.NickName == "hot pink");
+        //[AllowCrossSiteJson]
+        //public ActionResult DeleteUser()
+        //{
+        //    var user = db.Users.FirstOrDefault(s => s.NickName == "hot pink");
 
-            var log = db.UserLogs.Where(s => s.UserID == user.Id).ToList();
-            db.UserLogs.RemoveRange(log);
-            db.Users.Remove(user);
-            db.SaveChanges();
-            return Json(Comm.ToJsonResult("Success", "消息"), JsonRequestBehavior.AllowGet);
-        }
+        //    var log = db.UserLogs.Where(s => s.UserID == user.Id).ToList();
+        //    db.UserLogs.RemoveRange(log);
+        //    db.Users.Remove(user);
+        //    db.SaveChanges();
+        //    return Json(Comm.ToJsonResult("Success", "消息"), JsonRequestBehavior.AllowGet);
+        //}
 
 
         [HttpGet]
         public ActionResult TestMap()
         {
-            Models.Enterprise e = new Enterprise
+            Enterprise e = new Enterprise
             {
                 Address = "帝推科技",
                 Lat = 23.015228,
                 Lng = 113.74574
             };
-            var map = new Models.CommModels.Map(e);
+            var map = new Map(e);
             return View(map);
         }
 
         [HttpPost]
-        public ActionResult TestMap(Models.CommModels.Map map)
+        public ActionResult TestMap(Map map)
         {
             return View(map);
         }
@@ -205,16 +206,12 @@ namespace AiCard.Controllers
 
             return View();
         }
-        public ActionResult pac()
-        {
-            var model = new Test();
-            return View(model);
-        }
+       
 
         [AllowCrossSiteJson]
         public ActionResult WirteLog(object data)
         {
-            Comm.WriteLog("Debug", JsonConvert.SerializeObject(data), Enums.DebugLogLevel.Normal);
+            Comm.WriteLog("Debug", JsonConvert.SerializeObject(data), DebugLogLevel.Normal);
             return Json(Comm.ToJsonResult("Success", "成功"));
         }
 
@@ -225,7 +222,7 @@ namespace AiCard.Controllers
 
             public string Title { get; set; }
 
-            public Enums.CellStyle Style { get; set; }
+            public CellStyle Style { get; set; }
 
             public object Data { get; set; }
         }
@@ -246,20 +243,20 @@ namespace AiCard.Controllers
         {
             public TestImages()
             {
-                Avatar = new AiCard.Models.CommModels.FileUpload
+                Avatar = new FileUpload
                 {
                     Max = 3,
                     Name = "Avatar",
                     Sortable = true,
-                    Type = AiCard.Models.CommModels.FileType.Sound,
+                    Type = Common.CommModels.FileType.Sound,
                     AutoInit = false,
-                    Server = AiCard.Models.CommModels.UploadServer.QinQiu
+                    Server = UploadServer.QinQiu
                 };
             }
 
             public string NickName { get; set; }
 
-            public AiCard.Models.CommModels.FileUpload Avatar { get; set; }
+            public FileUpload Avatar { get; set; }
 
         }
 

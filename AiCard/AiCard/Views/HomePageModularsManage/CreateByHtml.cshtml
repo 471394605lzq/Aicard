@@ -2,14 +2,14 @@
 @{
     ViewBag.Title = "公司主页模块新增";
     Layout = "~/Views/Shared/_LayoutBackground.cshtml";
-    AiCard.Models.CommModels.FileUpload uploader = new AiCard.Models.CommModels.FileUpload
+    AiCard.Common.CommModels.FileUpload uploader = new AiCard.Common.CommModels.FileUpload
     {
         AutoInit = false,
         Max = 50,
         Name = "ckupload",
-        Server = AiCard.Models.CommModels.UploadServer.QinQiu,
-        Mode = AiCard.Models.CommModels.FileUploadMode.ModalOnly,
-        Type = AiCard.Models.CommModels.FileType.Image,
+        Server = AiCard.Common.CommModels.UploadServer.QinQiu,
+        Mode = AiCard.Common.CommModels.FileUploadMode.ModalOnly,
+        Type = AiCard.Common.CommModels.FileType.Image,
     };
 }
 <div class="ModularByHtml">

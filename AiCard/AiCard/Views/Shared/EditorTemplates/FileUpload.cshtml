@@ -1,6 +1,6 @@
-﻿@model AiCard.Models.CommModels.FileUpload
+﻿@model AiCard.Common.CommModels.FileUpload
 @{
-    var hidCtl = Model.Mode == AiCard.Models.CommModels.FileUploadMode.ModalOnly ? "hidden" : "";
+    var hidCtl = Model.Mode == AiCard.Common.CommModels.FileUploadMode.ModalOnly ? "hidden" : "";
 }
 <div id="myModal_@Model.Name" class="uploader @(Model.AutoInit?"":"noInit")"
      data-max="@Model.Max"
@@ -19,7 +19,7 @@
             </li>
             @foreach (var item in Model.Images)
             {
-                var imgsrc = Url.ResizeImage(item, h: 70, w: 120, quality: 100, mode: AiCard.Enums.ResizerMode.Max);
+                var imgsrc = Url.ResizeImage(item, h: 70, w: 120, quality: 100, mode: AiCard.Common.Enums.ResizerMode.Max);
                 var fileType = Path.GetExtension(item);
                 if (fileType != ".bmp" && fileType != ".tif" && fileType != ".png"
                     && fileType != ".jpeg" && fileType != ".jpg" && fileType != ".gif"
@@ -76,22 +76,22 @@
                     var accept = "";
                     switch (Model.Type)
                     {
-                        case AiCard.Models.CommModels.FileType.File:
+                        case AiCard.Common.CommModels.FileType.File:
                             { accept = ""; }
                             break;
-                        case AiCard.Models.CommModels.FileType.Image:
+                        case AiCard.Common.CommModels.FileType.Image:
                             { accept = "image/*"; }
                             break;
-                        case AiCard.Models.CommModels.FileType.Word:
+                        case AiCard.Common.CommModels.FileType.Word:
                             { accept = "application/vnd.ms-works,application/vnd.ms-works,application/vnd.ms-works,application/msword"; }
                             break;
-                        case AiCard.Models.CommModels.FileType.Excel:
+                        case AiCard.Common.CommModels.FileType.Excel:
                             { accept = "application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"; }
                             break;
-                        case AiCard.Models.CommModels.FileType.Video:
+                        case AiCard.Common.CommModels.FileType.Video:
                             { accept = "video/*"; }
                             break;
-                        case AiCard.Models.CommModels.FileType.Sound:
+                        case AiCard.Common.CommModels.FileType.Sound:
                             { accept = "audio/*"; }
                             break;
                         default:

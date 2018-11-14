@@ -5,7 +5,8 @@ using System.Linq;
 using System.Web;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Web.Mvc;
-using AiCard.Enums;
+using AiCard.Common.Enums;
+using AiCard.Common.CommModels;
 
 namespace AiCard.Models
 {
@@ -40,12 +41,12 @@ namespace AiCard.Models
         public string Title { get; set; }
 
         [Display(Name = "图片")]
-        public CommModels.FileUpload Images { get; set; } = new CommModels.FileUpload
+        public FileUpload Images { get; set; } = new FileUpload
         {
             AutoInit = true,
             Max = 50,
             Name = "Images",
-            Server = CommModels.UploadServer.QinQiu,
+            Server = UploadServer.QinQiu,
             Sortable = true,
         };
 
@@ -72,7 +73,7 @@ namespace AiCard.Models
         public string Address { get; set; }
 
         [Display(Name = "类别")]
-        public Enums.HomePageModularType Type { get { return HomePageModularType.Contact; } }
+        public HomePageModularType Type { get { return HomePageModularType.Contact; } }
 
     }
 }

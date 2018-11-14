@@ -1,4 +1,7 @@
-﻿using System;
+﻿using AiCard.Common.CommModels;
+using AiCard.Common.Enums;
+using AiCard.DAL.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -11,7 +14,7 @@ namespace AiCard.Models
         public int ID { get; set; }
 
         [Display(Name = "类别")]
-        public Enums.ProductType Type { get; set; }
+        public ProductType Type { get; set; }
 
         [Display(Name = "分类")]
         [Required]
@@ -48,14 +51,14 @@ namespace AiCard.Models
 
         [Display(Name = "图片")]
         //public string Images { get; set; }
-        public Models.CommModels.FileUpload Images { get; set; } = new CommModels.FileUpload
+        public FileUpload Images { get; set; } = new FileUpload
         {
             AutoInit = true,
             Max = 5,
             Name = "Images",
-            Server = CommModels.UploadServer.QinQiu,
+            Server = UploadServer.QinQiu,
             Sortable = true,
-            Type = CommModels.FileType.Image,
+            Type = Common.CommModels.FileType.Image,
         };
 
         [Display(Name = "商品信息")]
@@ -70,7 +73,7 @@ namespace AiCard.Models
         public int ID { get; set; }
 
         [Display(Name = "类别")]
-        public Enums.ProductType Type { get; set; }
+        public ProductType Type { get; set; }
 
         [Display(Name = "分类")]
         public int KindID { get; set; }
