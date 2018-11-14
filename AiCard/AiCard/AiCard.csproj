@@ -253,7 +253,6 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\Comm.cs" />
     <Compile Include="App_Start\DrawingPictures.cs" />
-    <Compile Include="App_Start\Enums.cs" />
     <Compile Include="App_Start\Extensions\ActionFilterAttributes.cs" />
     <Compile Include="App_Start\Extensions\ControllerExtensions.cs" />
     <Compile Include="App_Start\Extensions\IntExtensions.cs" />

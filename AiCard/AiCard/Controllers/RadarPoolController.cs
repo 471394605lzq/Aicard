@@ -1,4 +1,5 @@
-﻿using AiCard.Models;
+﻿using AiCard.DAL.Models;
+using AiCard.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -37,8 +38,8 @@ namespace AiCard.Controllers
                     };
                 parameters[0].Value = enterpriseid;
                 parameters[1].Value = userid;
-                parameters[2].Value = Enums.UserLogType.CardRead;
-                parameters[3].Value = Enums.UserLogType.CardCon;
+                parameters[2].Value = Common.Enums.UserLogType.CardRead;
+                parameters[3].Value = Common.Enums.UserLogType.CardCon;
                 //
                 string sqlstr = string.Format(@"GetYesterday_EpitomeForRadar @enterpriseid,@userid,@browsetype,@consultcusttype");
                 List<GetYesterdayEpitomeForRadarModel> data = db.Database.SqlQuery<GetYesterdayEpitomeForRadarModel>(sqlstr, parameters).ToList();
@@ -74,8 +75,8 @@ namespace AiCard.Controllers
                 parameters[0].Value = enterpriseid;
                 parameters[1].Value = userid;
                 parameters[2].Value = timenumber;
-                parameters[3].Value = Enums.UserLogType.CardRead;
-                parameters[4].Value = Enums.UserLogType.CardCon;
+                parameters[3].Value = Common.Enums.UserLogType.CardRead;
+                parameters[4].Value = Common.Enums.UserLogType.CardCon;
 
                 string sqlstr = string.Format(@"TrendAnalysis @enterpriseid,@userid,@timenumber,@browsetype,@consultcusttype");
                 List<TrendAnalysisModel> data = db.Database.SqlQuery<TrendAnalysisModel>(sqlstr, parameters).ToList();

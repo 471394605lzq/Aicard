@@ -17,7 +17,6 @@ using System.Data.SqlClient;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using PagedList;
-using AiCard.Common.Enums;
 using AiCard.Common.CommModels;
 using AiCard.Common;
 using AiCard.DAL.Models;
@@ -108,18 +107,18 @@ namespace AiCard.Controllers
             {
                 return Json(Comm.ToJsonResult("NoFound", "卡片不存在"));
             }
-            var likeCount = db.UserLogs.Count(s => s.Type == UserLogType.CardLike && s.RelationID == cardID);
+            var likeCount = db.UserLogs.Count(s => s.Type == Common.Enums.UserLogType.CardLike && s.RelationID == cardID);
             var viewCount = db.UserLogs
-                .Where(s => s.Type == UserLogType.CardRead && s.RelationID == cardID)
+                .Where(s => s.Type == Common.Enums.UserLogType.CardRead && s.RelationID == cardID)
                 .GroupBy(s => s.UserID)
                 .Count();
             var hadLike = db.UserLogs.Any(s => s.RelationID == cardID
-                && s.Type == UserLogType.CardLike
+                && s.Type == Common.Enums.UserLogType.CardLike
                 && s.UserID == userID);
             //获取最近访问的6个人头像
             var leastUsers = (from l in db.UserLogs
                               from u in db.Users
-                              where l.Type == UserLogType.CardRead
+                              where l.Type == Common.Enums.UserLogType.CardRead
                                 && l.RelationID == cardID
                                 && u.Id == l.UserID
                               select new
@@ -138,9 +137,9 @@ namespace AiCard.Controllers
                                .Take(6)
                                .ToList();
             var tab = (from t in db.CardTabs
-                       join l in db.UserLogs.Where(s => s.Type == UserLogType.CardTab)
+                       join l in db.UserLogs.Where(s => s.Type == Common.Enums.UserLogType.CardTab)
                         on t.ID equals l.RelationID into tl
-                       join ul in db.UserLogs.Where(s => s.Type == UserLogType.CardTab && s.UserID == userID)
+                       join ul in db.UserLogs.Where(s => s.Type == Common.Enums.UserLogType.CardTab && s.UserID == userID)
                         on t.ID equals ul.RelationID into tl2
                        where t.CardID == cardID
                        select new
@@ -208,7 +207,7 @@ namespace AiCard.Controllers
                 {
                     UserID = userID,
                     RelationID = cardID,
-                    Type = UserLogType.CardRead
+                    Type = Common.Enums.UserLogType.CardRead
                 });
             }
             catch (Exception ex)
@@ -427,7 +426,7 @@ namespace AiCard.Controllers
         /// <param name="type"></param>
         /// <returns></returns>
         [AllowCrossSiteJson]
-        public ActionResult GetRankingsList(Enums.RankingsType? type, int enterpriseID,string userID, int? page = 1, int? pageSize = 20)
+        public ActionResult GetRankingsList(Common.Enums.RankingsType? type, int enterpriseID, string userID, int? page = 1, int? pageSize = 20)
         {
             try
             {
@@ -450,14 +449,14 @@ namespace AiCard.Controllers
                 myparameters[0].Value = enterpriseID;
                 myparameters[1].Value = userID;
 
-                if (type == Enums.RankingsType.Activity)
+                if (type == Common.Enums.RankingsType.Activity)
                 {
                     string sqlstr = string.Format(@"SELECT * FROM (SELECT CAST(ROW_NUMBER() over(order by COUNT(c.Name) DESC) AS INTEGER) AS Ornumber, c.Name, c.Avatar, COUNT(c.Name) Counts,c.UserID AS ID,c.Position FROM dbo.UserLogs ul
                                   INNER JOIN dbo.Cards c ON c.UserID = ul.TargetUserID WHERE ul.CreateDateTime BETWEEN dateadd(ms, 0, DATEADD(dd, DATEDIFF(dd, 0, getdate()), 0)) AND dateadd(ms, -3, DATEADD(dd, DATEDIFF(dd, -1, getdate()), 0))
                                    AND c.EnterpriseID=@enterpriseID 
                                   GROUP BY c.Name, c.Avatar,c.ID,c.Position,c.UserID) t WHERE t.Ornumber > @starpagesize AND t.Ornumber<=@endpagesize");
                     List<RankingModel> data = db.Database.SqlQuery<RankingModel>(sqlstr, parameters).ToList();
-                    
+
                     string mysqlstr = string.Format(@"SELECT CAST(ROW_NUMBER() over(order by COUNT(c.Name) DESC) AS INTEGER) AS Ornumber, c.Name, c.Avatar, COUNT(c.Name) Counts,c.UserID AS ID,c.Position
                                   FROM dbo.UserLogs ul
                                   INNER JOIN dbo.Cards c ON c.UserID = ul.TargetUserID 
@@ -468,18 +467,18 @@ namespace AiCard.Controllers
                     var resultdata = new
                     {
                         listdata = data,
-                        mydata= mydata
+                        mydata = mydata
                     };
                     return Json(Comm.ToJsonResult("Success", "成功", resultdata), JsonRequestBehavior.AllowGet);
                 }
-                else if (type == RankingsType.CustNumber)
+                else if (type == Common.Enums.RankingsType.CustNumber)
                 {
                     string sqlstr = string.Format(@"SELECT* FROM (SELECT CAST(ROW_NUMBER() over(order by COUNT(u.UserName) DESC) AS INTEGER) AS Ornumber, u.UserName, COUNT(cus.ID) AS Counts,u.id AS ID,c.Position
 								 FROM dbo.AspNetUsers u
 								 INNER JOIN dbo.Cards c ON c.UserID=u.Id
                                                     LEFT JOIN dbo.EnterpriseUserCustomers cus ON cus.OwnerID = u.Id
                                                     WHERE UserType = 1 AND u.EnterpriseID=@enterpriseID GROUP BY u.UserName, u.Id,c.Position)t  WHERE t.Ornumber > @starpagesize AND t.Ornumber<=@endpagesize");
-                    List<RankingModel> data = db.Database.SqlQuery<RankingModel>(sqlstr,parameters).ToList();
+                    List<RankingModel> data = db.Database.SqlQuery<RankingModel>(sqlstr, parameters).ToList();
 
                     string mysqlstr = string.Format(@"SELECT CAST(ROW_NUMBER() over(order by COUNT(u.UserName) DESC) AS INTEGER) AS Ornumber, u.UserName, COUNT(cus.ID) AS Counts,u.id AS ID,c.Position
 								 FROM dbo.AspNetUsers u
