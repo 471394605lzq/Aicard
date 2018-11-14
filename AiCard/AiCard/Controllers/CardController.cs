@@ -473,18 +473,18 @@ namespace AiCard.Controllers
                 }
                 else if (type == Common.Enums.RankingsType.CustNumber)
                 {
-                    string sqlstr = string.Format(@"SELECT* FROM (SELECT CAST(ROW_NUMBER() over(order by COUNT(u.UserName) DESC) AS INTEGER) AS Ornumber, u.UserName, COUNT(cus.ID) AS Counts,u.id AS ID,c.Position
+                    string sqlstr = string.Format(@"SELECT* FROM (SELECT CAST(ROW_NUMBER() over(order by COUNT(u.UserName) DESC) AS INTEGER) AS Ornumber,c.Name, COUNT(cus.ID) AS Counts,u.id AS ID,c.Position
 								 FROM dbo.AspNetUsers u
 								 INNER JOIN dbo.Cards c ON c.UserID=u.Id
-                                                    LEFT JOIN dbo.EnterpriseUserCustomers cus ON cus.OwnerID = u.Id
-                                                    WHERE UserType = 1 AND u.EnterpriseID=@enterpriseID GROUP BY u.UserName, u.Id,c.Position)t  WHERE t.Ornumber > @starpagesize AND t.Ornumber<=@endpagesize");
+                                                    INNER JOIN dbo.EnterpriseUserCustomers cus ON cus.OwnerID = u.Id
+                                                    WHERE  UserType = 2 AND u.EnterpriseID=@enterpriseID GROUP BY c.Name, u.Id,c.Position)t  WHERE t.Ornumber > @starpagesize AND t.Ornumber<=@endpagesize");
                     List<RankingModel> data = db.Database.SqlQuery<RankingModel>(sqlstr, parameters).ToList();
 
-                    string mysqlstr = string.Format(@"SELECT CAST(ROW_NUMBER() over(order by COUNT(u.UserName) DESC) AS INTEGER) AS Ornumber, u.UserName, COUNT(cus.ID) AS Counts,u.id AS ID,c.Position
+                    string mysqlstr = string.Format(@"SELECT CAST(ROW_NUMBER() over(order by COUNT(u.UserName) DESC) AS INTEGER) AS Ornumber, c.Name , COUNT(cus.ID) AS Counts,u.id AS ID,c.Position
 								 FROM dbo.AspNetUsers u
 								 INNER JOIN dbo.Cards c ON c.UserID=u.Id
-                                                    LEFT JOIN dbo.EnterpriseUserCustomers cus ON cus.OwnerID = u.Id
-                                                    WHERE UserType = 1 AND u.EnterpriseID=@enterpriseID and u.Id=@userID GROUP BY u.UserName, u.Id,c.Position");
+                                                    INNER JOIN dbo.EnterpriseUserCustomers cus ON cus.OwnerID = u.Id
+                                                    WHERE UserType = 2 AND u.EnterpriseID=@enterpriseID and u.Id=@userID GROUP BY c.Name, u.Id,c.Position");
                     List<RankingModel> mydata = db.Database.SqlQuery<RankingModel>(mysqlstr, myparameters).ToList();
                     var resultdata = new
                     {
