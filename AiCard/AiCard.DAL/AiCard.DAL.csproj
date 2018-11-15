@@ -198,6 +198,10 @@
     <Compile Include="Migrations\201811130218454_AddUserSpeechsAndUserSpeechTypes.designer.cs">
       <DependentUpon>201811130218454_AddUserSpeechsAndUserSpeechTypes.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201811151230534_AddVipElt.cs" />
+    <Compile Include="Migrations\201811151230534_AddVipElt.Designer.cs">
+      <DependentUpon>201811151230534_AddVipElt.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ArticleModels.cs" />
     <Compile Include="Models\CardModels.cs" />
@@ -214,6 +218,8 @@
     <Compile Include="Models\UserLogModels.cs" />
     <Compile Include="Models\UserProductTopModels.cs" />
     <Compile Include="Models\UserSpeechModels.cs" />
+    <Compile Include="Models\VipRelationshipModels.cs" />
+    <Compile Include="Models\VipForwardAccountModels.cs" />
     <Compile Include="Models\VipModels.cs" />
     <Compile Include="Models\VipAmountLogModels.cs" />
     <Compile Include="Models\VipForwardModels.cs" />
@@ -313,6 +319,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201811130218454_AddUserSpeechsAndUserSpeechTypes.resx">
       <DependentUpon>201811130218454_AddUserSpeechsAndUserSpeechTypes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201811151230534_AddVipElt.resx">
+      <DependentUpon>201811151230534_AddVipElt.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

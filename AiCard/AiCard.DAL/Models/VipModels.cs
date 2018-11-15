@@ -24,19 +24,30 @@ namespace AiCard.DAL.Models
         public int CardID { get; set; }
 
         /// <summary>
-        /// 可提现
+        /// 可提金额
         /// </summary>
         public decimal Amount { get; set; }
 
         /// <summary>
-        /// 父的VIPID
+        /// 可提金额
         /// </summary>
-        public int? ParentID { get; set; }
+        public decimal TotalAmount { get; set; }
+
 
         /// <summary>
-        /// 父的UserID
+        /// 2级VIP用户的数量
         /// </summary>
-        public string ParentUserID { get; set; }
+        public int VipChild2ndCount { get; set; }
+
+        /// <summary>
+        /// 3级VIP用户的数量
+        /// </summary>
+        public int VipChild3rdCount { get; set; }
+
+        /// <summary>
+        /// 免费用户的数量
+        /// </summary>
+        public int FreeChildCount { get; set; }
 
         /// <summary>
         /// 用户类别
@@ -49,9 +60,12 @@ namespace AiCard.DAL.Models
         public Common.Enums.VipState State { get; set; }
 
         /// <summary>
-        /// 分享码
+        /// 分享码（升级VIP后才有，免费用户是null）
+        /// <para>六位随机数（数字+26大写字母）</para>
+        /// <para>匹配的时候时候不区分大小写</para>
         /// </summary>
         public string Code { get; set; }
+
 
         /// <summary>
         /// 创建时间

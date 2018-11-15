@@ -318,7 +318,7 @@ namespace AiCard.Common.Enums
     /// <summary>
     /// 支付类型
     /// </summary>
-    public enum PayType
+    public enum PayChannel
     {
         [Display(Name = "微信支付")]
         WxPay,
@@ -336,22 +336,18 @@ namespace AiCard.Common.Enums
         Unpaid,
         [Display(Name = "已支付")]
         Paid,
-        [Display(Name = "已退款")]
-        Refunded,
         [Display(Name = "已取消")]
         Canceled,
-        [Display(Name = "已完成")]
-        Completed,
     }
 
-    /// <summary>
-    /// 订单类别
-    /// </summary>
-    public enum OrderType
-    {
-        [Display(Name = "99购买VIP")]
-        BuyVip99
-    }
+    ///// <summary>
+    ///// 订单类别
+    ///// </summary>
+    //public enum OrderType
+    //{
+    //    [Display(Name = "99购买VIP")]
+    //    BuyVip99
+    //}
 
     public enum VipRank
     {
@@ -409,7 +405,29 @@ namespace AiCard.Common.Enums
         NoPass,
         [Display(Name = "审核通过")]
         Passed,
-        [Display(Name = "审核通过")]
-        Fail
+        [Display(Name = "转账失败")]
+        Fail,
+        [Display(Name = "转账成功")]
+        Completed,
+    }
+
+    public enum VipForwardType
+    {
+        [Display(Name = "银行卡")]
+        BankCard,
+        [Display(Name = "红包")]
+        WxHongBao
+    }
+
+    public enum OrderType
+    {
+        /// <summary>
+        /// 收款
+        /// </summary>
+        Receivable,
+        /// <summary>
+        /// 退款
+        /// </summary>
+        Refund
     }
 }

@@ -66,7 +66,7 @@ namespace AiCard.DAL.Models
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {
-            
+
         }
 
         public DbSet<RoleGroup> RoleGroups { get; set; }
@@ -107,6 +107,19 @@ namespace AiCard.DAL.Models
         public DbSet<UserSpeech> UserSpeechs { get; set; }
 
         public DbSet<UserSpeechType> UserSpeechTypes { get; set; }
+
+
+        public DbSet<Order> Orders { get; set; }
+
+        public DbSet<Vip> Vips { get; set; }
+
+
+        public DbSet<VipRelationship> VipRelationships { get; set; }
+
+        public DbSet<VipAmountLog> VipAmountLogs { get; set; }
+
+        public DbSet<VipForwardOrder> VipForwardOrders { get; set; }
+
 
         public SqlConnection Connection { get; internal set; }
 

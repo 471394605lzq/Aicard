@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.ComponentModel.DataAnnotations;
-namespace AiCard.Models
+namespace AiCard.DAL.Models
 {
     /// <summary>
     /// 订单
@@ -19,10 +19,15 @@ namespace AiCard.Models
         public string Code { get; set; }
 
         /// <summary>
-        /// 支付类型
+        /// 支付渠道
         /// </summary>
-        [Display(Name = "支付类型")]
-        public Common.Enums.PayType PayType { get; set; }
+        [Display(Name = "支付渠道")]
+        public Common.Enums.PayChannel Channel { get; set; }
+
+        /// <summary>
+        /// 订单类别
+        /// </summary>
+        public Common.Enums.OrderType Type { get; set; }
 
         /// <summary>
         /// 订单状态
@@ -54,8 +59,6 @@ namespace AiCard.Models
         [Display(Name = "应收金额")]
         public decimal ReceivableAmount { get; set; }
 
-        
-
         /// <summary>
         /// 创建时间
         /// </summary>
@@ -68,6 +71,16 @@ namespace AiCard.Models
         [Display(Name = "支付时间")]
         public DateTime? PayDateTime { get; set; }
 
-        
+        /// <summary>
+        /// 传入参数
+        /// </summary>
+        public string PayInput { get; set; }
+
+        /// <summary>
+        /// 支付的结果
+        /// </summary>
+        public string PayResult { get; set; }
+
+
     }
 }

@@ -37,9 +37,14 @@ namespace AiCard.DAL.Models
         public Common.Enums.VipAmountLogType Type { get; set; }
 
         /// <summary>
-        /// 对象，新用户，新的子集
+        /// 来源的用户（子用户）
         /// </summary>
         public string SourceUserID { get; set; }
+
+        /// <summary>
+        /// VIPID
+        /// </summary>
+        public int? VipID { get; set; }
 
         /// <summary>
         /// 时间
