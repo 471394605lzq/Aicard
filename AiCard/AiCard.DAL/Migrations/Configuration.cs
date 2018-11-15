@@ -1,24 +1,23 @@
-namespace AiCard.Migrations
+namespace AiCard.DAL.Migrations
 {
-    using DAL.Models;
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<ApplicationDbContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<AiCard.DAL.Models.ApplicationDbContext>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
         }
 
-        protected override void Seed(ApplicationDbContext context)
+        protected override void Seed(AiCard.DAL.Models.ApplicationDbContext context)
         {
             //  This method will be called after migrating to the latest version.
 
             //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
-            //  to avoid creating duplicate seed data. E.g.
+            //  to avoid creating duplicate seed data. E.0g.
             //
             //    context.People.AddOrUpdate(
             //      p => p.FullName,

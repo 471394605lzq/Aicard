@@ -1,4 +1,5 @@
-﻿using AiCard.DAL.Models;
+﻿using AiCard.Common;
+using AiCard.DAL.Models;
 using AiCard.Models;
 using System;
 using System.Collections.Generic;
@@ -27,7 +28,7 @@ namespace AiCard.Controllers
             {
                 if (!db.Cards.Any(s => s.EnterpriseID == enterpriseid && s.UserID == userid))
                 {
-                    return Json(Comm.ToJsonResult("CardNoFound", "卡片不存在"));
+                    return Json(Comm.ToJsonResult("CardNoFound", "名片不存在"));
                 }
                 //拼接参数
                 SqlParameter[] parameters = {

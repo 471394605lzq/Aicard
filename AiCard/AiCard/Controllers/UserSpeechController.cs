@@ -1,4 +1,5 @@
-﻿using AiCard.DAL.Models;
+﻿using AiCard.Common;
+using AiCard.DAL.Models;
 using AiCard.Models;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-
+using System.Data.Entity;
 namespace AiCard.Controllers
 {
     public class UserSpeechController : Controller
@@ -41,10 +42,10 @@ namespace AiCard.Controllers
                 parameters[1].Value = starpagesize;
                 parameters[2].Value = endpagesize;
                 //
-                string sqlstr = string.Format(@"SELECT * FROM (SELECT CAST(ROW_NUMBER() over(order by COUNT(ust.ID) DESC) AS INTEGER) AS Ornumber,ust.Name as SpeechTypeName,COUNT(ust.ID) AS SpeechTypeCount,ust.ID FROM dbo.UserSpeechTypes ust
+                string sqlstr = string.Format(@"SELECT * FROM (SELECT CAST(ROW_NUMBER() over(order by COUNT(ust.ID) DESC) AS INTEGER) AS Ornumber,ust.Name as SpeechTypeName,COUNT(us.ID) AS SpeechTypeCount,ust.ID FROM dbo.UserSpeechTypes ust
                                                     LEFT JOIN dbo.UserSpeeches us ON us.TypeID=ust.ID WHERE ust.UserID=@UserId
                                                     GROUP BY ust.Name,ust.ID) t WHERE t.Ornumber > @starpagesize AND t.Ornumber<=@endpagesize");
-                List<UserSpeechTypeModel> data = db.Database.SqlQuery<UserSpeechTypeModel>(sqlstr,parameters).ToList();
+                List<UserSpeechTypeModel> data = db.Database.SqlQuery<UserSpeechTypeModel>(sqlstr, parameters).ToList();
                 return Json(Comm.ToJsonResult("Success", "成功", data), JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -61,7 +62,7 @@ namespace AiCard.Controllers
         /// <param name="pageSize">每页条数</param>
         /// <returns>list</returns>
         [AllowCrossSiteJson]
-        public ActionResult GetUserSpeechList(string userId,int typeId, int? page = 1, int? pageSize = 10)
+        public ActionResult GetUserSpeechList(string userId, int typeId, int? page = 1, int? pageSize = 10)
         {
             try
             {
@@ -73,7 +74,7 @@ namespace AiCard.Controllers
                         new SqlParameter("@typeID", SqlDbType.Int),
                         new SqlParameter("@starpagesize", SqlDbType.Int),
                         new SqlParameter("@endpagesize", SqlDbType.Int),
-                        
+
                     };
                 parameters[0].Value = userId;
                 parameters[1].Value = typeId;
@@ -230,23 +231,49 @@ namespace AiCard.Controllers
             }
         }
 
+
         /// <summary>
         /// 删除话术
         /// </summary>
         /// <returns></returns>
         [HttpPost]
         [AllowCrossSiteJson]
-        public ActionResult DeleteSpeechInfo(int id, string userID)
+        public ActionResult DeleteSpeechTypeInfo(int speechtypeid, string userID)
         {
             try
             {
-                var tab = db.UserSpeechs.FirstOrDefault(s => s.ID==id && s.UserID == userID);
+                var tab = db.UserSpeechTypes.Include(s => s.Speechs).FirstOrDefault(s => s.ID == speechtypeid && s.UserID == userID);
                 if (tab == null)
                 {
                     return Json(Comm.ToJsonResult("NoFound", "话术不存在"));
                 }
-                UserSpeech speech = db.UserSpeechs.Find(id);
-                db.UserSpeechs.Remove(speech);
+                db.UserSpeechs.RemoveRange(tab.Speechs);
+                db.UserSpeechTypes.Remove(tab);
+                db.SaveChanges();
+                return Json(Comm.ToJsonResult("Success", "删除成功"), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(Comm.ToJsonResult("Error500", ex.Message), JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        /// <summary>
+        /// 删除话术
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        [AllowCrossSiteJson]
+        public ActionResult DeleteSpeechInfo(int speechid, string userID)
+        {
+            try
+            {
+                var tab = db.UserSpeechs.FirstOrDefault(s => s.ID == speechid && s.UserID == userID);
+                if (tab == null)
+                {
+                    return Json(Comm.ToJsonResult("NoFound", "话术不存在"));
+                }
+                db.UserSpeechs.Remove(tab);
                 db.SaveChanges();
                 return Json(Comm.ToJsonResult("Success", "删除成功"), JsonRequestBehavior.AllowGet);
             }

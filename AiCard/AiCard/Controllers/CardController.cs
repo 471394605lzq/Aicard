@@ -5,21 +5,12 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Data.Entity;
-using Microsoft.AspNet.Identity.Owin;
-using Microsoft.Owin.Security;
-using System.Threading.Tasks;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
-using System.Net;
-using AiCard.Models.CommModels;
 using System.Data;
 using System.Data.SqlClient;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using PagedList;
 using AiCard.Common.CommModels;
 using AiCard.Common;
 using AiCard.DAL.Models;
+using AiCard.Common.Extensions;
 
 namespace AiCard.Controllers
 {

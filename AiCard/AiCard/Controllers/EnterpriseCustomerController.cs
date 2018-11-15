@@ -1,8 +1,11 @@
-﻿using AiCard.Common.Enums;
+﻿using AiCard.Common;
+using AiCard.Common.Enums;
 using AiCard.DAL.Models;
 using AiCard.Models;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -23,14 +26,17 @@ namespace AiCard.Controllers
         /// <param name="pageSize">每页数量</param>
         /// <returns>商品列表json集合</returns>
         [AllowCrossSiteJson]
-        public ActionResult GetEnterpriseCustomerList(int enterpriseID, string filter, int page = 1, int pageSize = 20)
+        public ActionResult GetEnterpriseCustomerList(string userID, string filter, int page = 1, int pageSize = 20)
         {
-            var query = from ec in db.EnterpriseCustomers
-                        from e in db.Enterprises
+            if (!db.Users.Any(s => s.Id == userID))
+            {
+                return Json(Comm.ToJsonResult("NoFound", "用户不存在"));
+            }
+            var query = from euc in db.EnterpriseUserCustomer
+                        from ec in db.EnterpriseCustomers
                         from us in db.Users
-                        where e.ID == enterpriseID
-                            && ec.EnterpriseID == e.ID
-                            && ec.UserID == us.Id
+                        where ec.ID == euc.CustomerID
+                            && ec.UserID == us.Id&&euc.OwnerID== userID
                         select new
                         {
                             ID = ec.ID,
@@ -45,7 +51,70 @@ namespace AiCard.Controllers
             var paged = query.OrderBy(s => s.ID).ToPagedList(page, pageSize);
             return Json(Comm.ToJsonResultForPagedList(paged, paged), JsonRequestBehavior.AllowGet);
         }
+        /// <summary>
+        /// 今日新增客户总数、未跟进客户数
+        /// </summary>
+        /// <param name="userID">名片所属用户ID</param>
+        /// <returns></returns>
+        [AllowCrossSiteJson]
+        public ActionResult GetCustCount(string userID)
+        {
+            if (!db.Users.Any(s => s.Id == userID))
+            {
+                return Json(Comm.ToJsonResult("NoFound", "用户不存在"));
+            }
+            SqlParameter[] parms = {
+                new SqlParameter("@userid",SqlDbType.NVarChar),
+                new SqlParameter("@statetype",SqlDbType.Int)
+            };
+            parms[0].Value = userID;
+            parms[1].Value = Common.Enums.EnterpriseUserCustomerState.NoFllow;
+            string sqlstr = string.Format(@"GetCustCount @userid,@statetype");
+            List<GetCustCountModel> data = db.Database.SqlQuery<GetCustCountModel>(sqlstr, parms).ToList();
+            return Json(Comm.ToJsonResult("Success", "成功", data), JsonRequestBehavior.AllowGet);
+        }
 
+        /// <summary>
+        /// 根据类型获取客户信息
+        /// </summary>
+        /// <param name="userID">名片所属用户ID</param>
+        /// <param name="type">类型 0：今日新增客户 1：未跟进客户</param>
+        /// <returns></returns>
+        [AllowCrossSiteJson]
+        public ActionResult GetCustInfoByType(string userID, int type)
+        {
+            if (!db.Users.Any(s => s.Id == userID))
+            {
+                return Json(Comm.ToJsonResult("NoFound", "用户不存在"));
+            }
+            SqlParameter[] parms = {
+                new SqlParameter("@userid",SqlDbType.NVarChar),
+                new SqlParameter("@type",SqlDbType.Int),
+                new SqlParameter("@statetype",SqlDbType.Int)
+            };
+            parms[0].Value = userID;
+            parms[1].Value = type;
+            parms[2].Value = Common.Enums.EnterpriseUserCustomerState.NoFllow;
+            string sqlstr = string.Format(@"GetCustInfoByType @userid,@statetype,@statetype");
+            List<CustInfoModel> data = db.Database.SqlQuery<CustInfoModel>(sqlstr, parms).ToList();
+            return Json(Comm.ToJsonResult("Success", "成功", data), JsonRequestBehavior.AllowGet);
+        }
+        private class CustInfoModel
+        {
+            //id
+            public int ID { get; set; }
+            //姓名
+            public string Name { get; set; }
+            //头像
+            public string Avatar { get; set; }
+        }
+        private class GetCustCountModel
+        {
+            //今日新增客户数
+            public int newcustcount { get; set; }
+            //未跟进客户数
+            public int nofollwcount { get; set; }
+        }
         /// <summary>
         /// 根据标签查询客户信息列表
         /// </summary>
