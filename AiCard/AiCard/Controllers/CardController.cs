@@ -279,7 +279,7 @@ namespace AiCard.Controllers
                 string returnpath = Comm.MergePosterImage(dm);
                 var data = new
                 {
-                    Posterpath = returnpath
+                    Posterpath = Comm.ResizeImage(returnpath)
                 };
                 var card = db.Cards.FirstOrDefault(s => s.ID == cardID);
                 card.Poster = returnpath;
