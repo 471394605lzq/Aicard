@@ -353,7 +353,7 @@ namespace AiCard.Common.Enums
         BuyVip99
     }
 
-    public enum VipType
+    public enum VipRank
     {
         [Display(Name = "默认")]
         Default
@@ -387,5 +387,29 @@ namespace AiCard.Common.Enums
         [Display(Name = "在跟进")]
         Follow,
 
+    }
+
+    public enum VipAmountLogType
+    {
+        [Display(Name = "新名片")]
+        NewCard,
+        [Display(Name = "新2级用户")]
+        NewChild2nd,
+        [Display(Name = "新3级用户")]
+        NewChild3rd,
+        [Display(Name = "提现")]
+        Forward
+    }
+
+    public enum VipForwardState
+    {
+        [Display(Name = "待审核")]
+        Waiting,
+        [Display(Name = "审核不通过")]
+        NoPass,
+        [Display(Name = "审核通过")]
+        Passed,
+        [Display(Name = "审核通过")]
+        Fail
     }
 }

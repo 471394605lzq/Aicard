@@ -5,6 +5,9 @@ using System.Web;
 using System.ComponentModel.DataAnnotations;
 namespace AiCard.Models
 {
+    /// <summary>
+    /// 订单
+    /// </summary>
     public class Order
     {
         public int ID { get; set; }
