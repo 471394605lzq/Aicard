@@ -96,7 +96,7 @@ namespace AiCard.DAL.Models
 
         public DbSet<EnterpriseCustomer> EnterpriseCustomers { get; set; }
 
-        public DbSet<EnterpriseUserCustomer> EnterpriseCustomerRemarks { get; set; }
+        public DbSet<EnterpriseUserCustomer> EnterpriseUserCustomer { get; set; }
 
         public DbSet<CustomerTab> CustomerTabs { get; set; }
 

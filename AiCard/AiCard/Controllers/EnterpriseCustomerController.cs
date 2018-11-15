@@ -23,14 +23,17 @@ namespace AiCard.Controllers
         /// <param name="pageSize">每页数量</param>
         /// <returns>商品列表json集合</returns>
         [AllowCrossSiteJson]
-        public ActionResult GetEnterpriseCustomerList(int enterpriseID, string filter, int page = 1, int pageSize = 20)
+        public ActionResult GetEnterpriseCustomerList(string userID, string filter, int page = 1, int pageSize = 20)
         {
-            var query = from ec in db.EnterpriseCustomers
-                        from e in db.Enterprises
+            if (!db.Users.Any(s => s.Id == userID))
+            {
+                return Json(Comm.ToJsonResult("NoFound", "用户不存在"));
+            }
+            var query = from euc in db.EnterpriseUserCustomer
+                        from ec in db.EnterpriseCustomers
                         from us in db.Users
-                        where e.ID == enterpriseID
-                            && ec.EnterpriseID == e.ID
-                            && ec.UserID == us.Id
+                        where ec.ID == euc.CustomerID
+                            && ec.UserID == us.Id&&euc.OwnerID== userID
                         select new
                         {
                             ID = ec.ID,
@@ -44,6 +47,10 @@ namespace AiCard.Controllers
             }
             var paged = query.OrderBy(s => s.ID).ToPagedList(page, pageSize);
             return Json(Comm.ToJsonResultForPagedList(paged, paged), JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult GetCustCount() {
+
+            return Json(Comm.ToJsonResult("NoFound", "用户不存在"));
         }
 
         /// <summary>
