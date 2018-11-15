@@ -1,4 +1,4 @@
-namespace AiCard.Migrations
+namespace AiCard.DAL.Migrations
 {
     using System;
     using System.Data.Entity.Migrations;
