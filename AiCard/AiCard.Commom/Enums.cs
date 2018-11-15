@@ -361,16 +361,31 @@ namespace AiCard.Common.Enums
 
     public enum VipState
     {
+        [Display(Name = "已禁用")]
+        Disable,
         [Display(Name = "已启用")]
         Enable,
-        [Display(Name = "已禁用")]
-        Disable
 
     }
 
     public enum EnterpriseUserCustomerSource
     {
-         
+        [Display(Name = "二维码")]
+        QrCode,
+        [Display(Name = "微信群")]
+        Group,
+        [Display(Name = "微信好友")]
+        Friend,
+        [Display(Name = "卡片列表")]
+        CardList
+    }
+
+    public enum EnterpriseUserCustomerState
+    {
+        [Display(Name = "未跟进")]
+        NoFllow,
+        [Display(Name = "在跟进")]
+        Follow,
 
     }
 }
