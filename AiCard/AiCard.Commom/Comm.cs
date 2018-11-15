@@ -9,7 +9,7 @@ using System.Security.Cryptography;
 using AiCard.Common.Enums;
 using AiCard.Common.CommModels;
 using AiCard.Common.Extensions;
-
+using AiCard;
 namespace AiCard.Common
 {
     public class Comm
