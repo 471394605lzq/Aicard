@@ -439,7 +439,6 @@
     <Compile Include="Models\EnterpriseViewModels.cs" />
     <Compile Include="Models\HomePageModularViewModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
-    <Compile Include="Models\Order.cs" />
     <Compile Include="Models\ProductKindsViewModels.cs" />
     <Compile Include="Models\ProductViewModels.cs" />
     <Compile Include="Models\RoleGroupViewModel.cs" />

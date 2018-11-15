@@ -315,10 +315,62 @@ namespace AiCard.Common.Enums
         CustNumber
     }
 
+    /// <summary>
+    /// 支付类型
+    /// </summary>
     public enum PayType
     {
-        WiXinPay,
+        [Display(Name = "微信支付")]
+        WxPay,
+        [Display(Name = "阿里支付")]
         AliPay
+    }
+
+
+    /// <summary>
+    /// 订单状态
+    /// </summary>
+    public enum OrderState
+    {
+        [Display(Name = "待支付")]
+        Unpaid,
+        [Display(Name = "已支付")]
+        Paid,
+        [Display(Name = "已退款")]
+        Refunded,
+        [Display(Name = "已取消")]
+        Canceled,
+        [Display(Name = "已完成")]
+        Completed,
+    }
+
+    /// <summary>
+    /// 订单类别
+    /// </summary>
+    public enum OrderType
+    {
+        [Display(Name = "99购买VIP")]
+        BuyVip99
+    }
+
+    public enum VipType
+    {
+        [Display(Name = "默认")]
+        Default
+    }
+
+    public enum VipState
+    {
+        [Display(Name = "已启用")]
+        Enable,
+        [Display(Name = "已禁用")]
+        Disable
+
+    }
+
+    public enum EnterpriseUserCustomerSource
+    {
+         
 
     }
 }
