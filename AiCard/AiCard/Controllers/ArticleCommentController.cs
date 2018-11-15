@@ -6,6 +6,8 @@ using System.Web.Mvc;
 using AiCard.Models;
 using ToolGood.Words;
 using AiCard.DAL.Models;
+using AiCard.Common.Extensions;
+using AiCard.Common;
 
 namespace AiCard.Controllers
 {

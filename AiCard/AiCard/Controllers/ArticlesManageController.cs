@@ -10,6 +10,7 @@ using AiCard.Models;
 using Newtonsoft.Json;
 using AiCard.Common.Enums;
 using AiCard.DAL.Models;
+using AiCard.Common;
 
 namespace AiCard.Controllers
 {

@@ -5,19 +5,14 @@ using System.Web;
 using System.Web.Mvc;
 using AiCard.Models;
 using Microsoft.AspNet.Identity.Owin;
-using Microsoft.Owin.Security;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
-using System.Data.Entity;
 using System.Net;
-using AiCard.WeChatWork;
-using AiCard.WeChatWork.Models;
+using AiCard.Common.WeChatWork;
+using AiCard.Common.WeChatWork.Models;
 using PagedList;
-using PagedList.Mvc;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using AiCard.Models.CommModels;
 using AiCard.Common.Enums;
 using AiCard.Common;
 using AiCard.Common.CommModels;
@@ -181,9 +176,9 @@ namespace AiCard.Controllers
             ViewBag.logo = em.Logo;
             ViewBag.enterpriseid = em.ID;
 
-            List<User> list = new List<WeChatWork.Models.User>();
+            List<User> list = new List<Common.WeChatWork.Models.User>();
             //错误的时候返回该model
-            PagedList.PagedList<AiCard.WeChatWork.Models.User> model = new PagedList<WeChatWork.Models.User>(list, page, 15);
+            PagedList.PagedList<Common.WeChatWork.Models.User> model = new PagedList<Common.WeChatWork.Models.User>(list, page, 15);
             if (string.IsNullOrWhiteSpace(em.WeChatWorkCorpid) || string.IsNullOrWhiteSpace(em.WeChatWorkSecret))
             {
                 ViewBag.errormsg = "错误提示：请先配置微信corpid和secrrt!";
@@ -196,7 +191,7 @@ namespace AiCard.Controllers
                     ViewBag.errormsg = "";
                     WeChatWorkApi wxapi = new WeChatWorkApi(em.WeChatWorkCorpid, em.WeChatWorkSecret);
                     List<Department> listdepartment = wxapi.GetDepartment();
-                    List<User> listwxuser = new List<WeChatWork.Models.User>();
+                    List<User> listwxuser = new List<Common.WeChatWork.Models.User>();
                     //var m= db.Cards.Select(s => s.EnterpriseID == em.ID) as List<Card>;
                     List<Card> listcard = db.Cards.Where(s => s.EnterpriseID == em.ID).ToList();
                     if (listdepartment.Count > 0)
@@ -223,7 +218,7 @@ namespace AiCard.Controllers
                         }
                     }
                     var paged = listwxuser.OrderByDescending(s => s.ID).ToList();
-                    PagedList.PagedList<AiCard.WeChatWork.Models.User> models = new PagedList<WeChatWork.Models.User>(paged, page, 15);
+                    PagedList.PagedList<Common.WeChatWork.Models.User> models = new PagedList<Common.WeChatWork.Models.User>(paged, page, 15);
                     return View(models);
                 }
                 catch (Exception ex)
@@ -262,7 +257,7 @@ namespace AiCard.Controllers
                             //用户创建成果
                             if (result.Succeeded)
                             {
-                                Qiniu.QinQiuApi qin = new Qiniu.QinQiuApi();
+                                Common.Qiniu.QinQiuApi qin = new Common.Qiniu.QinQiuApi();
                                 var path = Server.MapPath(img);
                                 var img2 = qin.UploadFile(path);
                                 Card card = new Card

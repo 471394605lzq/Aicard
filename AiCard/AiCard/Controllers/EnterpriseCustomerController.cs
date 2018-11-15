@@ -1,4 +1,5 @@
-﻿using AiCard.Common.Enums;
+﻿using AiCard.Common;
+using AiCard.Common.Enums;
 using AiCard.DAL.Models;
 using AiCard.Models;
 using System;

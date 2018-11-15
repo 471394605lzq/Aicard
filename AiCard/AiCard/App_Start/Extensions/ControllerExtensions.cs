@@ -4,11 +4,10 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.IO;
-using Microsoft.AspNet.Identity;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System.Net;
 using AiCard.Common.Enums;
+using AiCard.Common;
+using AiCard.Common.Extensions;
+using Newtonsoft.Json;
 
 namespace AiCard
 {
