@@ -14,6 +14,8 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using AiCard.Common.Enums;
 using AiCard.DAL.Models;
+using AiCard.Common;
+using AiCard.Common.Extensions;
 
 namespace AiCard.Controllers
 {
@@ -590,7 +592,7 @@ namespace AiCard.Controllers
         public ActionResult LoginByWeiXinSilence(string state)
         {
             var p = new Dictionary<string, string>();
-            p.Add("appid", AiCard.WeChat.ConfigPc.AppID);
+            p.Add("appid", Common.WeChat.ConfigPc.AppID);
             p.Add("redirect_uri", "http://www.yumy.me/Account/LoginByWeiXin");
             p.Add("response_type", "code");
             p.Add("scope", "snsapi_base");
@@ -633,8 +635,8 @@ namespace AiCard.Controllers
                     default:
                     case WeChatAccount.PC:
                         {
-                            WeChat.WeChatApi wechat = new WeChat.WeChatApi(AiCard.WeChat.ConfigPc.AppID, AiCard.WeChat.ConfigPc.AppSecret);
-                            WeChat.AccessTokenResult result;
+                            Common.WeChat.WeChatApi wechat = new Common.WeChat.WeChatApi(Common.WeChat.ConfigPc.AppID, Common.WeChat.ConfigPc.AppSecret);
+                            Common.WeChat.AccessTokenResult result;
                             try
                             {
                                 result = wechat.GetAccessTokenSns(code);
@@ -679,7 +681,7 @@ namespace AiCard.Controllers
                                         }
                                         catch (Exception)
                                         {
-                                            user = CreateByWeChat(new WeChat.UserInfoResult { UnionID = unionid });
+                                            user = CreateByWeChat(new Common.WeChat.UserInfoResult { UnionID = unionid });
                                         }
 
                                     }
@@ -715,7 +717,7 @@ namespace AiCard.Controllers
             else
             {
                 //小程序
-                WeChat.WeChatMinApi wechat = new WeChat.WeChatMinApi(AiCard.WeChat.ConfigMini.AppID, AiCard.WeChat.ConfigMini.AppSecret);
+                Common.WeChat.WeChatMinApi wechat = new Common.WeChat.WeChatMinApi(Common.WeChat.ConfigMini.AppID, Common.WeChat.ConfigMini.AppSecret);
                 try
                 {
                     var result = wechat.Jscode2session(code);
@@ -744,7 +746,7 @@ namespace AiCard.Controllers
 
         [HttpPost]
         [AllowCrossSiteJson]
-        public ActionResult RegisterByWeiXin(WeChat.UserInfoResult model)
+        public ActionResult RegisterByWeiXin(Common.WeChat.UserInfoResult model)
         {
             try
             {
@@ -756,8 +758,8 @@ namespace AiCard.Controllers
                         return Json(Comm.ToJsonResult("OpenIDNoFound", $"OpenID不能为空"));
                     }
                     //如果用户没关注公众号，获取不了UnionID，从EncryptedData从解密用户数据
-                    var session = WeChat.Jscode2sessionResultList.GetSession(model.OpenID);
-                    var str = WeChat.Jscode2sessionResultList.AESDecrypt(model.EncryptedData, session, model.IV);
+                    var session = Common.WeChat.Jscode2sessionResultList.GetSession(model.OpenID);
+                    var str = Common.WeChat.Jscode2sessionResultList.AESDecrypt(model.EncryptedData, session, model.IV);
                     try
                     {
 
@@ -807,7 +809,7 @@ namespace AiCard.Controllers
             }
         }
 
-        private ApplicationUser CreateByWeChat(WeChat.UserInfoResult model)
+        private ApplicationUser CreateByWeChat(Common.WeChat.UserInfoResult model)
         {
 
             string username, nickname, avart, unionId = model.UnionID;
@@ -834,7 +836,7 @@ namespace AiCard.Controllers
 
             #region 把图片传到七牛
             var path = Server.MapPath(avart);
-            avart = new Qiniu.QinQiuApi().UploadFile(path, true);
+            avart = new Common.Qiniu.QinQiuApi().UploadFile(path, true);
             #endregion
 
 

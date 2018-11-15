@@ -3,19 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using AiCard.Models;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
-using Microsoft.AspNet.Identity.Owin;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System.IO;
-using System.Drawing;
-using System.Net;
-using AiCard.Models.CommModels;
 using AiCard.Common.CommModels;
 using AiCard.Common.Enums;
 using AiCard.DAL.Models;
+using AiCard.Common;
 
 namespace AiCard.Controllers
 {
@@ -52,7 +44,7 @@ namespace AiCard.Controllers
                     UserName = s.UserName
                 }).ToList();
             var fromUser = users.FirstOrDefault(s => s.NickName == from);
-            fromUser.SignUser = TxIm.SigCheck.Sign(fromUser.UserName);
+            fromUser.SignUser = Common.TxIm.SigCheck.Sign(fromUser.UserName);
             ViewBag.From = users.FirstOrDefault(s => s.NickName == from);
             ViewBag.To = users.FirstOrDefault(s => s.NickName == to);
             return View();
@@ -61,7 +53,7 @@ namespace AiCard.Controllers
         public ActionResult ImportUser(string userID)
         {
             var user = db.Users.FirstOrDefault(s => s.Id == userID);
-            new TxIm.Api().ImportUser(user.UserName, user.NickName, user.Avatar);
+            new Common.TxIm.ImApi().ImportUser(user.UserName, user.NickName, user.Avatar);
             return Json(1, JsonRequestBehavior.AllowGet);
         }
 
@@ -74,7 +66,7 @@ namespace AiCard.Controllers
                 NickName = s.NickName,
                 UserName = s.UserName
             }).FirstOrDefault(s => s.NickName == from);
-            fromUser.SignUser = TxIm.SigCheck.Sign(fromUser.UserName);
+            fromUser.SignUser = Common.TxIm.SigCheck.Sign(fromUser.UserName);
             ViewBag.From = fromUser;
             return View();
         }
@@ -134,7 +126,7 @@ namespace AiCard.Controllers
         {
             string corpid = "wwfbd3847b25072e2b";
             string secret = "x7H_NcJJ0-mxfwH42SSHGqxS9TdGkRvNqtZbPH5-xb8";
-            var api = new WeChatWork.WeChatWorkApi();
+            var api = new Common.WeChatWork.WeChatWorkApi();
             try
             {
                 api.GetAccessToken(corpid, secret);

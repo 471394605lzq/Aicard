@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using AiCard.Models;
 using AiCard.DAL.Models;
+using AiCard.Common;
 
 namespace AiCard.Controllers
 {
@@ -26,7 +27,7 @@ namespace AiCard.Controllers
             {
                 return Json(Comm.ToJsonResult("FromUserNoFound", "用户不存在"));
             }
-            var api = new TxIm.Api();
+            var api = new Common.TxIm.ImApi();
 
             var to = (from u in db.Users
                       from c in db.Cards
@@ -54,7 +55,7 @@ namespace AiCard.Controllers
                     UserID = from.Id,
                     UserName = from.UserName,
                     NickName = from.NickName,
-                    Sign = TxIm.SigCheck.Sign(from.UserName),
+                    Sign = Common.TxIm.SigCheck.Sign(from.UserName),
                 },
                 To = new
                 {

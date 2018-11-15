@@ -6,8 +6,6 @@ using System.Web.Mvc;
 using AiCard.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
-using Microsoft.Owin.Security;
-using AiCard.WeChatWork;
 using AiCard.Common.Enums;
 using AiCard.DAL.Models;
 
