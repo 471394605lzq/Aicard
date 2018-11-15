@@ -10,7 +10,7 @@ namespace AiCard.TxIm
 {
     public class SigCheck
     {
-        private const string dllPath = @"G:\AiCard\AiCard\AiCard\bin\sigcheck.dll";
+        private const string dllPath = @"D:\AiCard\bin\sigcheck.dll";
 
         //private const string dllPath = @"G:\AiCard\AiCard\AiCard\bin\sigcheck.dll";
 
