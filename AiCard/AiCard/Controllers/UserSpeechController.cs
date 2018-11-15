@@ -61,7 +61,7 @@ namespace AiCard.Controllers
         /// <param name="pageSize">每页条数</param>
         /// <returns>list</returns>
         [AllowCrossSiteJson]
-        public ActionResult GetUserSpeechList(string userId, int? page = 1, int? pageSize = 20)
+        public ActionResult GetUserSpeechList(string userId,int typeId, int? page = 1, int? pageSize = 10)
         {
             try
             {
@@ -70,16 +70,20 @@ namespace AiCard.Controllers
                 //拼接参数
                 SqlParameter[] parameters = {
                         new SqlParameter("@UserId", SqlDbType.NVarChar),
+                        new SqlParameter("@typeID", SqlDbType.Int),
                         new SqlParameter("@starpagesize", SqlDbType.Int),
-                        new SqlParameter("@endpagesize", SqlDbType.Int)
+                        new SqlParameter("@endpagesize", SqlDbType.Int),
+                        
                     };
                 parameters[0].Value = userId;
-                parameters[1].Value = starpagesize;
-                parameters[2].Value = endpagesize;
-                string sqlstr = string.Format(@"select* from (SELECT CAST(ROW_NUMBER() over(order by COUNT(ust.ID) DESC) AS INTEGER) AS Ornumber,ust.Content,ust.ID 
+                parameters[1].Value = typeId;
+                parameters[2].Value = starpagesize;
+                parameters[3].Value = endpagesize;
+                string sqlstr = string.Format(@"select* from (SELECT CAST(ROW_NUMBER() over(order by COUNT(ust.ID) DESC) AS INTEGER) AS Ornumber,ust.Content,ust.ID
                                                 FROM dbo.UserSpeeches ust
-                                                INNER  JOIN dbo.AspNetUsers us ON us.Id=ust.UserID WHERE ust.UserID=@UserId GROUP BY ust.Content,ust.ID) t 
+                                                INNER  JOIN dbo.AspNetUsers us ON us.Id=ust.UserID INNER JOIN dbo.UserSpeechTypes  ty ON ty.ID=ust.TypeID WHERE ust.UserID=@UserId and ust.TypeID=@typeID GROUP BY ust.Content,ust.ID ) t 
                                                 where t.Ornumber > @starpagesize AND t.Ornumber<=@endpagesize  ");
+
                 List<UserSpeechModel> data = db.Database.SqlQuery<UserSpeechModel>(sqlstr, parameters).ToList();
                 return Json(Comm.ToJsonResult("Success", "成功", data), JsonRequestBehavior.AllowGet);
             }
@@ -88,7 +92,6 @@ namespace AiCard.Controllers
                 return Json(Comm.ToJsonResult("Error", ex.Message), JsonRequestBehavior.AllowGet);
             }
         }
-
 
         /// <summary>
         /// 新增话术分类
@@ -117,7 +120,11 @@ namespace AiCard.Controllers
                     };
                     db.UserSpeechTypes.Add(speechtype);
                     db.SaveChanges();
-                    return Json(Comm.ToJsonResult("Success", "新增成功"), JsonRequestBehavior.AllowGet);
+                    var returndata = new
+                    {
+                        ID = speechtype.ID
+                    };
+                    return Json(Comm.ToJsonResult("Success", "新增成功", returndata), JsonRequestBehavior.AllowGet);
                 }
             }
             catch (Exception ex)
@@ -146,7 +153,11 @@ namespace AiCard.Controllers
                 };
                 db.UserSpeechs.Add(speech);
                 db.SaveChanges();
-                return Json(Comm.ToJsonResult("Success", "新增成功"), JsonRequestBehavior.AllowGet);
+                var returndata = new
+                {
+                    ID = speech.ID
+                };
+                return Json(Comm.ToJsonResult("Success", "新增成功", returndata), JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
