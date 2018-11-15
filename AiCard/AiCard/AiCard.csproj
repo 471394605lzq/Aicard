@@ -799,7 +799,6 @@
     <Content Include="Scripts\Views\testIm.js" />
     <Content Include="Scripts\Views\userManageIndex.js" />
     <Content Include="Scripts\_references.js" />
-    <Content Include="TxImKey\tls_licence_tools.exe" />
     <Content Include="Views\Shared\phone.jpg" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
