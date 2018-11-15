@@ -6,7 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Web;
 
-namespace AiCard.Models.CommModels
+namespace AiCard.Common.CommModels
 {
     public class ImageResizer : BaseFileUpload
     {
@@ -40,7 +40,7 @@ namespace AiCard.Models.CommModels
                 {
                     pPreviewUrl = string.IsNullOrWhiteSpace(ImageUrl)
                         ? $"~/Content/Images/phone.jpg?w={PreviewWidth}&h={PreviewHeight}&scale=canvas&Bgcolor=f6f6f6"
-                        :Comm.ResizeImage(ImageUrl, PreviewWidth, PreviewHeight);
+                        : Comm.ResizeImage(ImageUrl, PreviewWidth, PreviewHeight);
                 }
                 return pPreviewUrl;
             }

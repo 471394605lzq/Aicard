@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 using AiCard.Common.Enums;
 using AiCard.DAL.Models;
 using AiCard.Common;
-
+using AiCard.Common.Extensions;
 namespace AiCard.Controllers
 {
     public class ArticlesManageController : Controller
@@ -33,13 +33,13 @@ namespace AiCard.Controllers
 
         [Authorize(Roles = SysRole.ArticlesManageRead + "," + SysRole.EArticlesManageRead)]
         // GET: ArticlesManage
-        public ActionResult Index(string filter, ArticleType type=ArticleType.Html, int? page = 1)
+        public ActionResult Index(string filter, ArticleType type = ArticleType.Html, int? page = 1)
         {
             Sidebar();
             var m = from a in db.Articles
                     from e in db.Enterprises
                     from u in db.Users
-                    where a.EnterpriseID == e.ID&&a.UserID==u.Id && a.Type == type
+                    where a.EnterpriseID == e.ID && a.UserID == u.Id && a.Type == type
                     select new ArticleViewModel
                     {
                         ID = a.ID,
@@ -51,8 +51,8 @@ namespace AiCard.Controllers
                         Title = a.Title,
                         UserName = u.UserName,
                         Type = a.Type,
-                        State=a.State
-                         
+                        State = a.State
+
                     };
             if (!string.IsNullOrWhiteSpace(filter))
             {
@@ -88,7 +88,7 @@ namespace AiCard.Controllers
         public ActionResult Create()
         {
             Sidebar();
-            var model = new Article();
+            var model = new ArticleCreateEditViewModel();
             return View(model);
         }
 
@@ -99,7 +99,7 @@ namespace AiCard.Controllers
         [ValidateAntiForgeryToken]
         [ValidateInput(false)]
         [Authorize(Roles = SysRole.ArticlesManageCreate + "," + SysRole.EArticlesManageCreate)]
-        public ActionResult Create(Article article)
+        public ActionResult Create(ArticleCreateEditViewModel article)
         {
             Sidebar();
             var tempuser = db.Users.FirstOrDefault(s => s.Id == AccontData.UserID);
@@ -114,7 +114,7 @@ namespace AiCard.Controllers
 
                 var model = new Article
                 {
-                    Images = "",
+                    Images = article.Cover.ImageUrl,
                     Like = 0,
                     Share = 0,
                     State = ArticleState.Wait,
@@ -152,16 +152,17 @@ namespace AiCard.Controllers
             {
                 return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
             }
-            else if (temp.Type==ArticleType.Text) {
+            else if (temp.Type == ArticleType.Text)
+            {
                 return this.ToError("错误", "用户动态不可编辑", Url.Action("Index"));
             }
-            var models = new Article
+            var models = new ArticleCreateEditViewModel
             {
                 ID = temp.ID,
                 Title = temp.Title,
                 Content = temp.Content,
-                Type=temp.Type
             };
+            models.Cover.ImageUrl = temp.Images.SplitToArray<string>(',')?[0];
             if (models == null)
             {
                 return HttpNotFound();
@@ -176,7 +177,7 @@ namespace AiCard.Controllers
         [ValidateAntiForgeryToken]
         [ValidateInput(false)]
         [Authorize(Roles = SysRole.ArticlesManageEdit + "," + SysRole.EArticlesManageEdit)]
-        public ActionResult Edit(Article article)
+        public ActionResult Edit(ArticleCreateEditViewModel article)
         {
             var temp = db.Articles.FirstOrDefault(s => s.ID == article.ID);
             //防止企业用户串号修改
@@ -187,19 +188,22 @@ namespace AiCard.Controllers
             }
             if (ModelState.IsValid)
             {
-                if (article.Type == ArticleType.Html)
+                if (temp.Type == ArticleType.Html)
                 {
                     var t = db.Articles.FirstOrDefault(s => s.ID == article.ID);
                     t.ID = article.ID;
                     t.Content = article.Content;
                     t.Title = article.Title;
+                    t.Images = article.Cover.ImageUrl;
                     db.SaveChanges();
                     return RedirectToAction("Index");
                 }
-                else {
+                else
+                {
                     return this.ToError("错误", "用户动态不可编辑", Url.Action("Index"));
                 }
             }
+            Sidebar();
             return View(article);
         }
 

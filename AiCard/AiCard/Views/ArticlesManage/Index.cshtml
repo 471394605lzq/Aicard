@@ -1,4 +1,5 @@
-﻿@model IEnumerable<AiCard.Models.ArticleViewModel>
+﻿@using AiCard.Common.Extensions
+@model IEnumerable<AiCard.Models.ArticleViewModel>
 
 @{
     ViewBag.Title = "动态管理";
@@ -9,7 +10,8 @@
     <div class="container-fluid">
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
-                @if (User.IsInRole(SysRole.EArticlesManageCreate)) {
+                @if (User.IsInRole(SysRole.EArticlesManageCreate))
+                {
                     <li><a href="@Url.Action("Create")">新增</a></li>
                 }
                 @if (User.IsInRole(SysRole.EArticlesMangeCheck))
@@ -67,42 +69,43 @@
             </th>
             <th>操作</th>
         </tr>
-        </thead>
-        @foreach (var item in Model)
-        {
-            var isdisplay = item.Type == AiCard.Common.Enums.ArticleType.Html ? "display:block" : "display:none";
-            <tr>
-                <td>
-                    <input data-id="@item.ID" data-item="@Newtonsoft.Json.JsonConvert.SerializeObject(item)" class="chk" type="checkbox" name="chkItem" value="" />
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Title)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.EnterpriseName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.UserName)
-                </td>
-                <td>
-                    @item.Type.GetDisplayName()
-                </td>
-                <td>
-                    @item.State.GetDisplayName()
-                </td>
-                <td>
-                    @if (User.IsInRole(SysRole.EArticlesManageEdit)) {
+    </thead>
+    @foreach (var item in Model)
+    {
+        var isdisplay = item.Type == AiCard.Common.Enums.ArticleType.Html ? "display:block" : "display:none";
+        <tr>
+            <td>
+                <input data-id="@item.ID" data-item="@Newtonsoft.Json.JsonConvert.SerializeObject(item)" class="chk" type="checkbox" name="chkItem" value="" />
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EnterpriseName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserName)
+            </td>
+            <td>
+                @item.Type.GetDisplayName()
+            </td>
+            <td>
+                @item.State.GetDisplayName()
+            </td>
+            <td>
+                @if (User.IsInRole(SysRole.EArticlesManageEdit))
+                {
                     <a href="@Url.Action("Edit", new { id = item.ID })" class="btn btn-default" style="width:50px; height:25px;line-height:12px;float:left;@isdisplay">编辑</a>
-                    }
-                    @if (User.IsInRole(SysRole.EArticlesMangeDelete))
-                    {
+                }
+                @if (User.IsInRole(SysRole.EArticlesMangeDelete))
+                {
                     <a href="@Url.Action("Delete", new { id = item.ID })" class="btn btn-default" style="margin-left:15px;width:50px;height:25px;line-height:12px;float:left;@isdisplay">删除</a>
-                        }
-                    @*@Html.ActionLink("编辑", "Edit", new { id = item.ID }) |*@
-                    @*@Html.ActionLink("删除", "Delete", new { id = item.ID })*@
-                </td>
-            </tr>
-        }
+                }
+                @*@Html.ActionLink("编辑", "Edit", new { id = item.ID }) |*@
+                @*@Html.ActionLink("删除", "Delete", new { id = item.ID })*@
+            </td>
+        </tr>
+    }
 
 </table>
 @Html.PageList((PagedList.IPagedList<AiCard.Models.ArticleViewModel>)Model, Url.PageUrl())

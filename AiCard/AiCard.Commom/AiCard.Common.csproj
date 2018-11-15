@@ -109,6 +109,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Comm.cs" />
+    <Compile Include="CommModels\ImageResizer.cs" />
     <Compile Include="CommonApi.cs" />
     <Compile Include="ChinaPCAS.cs" />
     <Compile Include="CommModels\Cell.cs" />

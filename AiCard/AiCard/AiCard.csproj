@@ -292,10 +292,8 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
-    <Compile Include="Models\ArticleViewModel.cs" />
     <Compile Include="Models\ArticleViewModels.cs" />
     <Compile Include="Models\CardViewModels.cs" />
-    <Compile Include="Models\CommModels\ImageResizer.cs" />
     <Compile Include="Models\CustomerTabGroupViewModel.cs" />
     <Compile Include="Models\CustomerTabViewModel.cs" />
     <Compile Include="Models\EnterpriseViewModels.cs" />
@@ -913,6 +911,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Models\CommModels\" />
     <Folder Include="Upload\" />
     <Folder Include="Views\ArticleComment\" />
     <Folder Include="Views\Article\" />

@@ -1,12 +1,11 @@
 ﻿using AiCard.Common;
 using AiCard.Common.CommModels;
-using AiCard.Models.CommModels;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
-
+using AiCard.Common.Extensions;
 namespace AiCard.Models
 {
     public class EnterpriseViewModels
@@ -18,7 +17,7 @@ namespace AiCard.Models
         public string Name { get; set; }
         [Display(Name = "企业logo")]
         //public string Logo { get; set; }
-        public Models.CommModels.ImageResizer Logo { get; set; } = new CommModels.ImageResizer("Logo", 120, 120)
+        public Common.CommModels.ImageResizer Logo { get; set; } = new Common.CommModels.ImageResizer("Logo", 120, 120)
         {
             AutoInit = true,
             Name = "Logo",
@@ -95,7 +94,7 @@ namespace AiCard.Models
         public string Name { get; set; }
         [Display(Name = "企业logo")]
         //public string Logo { get; set; }
-        public Models.CommModels.ImageResizer Logo { get; set; } = new CommModels.ImageResizer("Logo", 120, 120)
+        public Common.CommModels.ImageResizer Logo { get; set; } = new Common.CommModels.ImageResizer("Logo", 120, 120)
         {
             AutoInit = true,
             Name = "Logo",

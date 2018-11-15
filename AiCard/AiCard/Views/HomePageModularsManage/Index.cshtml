@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<AiCard.DAL.Models.HomePageModular>
+@using AiCard.Common.Extensions
 @{
     ViewBag.Title = "公司主页";
     var modularTypes = Enum.GetValues(typeof(AiCard.Common.Enums.HomePageModularType));
