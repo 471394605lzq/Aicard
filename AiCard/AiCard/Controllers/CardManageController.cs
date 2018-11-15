@@ -6,13 +6,11 @@ using System.Web;
 using System.Web.Mvc;
 using System.Data.Entity;
 using Microsoft.AspNet.Identity.Owin;
-using Microsoft.Owin.Security;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System.Net;
-using AiCard.WeChat;
-using AiCard.Models.CommModels;
+using AiCard.Common.WeChat;
 using AiCard.Common.Enums;
 using AiCard.DAL.Models;
 

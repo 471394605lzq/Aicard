@@ -100,7 +100,7 @@ namespace AiCard.Controllers
                 case UploadServer.QinQiu:
                     {
                         List<string> fileList = new List<string>();
-                        var qinniu = new Qiniu.QinQiuApi();
+                        var qinniu = new Common.Qiniu.QinQiuApi();
                         foreach (var item in filename)
                         {
                             var path = Server.MapPath(item);
@@ -158,12 +158,12 @@ namespace AiCard.Controllers
         private void DeleteSeverFile(string file)
         {
 
-            if (file.Contains(Qiniu.QinQiuApi.ServerLink))
+            if (file.Contains(Common.Qiniu.QinQiuApi.ServerLink))
             {
-                string key = Qiniu.QinQiuApi.LinkToKey(file);
+                string key = Common.Qiniu.QinQiuApi.LinkToKey(file);
                 try
                 {
-                    new Qiniu.QinQiuApi().DeleteFile(key);
+                    new Common.Qiniu.QinQiuApi().DeleteFile(key);
                 }
                 catch (Exception ex)
                 {

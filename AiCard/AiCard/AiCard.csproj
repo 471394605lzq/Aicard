@@ -101,7 +101,7 @@
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="NPOI, Version=2.3.0.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
@@ -126,10 +126,6 @@
     </Reference>
     <Reference Include="PagedList.Mvc, Version=4.5.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
       <HintPath>..\packages\PagedList.Mvc.4.5.0.0\lib\net40\PagedList.Mvc.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Qiniu, Version=7.2.15.0, Culture=neutral, PublicKeyToken=2894d75bb9f220bf, processorArchitecture=MSIL">
-      <HintPath>..\packages\Qiniu.Shared.ExtJson.7.2.15\lib\net45\Qiniu.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -250,38 +246,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\ActionFilterAttributes.cs" />
-    <Compile Include="App_Start\Api.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
-    <Compile Include="App_Start\Comm.cs" />
-    <Compile Include="App_Start\DrawingPictures.cs" />
     <Compile Include="App_Start\Extensions\ActionFilterAttributes.cs" />
     <Compile Include="App_Start\Extensions\ControllerExtensions.cs" />
-    <Compile Include="App_Start\Extensions\IntExtensions.cs" />
-    <Compile Include="App_Start\Extensions\DictionaryExtensions.cs" />
-    <Compile Include="App_Start\Extensions\EnumExtensions.cs" />
-    <Compile Include="App_Start\Extensions\ExcelHelper.cs" />
     <Compile Include="App_Start\Extensions\HtmlHelperExtensions.cs" />
     <Compile Include="App_Start\Extensions\IPrincipalExtensions.cs" />
     <Compile Include="App_Start\Extensions\ModelStateDictionaryExtensions.cs" />
-    <Compile Include="App_Start\Extensions\DateTimeExtensions.cs" />
-    <Compile Include="App_Start\Extensions\StringExtensions.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />
-    <Compile Include="App_Start\Log.cs" />
-    <Compile Include="App_Start\Qiniu\QinQiuApi.cs" />
-    <Compile Include="App_Start\QrCode.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
-    <Compile Include="App_Start\SteamCheck.cs" />
     <Compile Include="App_Start\SysRole.cs" />
-    <Compile Include="App_Start\TxIm\Api.cs" />
-    <Compile Include="App_Start\TxIm\Config.cs" />
-    <Compile Include="App_Start\TxIm\Sign.cs" />
-    <Compile Include="App_Start\WeChatWork\WeChatWorkApi.cs" />
-    <Compile Include="App_Start\WeChatWork\WeChatWorkModel.cs" />
-    <Compile Include="App_Start\WeChat\WeChatMiniApi.cs" />
-    <Compile Include="App_Start\WeChat\WeChatApi.cs" />
-    <Compile Include="App_Start\WeChat\Config.cs" />
     <Compile Include="Bll\HomePageModulars.cs" />
     <Compile Include="Bll\Roles.cs" />
     <Compile Include="Bll\UserLogs.cs" />
@@ -316,119 +291,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201810030625179_AddUserAndRole.cs" />
-    <Compile Include="Migrations\201810030625179_AddUserAndRole.Designer.cs">
-      <DependentUpon>201810030625179_AddUserAndRole.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201810030629596_RoleAddTypeGroupDesc.cs" />
-    <Compile Include="Migrations\201810030629596_RoleAddTypeGroupDesc.Designer.cs">
-      <DependentUpon>201810030629596_RoleAddTypeGroupDesc.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201810040802295_AddRoleGroup.cs" />
-    <Compile Include="Migrations\201810040802295_AddRoleGroup.Designer.cs">
-      <DependentUpon>201810040802295_AddRoleGroup.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201810050232520_UserAddEnterpriseID.cs" />
-    <Compile Include="Migrations\201810050232520_UserAddEnterpriseID.Designer.cs">
-      <DependentUpon>201810050232520_UserAddEnterpriseID.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201810050639377_UserChnageEniterpriseID.cs" />
-    <Compile Include="Migrations\201810050639377_UserChnageEniterpriseID.Designer.cs">
-      <DependentUpon>201810050639377_UserChnageEniterpriseID.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201810060930252_AddEnterprises.cs" />
-    <Compile Include="Migrations\201810060930252_AddEnterprises.Designer.cs">
-      <DependentUpon>201810060930252_AddEnterprises.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201810090656140_UserAddNickNameAndAvatar.cs" />
-    <Compile Include="Migrations\201810090656140_UserAddNickNameAndAvatar.Designer.cs">
-      <DependentUpon>201810090656140_UserAddNickNameAndAvatar.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201810110834161_AddCard.cs" />
-    <Compile Include="Migrations\201810110834161_AddCard.Designer.cs">
-      <DependentUpon>201810110834161_AddCard.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201810111030337_AddArticle.cs" />
-    <Compile Include="Migrations\201810111030337_AddArticle.Designer.cs">
-      <DependentUpon>201810111030337_AddArticle.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201810111156517_ArticleDeleteEnableAddState.cs" />
-    <Compile Include="Migrations\201810111156517_ArticleDeleteEnableAddState.Designer.cs">
-      <DependentUpon>201810111156517_ArticleDeleteEnableAddState.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201810130255490_AddUserLogs.cs" />
-    <Compile Include="Migrations\201810130255490_AddUserLogs.Designer.cs">
-      <DependentUpon>201810130255490_AddUserLogs.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201810130303156_AddProductsAndProductKind.cs" />
-    <Compile Include="Migrations\201810130303156_AddProductsAndProductKind.Designer.cs">
-      <DependentUpon>201810130303156_AddProductsAndProductKind.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201810180133010_EnterpriseAddWeChatWorkCorpIDAndWeChatWorkSecret.cs" />
-    <Compile Include="Migrations\201810180133010_EnterpriseAddWeChatWorkCorpIDAndWeChatWorkSecret.Designer.cs">
-      <DependentUpon>201810180133010_EnterpriseAddWeChatWorkCorpIDAndWeChatWorkSecret.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201810180706124_AddHomePageModulars.cs" />
-    <Compile Include="Migrations\201810180706124_AddHomePageModulars.Designer.cs">
-      <DependentUpon>201810180706124_AddHomePageModulars.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201810230915321_AddCardTabs.cs" />
-    <Compile Include="Migrations\201810230915321_AddCardTabs.Designer.cs">
-      <DependentUpon>201810230915321_AddCardTabs.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201810240602250_CardAddViewAndLike.cs" />
-    <Compile Include="Migrations\201810240602250_CardAddViewAndLike.Designer.cs">
-      <DependentUpon>201810240602250_CardAddViewAndLike.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201810250845464_ProductAddOriginalPrice.cs" />
-    <Compile Include="Migrations\201810250845464_ProductAddOriginalPrice.Designer.cs">
-      <DependentUpon>201810250845464_ProductAddOriginalPrice.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201810290736022_ArticleAddUpdateDateTimeAndTypeAndShare.cs" />
-    <Compile Include="Migrations\201810290736022_ArticleAddUpdateDateTimeAndTypeAndShare.Designer.cs">
-      <DependentUpon>201810290736022_ArticleAddUpdateDateTimeAndTypeAndShare.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201811021236226_AddUserProductTop.cs" />
-    <Compile Include="Migrations\201811021236226_AddUserProductTop.Designer.cs">
-      <DependentUpon>201811021236226_AddUserProductTop.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201811021240475_AddUserCardTop.cs" />
-    <Compile Include="Migrations\201811021240475_AddUserCardTop.Designer.cs">
-      <DependentUpon>201811021240475_AddUserCardTop.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201811050329097_AddEnterpriseCustomerAndEnterpriseCustomerRemark.cs" />
-    <Compile Include="Migrations\201811050329097_AddEnterpriseCustomerAndEnterpriseCustomerRemark.Designer.cs">
-      <DependentUpon>201811050329097_AddEnterpriseCustomerAndEnterpriseCustomerRemark.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201811050332306_AddCustomerTabAndCustomerTabGroup.cs" />
-    <Compile Include="Migrations\201811050332306_AddCustomerTabAndCustomerTabGroup.Designer.cs">
-      <DependentUpon>201811050332306_AddCustomerTabAndCustomerTabGroup.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201811050338025_DeleteOwnerIDAndCardID.cs" />
-    <Compile Include="Migrations\201811050338025_DeleteOwnerIDAndCardID.Designer.cs">
-      <DependentUpon>201811050338025_DeleteOwnerIDAndCardID.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201811050353015_CustomerTabGroupAddEnterpriseID.cs" />
-    <Compile Include="Migrations\201811050353015_CustomerTabGroupAddEnterpriseID.Designer.cs">
-      <DependentUpon>201811050353015_CustomerTabGroupAddEnterpriseID.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201811050907409_CardAddSortAndAddEnterpriseCustomerTab.cs" />
-    <Compile Include="Migrations\201811050907409_CardAddSortAndAddEnterpriseCustomerTab.Designer.cs">
-      <DependentUpon>201811050907409_CardAddSortAndAddEnterpriseCustomerTab.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201811060206298_CustomerTabChangeSortType.cs" />
-    <Compile Include="Migrations\201811060206298_CustomerTabChangeSortType.Designer.cs">
-      <DependentUpon>201811060206298_CustomerTabChangeSortType.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201811100917083_AddEnterpriseCustomerRemarkChangeName.cs" />
-    <Compile Include="Migrations\201811100917083_AddEnterpriseCustomerRemarkChangeName.Designer.cs">
-      <DependentUpon>201811100917083_AddEnterpriseCustomerRemarkChangeName.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201811130218454_AddUserSpeechsAndUserSpeechTypes.cs" />
-    <Compile Include="Migrations\201811130218454_AddUserSpeechsAndUserSpeechTypes.Designer.cs">
-      <DependentUpon>201811130218454_AddUserSpeechsAndUserSpeechTypes.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ArticleViewModel.cs" />
     <Compile Include="Models\ArticleViewModels.cs" />
@@ -453,7 +315,6 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Start\IllegalWords\keywords.txt" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -939,6 +800,7 @@
     <Content Include="Scripts\Views\testIm.js" />
     <Content Include="Scripts\Views\userManageIndex.js" />
     <Content Include="Scripts\_references.js" />
+    <Content Include="TxImKey\tls_licence_tools.exe" />
     <Content Include="Views\Shared\phone.jpg" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -1047,6 +909,9 @@
     <Content Include="Views\ArticlesManage\Details.cshtml" />
     <Content Include="Views\ArticlesManage\Edit.cshtml" />
     <Content Include="Views\ArticlesManage\Index.cshtml" />
+    <Content Include="TxImKey\private_key" />
+    <Content Include="TxImKey\public_key" />
+    <Content Include="TxImKey\sig" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -1069,92 +934,6 @@
   <ItemGroup>
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\201810030625179_AddUserAndRole.resx">
-      <DependentUpon>201810030625179_AddUserAndRole.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201810030629596_RoleAddTypeGroupDesc.resx">
-      <DependentUpon>201810030629596_RoleAddTypeGroupDesc.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201810040802295_AddRoleGroup.resx">
-      <DependentUpon>201810040802295_AddRoleGroup.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201810050232520_UserAddEnterpriseID.resx">
-      <DependentUpon>201810050232520_UserAddEnterpriseID.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201810050639377_UserChnageEniterpriseID.resx">
-      <DependentUpon>201810050639377_UserChnageEniterpriseID.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201810060930252_AddEnterprises.resx">
-      <DependentUpon>201810060930252_AddEnterprises.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201810090656140_UserAddNickNameAndAvatar.resx">
-      <DependentUpon>201810090656140_UserAddNickNameAndAvatar.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201810110834161_AddCard.resx">
-      <DependentUpon>201810110834161_AddCard.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201810111030337_AddArticle.resx">
-      <DependentUpon>201810111030337_AddArticle.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201810111156517_ArticleDeleteEnableAddState.resx">
-      <DependentUpon>201810111156517_ArticleDeleteEnableAddState.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201810130255490_AddUserLogs.resx">
-      <DependentUpon>201810130255490_AddUserLogs.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201810130303156_AddProductsAndProductKind.resx">
-      <DependentUpon>201810130303156_AddProductsAndProductKind.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201810180133010_EnterpriseAddWeChatWorkCorpIDAndWeChatWorkSecret.resx">
-      <DependentUpon>201810180133010_EnterpriseAddWeChatWorkCorpIDAndWeChatWorkSecret.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201810180706124_AddHomePageModulars.resx">
-      <DependentUpon>201810180706124_AddHomePageModulars.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201810230915321_AddCardTabs.resx">
-      <DependentUpon>201810230915321_AddCardTabs.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201810240602250_CardAddViewAndLike.resx">
-      <DependentUpon>201810240602250_CardAddViewAndLike.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201810250845464_ProductAddOriginalPrice.resx">
-      <DependentUpon>201810250845464_ProductAddOriginalPrice.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201810290736022_ArticleAddUpdateDateTimeAndTypeAndShare.resx">
-      <DependentUpon>201810290736022_ArticleAddUpdateDateTimeAndTypeAndShare.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201811021236226_AddUserProductTop.resx">
-      <DependentUpon>201811021236226_AddUserProductTop.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201811021240475_AddUserCardTop.resx">
-      <DependentUpon>201811021240475_AddUserCardTop.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201811050329097_AddEnterpriseCustomerAndEnterpriseCustomerRemark.resx">
-      <DependentUpon>201811050329097_AddEnterpriseCustomerAndEnterpriseCustomerRemark.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201811050332306_AddCustomerTabAndCustomerTabGroup.resx">
-      <DependentUpon>201811050332306_AddCustomerTabAndCustomerTabGroup.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201811050338025_DeleteOwnerIDAndCardID.resx">
-      <DependentUpon>201811050338025_DeleteOwnerIDAndCardID.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201811050353015_CustomerTabGroupAddEnterpriseID.resx">
-      <DependentUpon>201811050353015_CustomerTabGroupAddEnterpriseID.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201811050907409_CardAddSortAndAddEnterpriseCustomerTab.resx">
-      <DependentUpon>201811050907409_CardAddSortAndAddEnterpriseCustomerTab.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201811060206298_CustomerTabChangeSortType.resx">
-      <DependentUpon>201811060206298_CustomerTabChangeSortType.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201811100917083_AddEnterpriseCustomerRemarkChangeName.resx">
-      <DependentUpon>201811100917083_AddEnterpriseCustomerRemarkChangeName.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201811130218454_AddUserSpeechsAndUserSpeechTypes.resx">
-      <DependentUpon>201811130218454_AddUserSpeechsAndUserSpeechTypes.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AiCard.Commom\AiCard.Common.csproj">

@@ -7,6 +7,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using AiCard.Common.Enums;
 using AiCard.DAL.Models;
+using AiCard.Common.Extensions;
 
 namespace AiCard.Bll
 {

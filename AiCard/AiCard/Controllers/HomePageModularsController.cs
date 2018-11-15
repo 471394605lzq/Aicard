@@ -6,6 +6,8 @@ using System.Web.Mvc;
 using AiCard.Models;
 using AiCard.Common.Enums;
 using AiCard.DAL.Models;
+using AiCard.Common;
+using AiCard.Common.Extensions;
 
 namespace AiCard.Controllers
 {
