@@ -428,6 +428,10 @@
     <Compile Include="Migrations\201811130218454_AddUserSpeechsAndUserSpeechTypes.Designer.cs">
       <DependentUpon>201811130218454_AddUserSpeechsAndUserSpeechTypes.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201811150246071_EnterpriseUserCustomerAddSourceAndState.cs" />
+    <Compile Include="Migrations\201811150246071_EnterpriseUserCustomerAddSourceAndState.Designer.cs">
+      <DependentUpon>201811150246071_EnterpriseUserCustomerAddSourceAndState.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ArticleViewModel.cs" />
@@ -439,7 +443,6 @@
     <Compile Include="Models\EnterpriseViewModels.cs" />
     <Compile Include="Models\HomePageModularViewModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
-    <Compile Include="Models\Order.cs" />
     <Compile Include="Models\ProductKindsViewModels.cs" />
     <Compile Include="Models\ProductViewModels.cs" />
     <Compile Include="Models\RoleGroupViewModel.cs" />
@@ -1154,6 +1157,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201811130218454_AddUserSpeechsAndUserSpeechTypes.resx">
       <DependentUpon>201811130218454_AddUserSpeechsAndUserSpeechTypes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201811150246071_EnterpriseUserCustomerAddSourceAndState.resx">
+      <DependentUpon>201811150246071_EnterpriseUserCustomerAddSourceAndState.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

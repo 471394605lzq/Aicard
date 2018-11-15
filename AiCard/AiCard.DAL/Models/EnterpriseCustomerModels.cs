@@ -129,6 +129,17 @@ namespace AiCard.DAL.Models
         /// </summary>
         public string OwnerID { get; set; }
 
+        ///// <summary>
+        ///// 来源
+        ///// </summary>
+        public Common.Enums.EnterpriseUserCustomerSource Source { get; set; }
+
+        ///// <summary>
+        ///// 状态
+        ///// </summary>
+        public Common.Enums.EnterpriseUserCustomerState State { get; set; }
+
+
         /// <summary>
         /// 备注
         /// </summary>
@@ -138,7 +149,7 @@ namespace AiCard.DAL.Models
         /// 创建时间
         /// </summary>
         public DateTime CreateDateTime { get; set; }
-        
+
     }
 
     /// <summary>

@@ -16,6 +16,18 @@ namespace AiCard.Models
         public string Code { get; set; }
 
         /// <summary>
+        /// 支付类型
+        /// </summary>
+        [Display(Name = "支付类型")]
+        public Common.Enums.PayType PayType { get; set; }
+
+        /// <summary>
+        /// 订单状态
+        /// </summary>
+        [Display(Name = "订单状态")]
+        public Common.Enums.OrderState State { get; set; }
+
+        /// <summary>
         /// 支付的订单号
         /// </summary>
         [Display(Name = "支付的订单号")]
@@ -39,11 +51,7 @@ namespace AiCard.Models
         [Display(Name = "应收金额")]
         public decimal ReceivableAmount { get; set; }
 
-        /// <summary>
-        /// 支付类型
-        /// </summary>
-        [Display(Name = "支付类型")]
-        public Common.Enums.PayType PayType { get; set; }
+        
 
         /// <summary>
         /// 创建时间
@@ -56,5 +64,7 @@ namespace AiCard.Models
         /// </summary>
         [Display(Name = "支付时间")]
         public DateTime? PayDateTime { get; set; }
+
+        
     }
 }

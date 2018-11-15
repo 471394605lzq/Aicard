@@ -206,13 +206,15 @@
     <Compile Include="Models\EnterpriseModels.cs" />
     <Compile Include="Models\HomePageModular.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\OrderModels.cs" />
     <Compile Include="Models\ProductModels.cs" />
-    <Compile Include="Models\RoleGroup.cs" />
-    <Compile Include="Models\RolesModel.cs" />
-    <Compile Include="Models\UserCardTop.cs" />
-    <Compile Include="Models\UserLog.cs" />
-    <Compile Include="Models\UserProductTop.cs" />
+    <Compile Include="Models\RoleGroupModels.cs" />
+    <Compile Include="Models\RolesModels.cs" />
+    <Compile Include="Models\UserCardTopModels.cs" />
+    <Compile Include="Models\UserLogModels.cs" />
+    <Compile Include="Models\UserProductTopModels.cs" />
     <Compile Include="Models\UserSpeechModels.cs" />
+    <Compile Include="Models\Vip.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
