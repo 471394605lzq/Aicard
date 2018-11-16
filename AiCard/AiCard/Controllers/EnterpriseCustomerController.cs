@@ -409,6 +409,34 @@ namespace AiCard.Controllers
         }
 
 
+        /// <summary>
+        /// 删除客户标签
+        /// </summary>
+        /// <param name="cardID"></param>
+        /// <param name="tabID"></param>
+        /// <param name="userID"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [AllowCrossSiteJson]
+        public ActionResult DeleteCustTabs(int tabID, string owerID, int custID)
+        {
+            try
+            {
+                var tab = db.EnterpriseCustomerTabs.FirstOrDefault(s => s.CustomerID == custID && s.ID == tabID && s.OwnerID == owerID);
+                if (tab == null)
+                {
+                    return Json(Comm.ToJsonResult("TabNoFound", "标签不存在"));
+                }
+                db.EnterpriseCustomerTabs.Remove(tab);
+                db.SaveChanges();
+                return Json(Comm.ToJsonResult("Success", "删除成功"));
+            }
+            catch (Exception ex)
+            {
+                return Json(Comm.ToJsonResult("Error", ex.Message));
+            }
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
