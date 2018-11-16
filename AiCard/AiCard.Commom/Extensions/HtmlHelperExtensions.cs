@@ -1,6 +1,5 @@
 ﻿using AiCard.Common;
 using AiCard.Common.Enums;
-using AiCard.Common.Extensions;
 using PagedList;
 using System;
 using System.Collections.Generic;

@@ -6,7 +6,6 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using AiCard.Common.Enums;
 using AiCard.Common.WeChatWork.Models;
-using AiCard.Common.Extensions;
 
 namespace AiCard.Common.WeChatWork
 {

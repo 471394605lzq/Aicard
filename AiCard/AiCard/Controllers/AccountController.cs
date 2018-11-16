@@ -15,7 +15,6 @@ using Newtonsoft.Json.Linq;
 using AiCard.Common.Enums;
 using AiCard.DAL.Models;
 using AiCard.Common;
-using AiCard.Common.Extensions;
 
 namespace AiCard.Controllers
 {

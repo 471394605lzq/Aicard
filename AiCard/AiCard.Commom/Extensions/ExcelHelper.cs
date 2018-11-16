@@ -5,7 +5,7 @@ using NPOI.HSSF.UserModel;
 using System.IO;
 using System.Data;
 
-namespace AiCard.Common.Extensions
+namespace AiCard
 {
     public class ExcelHelper : IDisposable
     {

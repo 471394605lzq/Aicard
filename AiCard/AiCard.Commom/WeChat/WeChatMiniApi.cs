@@ -1,5 +1,5 @@
 ﻿
-using AiCard.Common.Extensions;
+
 using AiCard.Common.Qiniu;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;

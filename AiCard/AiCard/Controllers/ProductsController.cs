@@ -1,5 +1,4 @@
 ﻿using AiCard.Common;
-using AiCard.Common.Extensions;
 using AiCard.DAL.Models;
 using AiCard.Models;
 using System;

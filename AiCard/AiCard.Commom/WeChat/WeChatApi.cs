@@ -11,7 +11,6 @@ using System.Net;
 using System.Text;
 using System.IO;
 using AiCard.Common.Enums;
-using AiCard.Common.Extensions;
 
 namespace AiCard.Common.WeChat
 {

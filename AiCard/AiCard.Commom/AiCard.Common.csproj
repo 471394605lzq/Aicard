@@ -121,11 +121,15 @@
     <Compile Include="CommModels\Menu.cs" />
     <Compile Include="DrawingPictures.cs" />
     <Compile Include="Enums.cs" />
+    <Compile Include="Extensions\ActionFilterAttributes.cs" />
+    <Compile Include="Extensions\ControllerExtensions.cs" />
     <Compile Include="Extensions\DateTimeExtensions.cs" />
     <Compile Include="Extensions\DictionaryExtensions.cs" />
     <Compile Include="Extensions\EnumExtensions.cs" />
     <Compile Include="Extensions\ExcelHelper.cs" />
+    <Compile Include="Extensions\HtmlHelperExtensions.cs" />
     <Compile Include="Extensions\IntExtensions.cs" />
+    <Compile Include="Extensions\ModelStateDictionaryExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Interface\IDistrict.cs" />
     <Compile Include="Interface\IErrorReusult.cs" />

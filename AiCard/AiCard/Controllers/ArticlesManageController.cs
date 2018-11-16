@@ -11,7 +11,6 @@ using Newtonsoft.Json;
 using AiCard.Common.Enums;
 using AiCard.DAL.Models;
 using AiCard.Common;
-using AiCard.Common.Extensions;
 namespace AiCard.Controllers
 {
     public class ArticlesManageController : Controller

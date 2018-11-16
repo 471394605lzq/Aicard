@@ -6,7 +6,6 @@ using System.Web.Mvc;
 using System.IO;
 using AiCard.Common.Enums;
 using AiCard.Common;
-using AiCard.Common.Extensions;
 using Newtonsoft.Json;
 
 namespace AiCard

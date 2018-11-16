@@ -10,7 +10,6 @@ using System.Data.SqlClient;
 using AiCard.Common.CommModels;
 using AiCard.Common;
 using AiCard.DAL.Models;
-using AiCard.Common.Extensions;
 
 namespace AiCard.Controllers
 {

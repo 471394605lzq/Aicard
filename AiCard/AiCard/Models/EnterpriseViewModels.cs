@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
-using AiCard.Common.Extensions;
 namespace AiCard.Models
 {
     public class EnterpriseViewModels
