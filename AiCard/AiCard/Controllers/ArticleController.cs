@@ -130,7 +130,6 @@ namespace AiCard.Controllers
                 return a;
             });
             return Json(Comm.ToJsonResultForPagedList(paged, data), JsonRequestBehavior.AllowGet);
-
         }
 
         [AllowCrossSiteJson]
