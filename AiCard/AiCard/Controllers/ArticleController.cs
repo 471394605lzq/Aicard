@@ -135,7 +135,6 @@ namespace AiCard.Controllers
         [AllowCrossSiteJson]
         public ActionResult Detail(int articleID, string userID, int pageSize = 20)
         {
-            Common.Enums.ActionType.ArticleDetail.GetDisplayName();
             var a = db.Articles.FirstOrDefault(s => s.ID == articleID && s.State == Common.Enums.ArticleState.Released);
             if (a == null)
             {
@@ -177,7 +176,7 @@ namespace AiCard.Controllers
             var model = new
             {
                 ArticleID = a.ID,
-                Avatar = a.Type == Common.Enums.ArticleType.Text ? c.Avatar : e.Logo,
+                Avatar = a.Type == Common.Enums.ArticleType.Text ? c.Avatar?.SplitToArray<string>()?[0] : e.Logo,
                 CommentCount = com.ToStrForm(4, "评论"),
                 DateTimeStr = a.UpdateDateTime.ToStrForm(),
                 HadLike = hadLike,
