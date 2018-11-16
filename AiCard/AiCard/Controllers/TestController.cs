@@ -220,10 +220,10 @@ namespace AiCard.Controllers
                 keyword3 = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
                 keyword4 = content,
             };
-            new Common.WeChat.WeChatMinApi(Common.WeChat.ConfigMini.AppID, Common.WeChat.ConfigMini.AppSecret)
-                .SendMessage(openID, tempID, formID, null, key);
+            var result = new Common.WeChat.WeChatMinApi(Common.WeChat.ConfigMini.AppID, Common.WeChat.ConfigMini.AppSecret)
+                    .SendMessage(openID, tempID, formID, null, key);
 
-            return Json("1");
+            return Json(Comm.ToJsonResult("Success", "", result));
         }
 
 

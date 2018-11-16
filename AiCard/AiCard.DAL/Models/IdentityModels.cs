@@ -44,6 +44,12 @@ namespace AiCard.DAL.Models
 
         [Display(Name = "头像")]
         public string Avatar { get; set; }
+
+        /// <summary>
+        /// 存一个Json
+        /// </summary>
+        [Display(Name = "OpenID")]
+        public string OpenIDs { get; set; }
     }
 
 

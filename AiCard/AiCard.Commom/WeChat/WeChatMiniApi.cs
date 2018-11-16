@@ -211,7 +211,7 @@ namespace AiCard.Common.WeChat
             return _accessToken.Code;
         }
 
-        public void SendMessage(string openID, string tempID, string formID, string page, object keyword)
+        public string SendMessage(string openID, string tempID, string formID, string page, object keyword)
         {
             var p = new Dictionary<string, string>();
             p.Add("access_token", GetAccessToken());
@@ -220,10 +220,13 @@ namespace AiCard.Common.WeChat
                 touser = openID,
                 template_id = tempID,
                 page = page,
-                data = keyword
+                data = keyword,
+                form_id = formID,
+
             };
             var api = new CommonApi.BaseApi($"https://api.weixin.qq.com/cgi-bin/message/wxopen/template/send?{p.ToParam()}", "POST", data);
             var result = api.CreateRequestReturnJson();
+            return JsonConvert.SerializeObject(result);
         }
     }
 
