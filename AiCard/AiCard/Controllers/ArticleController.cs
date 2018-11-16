@@ -131,6 +131,7 @@ namespace AiCard.Controllers
         [AllowCrossSiteJson]
         public ActionResult Detail(int articleID, string userID, int pageSize = 20)
         {
+            Common.Enums.ActionType.ArticleDetail.GetDisplayName();
             var a = db.Articles.FirstOrDefault(s => s.ID == articleID && s.State == Common.Enums.ArticleState.Released);
             if (a == null)
             {
