@@ -226,12 +226,21 @@ namespace AiCard.Controllers
                 var query = (from c in db.EnterpriseCustomers
                              from u in db.Users
                              join cut in db.EnterpriseCustomerTabs.Where(s => s.OwnerID == userID) on c.ID equals cut.CustomerID into cuta
+                             join uscut in db.EnterpriseUserCustomer.Where(s=>s.OwnerID==userID) on c.ID equals uscut.CustomerID into uscuta
                              where c.ID == custID
                              select new
                              {
                                  Name = c.RealName,
                                  Avater = u.Avatar,
-                                 CustTabs = cuta.Select(s => s.Name).Take(3)
+                                 CustTabs = cuta.Select(s => s.Name),
+                                 Position=c.Position,
+                                 Email=c.Email,
+                                 Mobile=c.Mobile,
+                                 Gender=c.Gender,
+                                 Birthday=c.Birthday,
+                                 Company=c.Company,
+                                 Address=c.Address,
+                                 Remark=uscuta.Select(s=>s.Remark)
                              }).FirstOrDefault();
                 return Json(Comm.ToJsonResult("Success", "成功", query), JsonRequestBehavior.AllowGet);
             }
@@ -311,6 +320,40 @@ namespace AiCard.Controllers
             }
         }
 
+        /// <summary>
+        /// 修改用户所属客户备注
+        /// </summary>
+        /// <param name="userid"></param>
+        /// <param name="custid"></param>
+        /// <param name="remark"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [AllowCrossSiteJson]
+        public ActionResult EditCustRemark(string ownerid, int custid, string remark)
+        {
+            try
+            {
+                var t = db.EnterpriseUserCustomer.FirstOrDefault(s => s.CustomerID == custid && s.OwnerID == ownerid);
+                if (t == null)
+                {
+                    return Json(Comm.ToJsonResult("Error", "客户不存在"), JsonRequestBehavior.AllowGet);
+                }
+                t.Remark = remark;
+                db.SaveChanges();
+                return Json(Comm.ToJsonResult("Success", "成功"), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(Comm.ToJsonResult("Error", ex.Message), JsonRequestBehavior.AllowGet);
+            }
+        }
+        /// <summary>
+        /// 获取客户标签
+        /// </summary>
+        /// <param name="userid"></param>
+        /// <param name="custid"></param>
+        /// <param name="enterpriseid"></param>
+        /// <returns></returns>
         [AllowCrossSiteJson]
         public ActionResult GetCustTabs(string userid, int custid, int enterpriseid)
         {
