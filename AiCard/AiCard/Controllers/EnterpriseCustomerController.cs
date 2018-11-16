@@ -226,12 +226,21 @@ namespace AiCard.Controllers
                 var query = (from c in db.EnterpriseCustomers
                              from u in db.Users
                              join cut in db.EnterpriseCustomerTabs.Where(s => s.OwnerID == userID) on c.ID equals cut.CustomerID into cuta
+                             join uscut in db.EnterpriseUserCustomer.Where(s=>s.OwnerID==userID) on c.ID equals uscut.CustomerID into uscuta
                              where c.ID == custID
                              select new
                              {
                                  Name = c.RealName,
                                  Avater = u.Avatar,
-                                 CustTabs = cuta.Select(s => s.Name).Take(3)
+                                 CustTabs = cuta.Select(s => s.Name),
+                                 Position=c.Position,
+                                 Email=c.Email,
+                                 Mobile=c.Mobile,
+                                 Gender=c.Gender,
+                                 Birthday=c.Birthday,
+                                 Company=c.Company,
+                                 Address=c.Address,
+                                 Remark=uscuta.Select(s=>s.Remark)
                              }).FirstOrDefault();
                 return Json(Comm.ToJsonResult("Success", "成功", query), JsonRequestBehavior.AllowGet);
             }
@@ -311,50 +320,92 @@ namespace AiCard.Controllers
             }
         }
 
-        public ActionResult GetCustTabs(string userid, int custid, int eid)
+        /// <summary>
+        /// 修改用户所属客户备注
+        /// </summary>
+        /// <param name="userid"></param>
+        /// <param name="custid"></param>
+        /// <param name="remark"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [AllowCrossSiteJson]
+        public ActionResult EditCustRemark(string ownerid, int custid, string remark)
         {
-            //客户自定义标签
-            var custtab = db.EnterpriseCustomerTabs.Where(s => s.OwnerID == userid && s.CustomerID == custid).ToList();
-            //企业共用模板标签
-            var comTab = (from g in db.CustomerTabGroups
-                          join t in db.CustomerTabs on g.ID equals t.GroupID into gt
-                          where g.EnterpriseID == eid
-                          orderby g.Sort
-                          select new
-                          {
-                              g.Name,
-                              g.Sort,
-                              g.Style,
-                              Tabs = gt
-                          }).ToList();
-
-            var ects = db.EnterpriseCustomerTabs.Where(s => s.CustomerID == custid && s.OwnerID == userid);
-            //添加到自定义标签中的模板标签
-            var models = comTab.Select(group =>
+            try
             {
-                var child = group.Tabs.Select(tab => new
+                var t = db.EnterpriseUserCustomer.FirstOrDefault(s => s.CustomerID == custid && s.OwnerID == ownerid);
+                if (t == null)
                 {
-                    tab.Name,
-                    tab.ID,
-                    tab.Sort,
-                    Style = group.Style,
-                    Selected = ects.Any(z => z.Name == tab.Name)
+                    return Json(Comm.ToJsonResult("Error", "客户不存在"), JsonRequestBehavior.AllowGet);
                 }
-                 );
-                return new
-                {
-                    group.Name,
-                    group.Sort,
-                    group.Style,
-                    Tabs = child
-                };
-            });
-            var returndata = new
+                t.Remark = remark;
+                db.SaveChanges();
+                return Json(Comm.ToJsonResult("Success", "成功"), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
             {
-                custtabs = custtab,
-                comtabs = models
-            };
-            return Json("1");
+                return Json(Comm.ToJsonResult("Error", ex.Message), JsonRequestBehavior.AllowGet);
+            }
+        }
+        /// <summary>
+        /// 获取客户标签
+        /// </summary>
+        /// <param name="userid"></param>
+        /// <param name="custid"></param>
+        /// <param name="enterpriseid"></param>
+        /// <returns></returns>
+        [AllowCrossSiteJson]
+        public ActionResult GetCustTabs(string userid, int custid, int enterpriseid)
+        {
+            try
+            {
+                //客户自定义标签
+                var custtab = db.EnterpriseCustomerTabs.Where(s => s.OwnerID == userid && s.CustomerID == custid).ToList();
+                //企业共用模板标签
+                var comTab = (from g in db.CustomerTabGroups
+                              join t in db.CustomerTabs on g.ID equals t.GroupID into gt
+                              where g.EnterpriseID == enterpriseid
+                              orderby g.Sort
+                              select new
+                              {
+                                  g.Name,
+                                  g.Sort,
+                                  g.Style,
+                                  Tabs = gt
+                              }).ToList();
+
+                var ects = db.EnterpriseCustomerTabs.Where(s => s.CustomerID == custid && s.OwnerID == userid);
+                //添加到自定义标签中的模板标签
+                var models = comTab.Select(group =>
+                {
+                    var child = group.Tabs.Select(tab => new
+                    {
+                        tab.Name,
+                        tab.ID,
+                        tab.Sort,
+                        Style = group.Style,
+                        Selected = ects.Any(z => z.Name == tab.Name)
+                    }
+                     );
+                    return new
+                    {
+                        group.Name,
+                        group.Sort,
+                        group.Style,
+                        Tabs = child
+                    };
+                });
+                var returndata = new
+                {
+                    custtabs = custtab,
+                    comtabs = models
+                };
+                return Json(Comm.ToJsonResult("Success", "成功", returndata), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(Comm.ToJsonResult("Error", ex.Message), JsonRequestBehavior.AllowGet);
+            }
         }
 
 
