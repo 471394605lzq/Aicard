@@ -34,6 +34,10 @@
       <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="LitJSON, Version=0.13.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\LitJson.0.13.0\lib\net45\LitJSON.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
       <Private>True</Private>
@@ -144,6 +148,28 @@
     <Compile Include="TxIm\ImApi.cs" />
     <Compile Include="TxIm\ImConfig.cs" />
     <Compile Include="TxIm\Sign.cs" />
+    <Compile Include="WeChatPay\business\DownloadBill.cs" />
+    <Compile Include="WeChatPay\business\JsApiPay.cs" />
+    <Compile Include="WeChatPay\business\MicroPay.cs" />
+    <Compile Include="WeChatPay\business\NativeNotify.cs" />
+    <Compile Include="WeChatPay\business\NativePay.cs" />
+    <Compile Include="WeChatPay\business\OrderQuery.cs" />
+    <Compile Include="WeChatPay\business\Refund.cs" />
+    <Compile Include="WeChatPay\business\RefundQuery.cs" />
+    <Compile Include="WeChatPay\business\ResultNotify.cs" />
+    <Compile Include="WeChatPay\lib\Config.cs" />
+    <Compile Include="WeChatPay\lib\Data.cs" />
+    <Compile Include="WeChatPay\lib\AccountConfig.cs" />
+    <Compile Include="WeChatPay\lib\Exception.cs" />
+    <Compile Include="WeChatPay\lib\HttpService.cs" />
+    <Compile Include="WeChatPay\lib\IConfig.cs" />
+    <Compile Include="WeChatPay\lib\Log.cs" />
+    <Compile Include="WeChatPay\lib\Notify.cs" />
+    <Compile Include="WeChatPay\lib\RandomGenerator.cs" />
+    <Compile Include="WeChatPay\lib\SafeXmlDocument.cs" />
+    <Compile Include="WeChatPay\lib\WxPayApi.cs" />
+    <Compile Include="WeChatPay\WeChatPayment.cs" />
+    <Compile Include="WeChatPay\WeChatPayModel.cs" />
     <Compile Include="WeChatWork\WeChatWorkApi.cs" />
     <Compile Include="WeChatWork\WeChatWorkModel.cs" />
     <Compile Include="WeChat\WeChatConfig.cs" />
@@ -161,6 +187,7 @@
     <Content Include="IllegalWords\keywords.txt" />
     <Content Include="TxIm\tls_licence_tools.exe" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
