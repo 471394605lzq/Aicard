@@ -75,6 +75,11 @@ namespace AiCard.Models
         public bool HadLike { get; set; }
         [Display(Name = "状态")]
         public string State { get; set; }
+
+        /// <summary>
+        /// 动态归宿人ID
+        /// </summary>
+        public string OwnerID { get; set; }
     }
 
     public class ArticleViewModel

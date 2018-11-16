@@ -125,6 +125,7 @@ namespace AiCard.Controllers
                     Title = s.Title,
                     Type = s.Type,
                     UserName = s.Type == Common.Enums.ArticleType.Text ? s.User.Name : s.Enterprise.Name,
+                    OwnerID=s.UserID
                 };
                 return a;
             });
