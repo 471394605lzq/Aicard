@@ -247,6 +247,7 @@
   <ItemGroup>
     <Compile Include="App_Start\ActionFilterAttributes.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\Extensions\ControllerExtensions.cs" />
     <Compile Include="App_Start\Extensions\IPrincipalExtensions.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />

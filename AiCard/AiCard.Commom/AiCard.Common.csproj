@@ -122,7 +122,6 @@
     <Compile Include="DrawingPictures.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Extensions\ActionFilterAttributes.cs" />
-    <Compile Include="Extensions\ControllerExtensions.cs" />
     <Compile Include="Extensions\DateTimeExtensions.cs" />
     <Compile Include="Extensions\DictionaryExtensions.cs" />
     <Compile Include="Extensions\EnumExtensions.cs" />
