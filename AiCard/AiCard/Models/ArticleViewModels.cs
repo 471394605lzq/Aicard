@@ -73,6 +73,8 @@ namespace AiCard.Models
         public string DateTime { get; set; }
 
         public bool HadLike { get; set; }
+        [Display(Name = "状态")]
+        public string State { get; set; }
     }
 
     public class ArticleViewModel
