@@ -6,6 +6,8 @@ using System.Web.Mvc;
 using AiCard.Models;
 using AiCard.DAL.Models;
 using AiCard.Common;
+using AiCard;
+
 
 namespace AiCard.Controllers
 {
@@ -42,7 +44,7 @@ namespace AiCard.Controllers
                             on a.ID equals ll.RelationID into all
                          join lu in db.UserLogs.Where(s => s.Type == Common.Enums.UserLogType.ArticleLike && s.UserID == userID)
                             on a.ID equals lu.RelationID into alu
-                         where a.State == Common.Enums.ArticleState.Released
+                         //where a.State == Common.Enums.ArticleState.Released
                          select new
                          {
                              a.ID,
@@ -57,6 +59,7 @@ namespace AiCard.Controllers
                              a.UserID,
                              a.Type,
                              a.Share,
+                             a.State,
                              User = au.FirstOrDefault(),
                              Enterprise = ae.FirstOrDefault(),
                              Liker = all.Take(6),
@@ -73,7 +76,7 @@ namespace AiCard.Controllers
                 default:
                     {
                         filter = filter.Where(s => s.UserID != card.UserID
-                            && s.EnterpriseID == card.EnterpriseID);
+                            && s.EnterpriseID == card.EnterpriseID && s.State == Common.Enums.ArticleState.Released);
                     }
                     break;
             }
@@ -104,7 +107,7 @@ namespace AiCard.Controllers
                 var a = new ArticleIndexViewModels
                 {
                     ArticleID = s.ID,
-                    Avatar = s.Type == Common.Enums.ArticleType.Text ? s.User?.Avatar : s.Enterprise.Logo,
+                    Avatar = s.Type == Common.Enums.ArticleType.Text ? (s.User?.Avatar.SplitToArray<string>()?[0]) : s.Enterprise.Logo,
                     CommentCount = s.Comment.ToStrForm(4, "评论"),
                     Content = s.Content,
                     Cover = s.Type == Common.Enums.ArticleType.Html ? s.Images : null,
@@ -115,17 +118,18 @@ namespace AiCard.Controllers
                         (s.Images.SplitToArray<string>()?.ToArray() ?? new string[0])
                         : new string[0],
                     LikeCount = s.Like.ToStrForm(4, "点赞"),
+                    State = s.State.GetDisplayName(),
                     LikeUser = s.Liker.Select(x => x.Avatar).ToArray(),
                     Position = s.Type == Common.Enums.ArticleType.Text ? s.User.Position : "",
                     ShareCount = s.Share.ToStrForm(4, "分享"),
                     Title = s.Title,
                     Type = s.Type,
                     UserName = s.Type == Common.Enums.ArticleType.Text ? s.User.Name : s.Enterprise.Name,
+                    OwnerID=s.UserID
                 };
                 return a;
             });
             return Json(Comm.ToJsonResultForPagedList(paged, data), JsonRequestBehavior.AllowGet);
-
         }
 
         [AllowCrossSiteJson]
@@ -172,7 +176,7 @@ namespace AiCard.Controllers
             var model = new
             {
                 ArticleID = a.ID,
-                Avatar = a.Type == Common.Enums.ArticleType.Text ? c.Avatar : e.Logo,
+                Avatar = a.Type == Common.Enums.ArticleType.Text ? c.Avatar?.SplitToArray<string>()?[0] : e.Logo,
                 CommentCount = com.ToStrForm(4, "评论"),
                 DateTimeStr = a.UpdateDateTime.ToStrForm(),
                 HadLike = hadLike,
@@ -281,6 +285,35 @@ namespace AiCard.Controllers
             }
         }
 
+        /// <summary>
+        /// 删除动态
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <param name="articleID"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [AllowCrossSiteJson]
+        public ActionResult DeleteArticle(string owerID, int articleID)
+        {
+            Article model = db.Articles.Where(s => s.ID == articleID && s.UserID == owerID).FirstOrDefault();
+            if (model == null)
+            {
+                return Json(Comm.ToJsonResult("CardNoFound", "动态不存在"), JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                try
+                {
+                    db.Articles.Remove(model);
+                    db.SaveChanges();
+                    return Json(Comm.ToJsonResult("Success", "成功"), JsonRequestBehavior.AllowGet);
+                }
+                catch (Exception ex)
+                {
+                    return Json(Comm.ToJsonResult("Error", ex.Message), JsonRequestBehavior.AllowGet);
+                }
+            }
+        }
         protected override void Dispose(bool disposing)
         {
             if (disposing)

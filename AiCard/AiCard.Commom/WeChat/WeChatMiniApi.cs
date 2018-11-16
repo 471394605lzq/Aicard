@@ -210,6 +210,24 @@ namespace AiCard.Common.WeChat
             };
             return _accessToken.Code;
         }
+
+        public string SendMessage(string openID, string tempID, string formID, string page, object keyword)
+        {
+            var p = new Dictionary<string, string>();
+            p.Add("access_token", GetAccessToken());
+            var data = new
+            {
+                touser = openID,
+                template_id = tempID,
+                page = page,
+                data = keyword,
+                form_id = formID,
+
+            };
+            var api = new CommonApi.BaseApi($"https://api.weixin.qq.com/cgi-bin/message/wxopen/template/send?{p.ToParam()}", "POST", data);
+            var result = api.CreateRequestReturnJson();
+            return JsonConvert.SerializeObject(result);
+        }
     }
 
     public class Jscode2sessionResult
@@ -281,9 +299,11 @@ namespace AiCard.Common.WeChat
                 return null;
             }
         }
-        
+
 
     }
+
+
 
     public enum WeChatPage
     {

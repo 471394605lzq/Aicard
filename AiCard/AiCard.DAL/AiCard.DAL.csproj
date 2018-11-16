@@ -202,6 +202,10 @@
     <Compile Include="Migrations\201811151230534_AddVipElt.Designer.cs">
       <DependentUpon>201811151230534_AddVipElt.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201811160839571_UserAddOpenIDs.cs" />
+    <Compile Include="Migrations\201811160839571_UserAddOpenIDs.Designer.cs">
+      <DependentUpon>201811160839571_UserAddOpenIDs.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ArticleModels.cs" />
     <Compile Include="Models\CardModels.cs" />
@@ -322,6 +326,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201811151230534_AddVipElt.resx">
       <DependentUpon>201811151230534_AddVipElt.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201811160839571_UserAddOpenIDs.resx">
+      <DependentUpon>201811160839571_UserAddOpenIDs.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

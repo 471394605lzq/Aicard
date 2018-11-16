@@ -77,7 +77,7 @@ namespace AiCard.Controllers
         [Authorize(Roles = SysRole.CustomerTabManageCreate + "," + SysRole.ECustomerTabManageCreate)]
         public ActionResult Create()
         {
-            ViewBag.GroupID = new SelectList(db.CustomerTabGroups, "ID", "Name");
+            ViewBag.GroupID = new SelectList(db.CustomerTabGroups.Where(s=>s.EnterpriseID==AccontData.EnterpriseID), "ID", "Name");
             return View();
         }
 
@@ -129,7 +129,7 @@ namespace AiCard.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.GroupID = new SelectList(db.CustomerTabGroups, "ID", "Name", customerTab.GroupID);
+            ViewBag.GroupID = new SelectList(db.CustomerTabGroups.Where(s => s.EnterpriseID == AccontData.EnterpriseID), "ID", "Name", customerTab.GroupID);
             return View(customerTab);
         }
 
