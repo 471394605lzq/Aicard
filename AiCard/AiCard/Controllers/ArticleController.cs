@@ -76,7 +76,7 @@ namespace AiCard.Controllers
                 default:
                     {
                         filter = filter.Where(s => s.UserID != card.UserID
-                            && s.EnterpriseID == card.EnterpriseID&&s.State==Common.Enums.ArticleState.Released);
+                            && s.EnterpriseID == card.EnterpriseID && s.State == Common.Enums.ArticleState.Released);
                     }
                     break;
             }
@@ -107,7 +107,7 @@ namespace AiCard.Controllers
                 var a = new ArticleIndexViewModels
                 {
                     ArticleID = s.ID,
-                    Avatar = s.Type == Common.Enums.ArticleType.Text ? s.User?.Avatar : s.Enterprise.Logo,
+                    Avatar = s.Type == Common.Enums.ArticleType.Text ? (s.User?.Avatar.SplitToArray<string>()?[0]) : s.Enterprise.Logo,
                     CommentCount = s.Comment.ToStrForm(4, "评论"),
                     Content = s.Content,
                     Cover = s.Type == Common.Enums.ArticleType.Html ? s.Images : null,
@@ -176,7 +176,7 @@ namespace AiCard.Controllers
             var model = new
             {
                 ArticleID = a.ID,
-                Avatar = a.Type == Common.Enums.ArticleType.Text ? c.Avatar : e.Logo,
+                Avatar = a.Type == Common.Enums.ArticleType.Text ? c.Avatar?.SplitToArray<string>()?[0] : e.Logo,
                 CommentCount = com.ToStrForm(4, "评论"),
                 DateTimeStr = a.UpdateDateTime.ToStrForm(),
                 HadLike = hadLike,
