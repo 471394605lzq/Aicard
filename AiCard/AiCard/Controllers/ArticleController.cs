@@ -6,6 +6,8 @@ using System.Web.Mvc;
 using AiCard.Models;
 using AiCard.DAL.Models;
 using AiCard.Common;
+using AiCard;
+
 
 namespace AiCard.Controllers
 {
@@ -42,7 +44,7 @@ namespace AiCard.Controllers
                             on a.ID equals ll.RelationID into all
                          join lu in db.UserLogs.Where(s => s.Type == Common.Enums.UserLogType.ArticleLike && s.UserID == userID)
                             on a.ID equals lu.RelationID into alu
-                         where a.State == Common.Enums.ArticleState.Released
+                         //where a.State == Common.Enums.ArticleState.Released
                          select new
                          {
                              a.ID,
@@ -57,6 +59,7 @@ namespace AiCard.Controllers
                              a.UserID,
                              a.Type,
                              a.Share,
+                             a.State,
                              User = au.FirstOrDefault(),
                              Enterprise = ae.FirstOrDefault(),
                              Liker = all.Take(6),
@@ -73,7 +76,7 @@ namespace AiCard.Controllers
                 default:
                     {
                         filter = filter.Where(s => s.UserID != card.UserID
-                            && s.EnterpriseID == card.EnterpriseID);
+                            && s.EnterpriseID == card.EnterpriseID&&s.State==Common.Enums.ArticleState.Released);
                     }
                     break;
             }
@@ -115,6 +118,7 @@ namespace AiCard.Controllers
                         (s.Images.SplitToArray<string>()?.ToArray() ?? new string[0])
                         : new string[0],
                     LikeCount = s.Like.ToStrForm(4, "点赞"),
+                    State = s.State.GetDisplayName(),
                     LikeUser = s.Liker.Select(x => x.Avatar).ToArray(),
                     Position = s.Type == Common.Enums.ArticleType.Text ? s.User.Position : "",
                     ShareCount = s.Share.ToStrForm(4, "分享"),

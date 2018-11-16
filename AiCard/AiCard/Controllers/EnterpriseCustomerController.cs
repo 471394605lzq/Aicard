@@ -36,7 +36,7 @@ namespace AiCard.Controllers
                         from ec in db.EnterpriseCustomers
                         from us in db.Users
                         where ec.ID == euc.CustomerID
-                            && ec.UserID == us.Id&&euc.OwnerID== userID
+                            && ec.UserID == us.Id && euc.OwnerID == userID
                         select new
                         {
                             ID = ec.ID,
@@ -219,18 +219,19 @@ namespace AiCard.Controllers
         /// <param name="custID"></param>
         /// <returns></returns>
         [AllowCrossSiteJson]
-        public ActionResult GetCustInfo(int custID,string userID)
+        public ActionResult GetCustInfo(int custID, string userID)
         {
             try
             {
                 var query = (from c in db.EnterpriseCustomers
                              from u in db.Users
-                             join cut in db.EnterpriseCustomerTabs.Where(s=>s.OwnerID== userID) on c.ID equals cut.CustomerID  into cuta
+                             join cut in db.EnterpriseCustomerTabs.Where(s => s.OwnerID == userID) on c.ID equals cut.CustomerID into cuta
                              where c.ID == custID
-                             select  new {
-                                 Name=c.RealName,
-                                 Avater=u.Avatar,
-                                 CustTabs = cuta.Select(s=>s.Name).Take(3)
+                             select new
+                             {
+                                 Name = c.RealName,
+                                 Avater = u.Avatar,
+                                 CustTabs = cuta.Select(s => s.Name).Take(3)
                              }).FirstOrDefault();
                 return Json(Comm.ToJsonResult("Success", "成功", query), JsonRequestBehavior.AllowGet);
             }
@@ -281,14 +282,14 @@ namespace AiCard.Controllers
                         t.Mobile = model.Mobile;
                     }
                 }
-               
+
                 if (model.Position != null)
                 {
                     t.Position = model.Position;
                 }
 
                 t.Gender = model.Gender;
-                if (model.Birthday!=null)
+                if (model.Birthday != null)
                 {
                     t.Birthday = model.Birthday;
                 }
@@ -309,6 +310,53 @@ namespace AiCard.Controllers
                 return Json(Comm.ToJsonResult("Error500", ex.Message), JsonRequestBehavior.AllowGet);
             }
         }
+
+        public ActionResult GetCustTabs(string userid, int custid, int eid)
+        {
+            //客户自定义标签
+            var custtab = db.EnterpriseCustomerTabs.Where(s => s.OwnerID == userid && s.CustomerID == custid).ToList();
+            //企业共用模板标签
+            var comTab = (from g in db.CustomerTabGroups
+                          join t in db.CustomerTabs on g.ID equals t.GroupID into gt
+                          where g.EnterpriseID == eid
+                          orderby g.Sort
+                          select new
+                          {
+                              g.Name,
+                              g.Sort,
+                              g.Style,
+                              Tabs = gt
+                          }).ToList();
+
+            var ects = db.EnterpriseCustomerTabs.Where(s => s.CustomerID == custid && s.OwnerID == userid);
+            //添加到自定义标签中的模板标签
+            var models = comTab.Select(group =>
+            {
+                var child = group.Tabs.Select(tab => new
+                {
+                    tab.Name,
+                    tab.ID,
+                    tab.Sort,
+                    Style = group.Style,
+                    Selected = ects.Any(z => z.Name == tab.Name)
+                }
+                 );
+                return new
+                {
+                    group.Name,
+                    group.Sort,
+                    group.Style,
+                    Tabs = child
+                };
+            });
+            var returndata = new
+            {
+                custtabs = custtab,
+                comtabs = models
+            };
+            return Json("1");
+        }
+
 
         protected override void Dispose(bool disposing)
         {
