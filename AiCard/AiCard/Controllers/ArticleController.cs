@@ -285,6 +285,35 @@ namespace AiCard.Controllers
             }
         }
 
+        /// <summary>
+        /// 删除动态
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <param name="articleID"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [AllowCrossSiteJson]
+        public ActionResult DeleteArticle(string owerID, int articleID)
+        {
+            Article model = db.Articles.Where(s => s.ID == articleID && s.UserID == owerID).FirstOrDefault();
+            if (model == null)
+            {
+                return Json(Comm.ToJsonResult("CardNoFound", "动态不存在"), JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                try
+                {
+                    db.Articles.Remove(model);
+                    db.SaveChanges();
+                    return Json(Comm.ToJsonResult("Success", "成功"), JsonRequestBehavior.AllowGet);
+                }
+                catch (Exception ex)
+                {
+                    return Json(Comm.ToJsonResult("Error", ex.Message), JsonRequestBehavior.AllowGet);
+                }
+            }
+        }
         protected override void Dispose(bool disposing)
         {
             if (disposing)
