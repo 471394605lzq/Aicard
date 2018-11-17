@@ -715,8 +715,10 @@ namespace AiCard.Controllers
             }
             else
             {
+                string appID = Common.WeChat.ConfigMini.AppID;
+                string appSecret = Common.WeChat.ConfigMini.AppSecret;
                 //小程序
-                Common.WeChat.WeChatMinApi wechat = new Common.WeChat.WeChatMinApi(Common.WeChat.ConfigMini.AppID, Common.WeChat.ConfigMini.AppSecret);
+                Common.WeChat.WeChatMinApi wechat = new Common.WeChat.WeChatMinApi(appID, appSecret);
                 try
                 {
                     var result = wechat.Jscode2session(code);
@@ -724,8 +726,10 @@ namespace AiCard.Controllers
                     if (!string.IsNullOrWhiteSpace(result.UnionID))
                     {
                         user = db.Users.FirstOrDefault(s => s.WeChatID == result.UnionID);
+                        var option = new Bll.Users.UserOpenID(user);
+                        option.AddOpenID(appID, result.OpenID);
+                        db.SaveChanges();
                     }
-
                     return Json(Comm.ToJsonResult("Success", "成功", new
                     {
                         result.OpenID,
@@ -815,6 +819,10 @@ namespace AiCard.Controllers
             var user = db.Users.FirstOrDefault(s => s.WeChatID == unionId);
             if (user != null)
             {
+                string appID = Common.WeChat.ConfigMini.AppID;
+                var op1 = new Bll.Users.UserOpenID(user);
+                op1.AddOpenID(appID, model.OpenID);
+                db.SaveChanges();
                 return user;
             }
             nickname = model.NickName;
@@ -857,7 +865,8 @@ namespace AiCard.Controllers
                 LastLoginDateTime = DateTime.Now,
                 UserType = UserType.Personal
             };
-
+            var option = new Bll.Users.UserOpenID(user);
+            option.AddOpenID(Common.WeChat.ConfigMini.AppID, model.OpenID);
             var r = UserManager.Create(user);
             user = db.Users.FirstOrDefault(s => s.WeChatID == unionId);
 

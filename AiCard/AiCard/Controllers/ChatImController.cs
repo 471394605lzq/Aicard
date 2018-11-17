@@ -67,6 +67,30 @@ namespace AiCard.Controllers
             }), JsonRequestBehavior.AllowGet);
         }
 
+
+        [HttpPost]
+        public ActionResult SendMessage(string content, string fromUserID, string formID, string toUserID)
+        {
+            var appID = Common.WeChat.ConfigMini.AppID;
+            var toUser = db.Users.FirstOrDefault(s => s.Id == toUserID);
+            var option = new Bll.Users.UserOpenID(toUser);
+            string openID = option.SearchOpenID(appID);
+            string tempID = "szJbdS4HgheYYCoDRy4sWwGZltbdSWYARzK5VYrzh1c";
+            var fromUser = db.Users.FirstOrDefault(s => s.Id == fromUserID);
+            object key = new
+            {
+                keyword1 = "AI名片",
+                keyword2 = fromUser.NickName,
+                keyword3 = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
+                keyword4 = content,
+            };
+            var result = new Common.WeChat.WeChatMinApi(Common.WeChat.ConfigMini.AppID, Common.WeChat.ConfigMini.AppSecret)
+                    .SendMessage(openID, tempID, formID, null, key);
+
+            return Json(Comm.ToJsonResult("Success", "", result));
+        }
+
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)

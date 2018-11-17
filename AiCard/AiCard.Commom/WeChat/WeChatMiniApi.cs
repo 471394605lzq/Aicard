@@ -219,8 +219,8 @@ namespace AiCard.Common.WeChat
             {
                 touser = openID,
                 template_id = tempID,
-                page = page,
-                data = keyword,
+                //page = page,
+                //data = keyword,
                 form_id = formID,
 
             };

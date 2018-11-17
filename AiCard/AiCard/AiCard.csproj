@@ -257,6 +257,7 @@
     <Compile Include="Bll\HomePageModulars.cs" />
     <Compile Include="Bll\Roles.cs" />
     <Compile Include="Bll\UserLogs.cs" />
+    <Compile Include="Bll\Users.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ArticleCommentController.cs" />
     <Compile Include="Controllers\ArticleController.cs" />
