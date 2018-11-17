@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WxPayAPI;
+using static AiCard.Common.Comm;
 
 namespace AiCard.Commom.WeChatPay
 {
@@ -20,11 +21,12 @@ namespace AiCard.Commom.WeChatPay
         /// 统一下单，返回下单结果
         /// </summary>
         /// <returns></returns>
-        public PaymentResult GetUnifiedOrderResult(UnifiedPayData payData)
+        public RequestResult GetUnifiedOrderResult(UnifiedPayData payData)
         {
             #region
-            PaymentResult result = new PaymentResult {
-                retCode = ReqResult.failed,
+            RequestResult result = new RequestResult
+            {
+                retCode = ReqResultCode.failed,
                 retMsg =""
             };
             if (payData == null) {
@@ -49,7 +51,7 @@ namespace AiCard.Commom.WeChatPay
                 throw new WxPayException("UnifiedOrder response error!");
             }
             else {
-                result.retCode = ReqResult.success;
+                result.retCode = ReqResultCode.success;
                 result.retMsg = "请求成功";
                 result.objectData = ret;//把结果返回到业务层
             }

@@ -72,7 +72,7 @@ namespace AiCard.Bll
                             if (row > 0 && order.State==Common.Enums.OrderState.Success)
                             {//查看是否需要计算上级收益
                                 VIPAccountBLL bll = new VIPAccountBLL();
-                                bll.CalculateVIPAmount(order.UserID);
+                                bll.CalculateVIPAmount(order.UserID,1);
                             }
                         }
                     }
