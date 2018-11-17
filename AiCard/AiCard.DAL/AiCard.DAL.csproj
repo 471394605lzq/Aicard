@@ -206,9 +206,14 @@
     <Compile Include="Migrations\201811160839571_UserAddOpenIDs.Designer.cs">
       <DependentUpon>201811160839571_UserAddOpenIDs.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201811170323306_CardUserProductTops.cs" />
+    <Compile Include="Migrations\201811170323306_CardUserProductTops.Designer.cs">
+      <DependentUpon>201811170323306_CardUserProductTops.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ArticleModels.cs" />
     <Compile Include="Models\CardModels.cs" />
+    <Compile Include="Models\CardUserProductTop.cs" />
     <Compile Include="Models\CustomerTabModels.cs" />
     <Compile Include="Models\EnterpriseCustomerModels.cs" />
     <Compile Include="Models\EnterpriseModels.cs" />
@@ -329,6 +334,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201811160839571_UserAddOpenIDs.resx">
       <DependentUpon>201811160839571_UserAddOpenIDs.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201811170323306_CardUserProductTops.resx">
+      <DependentUpon>201811170323306_CardUserProductTops.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -126,6 +126,8 @@ namespace AiCard.DAL.Models
 
         public DbSet<VipForwardOrder> VipForwardOrders { get; set; }
 
+        public DbSet<CardUserProductTop> CardUserProductTops { get; set; }
+
 
         public SqlConnection Connection { get; internal set; }
 
