@@ -333,13 +333,13 @@ namespace AiCard.Common.Enums
     public enum OrderState
     {
         [Display(Name = "待处理")]
-        UnHandle=0,
+        UnHandle = 0,
         [Display(Name = "成功")]
-        Success=1,
+        Success = 1,
         [Display(Name = "失败")]
-        Failed=2,
+        Failed = 2,
         [Display(Name = "已取消")]
-        Canceled=3,
+        Canceled = 3,
     }
 
     ///// <summary>
@@ -353,8 +353,16 @@ namespace AiCard.Common.Enums
 
     public enum VipRank
     {
-        [Display(Name = "默认")]
-        Default
+        /// <summary>
+        /// 用户
+        /// </summary>
+        [Display(Name = "免费")]
+        Default,
+        /// <summary>
+        /// 99元VIP
+        /// </summary>
+        [Display(Name = "掌柜")]
+        Vip99
     }
 
     public enum VipState
