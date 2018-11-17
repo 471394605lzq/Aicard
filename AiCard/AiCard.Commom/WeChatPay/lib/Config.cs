@@ -18,7 +18,7 @@ namespace WxPayAPI
             if(config==null){
                 lock(syncRoot){
                     if (config == null)
-                        config = new  DemoConfig();
+                        config = new AccountConfig();
                 }
             }
             return config;

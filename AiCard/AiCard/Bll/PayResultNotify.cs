@@ -57,16 +57,23 @@ namespace AiCard.Bll
             {
                 int row = 0;
                 #region 更改订单状态，保存支付结果
-                if (!string.IsNullOrEmpty(out_trade_no)) {
+                if (!string.IsNullOrEmpty(out_trade_no))
+                {
                     using (ApplicationDbContext db = new ApplicationDbContext())
                     {
-                        Order order= db.Orders.FirstOrDefault(p=>p.Code== out_trade_no && p.State==Common.Enums.OrderState.UnHandle);
-                        if (order != null) {
+                        Order order = db.Orders.FirstOrDefault(p => p.Code == out_trade_no && p.State == Common.Enums.OrderState.UnHandle);
+                        if (order != null)
+                        {
                             order.PayCode = transaction_id;
                             order.PayResult = JsonConvert.SerializeObject(notifyData);
                             order.State = notifyData.GetValue("result_code").ToString() == "SUCCESS" ? Common.Enums.OrderState.Success : Common.Enums.OrderState.Failed;
                             order.PayDateTime = Convert.ToDateTime(notifyData.GetValue("time_end").ToString());
-                            row= db.SaveChanges();
+                            row = db.SaveChanges();
+                            if (row > 0 && order.State==Common.Enums.OrderState.Success)
+                            {//查看是否需要计算上级收益
+                                VIPAccountBLL bll = new VIPAccountBLL();
+                                bll.CalculateVIPAmount(order.UserID);
+                            }
                         }
                     }
                 }
@@ -80,7 +87,8 @@ namespace AiCard.Bll
                     page.Response.Write(res.ToXml());
                     page.Response.End();
                 }
-                else {//如果没更新成功，就继续接收通知
+                else
+                {//如果没更新成功，就继续接收通知
                     WxPayData res = new WxPayData();
                     res.SetValue("return_code", "FAIL");
                     res.SetValue("return_msg", "未接收成功");
@@ -88,7 +96,7 @@ namespace AiCard.Bll
                     page.Response.Write(res.ToXml());
                     page.Response.End();
                 }
-                
+
             }
         }
 

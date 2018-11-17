@@ -16,12 +16,7 @@ namespace AiCard.Controllers
     public class VIPController : Controller
     {
         OrderBLL orderbll = new OrderBLL();
-        // GET: VIP
-        public ActionResult Index()
-        {
-            return View();
-        }
-
+       
         /// <summary>
         /// 升级VIP，创建订单及预调起支付
         /// </summary>
