@@ -231,7 +231,7 @@ namespace AiCard.Controllers
                              select new
                              {
                                  Name = c.RealName,
-                                 Avater = u.Avatar,
+                                 Avatar = u.Avatar,
                                  CustTabs = cuta.Select(s => s.Name),
                                  Position=c.Position,
                                  Email=c.Email,
@@ -242,7 +242,21 @@ namespace AiCard.Controllers
                                  Address=c.Address,
                                  Remark=uscuta.Select(s=>s.Remark)
                              }).FirstOrDefault();
-                return Json(Comm.ToJsonResult("Success", "成功", query), JsonRequestBehavior.AllowGet);
+                var data = new
+                {
+                    Name = query.Name,
+                    Avatar = query.Avatar,
+                    CustTabs = query.CustTabs,
+                    Position = query.Position,
+                    Email = query.Email,
+                    Mobile = query.Mobile,
+                    Gender = query.Gender,
+                    Birthday =Convert.ToDateTime(query.Birthday).ToString("yyyy-MM-dd"),
+                    Company = query.Company,
+                    Address = query.Address,
+                    Remark = query.Remark
+                };
+                return Json(Comm.ToJsonResult("Success", "成功", data), JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
