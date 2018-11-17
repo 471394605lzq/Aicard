@@ -255,8 +255,11 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\SysRole.cs" />
     <Compile Include="Bll\HomePageModulars.cs" />
+    <Compile Include="Bll\OrderBLL.cs" />
+    <Compile Include="Bll\PayResultNotify.cs" />
     <Compile Include="Bll\Roles.cs" />
     <Compile Include="Bll\UserLogs.cs" />
+    <Compile Include="Bll\VIPAccountBLL.cs" />
     <Compile Include="Bll\Users.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ArticleCommentController.cs" />
@@ -286,6 +289,7 @@
     <Compile Include="Controllers\UserLogController.cs" />
     <Compile Include="Controllers\UserManageController.cs" />
     <Compile Include="Controllers\UserSpeechController.cs" />
+    <Compile Include="Controllers\VIPController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -307,6 +311,13 @@
     <Compile Include="Models\UserManageViewModels.cs" />
     <Compile Include="Models\UserViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ResultNotify\PayResultNotifyPage.aspx.cs">
+      <DependentUpon>PayResultNotifyPage.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ResultNotify\PayResultNotifyPage.aspx.designer.cs">
+      <DependentUpon>PayResultNotifyPage.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -349,6 +360,7 @@
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
+    <Content Include="ResultNotify\PayResultNotifyPage.aspx" />
     <Content Include="Scripts\ai.0.22.9-build00167.js" />
     <Content Include="Scripts\ai.0.22.9-build00167.min.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -924,6 +936,7 @@
     <Folder Include="Views\TsIm\" />
     <Folder Include="Views\UserLog\" />
     <Folder Include="Views\UserSpeech\" />
+    <Folder Include="Views\VIP\" />
     <Folder Include="WeChatSessionKey\" />
   </ItemGroup>
   <ItemGroup>

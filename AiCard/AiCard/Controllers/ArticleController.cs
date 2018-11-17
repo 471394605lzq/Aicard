@@ -125,11 +125,11 @@ namespace AiCard.Controllers
                     Title = s.Title,
                     Type = s.Type,
                     UserName = s.Type == Common.Enums.ArticleType.Text ? s.User.Name : s.Enterprise.Name,
+                    OwnerID=s.UserID
                 };
                 return a;
             });
             return Json(Comm.ToJsonResultForPagedList(paged, data), JsonRequestBehavior.AllowGet);
-
         }
 
         [AllowCrossSiteJson]
