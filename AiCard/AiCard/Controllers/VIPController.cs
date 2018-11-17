@@ -25,12 +25,12 @@ namespace AiCard.Controllers
         /// <returns></returns>
         [HttpPost]
         [AllowCrossSiteJson]
-        public ActionResult UpGradeVIP(string code, int UserID)
+        public ActionResult UpGradeVIP(string code, string UserID)
         {
             if (string.IsNullOrWhiteSpace(code)) {
                 return Json(Comm.ToJsonResult("Error", "code参数不能为空"), JsonRequestBehavior.AllowGet);
             }
-            if (UserID <= 0)
+            if (string.IsNullOrWhiteSpace(UserID))
             {
                 return Json(Comm.ToJsonResult("Error", "用户ID不能为空"), JsonRequestBehavior.AllowGet);
             }

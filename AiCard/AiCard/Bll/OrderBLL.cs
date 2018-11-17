@@ -33,7 +33,7 @@ namespace AiCard.Bll
         /// 创建订单号
         /// </summary>
         /// <returns></returns>
-        public string CreateOrderCode(int UserID) {
+        public string CreateOrderCode(string UserID) {
             #region
             string result = string.Empty;
             try
@@ -55,7 +55,7 @@ namespace AiCard.Bll
         /// <param name="code"></param>
         /// <param name="UserID"></param>
         /// <returns></returns>
-        public object CreateUpGradeOrder(string code, int UserID) {
+        public object CreateUpGradeOrder(string code, string UserID) {
             //1.调用小程序登录API，获取openID
             WeChatMinApi miniApi = new WeChatMinApi(ConfigMini.AppID, ConfigMini.AppSecret);
             Jscode2sessionResult openIDResule = miniApi.Jscode2session(code);

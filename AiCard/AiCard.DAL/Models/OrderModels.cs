@@ -45,7 +45,7 @@ namespace AiCard.DAL.Models
         /// 支付人的用户ID
         /// </summary>
         [Display(Name = "支付人的用户ID")]
-        public int UserID { get; set; }
+        public string UserID { get; set; }
 
         /// <summary>
         /// 金额
