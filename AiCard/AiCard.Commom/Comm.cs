@@ -13,6 +13,85 @@ namespace AiCard.Common
 {
     public class Comm
     {
+
+
+        /// <summary>
+        /// 升级VIP的会费（元）
+        /// </summary>
+        /// <returns></returns>
+        public static decimal UpGradeAmount()
+        {
+            return 99m;
+        }
+
+
+        /// <summary>
+        /// 注册上级可得佣金（元）
+        /// </summary>
+        /// <returns></returns>
+        public static decimal RegisterAmount()
+        {
+            return 3m;
+        }
+
+        /// <summary>
+        /// 升级后上级赚取佣金比例
+        /// </summary>
+        /// <returns></returns>
+        public static decimal ParentCommissionRate()
+        {
+            return 0.5m;
+        }
+
+        /// <summary>
+        /// 升级后上上级赚取佣金比例
+        /// </summary>
+        /// <returns></returns>
+        public static decimal GrandfatheredCommissionRate()
+        {
+            return 0.1m;
+        }
+
+        /// <summary>
+        /// 统一的请求结果
+        /// </summary>
+        public struct RequestResult
+        {
+            /// <summary>
+            /// 请求结果 
+            /// </summary>
+            public ReqResultCode retCode { get; set; }
+
+            /// <summary>
+            /// 提示消息
+            /// </summary>
+            public string retMsg { get; set; }
+
+            /// <summary>
+            /// 返回对象数据
+            /// </summary>
+            public dynamic objectData { get; set; }
+        }
+        /// <summary>
+        /// 请求结果枚举
+        /// </summary>
+        public enum ReqResultCode
+        {
+            /// <summary>
+            /// 成功
+            /// </summary>
+            success = 1,
+            /// <summary>
+            /// 失败
+            /// </summary>
+            failed = 0,
+            /// <summary>
+            /// 异常
+            /// </summary>
+            excetion = 3
+
+        }
+
         private static Random _random;
         /// <summary>
         /// 系统唯一随机
