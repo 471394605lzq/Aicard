@@ -20,7 +20,7 @@ namespace AiCard.Common.CommModels
             ImageUrl = image;
             PreviewWidth = pWidth > 0 ? pWidth : width;
             PreviewHeight = pHeight > 0 ? pHeight : height;
-
+            Server = server;
         }
         /// <summary>
         /// 图片地址

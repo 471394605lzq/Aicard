@@ -140,9 +140,11 @@ namespace AiCard.Models
         public string Title { get; set; }
 
         [Display(Name = "封面")]
-        public Common.CommModels.ImageResizer Cover { get; set; } = new Common.CommModels.ImageResizer("Cover", 132, 132);
+        public Common.CommModels.ImageResizer Cover { get; set; } = new Common.CommModels.ImageResizer("Cover", 132, 132, server: Common.CommModels.UploadServer.QinQiu);
 
         [Display(Name = "内容")]
         public string Content { get; set; }
+
+
     }
 }

@@ -13,7 +13,7 @@ var imageResizeUpload = function (selector, option) {
     var server = $iru.data("server");
     //配置参数
     var config = {
-        uploadUrl: comm.action("Upload", "Uploader")
+        uploadUrl:  comm.action("Upload", "Uploader")
     };
 
     if (option == undefined) {
