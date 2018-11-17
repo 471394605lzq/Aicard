@@ -71,6 +71,67 @@ namespace AiCard.Controllers
         }
 
         /// <summary>
+        /// 设置商品推荐
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [AllowCrossSiteJson]
+        public ActionResult SetUserProductTop(UserProductTop model)
+        {
+            try
+            {
+                var tab = db.UserProductTops.FirstOrDefault(s => s.ProductID == model.ProductID && s.UserID == model.UserID);
+                if (tab != null)
+                {
+                    return Json(Comm.ToJsonResult("NoFound", "商品推荐已推荐", JsonRequestBehavior.AllowGet));
+                }
+                var userproducttop = new UserProductTop
+                {
+                    CreateDateTime = DateTime.Now,
+                    ProductID = model.ProductID,
+                    UserID = model.UserID
+                };
+                db.UserProductTops.Add(userproducttop);
+                db.SaveChanges();
+                var returndata = new
+                {
+                    ID = userproducttop.ID
+                };
+                return Json(Comm.ToJsonResult("Success", "设置成功", returndata), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(Comm.ToJsonResult("Error500", ex.Message), JsonRequestBehavior.AllowGet);
+            }
+        }
+        /// <summary>
+        /// 取消商品推荐设置
+        /// </summary>
+        /// <param name="userproducttopID"></param>
+        /// <param name="userID"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [AllowCrossSiteJson]
+        public ActionResult DeleteUserTop(int productID, string userID)
+        {
+            try
+            {
+                var tab = db.UserProductTops.FirstOrDefault(s => s.ProductID == productID && s.UserID == userID);
+                if (tab == null)
+                {
+                    return Json(Comm.ToJsonResult("NoFound", "商品推荐不存在", JsonRequestBehavior.AllowGet));
+                }
+                db.UserProductTops.Remove(tab);
+                db.SaveChanges();
+                return Json(Comm.ToJsonResult("Success", "删除成功"), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(Comm.ToJsonResult("Error500", ex.Message), JsonRequestBehavior.AllowGet);
+            }
+        }
+        /// <summary>
         /// 获取企业商品分类列表
         /// </summary>
         /// <param name="enterpriseid">企业id</param>
@@ -148,7 +209,7 @@ namespace AiCard.Controllers
             }
             catch (Exception ex)
             {
-                return Json(Comm.ToJsonResult("Error", ex.Message));
+                return Json(Comm.ToJsonResult("Error", ex.Message, JsonRequestBehavior.AllowGet));
             }
         }
     }
