@@ -133,9 +133,9 @@ namespace AiCard.Controllers
         }
 
         [AllowCrossSiteJson]
-        public ActionResult Detail(int articleID, string userID, int pageSize = 20)
+        public ActionResult Detail(int articleID, string userID,int? type=0, int pageSize = 20)
         {
-            var a = db.Articles.FirstOrDefault(s => s.ID == articleID && s.State == Common.Enums.ArticleState.Released);
+            var a = type == 0 ? db.Articles.FirstOrDefault(s => s.ID == articleID && s.State == Common.Enums.ArticleState.Released) : db.Articles.FirstOrDefault(s => s.ID == articleID);
             if (a == null)
             {
                 return Json(Comm.ToJsonResult("NoFound", "动态不存在"), JsonRequestBehavior.AllowGet);
@@ -176,6 +176,7 @@ namespace AiCard.Controllers
             var model = new
             {
                 ArticleID = a.ID,
+                State=a.State.GetDisplayName(),
                 Avatar = a.Type == Common.Enums.ArticleType.Text ? c.Avatar?.SplitToArray<string>()?[0] : e.Logo,
                 CommentCount = com.ToStrForm(4, "评论"),
                 DateTimeStr = a.UpdateDateTime.ToStrForm(),

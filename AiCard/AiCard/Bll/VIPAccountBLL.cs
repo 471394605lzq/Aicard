@@ -12,7 +12,7 @@ namespace AiCard.Bll
     /// </summary>
     public sealed class VIPAccountBLL
     {
-        public void CalculateVIPAmount(int vUserID) {
+        public void CalculateVIPAmount(string vUserID) {
 
         }
     }
