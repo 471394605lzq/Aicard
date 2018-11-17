@@ -1,123 +1,52 @@
-﻿@model AiCard.DAL.Models.Article
+﻿@model AiCard.Models.ArticleCreateEditViewModel
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "预览";
     Layout = "~/Views/Shared/_LayoutBackground.cshtml";
 }
 
-<h2>Details</h2>
+<ol class="breadcrumb">
+    <li><a href="@Url.Action("Index")">商品动态</a></li>
+    <li>编辑动态</li>
+</ol>
+<div class="roleGroupCreateEdit">
 
-<div>
-    <h4>Article</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
+    <div>
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Title)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Title)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.Title)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Type)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.Cover)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Type)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.Cover)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.CreateDateTime)
-        </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.CreateDateTime)
-        </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Content)
+            </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.UpdateDateTime)
-        </dt>
+            <dd>
+                <div style="width:750px">
+                    @Html.Raw(Model.Content)
+                </div>
+               
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.UpdateDateTime)
-        </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.EnterpriseID)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.EnterpriseID)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.UserID)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.UserID)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Content)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Content)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Images)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Images)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Video)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Video)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Like)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Like)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Comment)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Comment)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Share)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Share)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.State)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.State)
-        </dd>
-
-    </dl>
+        </dl>
+    </div>
+    <p>
+        @*@Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |*@
+        @*@Html.ActionLink("返回", "Index")*@
+        <a href="@Url.Action("Index")" class="btn btn-default" style="margin-left:60px;">返回</a>
+    </p>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>

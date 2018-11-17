@@ -74,12 +74,26 @@ namespace AiCard.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Article article = db.Articles.Find(id);
-            if (article == null)
+            Sidebar();
+            var temp = db.Articles.FirstOrDefault(s => s.ID == id);
+            //防止企业用户串号修改
+            if (AccontData.UserType == UserType.Enterprise
+                && temp.EnterpriseID != AccontData.EnterpriseID)
+            {
+                return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
+            }
+            var models = new ArticleCreateEditViewModel
+            {
+                ID = temp.ID,
+                Title = temp.Title,
+                Content = temp.Content,
+            };
+            models.Cover.ImageUrl = temp.Images.SplitToArray<string>(',')?[0];
+            if (models == null)
             {
                 return HttpNotFound();
             }
-            return View(article);
+            return View(models);
         }
 
         [Authorize(Roles = SysRole.ArticlesManageCreate + "," + SysRole.EArticlesManageCreate)]
