@@ -1,4 +1,5 @@
 ﻿using AiCard.Common;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,12 @@ namespace AiCard.Controllers
         {
             try
             {
+                //List<Pcas> listpcas = ChinaPCAS.GetALL();
+                //var data = new
+                //{
+                //    data = listpcas
+                //};
+                //return Json(Comm.ToJsonResult("Success", "获取成功", data), JsonRequestBehavior.AllowGet);
                 if (type == 0)
                 {
                     var datap = new

@@ -205,7 +205,7 @@ namespace AiCard.Common.Enums
         ArticleComment = 11,
         [Display(Name = "文章查看")]
         ArticleRead = 12,
-        [Display(Name = "文章分享")]
+        [Display(Name = "文章分享")]//动态分享
         ArticleShare = 13,
         [Display(Name = "在线沟通")]
         Communication = 20,
@@ -221,13 +221,13 @@ namespace AiCard.Common.Enums
         HomePageEmail = 42,
         [Display(Name = "主页导航")]
         HomePageAddress = 43,
-        [Display(Name = "主页分享")]
+        [Display(Name = "主页分享")]//官网分享
         HomePageShare = 44,
         [Display(Name = "微信查看")]
         WeChatOpen = 50,
         [Display(Name = "名片查看")]
         CardRead = 60,
-        [Display(Name = "转发名片")]
+        [Display(Name = "转发名片")]//名片分享
         CardShare = 61,
         [Display(Name = "名片保存")]
         CardSave = 62,
@@ -259,6 +259,12 @@ namespace AiCard.Common.Enums
         FollowUp = 101,
         [Display(Name = "新增标签")]
         AddCustTab = 102,
+
+
+        [Display(Name = "微信好友分享")]
+        ShareWeChatFriend = 103,
+        [Display(Name = "微信群分享")]
+        ShareWeChatGroup = 104,
 
     }
 
