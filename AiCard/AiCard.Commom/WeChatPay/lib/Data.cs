@@ -24,8 +24,8 @@ namespace WxPayAPI
     /// </summary>
     public class WxPayData
     {
-        public  const string SIGN_TYPE_MD5 = "MD5";
-        public  const string SIGN_TYPE_HMAC_SHA256 = "HMAC-SHA256";
+        public const string SIGN_TYPE_MD5 = "MD5";
+        public const string SIGN_TYPE_HMAC_SHA256 = "HMAC-SHA256";
         public WxPayData()
         {
 
@@ -127,7 +127,7 @@ namespace WxPayAPI
                 throw new WxPayException("将空的xml串转换为WxPayData不合法!");
             }
 
-			
+
             SafeXmlDocument xmlDoc = new SafeXmlDocument();
             xmlDoc.LoadXml(xml);
             XmlNode xmlNode = xmlDoc.FirstChild;//获取到根节点<xml>
@@ -137,17 +137,17 @@ namespace WxPayAPI
                 XmlElement xe = (XmlElement)xn;
                 m_values[xe.Name] = xe.InnerText;//获取xml的键值对到WxPayData内部的数据中
             }
-			
+
             try
             {
-				//2015-06-29 错误是没有签名
-				if(m_values["return_code"].ToString() != "SUCCESS")
-				{
-					return m_values;
-				}
+                //2015-06-29 错误是没有签名
+                if (m_values["return_code"].ToString() != "SUCCESS")
+                {
+                    return m_values;
+                }
                 CheckSign();//验证签名,不通过会抛异常
             }
-            catch(WxPayException ex)
+            catch (WxPayException ex)
             {
                 throw new WxPayException(ex.Message);
             }
@@ -218,7 +218,8 @@ namespace WxPayAPI
         * @生成签名，详见签名生成算法
         * @return 签名, sign字段不参加签名
         */
-        public string MakeSign(string signType){
+        public string MakeSign(string signType)
+        {
             //转url格式
             string str = ToUrl();
             //在string后加入API KEY
@@ -235,10 +236,12 @@ namespace WxPayAPI
                 //所有字符转为大写
                 return sb.ToString().ToUpper();
             }
-            else if(signType==SIGN_TYPE_HMAC_SHA256)
+            else if (signType == SIGN_TYPE_HMAC_SHA256)
             {
                 return CalcHMACSHA256Hash(str, WxPayConfig.GetConfig().GetKey());
-            }else{
+            }
+            else
+            {
                 throw new WxPayException("sign_type 不合法");
             }
         }
@@ -298,7 +301,7 @@ namespace WxPayAPI
         */
         public bool CheckSign()
         {
-            return CheckSign(SIGN_TYPE_HMAC_SHA256);
+            return CheckSign(SIGN_TYPE_MD5);
         }
 
         /**
@@ -310,7 +313,7 @@ namespace WxPayAPI
         }
 
 
-        private  string CalcHMACSHA256Hash(string plaintext, string salt)
+        private string CalcHMACSHA256Hash(string plaintext, string salt)
         {
             string result = "";
             var enc = Encoding.Default;

@@ -359,7 +359,6 @@ namespace WxPayAPI
         */
         public static WxPayData UnifiedOrder(WxPayData inputObj, int timeOut = 6)
         {
-            Log.Debug("UnifiedOrder", "进入UnifiedOrder");
             string url = "https://api.mch.weixin.qq.com/pay/unifiedorder";
             //检测必填参数
             if (!inputObj.IsSet("out_trade_no"))
