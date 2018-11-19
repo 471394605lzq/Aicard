@@ -5,6 +5,7 @@ using AiCard.DAL.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Web;
 using WxPayAPI;
@@ -110,16 +111,23 @@ namespace AiCard.Bll
                 return new { retCode = "Error", retMsg = "保存订单数据失败", objectData = "" };
             }
             #endregion
-            //4.返回支付参数:5个参数，签名在前端生成
+            //4.返回支付参数:5个参数，生成签名再返回
             TimeSpan ts = DateTime.Now - new DateTime(1970, 1, 1);
-            object retModel = new
+            dynamic retModel = new
             {
-                appid = payreturnData.GetValue("appid")?.ToString(),
+                timeStamp = ts.TotalMilliseconds,
                 nonceStr = payreturnData.GetValue("nonce_str")?.ToString(),
-                prepayId = payreturnData.GetValue("prepay_id")?.ToString(),
-                timestamp = ts.TotalMilliseconds,
+                package = "prepay_id=" + payreturnData.GetValue("prepay_id")?.ToString(),
                 signType = "MD5",
+                paySign = "",
             };
+            string paySignpar = $"appId={payreturnData.GetValue("appid")?.ToString()}";
+            paySignpar += $"&nonceStr={retModel.nonceStr}";
+            paySignpar += $"&package={retModel.package}";
+            paySignpar += $"&signType={retModel.signType}";
+            paySignpar += $"&timeStamp={retModel.timeStamp}";
+            paySignpar += $"&key={ConfigurationManager.AppSettings["wxPayKey"] ?? string.Empty}";
+            retModel.paySign=GetMd5Hash(paySignpar);
             return new { retCode= "Success", retMsg="成功",objectData= retModel };
         }
 
