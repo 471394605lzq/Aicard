@@ -113,21 +113,21 @@ namespace AiCard.Bll
             #endregion
             //4.返回支付参数:5个参数，生成签名再返回
             TimeSpan ts = DateTime.Now - new DateTime(1970, 1, 1);
+            string paySignpar = $"appId={payreturnData.GetValue("appid")?.ToString()}";
+            paySignpar += $"&nonceStr={payreturnData.GetValue("nonce_str")?.ToString()}";
+            paySignpar += $"&package=prepay_id={payreturnData.GetValue("prepay_id")?.ToString()}";
+            paySignpar += $"&signType=MD5";
+            paySignpar += $"&timeStamp={ts.TotalMilliseconds}";
+            paySignpar += $"&key={ConfigurationManager.AppSettings["wxPayKey"] ?? string.Empty}";
+            paySignpar =  GetMd5Hash(paySignpar);
             dynamic retModel = new
             {
                 timeStamp = ts.TotalMilliseconds,
                 nonceStr = payreturnData.GetValue("nonce_str")?.ToString(),
                 package = "prepay_id=" + payreturnData.GetValue("prepay_id")?.ToString(),
                 signType = "MD5",
-                paySign = "",
+                paySign = paySignpar,
             };
-            string paySignpar = $"appId={payreturnData.GetValue("appid")?.ToString()}";
-            paySignpar += $"&nonceStr={retModel.nonceStr}";
-            paySignpar += $"&package={retModel.package}";
-            paySignpar += $"&signType={retModel.signType}";
-            paySignpar += $"&timeStamp={retModel.timeStamp}";
-            paySignpar += $"&key={ConfigurationManager.AppSettings["wxPayKey"] ?? string.Empty}";
-            retModel.paySign=GetMd5Hash(paySignpar);
             return new { retCode= "Success", retMsg="成功",objectData= retModel };
         }
 
