@@ -93,9 +93,10 @@
                 @item.State.GetDisplayName()
             </td>
             <td>
+                <a href="@Url.Action("Details", new { id = item.ID })" class="btn btn-default" style="width:50px; height:25px;line-height:12px;float:left;">预览</a>
                 @if (User.IsInRole(SysRole.EArticlesManageEdit))
                 {
-                    <a href="@Url.Action("Edit", new { id = item.ID })" class="btn btn-default" style="width:50px; height:25px;line-height:12px;float:left;@isdisplay">编辑</a>
+                    <a href="@Url.Action("Edit", new { id = item.ID })" class="btn btn-default" style="margin-left:15px;width:50px; height:25px;line-height:12px;float:left;@isdisplay">编辑</a>
                 }
                 @if (User.IsInRole(SysRole.EArticlesMangeDelete))
                 {

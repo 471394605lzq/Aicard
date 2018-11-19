@@ -270,6 +270,7 @@
     <Compile Include="Controllers\CardTabController.cs" />
     <Compile Include="Controllers\ChatImController.cs" />
     <Compile Include="Controllers\ChinaPCASController.cs" />
+    <Compile Include="Controllers\CommonController.cs" />
     <Compile Include="Controllers\CustomerTabGroupsManageController.cs" />
     <Compile Include="Controllers\CustomerTabsManageController.cs" />
     <Compile Include="Controllers\EnterpriseController.cs" />
@@ -928,6 +929,7 @@
     <Folder Include="Views\CardTab\" />
     <Folder Include="Views\Card\" />
     <Folder Include="Views\ChatIm\" />
+    <Folder Include="Views\Common\" />
     <Folder Include="Views\EnterpriseCustomer\" />
     <Folder Include="Views\HomePageManage\" />
     <Folder Include="Views\HomePageModulars\" />

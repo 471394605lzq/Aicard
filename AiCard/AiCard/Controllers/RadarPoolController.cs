@@ -28,7 +28,7 @@ namespace AiCard.Controllers
             {
                 if (!db.Cards.Any(s => s.EnterpriseID == enterpriseid && s.UserID == userid))
                 {
-                    return Json(Comm.ToJsonResult("CardNoFound", "名片不存在"));
+                    return Json(Comm.ToJsonResult("CardNoFound", "名片不存在"), JsonRequestBehavior.AllowGet);
                 }
                 //拼接参数
                 SqlParameter[] parameters = {

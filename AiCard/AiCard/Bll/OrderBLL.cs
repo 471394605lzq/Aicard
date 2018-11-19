@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using WxPayAPI;
+using static AiCard.Common.Comm;
 
 namespace AiCard.Bll
 {
@@ -19,14 +20,6 @@ namespace AiCard.Bll
     public sealed class OrderBLL
     {
         Random rand = new Random();
-
-        /// <summary>
-        /// 升级VIP的会费（元）
-        /// </summary>
-        /// <returns></returns>
-        public decimal UpGradeAmount() {
-            return 99m;
-        }
 
 
         /// <summary>
@@ -43,7 +36,7 @@ namespace AiCard.Bll
             }
             catch (Exception ex)
             {
-                
+                Comm.WriteLog("exception", ex.Message , Common.Enums.DebugLogLevel.Error, "Bll.OrderBLL.CreateOrderCode");
             }
             return result;
             #endregion
@@ -65,7 +58,7 @@ namespace AiCard.Bll
             }
 
             string OrderCode = CreateOrderCode(UserID);//创建订单号
-            decimal Amount = UpGradeAmount();//升级费用
+            decimal Amount = Comm.UpGradeAmount();//升级费用
             if (string.IsNullOrEmpty(OrderCode)) {
                 return new { retCode = "Error", retMsg = "订单号生成失败", objectData = "" };
             }
@@ -83,9 +76,9 @@ namespace AiCard.Bll
                 trade_type = "JSAPI"
             };
             WeChatPayment payment = new WeChatPayment();
-            PaymentResult payResult = payment.GetUnifiedOrderResult(payData);
+            RequestResult payResult = payment.GetUnifiedOrderResult(payData);
             WxPayData payreturnData = payResult.objectData;
-            if (payResult.retCode != ReqResult.success || payreturnData == null)
+            if (payResult.retCode != ReqResultCode.success || payreturnData == null)
             {
                 return new { retCode = "Error", retMsg = "请求微信支付统一下单失败", objectData = "" };
             }

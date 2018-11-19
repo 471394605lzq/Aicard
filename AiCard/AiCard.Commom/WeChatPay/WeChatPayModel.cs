@@ -47,39 +47,5 @@ namespace AiCard.Commom.WeChatPay
         public string goods_tag { get; set; }
     }
 
-    /// <summary>
-    /// 支付相关请求结果
-    /// </summary>
-    public struct PaymentResult {
-        /// <summary>
-        /// 请求结果 
-        /// </summary>
-        public ReqResult retCode { get; set; }
-
-        /// <summary>
-        /// 提示消息
-        /// </summary>
-        public string retMsg { get; set; }
-
-        /// <summary>
-        /// 返回对象数据
-        /// </summary>
-        public dynamic objectData { get; set; }
-    }
-
-    public enum ReqResult {
-        /// <summary>
-        /// 成功
-        /// </summary>
-        success=1,
-        /// <summary>
-        /// 失败
-        /// </summary>
-        failed=0,
-        /// <summary>
-        /// 异常
-        /// </summary>
-        excetion=3
-
-    }
+   
 }
