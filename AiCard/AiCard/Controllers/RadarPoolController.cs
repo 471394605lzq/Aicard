@@ -319,6 +319,133 @@ namespace AiCard.Controllers
                 return Json(Comm.ToJsonResult("Error", ex.Message), JsonRequestBehavior.AllowGet);
             }
         }
+
+        /// <summary>
+        /// 年龄占比
+        /// </summary>
+        /// <param name="enterpriseid"></param>
+        /// <param name="userid"></param>
+        /// <returns></returns>
+        public ActionResult GetCustomerAgeProportion(int enterpriseid, string userid)
+        {
+            try
+            {
+                if (!db.Cards.Any(s => s.EnterpriseID == enterpriseid && s.UserID == userid))
+                {
+                    return Json(Comm.ToJsonResult("CardNoFound", "名片不存在"));
+                }
+                //拼接参数
+                SqlParameter[] parameters = {
+                        new SqlParameter("@enterpriseid", SqlDbType.Int),
+                        new SqlParameter("@userid", SqlDbType.NVarChar)
+                };
+                parameters[0].Value = enterpriseid;
+                parameters[1].Value = userid;
+                string sqlstr = string.Format(@"GetCustomerAgeProportion @enterpriseid,@userid");
+                List<CustomerActionModel> data = db.Database.SqlQuery<CustomerActionModel>(sqlstr, parameters).ToList();
+                var resultdata = data.Select(s => new
+                {
+                    counts = s.counts,
+                    allcounts = s.allcounts,
+                    agename = s.actionname,
+                    ratio = s.ratio
+                });
+
+                return Json(Comm.ToJsonResult("Success", "成功", resultdata), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(Comm.ToJsonResult("Error", ex.Message), JsonRequestBehavior.AllowGet);
+            }
+        }
+        /// <summary>
+        /// 客户区域占比
+        /// </summary>
+        /// <param name="enterpriseid"></param>
+        /// <param name="userid"></param>
+        /// <returns></returns>
+        public ActionResult GetCustomerAreaProportion(int enterpriseid, string userid)
+        {
+            try
+            {
+                if (!db.Cards.Any(s => s.EnterpriseID == enterpriseid && s.UserID == userid))
+                {
+                    return Json(Comm.ToJsonResult("CardNoFound", "名片不存在"));
+                }
+                //拼接参数
+                SqlParameter[] parameters = {
+                        new SqlParameter("@enterpriseid", SqlDbType.Int),
+                        new SqlParameter("@userid", SqlDbType.NVarChar)
+                };
+                parameters[0].Value = enterpriseid;
+                parameters[1].Value = userid;
+                string sqlstr = string.Format(@"GetCustomerAreaProportion @enterpriseid,@userid");
+                List<CustomerActionModel> data = db.Database.SqlQuery<CustomerActionModel>(sqlstr, parameters).ToList();
+                var resultdata = data.Select(s => new
+                {
+                    counts = s.counts,
+                    allcounts = s.allcounts,
+                    areaname = s.actionname,
+                    ratio = s.ratio
+                });
+
+                return Json(Comm.ToJsonResult("Success", "成功", resultdata), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(Comm.ToJsonResult("Error", ex.Message), JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        /// <summary>
+        /// 客户兴趣分析
+        /// </summary>
+        /// <param name="enterpriseid"></param>
+        /// <param name="userid"></param>
+        /// <returns></returns>
+        public ActionResult GetCustomerAvocation(int enterpriseid, string userid)
+        {
+            try
+            {
+                if (!db.Cards.Any(s => s.EnterpriseID == enterpriseid && s.UserID == userid))
+                {
+                    return Json(Comm.ToJsonResult("CardNoFound", "名片不存在"));
+                }
+                //拼接参数
+                SqlParameter[] parameters = {
+                        new SqlParameter("@enterpriseid", SqlDbType.Int),
+                        new SqlParameter("@userid", SqlDbType.NVarChar),
+                        new SqlParameter("@articleread", SqlDbType.Int),
+                        new SqlParameter("@cardread", SqlDbType.Int),
+                        new SqlParameter("@shopread", SqlDbType.Int),
+                        new SqlParameter("@homepageread", SqlDbType.Int),
+                };
+                parameters[0].Value = enterpriseid;
+                parameters[1].Value = userid;
+                parameters[2].Value = Common.Enums.UserLogType.ArticleRead;
+                parameters[3].Value = Common.Enums.UserLogType.CardRead;
+                parameters[4].Value = Common.Enums.UserLogType.ShopRead;
+                parameters[5].Value = Common.Enums.UserLogType.HomePageRead;
+                string sqlstr = string.Format(@"GetCustomerAvocation @enterpriseid,@userid,@articleread,@cardread,@shopread,@homepageread");
+                List<CustomerActionModel> data = db.Database.SqlQuery<CustomerActionModel>(sqlstr, parameters).ToList();
+                var resultdata = data.Select(s => new
+                {
+                    counts = s.counts,
+                    allcounts = s.allcounts,
+                    avocation = s.action,
+                    avocationname= GetEnumsName(s.action),
+                    ratio = s.ratio
+                });
+
+                return Json(Comm.ToJsonResult("Success", "成功", resultdata), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(Comm.ToJsonResult("Error", ex.Message), JsonRequestBehavior.AllowGet);
+            }
+        }
+
+
         //获取客户来源枚举名称
         private string GetEnumsName(int val)
         {
