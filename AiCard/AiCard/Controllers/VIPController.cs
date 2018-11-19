@@ -40,8 +40,9 @@ namespace AiCard.Controllers
             {
                 result = orderbll.CreateUpGradeOrder(code, UserID);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Comm.WriteLog("WeChatPay", ex.Message, Common.Enums.DebugLogLevel.Error, ex: ex);
                 return Json(Comm.ToJsonResult("Error", "调用升级接口发生异常"), JsonRequestBehavior.AllowGet);
 
             }

@@ -27,35 +27,40 @@ namespace AiCard.Commom.WeChatPay
             RequestResult result = new RequestResult
             {
                 retCode = ReqResultCode.failed,
-                retMsg =""
+                retMsg = ""
             };
-            if (payData == null) {
+            if (payData == null)
+            {
                 result.retMsg = "请求参数不能为空";
             }
+            Log.Debug(this.GetType().ToString(), "进入");
+
             //统一下单
             WxPayData data = new WxPayData();
-            data.SetValue("body", payData.body??string.Empty);
-            data.SetValue("attach", payData.attach  ?? string.Empty);
+            data.SetValue("body", payData.body ?? string.Empty);
+            data.SetValue("attach", payData.attach ?? string.Empty);
             data.SetValue("out_trade_no", payData.out_trade_no ?? string.Empty);
-            data.SetValue("total_fee", payData.total_fee );
+            data.SetValue("total_fee", payData.total_fee);
             data.SetValue("time_start", DateTime.Now.ToString("yyyyMMddHHmmss"));
             data.SetValue("time_expire", DateTime.Now.AddMinutes(10).ToString("yyyyMMddHHmmss"));
             data.SetValue("goods_tag", payData.goods_tag ?? string.Empty);
             data.SetValue("trade_type", payData.trade_type ?? "JSAPI");
             data.SetValue("openid", payData.openid ?? string.Empty);
-
+            Log.Debug(this.GetType().ToString(), "WxPayData配置结束");
             WxPayData ret = WxPayApi.UnifiedOrder(data);
             if (!ret.IsSet("appid") || !ret.IsSet("prepay_id") || ret.GetValue("prepay_id").ToString() == "")
             {
                 Log.Error(this.GetType().ToString(), "UnifiedOrder response error!");
+                Common.Comm.WriteLog("WeChatPay", "统一下单异常", Common.Enums.DebugLogLevel.Error, ret.ToXml());
                 throw new WxPayException("UnifiedOrder response error!");
             }
-            else {
+            else
+            {
                 result.retCode = ReqResultCode.success;
                 result.retMsg = "请求成功";
                 result.objectData = ret;//把结果返回到业务层
             }
-            
+
             return result;
             #endregion
         }
