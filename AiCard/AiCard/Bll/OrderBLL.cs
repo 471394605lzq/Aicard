@@ -112,17 +112,19 @@ namespace AiCard.Bll
             }
             #endregion
             //4.返回支付参数:5个参数，生成签名再返回
-            TimeSpan ts = DateTime.Now - new DateTime(1970, 1, 1);
+            System.DateTime startTime = TimeZone.CurrentTimeZone.ToLocalTime(new System.DateTime(1970, 1, 1)); // 当地时区
+            long ts = (long)(DateTime.Now - startTime).TotalSeconds; // 相差秒数
+     
             string paySignpar = $"appId={payreturnData.GetValue("appid")?.ToString()}";
             paySignpar += $"&nonceStr={payreturnData.GetValue("nonce_str")?.ToString()}";
             paySignpar += $"&package=prepay_id={payreturnData.GetValue("prepay_id")?.ToString()}";
             paySignpar += $"&signType=MD5";
-            paySignpar += $"&timeStamp={ts.TotalMilliseconds}";
+            paySignpar += $"&timeStamp={ts}";
             paySignpar += $"&key={ConfigurationManager.AppSettings["wxPayKey"] ?? string.Empty}";
             paySignpar =  GetMd5Hash(paySignpar);
             dynamic retModel = new
             {
-                timeStamp = ts.Seconds,
+                timeStamp = ts,
                 nonceStr = payreturnData.GetValue("nonce_str")?.ToString(),
                 package = "prepay_id=" + payreturnData.GetValue("prepay_id")?.ToString(),
                 signType = "MD5",
