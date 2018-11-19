@@ -16,7 +16,7 @@ namespace AiCard.Controllers
     public class VIPController : Controller
     {
         OrderBLL orderbll = new OrderBLL();
-       
+
         /// <summary>
         /// 升级VIP，创建订单及预调起支付
         /// </summary>
@@ -27,7 +27,8 @@ namespace AiCard.Controllers
         [AllowCrossSiteJson]
         public ActionResult UpGradeVIP(string code, string UserID)
         {
-            if (string.IsNullOrWhiteSpace(code)) {
+            if (string.IsNullOrWhiteSpace(code))
+            {
                 return Json(Comm.ToJsonResult("Error", "code参数不能为空"), JsonRequestBehavior.AllowGet);
             }
             if (string.IsNullOrWhiteSpace(UserID))
@@ -37,17 +38,18 @@ namespace AiCard.Controllers
             dynamic result = null;
             try
             {
-                result= orderbll.CreateUpGradeOrder(code,UserID);
+                result = orderbll.CreateUpGradeOrder(code, UserID);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Comm.WriteLog("WeChatPay", ex.Message, Common.Enums.DebugLogLevel.Error, ex: ex);
                 return Json(Comm.ToJsonResult("Error", "调用升级接口发生异常"), JsonRequestBehavior.AllowGet);
 
             }
 
             return Json(Comm.ToJsonResult(result.retCode, result.retMsg, result.objectData), JsonRequestBehavior.AllowGet);
         }
-        
-        
+
+
     }
 }

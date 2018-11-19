@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Configuration;
+using System.Web;
 
 namespace WxPayAPI.lib
 {
@@ -9,6 +10,22 @@ namespace WxPayAPI.lib
         {
         }
 
+        /// <summary>
+        /// 获取应用程序跟目录
+        /// </summary>
+        public  string rootPath {
+            get {
+                if (HttpContext.Current != null)
+                {
+                    return HttpContext.Current.Request.PhysicalApplicationPath;
+                }
+                else
+                {
+                    return AppDomain.CurrentDomain.BaseDirectory;
+                }
+
+            }
+        }
 
         //=======【基本信息设置】=====================================
         /* 微信公众号信息配置
@@ -52,7 +69,7 @@ namespace WxPayAPI.lib
         /* 支付结果通知回调url，用于商户接收支付结果
         */
         public string GetNotifyUrl(){
-            return ConfigurationManager.AppSettings["wxNotifyUrl"] ?? string.Empty;
+            return rootPath + ConfigurationManager.AppSettings["wxNotifyUrl"] ?? string.Empty;
         }
 
         //=======【商户系统后台机器IP】===================================== 
@@ -83,7 +100,7 @@ namespace WxPayAPI.lib
         /* 日志等级，0.不输出日志；1.只输出错误信息; 2.输出错误和正常信息; 3.输出错误信息、正常信息和调试信息
         */
         public int GetLogLevel(){
-            return 1;
+            return 3;
         }
     }
 }

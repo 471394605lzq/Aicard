@@ -7,7 +7,7 @@ namespace WxPayAPI
 {
     public class Log
     {
-  
+
 
         /**
          * 向日志写入调试信息
@@ -16,7 +16,7 @@ namespace WxPayAPI
          */
         public static void Debug(string className, string content)
         {
-            if(WxPayConfig.GetConfig().GetLogLevel() >= 3)
+            if (WxPayConfig.GetConfig().GetLogLevel() >= 3)
             {
                 WriteLog("DEBUG", className, content);
             }
@@ -29,7 +29,7 @@ namespace WxPayAPI
         */
         public static void Info(string className, string content)
         {
-            if(WxPayConfig.GetConfig().GetLogLevel() >= 2)
+            if (WxPayConfig.GetConfig().GetLogLevel() >= 2)
             {
                 WriteLog("INFO", className, content);
             }
@@ -42,7 +42,7 @@ namespace WxPayAPI
         */
         public static void Error(string className, string content)
         {
-            if(WxPayConfig.GetConfig().GetLogLevel() >= 1)
+            if (WxPayConfig.GetConfig().GetLogLevel() >= 1)
             {
                 WriteLog("ERROR", className, content);
             }
@@ -60,7 +60,21 @@ namespace WxPayAPI
             //日志内容
             string write_content = time + " " + type + " " + className + ": " + content;
             //需要用户自定义日志实现形式
-            Console.WriteLine(write_content);
+            AiCard.Common.Enums.DebugLogLevel logType;
+            switch (type)
+            {
+                default:
+                case "DEBUG":
+                    logType = AiCard.Common.Enums.DebugLogLevel.Normal;
+                    break;
+                case "INFO":
+                    logType = AiCard.Common.Enums.DebugLogLevel.Normal;
+                    break;
+                case "ERROR":
+                    logType = AiCard.Common.Enums.DebugLogLevel.Error;
+                    break;
+            }
+            AiCard.Common.Comm.WriteLog("WeChatPay", write_content, logType);
 
         }
     }

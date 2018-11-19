@@ -73,6 +73,9 @@ namespace AiCard.DAL.Models
         [Display(Name = "海报")]
         public string Poster { get; set; }
 
+        [Display(Name = "行业")]
+        public string Industry { get; set; }
+
 
         public List<CardTab> CardTabs { get; set; }
 
