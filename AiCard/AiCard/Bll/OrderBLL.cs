@@ -32,7 +32,7 @@ namespace AiCard.Bll
             try
             {
                 DateTime now = DateTime.Now;
-                result = now.ToString("yyyyMMddHHmmssfff")  + UserID.ToString().PadLeft(8, '0') + rand.Next(1, 99999).ToString().PadLeft(5, '1');
+                result = now.ToString("yyyyMMddHHmmssfff")  + UserID.ToString().Substring(0, 8) + rand.Next(1, 99999).ToString().PadLeft(5, '1');
             }
             catch (Exception ex)
             {
