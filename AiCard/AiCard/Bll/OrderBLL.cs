@@ -122,7 +122,7 @@ namespace AiCard.Bll
             paySignpar =  GetMd5Hash(paySignpar);
             dynamic retModel = new
             {
-                timeStamp = ts.TotalMilliseconds,
+                timeStamp = ts.Seconds,
                 nonceStr = payreturnData.GetValue("nonce_str")?.ToString(),
                 package = "prepay_id=" + payreturnData.GetValue("prepay_id")?.ToString(),
                 signType = "MD5",
