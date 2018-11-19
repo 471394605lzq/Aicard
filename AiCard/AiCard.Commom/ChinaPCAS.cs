@@ -95,7 +95,13 @@ namespace AiCard.Common
         //    List<Pcas> returnlist = listpcas.Where(s => s.ParentName == preantname).ToList();
         //    return returnlist;
         //}
-
+        /// <summary>
+        /// 获取所有区域信息
+        /// </summary>
+        /// <returns></returns>
+        public static List<Pcas> GetALL() {
+            return listpcas;
+        }
         public static List<string> GetP()
         {
             return listpcas.Select(s => s.Name).ToList();

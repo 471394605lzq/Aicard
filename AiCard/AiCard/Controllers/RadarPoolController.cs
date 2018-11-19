@@ -23,7 +23,8 @@ namespace AiCard.Controllers
         /// </summary>
         /// <returns></returns>
         [AllowCrossSiteJson]
-        public ActionResult GetYesterdayEpitomeForRadar(int enterpriseid,string userid) {
+        public ActionResult GetYesterdayEpitomeForRadar(int enterpriseid, string userid)
+        {
             try
             {
                 if (!db.Cards.Any(s => s.EnterpriseID == enterpriseid && s.UserID == userid))
@@ -57,13 +58,13 @@ namespace AiCard.Controllers
         /// </summary>
         /// <returns></returns>
         [AllowCrossSiteJson]
-        public ActionResult TrendAnalysis(int enterpriseid, string userid,int timenumber)
+        public ActionResult TrendAnalysis(int enterpriseid, string userid, int timenumber)
         {
             try
             {
                 if (!db.Cards.Any(s => s.EnterpriseID == enterpriseid && s.UserID == userid))
                 {
-                    return Json(Comm.ToJsonResult("CardNoFound", "卡片不存在"));
+                    return Json(Comm.ToJsonResult("CardNoFound", "名片不存在"));
                 }
                 //拼接参数
                 SqlParameter[] parameters = {
@@ -88,15 +89,405 @@ namespace AiCard.Controllers
                 return Json(Comm.ToJsonResult("Error", ex.Message), JsonRequestBehavior.AllowGet);
             }
         }
-        private class TrendAnalysisModel {
+        /// <summary>
+        /// 获取客户来源数据
+        /// </summary>
+        /// <param name="userid">名片所属用户ID</param>
+        /// <param name="timenumber">时间天数(0表示查询所有)</param>
+        /// <returns></returns>
+        [AllowCrossSiteJson]
+        public ActionResult GetCustomerSource(string userid, int timenumber)
+        {
+            try
+            {
+                if (!db.EnterpriseUserCustomer.Any(s => s.OwnerID == userid))
+                {
+                    return Json(Comm.ToJsonResult("CardNoFound", "客户归属用户不存在"));
+                }
+                //拼接参数
+                SqlParameter[] parameters = {
+                        new SqlParameter("@userid", SqlDbType.NVarChar),
+                        new SqlParameter("@timenumber", SqlDbType.Int),
+                    };
+                parameters[0].Value = userid;
+                parameters[1].Value = timenumber;
+
+                string sqlstr = string.Format(@"GetCustomerSource @userid,@timenumber");
+                List<CustomerActionModel> data = db.Database.SqlQuery<CustomerActionModel>(sqlstr, parameters).ToList();
+                var resultdata = data.Select(s => new
+                {
+                    counts = s.counts,
+                    allcounts = s.allcounts,
+                    source = s.action,
+                    sourcename = GetEnumsName(s.action),
+                    ratio = s.ratio
+                });
+
+                return Json(Comm.ToJsonResult("Success", "成功", resultdata), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(Comm.ToJsonResult("Error", ex.Message), JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        /// <summary>
+        /// 分享路径
+        /// </summary>
+        /// <returns></returns>
+        [AllowCrossSiteJson]
+        public ActionResult SharePath(int enterpriseid, string userid, int timenumber)
+        {
+            try
+            {
+                if (!db.Cards.Any(s => s.EnterpriseID == enterpriseid && s.UserID == userid))
+                {
+                    return Json(Comm.ToJsonResult("CardNoFound", "名片不存在"));
+                }
+
+                //int[] actionstr = {
+                //   Common.Enums.UserLogType.ShareWeChatFriend.GetHashCode(),
+                //   Common.Enums.UserLogType.ShareWeChatGroup.GetHashCode()
+
+                //};
+                //拼接参数
+                SqlParameter[] parameters = {
+                        new SqlParameter("@enterpriseid", SqlDbType.Int),
+                        new SqlParameter("@userid", SqlDbType.NVarChar),
+                        new SqlParameter("@timenumber", SqlDbType.Int),
+                        new SqlParameter("@actionstr1", SqlDbType.Int),
+                        new SqlParameter("@actionstr2", SqlDbType.Int)
+                    };
+                parameters[0].Value = enterpriseid;
+                parameters[1].Value = userid;
+                parameters[2].Value = timenumber;
+                parameters[3].Value = Common.Enums.UserLogType.ShareWeChatFriend;
+                parameters[4].Value = Common.Enums.UserLogType.ShareWeChatGroup;
+
+                string sqlstr = string.Format(@"GetSharePath @enterpriseid,@userid,@timenumber,@actionstr1,@actionstr2");
+                List<CustomerActionModel> data = db.Database.SqlQuery<CustomerActionModel>(sqlstr, parameters).ToList();
+                var resultdata = data.Select(s => new
+                {
+                    counts = s.counts,
+                    allcounts = s.allcounts,
+                    sharepath = s.action,
+                    sharepathname = GetEnumsName(s.action),
+                    ratio = s.ratio
+                });
+
+                return Json(Comm.ToJsonResult("Success", "成功", resultdata), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(Comm.ToJsonResult("Error", ex.Message), JsonRequestBehavior.AllowGet);
+            }
+        }
+        /// <summary>
+        /// 获取分享页面统计
+        /// </summary>
+        /// <param name="enterpriseid"></param>
+        /// <param name="userid"></param>
+        /// <param name="timenumber"></param>
+        /// <returns></returns>
+        public ActionResult GetSharePage(int enterpriseid, string userid, int timenumber)
+        {
+            try
+            {
+                if (!db.Cards.Any(s => s.EnterpriseID == enterpriseid && s.UserID == userid))
+                {
+                    return Json(Comm.ToJsonResult("CardNoFound", "名片不存在"));
+                }
+                //拼接参数
+                SqlParameter[] parameters = {
+                        new SqlParameter("@enterpriseid", SqlDbType.Int),
+                        new SqlParameter("@userid", SqlDbType.NVarChar),
+                        new SqlParameter("@timenumber", SqlDbType.Int),
+                        new SqlParameter("@actionstr1", SqlDbType.Int),
+                        new SqlParameter("@actionstr2", SqlDbType.Int),
+                        new SqlParameter("@actionstr3", SqlDbType.Int)
+                    };
+                parameters[0].Value = enterpriseid;
+                parameters[1].Value = userid;
+                parameters[2].Value = timenumber;
+                parameters[3].Value = Common.Enums.UserLogType.ArticleShare;
+                parameters[4].Value = Common.Enums.UserLogType.CardShare;
+                parameters[5].Value = Common.Enums.UserLogType.HomePageShare;
+                string sql = @" SELECT COUNT(ID) counts,[Type] AS [action] FROM dbo.UserLogs 
+                            WHERE [Type] IN(@actionstr1,@actionstr2,@actionstr3)  
+                            AND TargetUserID=@userid AND TargetEnterpriseID=@enterpriseid AND 
+                            CreateDateTime BETWEEN dateadd(day, -@timenumber, dateadd(ms, 0, DATEADD(dd, DATEDIFF(dd, 0, getdate()), 0)))
+                            AND dateadd(day, -@timenumber, DATEADD(ms, -3, DATEADD(dd, DATEDIFF(dd, -1, getdate()), 0)))
+                            GROUP BY [Type]";
+                string sqlstr = string.Format(sql, @"@enterpriseid,@userid,@timenumber,@actionstr1,@actionstr2,@actionstr3");
+                List<CustomerActionModel> data = db.Database.SqlQuery<CustomerActionModel>(sqlstr, parameters).ToList();
+                var resultdata = data.Select(s => new
+                {
+                    counts = s.counts,
+                    sharepage = s.action,
+                    sharepaagename = GetEnumsName(s.action),
+                });
+                return Json(Comm.ToJsonResult("Success", "成功", resultdata), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(Comm.ToJsonResult("Error", ex.Message), JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        /// <summary>
+        /// 分享次数趋势分析
+        /// </summary>
+        /// <param name="enterpriseid"></param>
+        /// <param name="userid"></param>
+        /// <param name="timenumber"></param>
+        /// <returns></returns>
+        public ActionResult GetShareNumberAnalysis(int enterpriseid, string userid, int timenumber) {
+            try
+            {
+                if (!db.Cards.Any(s => s.EnterpriseID == enterpriseid && s.UserID == userid))
+                {
+                    return Json(Comm.ToJsonResult("CardNoFound", "名片不存在"));
+                }
+                //拼接参数
+                SqlParameter[] parameters = {
+                        new SqlParameter("@enterpriseid", SqlDbType.Int),
+                        new SqlParameter("@userid", SqlDbType.NVarChar),
+                        new SqlParameter("@timenumber", SqlDbType.Int),
+                        new SqlParameter("@actionstr1", SqlDbType.Int),
+                        new SqlParameter("@actionstr2", SqlDbType.Int)
+                    };
+                parameters[0].Value = enterpriseid;
+                parameters[1].Value = userid;
+                parameters[2].Value = timenumber;
+                parameters[3].Value = Common.Enums.UserLogType.ShareWeChatFriend;
+                parameters[4].Value = Common.Enums.UserLogType.ShareWeChatGroup;
+                string sql = @" SELECT DATENAME(HOUR,CreateDateTime) AS hourstr,COUNT(ID) counts FROM dbo.UserLogs WHERE [Type] IN(@actionstr1,@actionstr2) 
+                                AND TargetUserID=@userid AND TargetEnterpriseID=@enterpriseid AND 
+                                CreateDateTime BETWEEN dateadd(day, -@timenumber, dateadd(ms, 0, DATEADD(dd, DATEDIFF(dd, 0, getdate()), 0)))AND dateadd(day, -@timenumber, DATEADD(ms, -3, DATEADD(dd, DATEDIFF(dd, -1, getdate()), 0)))
+                                GROUP BY DATENAME(HOUR,CreateDateTime)";
+                string sqlstr = string.Format(sql, @"@enterpriseid,@userid,@timenumber,@actionstr1,@actionstr2");
+                List<TrendAnalysisModel> data = db.Database.SqlQuery<TrendAnalysisModel>(sqlstr, parameters).ToList();
+                var resultdata = data.Select(s => new
+                {
+                    counts = s.counts,
+                    hourstr = s.hourstr
+                    //typenumber=s.typenumber,
+                    //typestr = GetEnumsName(s.typenumber)
+                });
+                return Json(Comm.ToJsonResult("Success", "成功", resultdata), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(Comm.ToJsonResult("Error", ex.Message), JsonRequestBehavior.AllowGet);
+            }
+        }
+        /// <summary>
+        /// 性别占比
+        /// </summary>
+        /// <param name="enterpriseid"></param>
+        /// <param name="userid"></param>
+        /// <returns></returns>
+        public ActionResult GetCustomerGenderProportion(int enterpriseid, string userid) {
+            try
+            {
+                if (!db.Cards.Any(s => s.EnterpriseID == enterpriseid && s.UserID == userid))
+                {
+                    return Json(Comm.ToJsonResult("CardNoFound", "名片不存在"));
+                }
+                //拼接参数
+                SqlParameter[] parameters = {
+                        new SqlParameter("@enterpriseid", SqlDbType.Int),
+                        new SqlParameter("@userid", SqlDbType.NVarChar)
+                };
+                parameters[0].Value = enterpriseid;
+                parameters[1].Value = userid;
+                string sqlstr = string.Format(@"GetCustomerGenderProportion @enterpriseid,@userid");
+                List<CustomerActionModel> data = db.Database.SqlQuery<CustomerActionModel>(sqlstr, parameters).ToList();
+                var resultdata = data.Select(s => new
+                {
+                    counts = s.counts,
+                    allcounts = s.allcounts,
+                    gender = s.action,
+                    gendername = GetEnumsName(s.action),
+                    ratio = s.ratio
+                });
+
+                return Json(Comm.ToJsonResult("Success", "成功", resultdata), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(Comm.ToJsonResult("Error", ex.Message), JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        /// <summary>
+        /// 年龄占比
+        /// </summary>
+        /// <param name="enterpriseid"></param>
+        /// <param name="userid"></param>
+        /// <returns></returns>
+        public ActionResult GetCustomerAgeProportion(int enterpriseid, string userid)
+        {
+            try
+            {
+                if (!db.Cards.Any(s => s.EnterpriseID == enterpriseid && s.UserID == userid))
+                {
+                    return Json(Comm.ToJsonResult("CardNoFound", "名片不存在"));
+                }
+                //拼接参数
+                SqlParameter[] parameters = {
+                        new SqlParameter("@enterpriseid", SqlDbType.Int),
+                        new SqlParameter("@userid", SqlDbType.NVarChar)
+                };
+                parameters[0].Value = enterpriseid;
+                parameters[1].Value = userid;
+                string sqlstr = string.Format(@"GetCustomerAgeProportion @enterpriseid,@userid");
+                List<CustomerActionModel> data = db.Database.SqlQuery<CustomerActionModel>(sqlstr, parameters).ToList();
+                var resultdata = data.Select(s => new
+                {
+                    counts = s.counts,
+                    allcounts = s.allcounts,
+                    agename = s.actionname,
+                    ratio = s.ratio
+                });
+
+                return Json(Comm.ToJsonResult("Success", "成功", resultdata), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(Comm.ToJsonResult("Error", ex.Message), JsonRequestBehavior.AllowGet);
+            }
+        }
+        /// <summary>
+        /// 客户区域占比
+        /// </summary>
+        /// <param name="enterpriseid"></param>
+        /// <param name="userid"></param>
+        /// <returns></returns>
+        public ActionResult GetCustomerAreaProportion(int enterpriseid, string userid)
+        {
+            try
+            {
+                if (!db.Cards.Any(s => s.EnterpriseID == enterpriseid && s.UserID == userid))
+                {
+                    return Json(Comm.ToJsonResult("CardNoFound", "名片不存在"));
+                }
+                //拼接参数
+                SqlParameter[] parameters = {
+                        new SqlParameter("@enterpriseid", SqlDbType.Int),
+                        new SqlParameter("@userid", SqlDbType.NVarChar)
+                };
+                parameters[0].Value = enterpriseid;
+                parameters[1].Value = userid;
+                string sqlstr = string.Format(@"GetCustomerAreaProportion @enterpriseid,@userid");
+                List<CustomerActionModel> data = db.Database.SqlQuery<CustomerActionModel>(sqlstr, parameters).ToList();
+                var resultdata = data.Select(s => new
+                {
+                    counts = s.counts,
+                    allcounts = s.allcounts,
+                    areaname = s.actionname,
+                    ratio = s.ratio
+                });
+
+                return Json(Comm.ToJsonResult("Success", "成功", resultdata), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(Comm.ToJsonResult("Error", ex.Message), JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        /// <summary>
+        /// 客户兴趣分析
+        /// </summary>
+        /// <param name="enterpriseid"></param>
+        /// <param name="userid"></param>
+        /// <returns></returns>
+        public ActionResult GetCustomerAvocation(int enterpriseid, string userid)
+        {
+            try
+            {
+                if (!db.Cards.Any(s => s.EnterpriseID == enterpriseid && s.UserID == userid))
+                {
+                    return Json(Comm.ToJsonResult("CardNoFound", "名片不存在"));
+                }
+                //拼接参数
+                SqlParameter[] parameters = {
+                        new SqlParameter("@enterpriseid", SqlDbType.Int),
+                        new SqlParameter("@userid", SqlDbType.NVarChar),
+                        new SqlParameter("@articleread", SqlDbType.Int),
+                        new SqlParameter("@cardread", SqlDbType.Int),
+                        new SqlParameter("@shopread", SqlDbType.Int),
+                        new SqlParameter("@homepageread", SqlDbType.Int),
+                };
+                parameters[0].Value = enterpriseid;
+                parameters[1].Value = userid;
+                parameters[2].Value = Common.Enums.UserLogType.ArticleRead;
+                parameters[3].Value = Common.Enums.UserLogType.CardRead;
+                parameters[4].Value = Common.Enums.UserLogType.ShopRead;
+                parameters[5].Value = Common.Enums.UserLogType.HomePageRead;
+                string sqlstr = string.Format(@"GetCustomerAvocation @enterpriseid,@userid,@articleread,@cardread,@shopread,@homepageread");
+                List<CustomerActionModel> data = db.Database.SqlQuery<CustomerActionModel>(sqlstr, parameters).ToList();
+                var resultdata = data.Select(s => new
+                {
+                    counts = s.counts,
+                    allcounts = s.allcounts,
+                    avocation = s.action,
+                    avocationname= GetEnumsName(s.action),
+                    ratio = s.ratio
+                });
+
+                return Json(Comm.ToJsonResult("Success", "成功", resultdata), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(Comm.ToJsonResult("Error", ex.Message), JsonRequestBehavior.AllowGet);
+            }
+        }
+
+
+        //获取客户来源枚举名称
+        private string GetEnumsName(int val)
+        {
+            string returnmane = "";
+            try
+            {
+                returnmane = ((Common.Enums.EnterpriseUserCustomerSource)val).GetDisplayName();
+            }
+            finally
+            {
+                returnmane = "未知";
+            }
+            return returnmane;
+        }
+        private class CustomerActionModel
+        {
+            /// <summary>
+            /// 数量
+            /// </summary>
+            public int counts { get; set; }
+            //总数
+            public int allcounts { get; set; }
+            //行为值
+            public int action { get; set; }
+            //行为名称
+            public string actionname { get; set; }
+            //百分比
+            public double ratio { get; set; }
+        }
+        private class TrendAnalysisModel
+        {
             //小时
             public string hourstr { get; set; }
             //数量
             public int counts { get; set; }
+            //类型值
+            public int typenumber { get; set; }
             //类型
             public string typestr { get; set; }
         }
-        private class GetYesterdayEpitomeForRadarModel {
+        private class GetYesterdayEpitomeForRadarModel
+        {
 
             //统计标题
             public string pooltypestr { get; set; }
