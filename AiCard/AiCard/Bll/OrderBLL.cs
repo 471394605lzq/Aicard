@@ -27,17 +27,18 @@ namespace AiCard.Bll
         /// 创建订单号
         /// </summary>
         /// <returns></returns>
-        public string CreateOrderCode(string UserID) {
+        public string CreateOrderCode(string UserID)
+        {
             #region
             string result = string.Empty;
             try
             {
                 DateTime now = DateTime.Now;
-                result = now.ToString("yyyyMMddHHmmssfff")  + UserID.ToString().Substring(0, 8) + rand.Next(1, 99999).ToString().PadLeft(5, '1');
+                result = now.ToString("yyyyMMddHHmmssfff") + UserID.ToString().Substring(0, 8) + rand.Next(1, 99999).ToString().PadLeft(5, '1');
             }
             catch (Exception ex)
             {
-                Comm.WriteLog("exception", ex.Message , Common.Enums.DebugLogLevel.Error, "Bll.OrderBLL.CreateOrderCode");
+                Comm.WriteLog("exception", ex.Message, Common.Enums.DebugLogLevel.Error, "Bll.OrderBLL.CreateOrderCode");
             }
             return result;
             #endregion
@@ -49,7 +50,8 @@ namespace AiCard.Bll
         /// <param name="code"></param>
         /// <param name="UserID"></param>
         /// <returns></returns>
-        public object CreateUpGradeOrder(string code, string UserID) {
+        public object CreateUpGradeOrder(string code, string UserID)
+        {
             //1.调用小程序登录API，获取openID
             WeChatMinApi miniApi = new WeChatMinApi(ConfigMini.AppID, ConfigMini.AppSecret);
             Jscode2sessionResult openIDResule = miniApi.Jscode2session(code);
@@ -60,7 +62,8 @@ namespace AiCard.Bll
 
             string OrderCode = CreateOrderCode(UserID);//创建订单号
             decimal Amount = Comm.UpGradeAmount();//升级费用
-            if (string.IsNullOrEmpty(OrderCode)) {
+            if (string.IsNullOrEmpty(OrderCode))
+            {
                 return new { retCode = "Error", retMsg = "订单号生成失败", objectData = "" };
             }
             //2.调用支付统一下单API
@@ -114,23 +117,32 @@ namespace AiCard.Bll
             //4.返回支付参数:5个参数，生成签名再返回
             System.DateTime startTime = TimeZone.CurrentTimeZone.ToLocalTime(new System.DateTime(1970, 1, 1)); // 当地时区
             long ts = (long)(DateTime.Now - startTime).TotalSeconds; // 相差秒数
-     
-            string paySignpar = $"appId={payreturnData.GetValue("appid")?.ToString()}";
-            paySignpar += $"&nonceStr={payreturnData.GetValue("nonce_str")?.ToString()}";
-            paySignpar += $"&package=prepay_id={payreturnData.GetValue("prepay_id")?.ToString()}";
-            paySignpar += $"&signType=MD5";
-            paySignpar += $"&timeStamp={ts}";
-            paySignpar += $"&key={ConfigurationManager.AppSettings["wxPayKey"] ?? string.Empty}";
-            paySignpar =  GetMd5Hash(paySignpar);
+
+            System.Text.StringBuilder paySignpar = new System.Text.StringBuilder();
+            paySignpar.Append($"appId={payreturnData.GetValue("appid")?.ToString()}");
+            paySignpar.Append($"&nonceStr={payreturnData.GetValue("nonce_str")?.ToString()}");
+            paySignpar.Append($"&package=prepay_id={payreturnData.GetValue("prepay_id")?.ToString()}");
+            paySignpar.Append($"&signType=MD5");
+            paySignpar.Append($"&timeStamp={ts.ToString()}");
+            paySignpar.Append($"&key={ConfigurationManager.AppSettings["wxPayKey"] ?? string.Empty}");
+            //paySignpar += $"&nonceStr={payreturnData.GetValue("nonce_str")?.ToString()}";
+            //paySignpar += $"&package=prepay_id={payreturnData.GetValue("prepay_id")?.ToString()}";
+            //paySignpar += $"&signType=MD5";
+            //paySignpar += $"&timeStamp={ts}";
+            //paySignpar += $"&key={ConfigurationManager.AppSettings["wxPayKey"] ?? string.Empty}";
+            string strPaySignpar = paySignpar.ToString();
+
+            var sign = GetMd5Hash(strPaySignpar).ToUpper();
+            Log.Debug(this.GetType().ToString(), JsonConvert.SerializeObject(new { str = strPaySignpar, sign }));
             dynamic retModel = new
             {
-                timeStamp = ts,
+                timeStamp = ts.ToString(),
                 nonceStr = payreturnData.GetValue("nonce_str")?.ToString(),
                 package = "prepay_id=" + payreturnData.GetValue("prepay_id")?.ToString(),
                 signType = "MD5",
-                paySign = paySignpar,
+                paySign = sign,
             };
-            return new { retCode= "Success", retMsg="成功",objectData= retModel };
+            return new { retCode = "Success", retMsg = "成功", objectData = retModel };
         }
 
 
