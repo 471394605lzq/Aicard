@@ -13,17 +13,19 @@ namespace WxPayAPI.lib
         /// <summary>
         /// 获取应用程序跟目录
         /// </summary>
-        public  string rootPath {
-            get {
-                if (HttpContext.Current != null)
-                {
-                    return HttpContext.Current.Request.PhysicalApplicationPath;
-                }
-                else
-                {
-                    return AppDomain.CurrentDomain.BaseDirectory;
-                }
-
+        public string rootPath
+        {
+            get
+            {
+                //if (HttpContext.Current != null)
+                //{
+                //    return HttpContext.Current.Request.PhysicalApplicationPath;
+                //}
+                //else
+                //{
+                //    return AppDomain.CurrentDomain.BaseDirectory;
+                //}
+                return "https://www.dtoao.com/";
             }
         }
 
@@ -35,16 +37,20 @@ namespace WxPayAPI.lib
         * APPSECRET：公众帐号secert（仅JSAPI支付的时候需要配置），请妥善保管，避免密钥泄露
         */
 
-        public string GetAppID(){
-            return ConfigurationManager.AppSettings["wxAppID"]??string.Empty;
+        public string GetAppID()
+        {
+            return ConfigurationManager.AppSettings["wxAppID"] ?? string.Empty;
         }
-        public string GetMchID(){
+        public string GetMchID()
+        {
             return ConfigurationManager.AppSettings["wxMchID"] ?? string.Empty;
         }
-        public string GetKey(){
+        public string GetKey()
+        {
             return ConfigurationManager.AppSettings["wxPayKey"] ?? string.Empty;
         }
-        public string GetAppSecret(){
+        public string GetAppSecret()
+        {
             return ConfigurationManager.AppSettings["wxAppSecret"] ?? string.Empty;
         }
 
@@ -56,10 +62,12 @@ namespace WxPayAPI.lib
          * 2.建议将证书文件名改为复杂且不容易猜测的文件
          * 3.商户服务器要做好病毒和木马防护工作，不被非法侵入者窃取证书文件。
         */
-        public string GetSSlCertPath(){
+        public string GetSSlCertPath()
+        {
             return ConfigurationManager.AppSettings["wxCertPath"] ?? string.Empty;
         }
-        public string GetSSlCertPassword(){
+        public string GetSSlCertPassword()
+        {
             return ConfigurationManager.AppSettings["wxCertPassword"] ?? string.Empty;
         }
 
@@ -68,14 +76,16 @@ namespace WxPayAPI.lib
         //=======【支付结果通知url】===================================== 
         /* 支付结果通知回调url，用于商户接收支付结果
         */
-        public string GetNotifyUrl(){
+        public string GetNotifyUrl()
+        {
             return rootPath + ConfigurationManager.AppSettings["wxNotifyUrl"] ?? string.Empty;
         }
 
         //=======【商户系统后台机器IP】===================================== 
         /* 此参数可手动配置也可在程序中自动获取
         */
-        public string GetIp(){
+        public string GetIp()
+        {
             return ConfigurationManager.AppSettings["wxPlatformIp"] ?? string.Empty;
         }
 
@@ -83,7 +93,8 @@ namespace WxPayAPI.lib
         //=======【代理服务器设置】===================================
         /* 默认IP和端口号分别为0.0.0.0和0，此时不开启代理（如有需要才设置）
         */
-        public string GetProxyUrl(){
+        public string GetProxyUrl()
+        {
             return "";
         }
 
@@ -91,7 +102,8 @@ namespace WxPayAPI.lib
         //=======【上报信息配置】===================================
         /* 测速上报等级，0.关闭上报; 1.仅错误时上报; 2.全量上报
         */
-        public int GetReportLevel(){
+        public int GetReportLevel()
+        {
             return 1;
         }
 
@@ -99,7 +111,8 @@ namespace WxPayAPI.lib
         //=======【日志级别】===================================
         /* 日志等级，0.不输出日志；1.只输出错误信息; 2.输出错误和正常信息; 3.输出错误信息、正常信息和调试信息
         */
-        public int GetLogLevel(){
+        public int GetLogLevel()
+        {
             return 3;
         }
     }

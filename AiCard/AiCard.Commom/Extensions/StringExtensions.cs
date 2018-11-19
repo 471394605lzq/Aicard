@@ -72,7 +72,7 @@ namespace AiCard
                     }
 
                 })
-                .Select(s=> (T)Enum.Parse(typeof(T), s, true)).ToList();
+                .Select(s => (T)Enum.Parse(typeof(T), s, true)).ToList();
             }
             return temp.Select(s => (T)Convert.ChangeType(s, typeof(T))).ToList();
         }

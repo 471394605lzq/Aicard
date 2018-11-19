@@ -18,11 +18,10 @@ namespace AiCard.Controllers
         // GET: Test
         public ActionResult Index(string userName)
         {
-            var user = db.Users.FirstOrDefault(s => s.UserName == userName);
-            var usero = new Bll.Users.UserOpenID(user);
-            usero.AddOpenID("1", "2");
-            db.SaveChanges();
-            return View();
+            string date = "20181119210604";
+            string newDate = $"{new string(date.Take(4).ToArray())}-{new string(date.Skip(4).Take(2).ToArray())}-{new string(date.Skip(6).Take(2).ToArray())} {new string(date.Skip(8).Take(2).ToArray())}:{new string(date.Skip(10).Take(2).ToArray())}:{new string(date.Skip(12).Take(2).ToArray())}";
+            var d = Convert.ToDateTime(newDate);
+            return Json(newDate, JsonRequestBehavior.AllowGet);
 
         }
         #region 腾讯IM

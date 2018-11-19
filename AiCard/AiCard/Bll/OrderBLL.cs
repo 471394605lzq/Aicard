@@ -76,8 +76,9 @@ namespace AiCard.Bll
                 openid = openIDResule.OpenID,
                 out_trade_no = OrderCode,
                 //total_fee = (int)Amount * 100,
-                total_fee = 1,//测试1分订单
+                total_fee = 1,//测试10分订单
                 trade_type = "JSAPI"
+
             };
             WeChatPayment payment = new WeChatPayment();
             RequestResult payResult = payment.GetUnifiedOrderResult(payData);
@@ -133,7 +134,6 @@ namespace AiCard.Bll
             string strPaySignpar = paySignpar.ToString();
 
             var sign = GetMd5Hash(strPaySignpar).ToUpper();
-            Log.Debug(this.GetType().ToString(), JsonConvert.SerializeObject(new { str = strPaySignpar, sign }));
             dynamic retModel = new
             {
                 timeStamp = ts.ToString(),
