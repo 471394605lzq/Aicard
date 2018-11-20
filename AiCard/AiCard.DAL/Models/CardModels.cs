@@ -85,6 +85,12 @@ namespace AiCard.DAL.Models
         [Display(Name = "阅览数")]
         public int View { get; set; }
 
+        /// <summary>
+        /// 生日
+        /// </summary>
+        [Display(Name = "生日")]
+        public DateTime? Birthday { get; set; }
+
         [Display(Name = "排序")]
         public int Sort { get; set; }
     }
@@ -119,11 +125,7 @@ namespace AiCard.DAL.Models
         [Display(Name = "点击次数")]
         public int Count { get; set; }
 
-        /// <summary>
-        /// 生日
-        /// </summary>
-        [Display(Name = "生日")]
-        public DateTime? Birthday { get; set; }
+      
 
     }
 }
