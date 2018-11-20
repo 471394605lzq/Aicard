@@ -97,7 +97,7 @@ namespace AiCard.Bll
                 //2.生成商户订单
                 Order order = new Order()
                 {
-                    Amount = Amount,
+                    Amount = 0,
                     Code = OrderCode,
                     ReceivableAmount = Amount,
                     State = Common.Enums.OrderState.UnHandle,
@@ -105,6 +105,7 @@ namespace AiCard.Bll
                     Type = Common.Enums.OrderType.Receivable,
                     UserID = UserID,
                     CreateDateTime = DateTime.Now,
+                    PayCode=string.Empty,
                     PayInput = JsonConvert.SerializeObject(payData)
                 };
                 db.Orders.Add(order);
@@ -126,11 +127,6 @@ namespace AiCard.Bll
             paySignpar.Append($"&signType=MD5");
             paySignpar.Append($"&timeStamp={ts.ToString()}");
             paySignpar.Append($"&key={ConfigurationManager.AppSettings["wxPayKey"] ?? string.Empty}");
-            //paySignpar += $"&nonceStr={payreturnData.GetValue("nonce_str")?.ToString()}";
-            //paySignpar += $"&package=prepay_id={payreturnData.GetValue("prepay_id")?.ToString()}";
-            //paySignpar += $"&signType=MD5";
-            //paySignpar += $"&timeStamp={ts}";
-            //paySignpar += $"&key={ConfigurationManager.AppSettings["wxPayKey"] ?? string.Empty}";
             string strPaySignpar = paySignpar.ToString();
 
             var sign = GetMd5Hash(strPaySignpar).ToUpper();

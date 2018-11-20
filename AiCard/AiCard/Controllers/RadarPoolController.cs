@@ -467,7 +467,7 @@ namespace AiCard.Controllers
         /// <param name="type"></param>
         /// <returns></returns>
         [AllowCrossSiteJson]
-        public ActionResult GetCustomerActivityList(string custID, int timenumber)
+        public ActionResult GetCustomerActivity(string custID, int timenumber)
         {
             try
             {
@@ -479,9 +479,9 @@ namespace AiCard.Controllers
                 parameters[0].Value = custID;
                 parameters[1].Value = timenumber;
 
-                string sqlstr = string.Format(@"SELECT DATENAME(HOUR,CreateDateTime) AS hourstr,COUNT(ID) counts FROM dbo.UserLogs ul
+                string sqlstr = string.Format(@"SELECT DATENAME(HOUR,ul.CreateDateTime) AS hourstr,COUNT(ul.ID) counts FROM dbo.UserLogs ul
                                                     INNER JOIN dbo.EnterpriseCustomers c ON c.UserID = ul.UserID
-                                                    WHERE ul.UserID=@custID AND CreateDateTime BETWEEN dateadd(day, -@timenumber, dateadd(ms, 0, DATEADD(dd, DATEDIFF(dd, 0, getdate()), 0)))
+                                                    WHERE c.ID=@custID AND ul.CreateDateTime BETWEEN dateadd(day, -@timenumber, dateadd(ms, 0, DATEADD(dd, DATEDIFF(dd, 0, getdate()), 0)))
                                                     AND dateadd(day, -@timenumber, DATEADD(ms, -3, DATEADD(dd, DATEDIFF(dd, -1, getdate()), 0)))
                                                     GROUP BY DATENAME(HOUR,CreateDateTime)");
                 List<TrendAnalysisModel> data = db.Database.SqlQuery<TrendAnalysisModel>(sqlstr, parameters).ToList();
@@ -493,6 +493,41 @@ namespace AiCard.Controllers
             }
         }
 
+        /// <summary>
+        /// 客户详情-客户活跃度排行榜
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        [AllowCrossSiteJson]
+        public ActionResult GetCustomerActivityTop(Common.Enums.CustomerActiveType type, string userID)
+        {
+            try
+            {
+                //拼接参数
+                SqlParameter[] parameters = {
+                        new SqlParameter("@userid", SqlDbType.Int),
+                        new SqlParameter("@timetype", SqlDbType.Int),
+                    };
+                parameters[0].Value = userID;
+                parameters[1].Value = type;
+
+                List<CustActivityTopModel> data = db.Database.SqlQuery<CustActivityTopModel>("GetCustomerActivityTop", parameters).ToList();
+                return Json(Comm.ToJsonResult("Success", "成功", data), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(Comm.ToJsonResult("Error", ex.Message), JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        private class CustActivityTopModel
+        {
+            public int Ornumber { get; set; }
+            public string Name { get; set; }
+            public string Avatar { get; set; }
+            public int Counts { get; set; }
+            public string ID { get; set; }
+        }
         private class CustomerActionModel
         {
             /// <summary>
