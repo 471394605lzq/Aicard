@@ -320,6 +320,18 @@ namespace AiCard.Common.Enums
         [Display(Name = "客户数")]
         CustNumber
     }
+    /// <summary>
+    /// 客户活跃排行榜
+    /// </summary>
+    public enum CustomerActiveType
+    {
+        [Display(Name = "全部")]
+        All,
+        [Display(Name = "周榜")]
+        Week,
+        [Display(Name = "月榜")]
+        Month
+    }
 
     /// <summary>
     /// 支付类型
