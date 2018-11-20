@@ -51,5 +51,38 @@ namespace AiCard.Controllers
         }
 
 
+        /// <summary>
+        /// 退款测试
+        /// </summary>
+        /// <param name="code"></param>
+        /// <param name="UserID"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [AllowCrossSiteJson]
+        public ActionResult Refund(string code, string UserID)
+        {
+            if (string.IsNullOrWhiteSpace(code))
+            {
+                return Json(Comm.ToJsonResult("Error", "code参数不能为空"), JsonRequestBehavior.AllowGet);
+            }
+            if (string.IsNullOrWhiteSpace(UserID))
+            {
+                return Json(Comm.ToJsonResult("Error", "用户ID不能为空"), JsonRequestBehavior.AllowGet);
+            }
+            dynamic result = null;
+            try
+            {
+                result = orderbll.RefundApply(code, UserID);
+            }
+            catch (Exception ex)
+            {
+                Comm.WriteLog("Refund", ex.Message, Common.Enums.DebugLogLevel.Error, ex: ex);
+                return Json(Comm.ToJsonResult("Error", "调用退款接口发生异常"), JsonRequestBehavior.AllowGet);
+
+            }
+
+            return Json(Comm.ToJsonResult(result.retCode, result.retMsg, result.objectData), JsonRequestBehavior.AllowGet);
+        }
+
     }
 }
