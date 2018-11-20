@@ -67,10 +67,22 @@ namespace AiCard.DAL.Models
         public string Code { get; set; }
 
         /// <summary>
-        /// 收入排名
-        /// <para>每日0:00更新</para>
+        /// 收入排名（全部）
+        /// <para>0不进入排名</para>
         /// </summary>
         public int TotalAmountRank { get; set; }
+
+        /// <summary>
+        /// 收入排名（周榜）
+        /// <para>上一周日到周六</para>
+        /// </summary>
+        public int TotalWeekAmountRank { get; set; }
+
+        /// <summary>
+        /// 收入排名（月榜）
+        /// <para>上一个月1号到上个月底</para>
+        /// </summary>
+        public int TotalMonthAmountRank { get; set; }
 
         /// <summary>
         /// 创建时间

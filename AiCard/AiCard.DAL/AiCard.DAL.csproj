@@ -230,6 +230,10 @@
     <Compile Include="Migrations\201811200633135_VipAddTotalAmountRank.Designer.cs">
       <DependentUpon>201811200633135_VipAddTotalAmountRank.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201811200752294_VipTotalWeekAmountRankAndTotalMonthAmountRank.cs" />
+    <Compile Include="Migrations\201811200752294_VipTotalWeekAmountRankAndTotalMonthAmountRank.Designer.cs">
+      <DependentUpon>201811200752294_VipTotalWeekAmountRankAndTotalMonthAmountRank.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ArticleModels.cs" />
     <Compile Include="Models\CardModels.cs" />
@@ -373,6 +377,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201811200633135_VipAddTotalAmountRank.resx">
       <DependentUpon>201811200633135_VipAddTotalAmountRank.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201811200752294_VipTotalWeekAmountRankAndTotalMonthAmountRank.resx">
+      <DependentUpon>201811200752294_VipTotalWeekAmountRankAndTotalMonthAmountRank.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

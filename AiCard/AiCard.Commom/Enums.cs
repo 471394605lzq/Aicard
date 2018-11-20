@@ -458,4 +458,14 @@ namespace AiCard.Common.Enums
         /// </summary>
         Refund
     }
+
+    public enum VipTotalAmountRankType
+    {
+        [Display(Name = "总榜")]
+        All,
+        [Display(Name = "周榜")]
+        Week,
+        [Display(Name = "月榜")]
+        Month
+    }
 }
