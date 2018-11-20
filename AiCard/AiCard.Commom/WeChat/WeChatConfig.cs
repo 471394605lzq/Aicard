@@ -20,67 +20,56 @@ namespace AiCard.Common.WeChat
         public static string RefreshToken { get; set; }
     }
 
-    //public abstract class Config
-    //{
-    //    public Config(WeChatAccount account)
-    //    {
-    //        switch (account)
-    //        {
-    //            case WeChatAccount.PC:
-    //                AppID = "wxbd54d6bab8add1e0";
-    //                AppSecret = "";
-    //                break;
-    //            case WeChatAccount.AiCardMini:
-    //            default:
-    //                AppID = "wx4f0894f87f291778";
-    //                AppSecret = "b186bd1fe13e8a2fd1d2c66893941462";
-    //                break;
-    //        }
-    //    }
+    public class WeChatWorkConfig
+    {
+        /// <summary>
+        /// 网页开放平台
+        /// </summary>
+        public static string AppID = "1000004";
 
-    //    /// <summary>
-    //    /// 网页开放平台
-    //    /// </summary>
-    //    public abstract string AppID { get; set; }
+        /// <summary>
+        /// 网页开放平台
+        /// </summary>
+        public static string AppSecret = "-1k1RzNA3Z1lRsOnXF-fYPBxHv4m6fN8zgU_BOA8Y98";
 
-    //    /// <summary>
-    //    /// 网页开放平台
-    //    /// </summary>
-    //    public abstract string AppSecret { get; set; }
 
-    //    public const string JsapiTimeStamp = "1414587457";
+        /// <summary>
+        /// AppID对应的公共AccessToken
+        /// </summary>
+        public static string AccessToken = null;
 
-    //    /// <summary>
-    //    /// AppID对应的公共AccessToken
-    //    /// </summary>
-    //    public static string AccessToken = null;
+        /// <summary>
+        /// AppID对应的公共RefreshToken
+        /// </summary>
+        public static string RefreshToken = null;
 
-    //    /// <summary>
-    //    /// AppID对应的公共RefreshToken
-    //    /// </summary>
-    //    public static string RefreshToken = null;
+        public static String JsSign(string url, string noncestr, string timestamp)
+        {
+            if (AccessToken == null)
+            {
+                var api1 = new CommonApi.BaseApi($"https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid={AppID}&secret={AppSecret}", "GET");
+                var json = api1.CreateRequestReturnJson();
+                var AccessToken = json["access_token"].Value<string>();
+            }
+            else
+            {
 
-    //    public static String JsSign(string url)
-    //    {
+            }
+            var api2 = new CommonApi.BaseApi($"https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token={AccessToken}&type=jsapi", "GET");
+            var josn2 = api2.CreateRequestReturnJson();
+            var str = $"jsapi_ticket={josn2["ticket"].Value<string>()}&noncestr={noncestr}&timestamp={timestamp}&url={url}";
+            byte[] StrRes = Encoding.Default.GetBytes(str);
+            HashAlgorithm iSHA = new SHA1CryptoServiceProvider();
+            StrRes = iSHA.ComputeHash(StrRes);
+            StringBuilder EnText = new StringBuilder();
+            foreach (byte iByte in StrRes)
+            {
+                EnText.AppendFormat("{0:x2}", iByte);
+            }
+            return EnText.ToString();
 
-    //        var api1 = new Api.BaseApi($"https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid={AppID}&secret={AppSecret}", "GET");
-    //        var json = api1.CreateRequestReturnJson();
-    //        var access_token = json["access_token"].Value<string>();
-    //        var api2 = new Api.BaseApi($"https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token={access_token}&type=jsapi", "GET");
-    //        var josn2 = api2.CreateRequestReturnJson();
-    //        var str = $"jsapi_ticket={josn2["ticket"].Value<string>()}&noncestr=Octopus&timestamp={JsapiTimeStamp}&url={url}";
-    //        byte[] StrRes = Encoding.Default.GetBytes(str);
-    //        HashAlgorithm iSHA = new SHA1CryptoServiceProvider();
-    //        StrRes = iSHA.ComputeHash(StrRes);
-    //        StringBuilder EnText = new StringBuilder();
-    //        foreach (byte iByte in StrRes)
-    //        {
-    //            EnText.AppendFormat("{0:x2}", iByte);
-    //        }
-    //        return EnText.ToString();
-
-    //    }
-    //}
+        }
+    }
 
     public static class ConfigPc
     {

@@ -186,7 +186,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="IllegalWords\keywords.txt" />
-    <Content Include="TxIm\tls_licence_tools.exe" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
