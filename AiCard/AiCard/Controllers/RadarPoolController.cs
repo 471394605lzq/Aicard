@@ -130,6 +130,20 @@ namespace AiCard.Controllers
                 return Json(Comm.ToJsonResult("Error", ex.Message), JsonRequestBehavior.AllowGet);
             }
         }
+        //获取客户来源枚举名称
+        private string GetEnumsName(int val)
+        {
+            string returnmane = "";
+            try
+            {
+                returnmane = ((Common.Enums.EnterpriseUserCustomerSource)val).GetDisplayName();
+            }
+            finally
+            {
+                returnmane = "未知";
+            }
+            return returnmane;
+        }
 
         /// <summary>
         /// 分享路径
@@ -267,14 +281,14 @@ namespace AiCard.Controllers
                                 GROUP BY DATENAME(HOUR,CreateDateTime)";
                 string sqlstr = string.Format(sql, @"@enterpriseid,@userid,@timenumber,@actionstr1,@actionstr2");
                 List<TrendAnalysisModel> data = db.Database.SqlQuery<TrendAnalysisModel>(sqlstr, parameters).ToList();
-                var resultdata = data.Select(s => new
-                {
-                    counts = s.counts,
-                    hourstr = s.hourstr
-                    //typenumber=s.typenumber,
-                    //typestr = GetEnumsName(s.typenumber)
-                });
-                return Json(Comm.ToJsonResult("Success", "成功", resultdata), JsonRequestBehavior.AllowGet);
+                //var resultdata = data.Select(s => new
+                //{
+                //    counts = s.counts,
+                //    hourstr = s.hourstr
+                //    //typenumber=s.typenumber,
+                //    //typestr = GetEnumsName(s.typenumber)
+                //});
+                return Json(Comm.ToJsonResult("Success", "成功", data), JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -403,30 +417,28 @@ namespace AiCard.Controllers
         /// <param name="enterpriseid"></param>
         /// <param name="userid"></param>
         /// <returns></returns>
-        public ActionResult GetCustomerAvocation(int enterpriseid, string userid)
+        public ActionResult GetCustomerAvocation(int custid)
         {
             try
             {
-                if (!db.Cards.Any(s => s.EnterpriseID == enterpriseid && s.UserID == userid))
+                if (!db.EnterpriseCustomers.Any(s => s.ID == custid))
                 {
-                    return Json(Comm.ToJsonResult("CardNoFound", "名片不存在"));
+                    return Json(Comm.ToJsonResult("NoFound", "客户不存在"));
                 }
                 //拼接参数
                 SqlParameter[] parameters = {
-                        new SqlParameter("@enterpriseid", SqlDbType.Int),
-                        new SqlParameter("@userid", SqlDbType.NVarChar),
+                        new SqlParameter("@custid", SqlDbType.Int),
                         new SqlParameter("@articleread", SqlDbType.Int),
                         new SqlParameter("@cardread", SqlDbType.Int),
                         new SqlParameter("@shopread", SqlDbType.Int),
                         new SqlParameter("@homepageread", SqlDbType.Int),
                 };
-                parameters[0].Value = enterpriseid;
-                parameters[1].Value = userid;
-                parameters[2].Value = Common.Enums.UserLogType.ArticleRead;
-                parameters[3].Value = Common.Enums.UserLogType.CardRead;
-                parameters[4].Value = Common.Enums.UserLogType.ShopRead;
-                parameters[5].Value = Common.Enums.UserLogType.HomePageRead;
-                string sqlstr = string.Format(@"GetCustomerAvocation @enterpriseid,@userid,@articleread,@cardread,@shopread,@homepageread");
+                parameters[0].Value = custid;
+                parameters[1].Value = Common.Enums.UserLogType.ArticleRead;
+                parameters[2].Value = Common.Enums.UserLogType.CardRead;
+                parameters[3].Value = Common.Enums.UserLogType.ShopRead;
+                parameters[4].Value = Common.Enums.UserLogType.HomePageRead;
+                string sqlstr = string.Format(@"GetCustomerAvocation @custid,@articleread,@cardread,@shopread,@homepageread");
                 List<CustomerActionModel> data = db.Database.SqlQuery<CustomerActionModel>(sqlstr, parameters).ToList();
                 var resultdata = data.Select(s => new
                 {
@@ -446,20 +458,41 @@ namespace AiCard.Controllers
         }
 
 
-        //获取客户来源枚举名称
-        private string GetEnumsName(int val)
+
+
+
+        /// <summary>
+        /// 客户详情-客户活跃度
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        [AllowCrossSiteJson]
+        public ActionResult GetCustomerActivityList(string custID, int timenumber)
         {
-            string returnmane = "";
             try
             {
-                returnmane = ((Common.Enums.EnterpriseUserCustomerSource)val).GetDisplayName();
+                //拼接参数
+                SqlParameter[] parameters = {
+                        new SqlParameter("@custID", SqlDbType.Int),
+                        new SqlParameter("@timenumber", SqlDbType.Int),
+                    };
+                parameters[0].Value = custID;
+                parameters[1].Value = timenumber;
+
+                string sqlstr = string.Format(@"SELECT DATENAME(HOUR,CreateDateTime) AS hourstr,COUNT(ID) counts FROM dbo.UserLogs ul
+                                                    INNER JOIN dbo.EnterpriseCustomers c ON c.UserID = ul.UserID
+                                                    WHERE ul.UserID=@custID AND CreateDateTime BETWEEN dateadd(day, -@timenumber, dateadd(ms, 0, DATEADD(dd, DATEDIFF(dd, 0, getdate()), 0)))
+                                                    AND dateadd(day, -@timenumber, DATEADD(ms, -3, DATEADD(dd, DATEDIFF(dd, -1, getdate()), 0)))
+                                                    GROUP BY DATENAME(HOUR,CreateDateTime)");
+                List<TrendAnalysisModel> data = db.Database.SqlQuery<TrendAnalysisModel>(sqlstr, parameters).ToList();
+                return Json(Comm.ToJsonResult("Success", "成功", data), JsonRequestBehavior.AllowGet);
             }
-            finally
+            catch (Exception ex)
             {
-                returnmane = "未知";
+                return Json(Comm.ToJsonResult("Error", ex.Message), JsonRequestBehavior.AllowGet);
             }
-            return returnmane;
         }
+
         private class CustomerActionModel
         {
             /// <summary>
