@@ -212,7 +212,7 @@ namespace AiCard.Controllers
         /// <param name="tabsname">客户自定义标签名称</param>
         /// <returns></returns>
         [AllowCrossSiteJson]
-        public ActionResult SetCustomerTabs(int customerID, string ownerID, string tabsName)
+        public ActionResult SetCustomerTabs(int customerID, string ownerID, string tabsName, Common.Enums.CardTabStyle style, int? iscustomtab)
         {
             try
             {
@@ -229,7 +229,7 @@ namespace AiCard.Controllers
                     return Json(Comm.ToJsonResult("HadAdd", $"{tabsName}已经存在"));
                 }
                 var randam = Comm.Random.Next(3);
-                var tab = new EnterpriseCustomerTab { CreateDateTime = DateTime.Now, Name = tabsName, Style = (CardTabStyle)randam, CustomerID = customerID, OwnerID = ownerID };
+                var tab = new EnterpriseCustomerTab { CreateDateTime = DateTime.Now, Name = tabsName, Style = iscustomtab == null ? (CardTabStyle)randam : style, CustomerID = customerID, OwnerID = ownerID };
                 db.EnterpriseCustomerTabs.Add(tab);
                 db.SaveChanges();
                 var returndata = new
@@ -265,7 +265,7 @@ namespace AiCard.Controllers
                              {
                                  Name = c.RealName,
                                  Avatar = u.Avatar,
-                                 CustTabs = cuta.Select(s => s.Name),
+                                 CustTabs = cuta,
                                  Position=c.Position,
                                  Email=c.Email,
                                  Mobile=c.Mobile,

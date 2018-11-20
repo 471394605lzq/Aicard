@@ -467,10 +467,14 @@ namespace AiCard.Controllers
         /// <param name="type"></param>
         /// <returns></returns>
         [AllowCrossSiteJson]
-        public ActionResult GetCustomerActivity(string custID, int timenumber)
+        public ActionResult GetCustomerActivity(int custID, int timenumber)
         {
             try
             {
+                if (!db.EnterpriseCustomers.Any(s => s.ID == custID))
+                {
+                    return Json(Comm.ToJsonResult("NoFound", "客户不存在"));
+                }
                 //拼接参数
                 SqlParameter[] parameters = {
                         new SqlParameter("@custID", SqlDbType.Int),
@@ -494,7 +498,7 @@ namespace AiCard.Controllers
         }
 
         /// <summary>
-        /// 客户详情-客户活跃度排行榜
+        /// 客户活跃度排行榜
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
@@ -503,15 +507,19 @@ namespace AiCard.Controllers
         {
             try
             {
+                if (!db.Users.Any(s => s.Id == userID))
+                {
+                    return Json(Comm.ToJsonResult("NoFound", "该用户不存在"));
+                }
                 //拼接参数
                 SqlParameter[] parameters = {
-                        new SqlParameter("@userid", SqlDbType.Int),
+                        new SqlParameter("@userid", SqlDbType.NVarChar),
                         new SqlParameter("@timetype", SqlDbType.Int),
                     };
                 parameters[0].Value = userID;
                 parameters[1].Value = type;
-
-                List<CustActivityTopModel> data = db.Database.SqlQuery<CustActivityTopModel>("GetCustomerActivityTop", parameters).ToList();
+                string sqlstr = string.Format(@"GetCustomerActivityTop @userid,@timetype");
+                List<CustActivityTopModel> data = db.Database.SqlQuery<CustActivityTopModel>(sqlstr, parameters).ToList();
                 return Json(Comm.ToJsonResult("Success", "成功", data), JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
