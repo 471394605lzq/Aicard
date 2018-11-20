@@ -18,10 +18,13 @@ namespace AiCard.Controllers
         // GET: Test
         public ActionResult Index(string userName)
         {
-            string date = "20181119210604";
-            string newDate = $"{new string(date.Take(4).ToArray())}-{new string(date.Skip(4).Take(2).ToArray())}-{new string(date.Skip(6).Take(2).ToArray())} {new string(date.Skip(8).Take(2).ToArray())}:{new string(date.Skip(10).Take(2).ToArray())}:{new string(date.Skip(12).Take(2).ToArray())}";
-            var d = Convert.ToDateTime(newDate);
-            return Json(newDate, JsonRequestBehavior.AllowGet);
+            DateTime dateOfBirth = new DateTime(1990, 11, 30);
+            int age = 0;
+            age = DateTime.Now.Year - dateOfBirth.Year;
+            if (DateTime.Now.DayOfYear < dateOfBirth.DayOfYear)
+                age = age - 1;
+
+            return Json(age, JsonRequestBehavior.AllowGet);
 
         }
         #region 腾讯IM

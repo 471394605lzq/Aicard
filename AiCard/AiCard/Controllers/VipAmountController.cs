@@ -6,15 +6,22 @@ using System.Web.Mvc;
 using AiCard.DAL.Models;
 namespace AiCard.Controllers
 {
-    public class VipHomeController : Controller
+    public class VipAmountController : Controller
     {
         ApplicationDbContext db = new ApplicationDbContext();
 
-        // GET: VipHome
-        public ActionResult Index(int page = 1, int pageSize = 20)
+        // GET: VipAmountLog
+        public ActionResult Top(int top)
         {
-            var cards = db.Cards.OrderByDescending(s => s.ID).ToPagedList(page, pageSize);
-            
+            var query = from v in db.Vips
+                        from c in db.CardPersonals
+                        where c.ID == v.CardID
+                        select new
+                        {
+                            v.TotalAmount,
+                            c.Name,
+
+                        };
             return View();
         }
 
@@ -26,6 +33,5 @@ namespace AiCard.Controllers
             }
             base.Dispose(disposing);
         }
-
     }
 }

@@ -65,8 +65,9 @@ namespace AiCard.Bll
                         Order order = db.Orders.FirstOrDefault(p => p.Code == out_trade_no && p.State == Common.Enums.OrderState.UnHandle);
                         if (order != null)
                         {
+                            order.Amount = Convert.ToDecimal(notifyData.GetValue("total_fee").ToString())/100m;
                             order.PayCode = transaction_id;
-                            order.PayResult = JsonConvert.SerializeObject(notifyData);
+                            order.PayResult = notifyData.ToJson();
                             order.State = notifyData.GetValue("result_code").ToString() == "SUCCESS" ? Common.Enums.OrderState.Success : Common.Enums.OrderState.Failed;
                             order.PayDateTime = DateTime.Now;
                             row = db.SaveChanges();

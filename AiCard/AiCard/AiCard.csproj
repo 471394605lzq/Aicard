@@ -290,8 +290,9 @@
     <Compile Include="Controllers\UserLogController.cs" />
     <Compile Include="Controllers\UserManageController.cs" />
     <Compile Include="Controllers\UserSpeechController.cs" />
+    <Compile Include="Controllers\VipAmountController.cs" />
     <Compile Include="Controllers\VIPController.cs" />
-    <Compile Include="Controllers\VipHomeController.cs" />
+    <Compile Include="Controllers\CardPersonalController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -939,6 +940,7 @@
     <Folder Include="Views\TsIm\" />
     <Folder Include="Views\UserLog\" />
     <Folder Include="Views\UserSpeech\" />
+    <Folder Include="Views\VipAmountLog\" />
     <Folder Include="Views\VipHome\" />
     <Folder Include="Views\VIP\" />
     <Folder Include="WeChatSessionKey\" />

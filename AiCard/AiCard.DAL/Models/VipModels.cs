@@ -66,6 +66,11 @@ namespace AiCard.DAL.Models
         /// </summary>
         public string Code { get; set; }
 
+        /// <summary>
+        /// 收入排名
+        /// <para>每日0:00更新</para>
+        /// </summary>
+        public int TotalAmountRank { get; set; }
 
         /// <summary>
         /// 创建时间
