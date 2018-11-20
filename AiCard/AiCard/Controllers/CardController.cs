@@ -447,17 +447,19 @@ namespace AiCard.Controllers
                                   GROUP BY c.Name, c.Avatar,c.ID,c.Position,c.UserID) t WHERE t.Ornumber > @starpagesize AND t.Ornumber<=@endpagesize");
                     List<RankingModel> data = db.Database.SqlQuery<RankingModel>(sqlstr, parameters).ToList();
 
-                    string mysqlstr = string.Format(@"SELECT CAST(ROW_NUMBER() over(order by COUNT(c.Name) DESC) AS INTEGER) AS Ornumber, c.Name, c.Avatar, COUNT(c.Name) Counts,c.UserID AS ID,c.Position
+                    string mysqlstr = string.Format(@"SELECT CAST(ROW_NUMBER() over(order by COUNT(c.Name) DESC) AS INTEGER) AS Ornumber, c.Name, c.Avatar, COUNT(c.Name) Counts,c.UserID AS ID,c.Position,ul.TargetUserID
                                   FROM dbo.UserLogs ul
                                   INNER JOIN dbo.Cards c ON c.UserID = ul.TargetUserID 
 								  WHERE ul.CreateDateTime BETWEEN dateadd(ms, 0, DATEADD(dd, DATEDIFF(dd, 0, getdate()), 0)) AND dateadd(ms, -3, DATEADD(dd, DATEDIFF(dd, -1, getdate()), 0))
-                                   AND c.EnterpriseID=@enterpriseID AND ul.TargetUserID=@userID
+                                   AND c.EnterpriseID=@enterpriseID 
                                   GROUP BY c.Name, c.Avatar,c.ID,c.Position,c.UserID");
+                    //AND ul.TargetUserID = @userID
                     List<RankingModel> mydata = db.Database.SqlQuery<RankingModel>(mysqlstr, myparameters).ToList();
+
                     var resultdata = new
                     {
                         listdata = data,
-                        mydata = mydata
+                        mydata = mydata.Where(s=>s.TargetUserID== userID).ToList()
                     };
                     return Json(Comm.ToJsonResult("Success", "成功", resultdata), JsonRequestBehavior.AllowGet);
                 }
@@ -470,16 +472,17 @@ namespace AiCard.Controllers
                                                     WHERE  UserType = 2 AND u.EnterpriseID=@enterpriseID GROUP BY c.Name, u.Id,c.Position)t  WHERE t.Ornumber > @starpagesize AND t.Ornumber<=@endpagesize");
                     List<RankingModel> data = db.Database.SqlQuery<RankingModel>(sqlstr, parameters).ToList();
 
-                    string mysqlstr = string.Format(@"SELECT CAST(ROW_NUMBER() over(order by COUNT(u.UserName) DESC) AS INTEGER) AS Ornumber, c.Name , COUNT(cus.ID) AS Counts,u.id AS ID,c.Position
+                    string mysqlstr = string.Format(@"SELECT CAST(ROW_NUMBER() over(order by COUNT(u.UserName) DESC) AS INTEGER) AS Ornumber, c.Name , COUNT(cus.ID) AS Counts,u.id AS ID,c.Position,u.Id as TargetUserID
 								 FROM dbo.AspNetUsers u
 								 INNER JOIN dbo.Cards c ON c.UserID=u.Id
                                                     INNER JOIN dbo.EnterpriseUserCustomers cus ON cus.OwnerID = u.Id
-                                                    WHERE UserType = 2 AND u.EnterpriseID=@enterpriseID and u.Id=@userID GROUP BY c.Name, u.Id,c.Position");
+                                                    WHERE UserType = 2 AND u.EnterpriseID=@enterpriseID  GROUP BY c.Name, u.Id,c.Position");
                     List<RankingModel> mydata = db.Database.SqlQuery<RankingModel>(mysqlstr, myparameters).ToList();
+                    //and u.Id = @userID
                     var resultdata = new
                     {
                         listdata = data,
-                        mydata = mydata
+                        mydata = mydata.Where(s=>s.TargetUserID==userID).ToList()
                     };
 
                     return Json(Comm.ToJsonResult("Success", "成功", resultdata), JsonRequestBehavior.AllowGet);
@@ -502,6 +505,7 @@ namespace AiCard.Controllers
             public int Counts { get; set; }
             public string Position { get; set; }
             public string ID { get; set; }
+            public string TargetUserID { get; set; }
         }
 
 
