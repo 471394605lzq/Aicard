@@ -24,11 +24,13 @@ namespace AiCard.Bll
         /// </summary>
         public override void ProcessNotify()
         {
-            WxPayData notifyData = GetNotifyData();
 
+            WxPayData notifyData = GetNotifyData();
             //检查支付结果中transaction_id是否存在
             if (!notifyData.IsSet("transaction_id"))
             {
+
+                Log.Debug("notifyData", $"notifyData:完成");
                 //若transaction_id不存在，则立即返回结果给微信支付后台
                 WxPayData res = new WxPayData();
                 res.SetValue("return_code", "FAIL");
@@ -40,7 +42,6 @@ namespace AiCard.Bll
 
             string transaction_id = notifyData.GetValue("transaction_id").ToString();
             string out_trade_no = notifyData.GetValue("out_trade_no").ToString();
-
             //查询订单，判断订单真实性
             if (!QueryOrder(transaction_id))
             {
@@ -67,12 +68,13 @@ namespace AiCard.Bll
                             order.PayCode = transaction_id;
                             order.PayResult = JsonConvert.SerializeObject(notifyData);
                             order.State = notifyData.GetValue("result_code").ToString() == "SUCCESS" ? Common.Enums.OrderState.Success : Common.Enums.OrderState.Failed;
-                            order.PayDateTime = Convert.ToDateTime(notifyData.GetValue("time_end").ToString());
+                            order.PayDateTime = DateTime.Now;
                             row = db.SaveChanges();
-                            if (row > 0 && order.State==Common.Enums.OrderState.Success)
-                            {//查看是否需要计算上级收益
+                            if (row > 0 && order.State == Common.Enums.OrderState.Success)
+                            {
+                                //查看是否需要计算上级收益
                                 VIPAccountBLL bll = new VIPAccountBLL();
-                                bll.CalculateVIPAmount(order.UserID,1);
+                                bll.CalculateVIPAmount(order.UserID, 1);
                             }
                         }
                     }

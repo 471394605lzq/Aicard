@@ -252,7 +252,7 @@ namespace WxPayAPI
         */
         public string MakeSign()
         {
-            return MakeSign(SIGN_TYPE_HMAC_SHA256);
+            return MakeSign(SIGN_TYPE_MD5);
         }
 
 

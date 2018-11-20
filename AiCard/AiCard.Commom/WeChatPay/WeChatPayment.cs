@@ -46,14 +46,6 @@ namespace AiCard.Commom.WeChatPay
             data.SetValue("openid", payData.openid ?? string.Empty);
 
             WxPayData ret = WxPayApi.UnifiedOrder(data);
-
-            Log.Debug(this.GetType().ToString(), "WxPayData ret:" +
-                Newtonsoft.Json.JsonConvert.SerializeObject(new
-                {
-                    isSetAppid = ret.IsSet("appid"),
-                    isSetPrepayID = ret.IsSet("prepay_id"),
-                    ret = ret
-                }));
             if (!ret.IsSet("appid") || !ret.IsSet("prepay_id") || ret.GetValue("prepay_id").ToString() == "")
             {
                 Log.Error(this.GetType().ToString(), "UnifiedOrder response error!");

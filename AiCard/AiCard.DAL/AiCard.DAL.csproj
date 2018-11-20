@@ -214,6 +214,10 @@
     <Compile Include="Migrations\201811191118052_CardAddIndustry.Designer.cs">
       <DependentUpon>201811191118052_CardAddIndustry.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201811200203324_CardAddBirthday.cs" />
+    <Compile Include="Migrations\201811200203324_CardAddBirthday.Designer.cs">
+      <DependentUpon>201811200203324_CardAddBirthday.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ArticleModels.cs" />
     <Compile Include="Models\CardModels.cs" />
@@ -344,6 +348,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201811191118052_CardAddIndustry.resx">
       <DependentUpon>201811191118052_CardAddIndustry.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201811200203324_CardAddBirthday.resx">
+      <DependentUpon>201811200203324_CardAddBirthday.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -119,5 +119,11 @@ namespace AiCard.DAL.Models
         [Display(Name = "点击次数")]
         public int Count { get; set; }
 
+        /// <summary>
+        /// 生日
+        /// </summary>
+        [Display(Name = "生日")]
+        public DateTime? Birthday { get; set; }
+
     }
 }

@@ -45,7 +45,7 @@ namespace WxPayAPI
             inputObj.SetValue("appid", WxPayConfig.GetConfig().GetAppID());//公众账号ID
             inputObj.SetValue("mch_id", WxPayConfig.GetConfig().GetMchID());//商户号
             inputObj.SetValue("nonce_str", Guid.NewGuid().ToString().Replace("-", ""));//随机字符串
-            inputObj.SetValue("sign_type", WxPayData.SIGN_TYPE_HMAC_SHA256);//签名类型
+            inputObj.SetValue("sign_type", WxPayData.SIGN_TYPE_MD5);//签名类型
             inputObj.SetValue("sign", inputObj.MakeSign());//签名
             string xml = inputObj.ToXml();
 
@@ -88,7 +88,7 @@ namespace WxPayAPI
             inputObj.SetValue("appid", WxPayConfig.GetConfig().GetAppID());//公众账号ID
             inputObj.SetValue("mch_id", WxPayConfig.GetConfig().GetMchID());//商户号
             inputObj.SetValue("nonce_str", WxPayApi.GenerateNonceStr());//随机字符串
-            inputObj.SetValue("sign_type", WxPayData.SIGN_TYPE_HMAC_SHA256);//签名类型
+            inputObj.SetValue("sign_type", WxPayData.SIGN_TYPE_MD5);//签名类型
             inputObj.SetValue("sign", inputObj.MakeSign());//签名
 
 
@@ -133,7 +133,7 @@ namespace WxPayAPI
             inputObj.SetValue("appid", WxPayConfig.GetConfig().GetAppID());//公众账号ID
             inputObj.SetValue("mch_id", WxPayConfig.GetConfig().GetMchID());//商户号
             inputObj.SetValue("nonce_str", GenerateNonceStr());//随机字符串
-            inputObj.SetValue("sign_type", WxPayData.SIGN_TYPE_HMAC_SHA256);//签名类型
+            inputObj.SetValue("sign_type", WxPayData.SIGN_TYPE_MD5);//签名类型
             inputObj.SetValue("sign", inputObj.MakeSign());//签名
             string xml = inputObj.ToXml();
 
@@ -193,7 +193,7 @@ namespace WxPayAPI
             inputObj.SetValue("appid", WxPayConfig.GetConfig().GetAppID());//公众账号ID
             inputObj.SetValue("mch_id", WxPayConfig.GetConfig().GetMchID());//商户号
             inputObj.SetValue("nonce_str", Guid.NewGuid().ToString().Replace("-", ""));//随机字符串
-            inputObj.SetValue("sign_type", WxPayData.SIGN_TYPE_HMAC_SHA256);//签名类型
+            inputObj.SetValue("sign_type", WxPayData.SIGN_TYPE_MD5);//签名类型
             inputObj.SetValue("sign", inputObj.MakeSign());//签名
 
             string xml = inputObj.ToXml();
@@ -240,7 +240,7 @@ namespace WxPayAPI
             inputObj.SetValue("appid", WxPayConfig.GetConfig().GetAppID());//公众账号ID
             inputObj.SetValue("mch_id", WxPayConfig.GetConfig().GetMchID());//商户号
             inputObj.SetValue("nonce_str", GenerateNonceStr());//随机字符串
-            inputObj.SetValue("sign_type", WxPayData.SIGN_TYPE_HMAC_SHA256);//签名类型
+            inputObj.SetValue("sign_type", WxPayData.SIGN_TYPE_MD5);//签名类型
             inputObj.SetValue("sign", inputObj.MakeSign());//签名
 
             string xml = inputObj.ToXml();
@@ -283,7 +283,7 @@ namespace WxPayAPI
             inputObj.SetValue("appid", WxPayConfig.GetConfig().GetAppID());//公众账号ID
             inputObj.SetValue("mch_id", WxPayConfig.GetConfig().GetMchID());//商户号
             inputObj.SetValue("nonce_str", GenerateNonceStr());//随机字符串
-            inputObj.SetValue("sign_type", WxPayData.SIGN_TYPE_HMAC_SHA256);//签名类型
+            inputObj.SetValue("sign_type", WxPayData.SIGN_TYPE_MD5);//签名类型
             inputObj.SetValue("sign", inputObj.MakeSign());//签名
 
             string xml = inputObj.ToXml();
@@ -328,7 +328,7 @@ namespace WxPayAPI
             inputObj.SetValue("appid", WxPayConfig.GetConfig().GetAppID());//公众账号ID
             inputObj.SetValue("mch_id", WxPayConfig.GetConfig().GetMchID());//商户号
             inputObj.SetValue("nonce_str", GenerateNonceStr());//随机字符串	
-            inputObj.SetValue("sign_type", WxPayData.SIGN_TYPE_HMAC_SHA256);//签名类型
+            inputObj.SetValue("sign_type", WxPayData.SIGN_TYPE_MD5);//签名类型
             inputObj.SetValue("sign", inputObj.MakeSign());//签名
             string xml = inputObj.ToXml();
 
@@ -441,7 +441,7 @@ namespace WxPayAPI
             inputObj.SetValue("appid", WxPayConfig.GetConfig().GetAppID());//公众账号ID
             inputObj.SetValue("mch_id", WxPayConfig.GetConfig().GetMchID());//商户号
             inputObj.SetValue("nonce_str", GenerateNonceStr());//随机字符串		
-            inputObj.SetValue("sign_type", WxPayData.SIGN_TYPE_HMAC_SHA256);//签名类型
+            inputObj.SetValue("sign_type", WxPayData.SIGN_TYPE_MD5);//签名类型
             inputObj.SetValue("sign", inputObj.MakeSign());//签名
             string xml = inputObj.ToXml();
 
@@ -572,7 +572,7 @@ namespace WxPayAPI
             inputObj.SetValue("user_ip", WxPayConfig.GetConfig().GetIp());//终端ip
             inputObj.SetValue("time", DateTime.Now.ToString("yyyyMMddHHmmss"));//商户上报时间	 
             inputObj.SetValue("nonce_str", GenerateNonceStr());//随机字符串
-            inputObj.SetValue("sign_type", WxPayData.SIGN_TYPE_HMAC_SHA256);//签名类型
+            inputObj.SetValue("sign_type", WxPayData.SIGN_TYPE_MD5);//签名类型
             inputObj.SetValue("sign", inputObj.MakeSign());//签名
             string xml = inputObj.ToXml();
 
