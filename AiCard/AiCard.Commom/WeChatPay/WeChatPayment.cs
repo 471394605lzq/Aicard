@@ -62,5 +62,64 @@ namespace AiCard.Commom.WeChatPay
             #endregion
         }
 
+        /// <summary>
+        /// 微信退款申请
+        /// </summary>
+        /// <param name="refundData">退款申请参数</param>
+        /// <returns></returns>
+        public RequestResult RefundApply(RefundApplyData refundData) {
+            #region
+            RequestResult result = new RequestResult
+            {
+                retCode = ReqResultCode.failed,
+                retMsg = ""
+            };
+            if (refundData == null)
+            {
+                result.retMsg = "请求参数不能为空";
+            }
+            try
+            {
+                Log.Info("Refund", "Refund is processing...");
+
+                WxPayData data = new WxPayData();
+                if (!string.IsNullOrEmpty(refundData.transaction_id))//微信订单号存在的条件下，则已微信订单号为准
+                {
+                    data.SetValue("transaction_id", refundData.transaction_id);
+                }
+                else//微信订单号不存在，才根据商户订单号去退款
+                {
+                    data.SetValue("out_trade_no", refundData.out_trade_no);
+                }
+
+                data.SetValue("total_fee", int.Parse(refundData.total_fee));//订单总金额
+                data.SetValue("refund_fee", int.Parse(refundData.refund_fee));//退款金额
+                data.SetValue("out_refund_no", refundData.out_refund_no);//随机生成商户退款单号
+                data.SetValue("op_user_id", WxPayConfig.GetConfig().GetMchID());//操作员，默认为商户号
+
+                WxPayData ret = WxPayApi.Refund(data);//提交退款申请给API，接收返回数据
+                Log.Info("Refund", "Refund process complete, result : " + ret.ToXml());
+                if (ret.GetValue("return_code").ToString()== "SUCCESS" && ret.GetValue("result_code").ToString() == "SUCCESS")
+                {
+                    result.retCode = ReqResultCode.success;
+                    result.retMsg = "请求成功";
+                    result.objectData = ret;//把结果返回到业务层
+                }
+                else
+                {
+                    Log.Error(this.GetType().ToString(), "微信退款申请失败!");
+                    result.retMsg = "微信退款申请失败";
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(this.GetType().ToString(), $"微信退款申请发生异常：{ex.Message}");
+                throw new WxPayException($"微信退款申请发生异常：{ex.Message}");
+            }
+            
+            return result;
+            #endregion
+
+        }
     }
 }

@@ -8,6 +8,7 @@ namespace AiCard.Commom.WeChatPay
 {
     /// <summary>
     /// 微信支付提交参数及返回参数模型
+    /// 退款等参数实体
     /// </summary>
     public sealed  class WeChatPayModel
     {
@@ -47,5 +48,31 @@ namespace AiCard.Commom.WeChatPay
         public string goods_tag { get; set; }
     }
 
+
+    /// <summary>
+    /// 退款申请参数
+    /// </summary>
+    public sealed class RefundApplyData {
+        /// <summary>
+        /// 微信订单号
+        /// </summary>
+        public string transaction_id { get; set; }
+        /// <summary>
+        /// 商户订单号
+        /// </summary>
+        public string out_trade_no { get; set; }
+        /// <summary>
+        /// 订单总金额
+        /// </summary>
+        public string total_fee { get; set; }
+        /// <summary>
+        /// 退款金额
+        /// </summary>
+        public string refund_fee { get; set; }
+        /// <summary>
+        /// 商户退款单号
+        /// </summary>
+        public string out_refund_no { get; set; }
+    }
    
 }

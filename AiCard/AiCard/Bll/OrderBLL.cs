@@ -21,8 +21,8 @@ namespace AiCard.Bll
     public sealed class OrderBLL
     {
         Random rand = new Random();
-
-
+        WeChatPayment payment = new WeChatPayment();
+        
         /// <summary>
         /// 创建订单号
         /// </summary>
@@ -80,7 +80,7 @@ namespace AiCard.Bll
                 trade_type = "JSAPI"
 
             };
-            WeChatPayment payment = new WeChatPayment();
+            
             RequestResult payResult = payment.GetUnifiedOrderResult(payData);
             WxPayData payreturnData = payResult.objectData;
             if (payResult.retCode != ReqResultCode.success || payreturnData == null)
@@ -141,6 +141,97 @@ namespace AiCard.Bll
             return new { retCode = "Success", retMsg = "成功", objectData = retModel };
         }
 
+        /// <summary>
+        /// 退款申请
+        /// </summary>
+        /// <param name="orderCode">商户订单号</param>
+        /// <param name="UserID">用户ID</param>
+        /// <returns></returns>
+        public object RefundApply(string orderCode, string UserID) {
+            if (string.IsNullOrEmpty(orderCode) || string.IsNullOrEmpty(UserID))
+            {
+                return new { retCode = "Error", retMsg = "商户订单号和用户ID均不能为空", objectData = "" };
+            }
+            int rows = 0;
+            WxPayData refundreturnData = null;
+            try
+            {
+                using (ApplicationDbContext db = new ApplicationDbContext())
+                {
+                    //1.查询本地订单
+                    Order order = db.Orders.FirstOrDefault(p => p.Code == orderCode);
+                    if (order != null)
+                    {
+                        if (order.UserID.Equals(UserID))
+                        {
+                            if (order.State == Common.Enums.OrderState.Success)
+                            {
+                                string OrderCode = CreateOrderCode(UserID);//创建退款订单号
+                                //退款参数
+                                RefundApplyData refundData = new RefundApplyData()
+                                {
+                                    out_refund_no = OrderCode,
+                                    out_trade_no = order.Code,
+                                    refund_fee = ((int)(order.Amount * 100)).ToString(),
+                                    total_fee = ((int)(order.Amount * 100)).ToString(),
+                                    transaction_id = order.PayCode
+                                };
+                                //2.创建本地退款订单
+                                Order refund = new Order()
+                                {
+                                    Channel = Common.Enums.PayChannel.WxPay,
+                                    Code = OrderCode,
+                                    CreateDateTime = DateTime.Now,
+                                    PayCode = string.Empty,
+                                    PayInput = JsonConvert.SerializeObject(refundData),
+                                    ReceivableAmount = order.Amount,
+                                    State = Common.Enums.OrderState.UnHandle,
+                                    Type = Common.Enums.OrderType.Refund,
+                                    UserID = UserID
+                                };
+                                db.Orders.Add(refund);
+                                rows = db.SaveChanges();
+                                if (rows > 0)
+                                {
+                                    //3.微信退款申请
+                                    RequestResult payResult = payment.RefundApply(refundData);
+                                    refundreturnData = payResult.objectData;
+                                    if (payResult.retCode != ReqResultCode.success || refundreturnData == null)
+                                    {
+                                        return new { retCode = "Error", retMsg = "请求微信退款失败", objectData = "" };
+                                    }
+                                    //4.更新订单状态
+                                    refund.PayCode = refundreturnData.GetValue("refund_id").ToString();//微信退款单号
+                                    refund.State = Common.Enums.OrderState.Success;
+                                    refund.Amount = Convert.ToDecimal(refundreturnData.GetValue("refund_fee").ToString()) / 100m;
+                                    refund.PayDateTime = DateTime.Now;
+                                    refund.PayResult = refundreturnData.ToJson();
+                                    rows = db.SaveChanges();
+                                }
+                            }
+                            else
+                            {
+                                return new { retCode = "Error", retMsg = "订单未支付成功，不能退款", objectData = "" };
+                            }
+                        }
+                        else
+                        {
+                            return new { retCode = "Error", retMsg = "此订单不是当前用户的订单", objectData = "" };
+                        }
+                    }
+                    else
+                    {
+                        return new { retCode = "Error", retMsg = "订单不存在", objectData = "" };
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
 
+                return new { retCode = "Error", retMsg = $"申请微信退款发生异常：{ex.Message}", objectData = "" };
+            }
+           
+            return new { retCode = "Success", retMsg = "成功", objectData = refundreturnData };
+        }
     }
 }
