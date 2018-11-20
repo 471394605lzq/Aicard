@@ -129,7 +129,11 @@ namespace AiCard.DAL.Models
         public DbSet<CardUserProductTop> CardUserProductTops { get; set; }
 
 
+        public DbSet<CardPersonal> CardPersonals { get; set; }
+
+
         public SqlConnection Connection { get; internal set; }
+
 
 
 

@@ -1,29 +1,25 @@
-﻿using AiCard.Common.Enums;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Security.Principal;
-using System.Web;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace AiCard.DAL.Models
 {
-    public class Card : Common.ICard
+    public class CardPersonal : Common.IDistrict, Common.IGprs, Common.ICard
     {
         public int ID { get; set; }
 
-        [Display(Name = "企业")]
-        public int? EnterpriseID { get; set; }
 
-        public Enterprise Enterprise { get; set; }
+        [Display(Name = "公司")]
+        public string Enterprise { get; set; }
 
         [Display(Name = "用户")]
         public string UserID { get; set; }
 
         public ApplicationUser User { get; set; }
 
-        [Display(Name = "企业微信ID")]
-        public string WeChatEID { get; set; }
 
         [Display(Name = "姓名")]
         public string Name { get; set; }
@@ -50,7 +46,7 @@ namespace AiCard.DAL.Models
         public string Position { get; set; }
 
         [Display(Name = "性别")]
-        public Gender Gender { get; set; }
+        public Common.Enums.Gender Gender { get; set; }
 
         [Display(Name = "签名")]
         public string Remark { get; set; }
@@ -67,65 +63,53 @@ namespace AiCard.DAL.Models
         [Display(Name = "图片")]
         public string Images { get; set; }
 
+        /// <summary>
+        /// 小程序分享二维码
+        /// </summary>
         [Display(Name = "小程序分享二维码")]
         public string WeChatMiniQrCode { get; set; }
 
+        /// <summary>
+        /// 海报
+        /// </summary>
         [Display(Name = "海报")]
         public string Poster { get; set; }
 
+        /// <summary>
+        /// 行业
+        /// </summary>
         [Display(Name = "行业")]
         public string Industry { get; set; }
 
-
-        public List<CardTab> CardTabs { get; set; }
 
         [Display(Name = "点赞")]
         public int Like { get; set; }
 
         [Display(Name = "阅览数")]
         public int View { get; set; }
-
-        /// <summary>
-        /// 生日
-        /// </summary>
+        
         [Display(Name = "生日")]
         public DateTime? Birthday { get; set; }
 
         [Display(Name = "排序")]
         public int Sort { get; set; }
-    }
 
-    public class CardTab
-    {
-        public int ID { get; set; }
+        [Display(Name = "省")]
+        public string Province { get; set; }
 
-        /// <summary>
-        /// 名称
-        /// </summary>
-        [Display(Name = "名称")]
-        public string Name { get; set; }
+        [Display(Name = "市")]
+        public string City { get; set; }
 
-        /// <summary>
-        /// 卡片ID
-        /// </summary>
-        [Display(Name = "卡片")]
-        public int CardID { get; set; }
+        [Display(Name = "区")]
+        public string District { get; set; }
 
-        public Card Card { get; set; }
+        [Display(Name = "维度")]
+        public double? Lat { get; set; }
 
-        /// <summary>
-        /// 样式
-        /// </summary>
-        [Display(Name = "样式")]
-        public CardTabStyle Style { get; set; }
+        [Display(Name = "经度")]
+        public double? Lng { get; set; }
 
-        /// <summary>
-        /// 总的点击次数
-        /// </summary>
-        [Display(Name = "点击次数")]
-        public int Count { get; set; }
-
-
-
+        [Display(Name = "详细地址")]
+        public string Address { get; set; }
     }
 }

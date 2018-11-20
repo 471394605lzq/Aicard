@@ -134,6 +134,7 @@
     <Compile Include="Extensions\IntExtensions.cs" />
     <Compile Include="Extensions\ModelStateDictionaryExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Interface\ICard.cs" />
     <Compile Include="Interface\IDistrict.cs" />
     <Compile Include="Interface\IErrorReusult.cs" />
     <Compile Include="Interface\IFileUpload.cs" />
