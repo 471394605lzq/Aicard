@@ -53,7 +53,8 @@ namespace AiCard.Bll
         public object CreateUpGradeOrder(string code, string UserID)
         {
             //1.调用小程序登录API，获取openID
-            WeChatMinApi miniApi = new WeChatMinApi(ConfigMini.AppID, ConfigMini.AppSecret);
+            IConfig config = new ConfigMini();
+            WeChatMinApi miniApi = new WeChatMinApi(config);
             Jscode2sessionResult openIDResule = miniApi.Jscode2session(code);
             if (openIDResule == null || string.IsNullOrWhiteSpace(openIDResule.OpenID))
             {

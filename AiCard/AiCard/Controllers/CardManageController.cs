@@ -227,7 +227,8 @@ namespace AiCard.Controllers
             var temp = db.Cards.FirstOrDefault(s => s.ID == model.ID);
 
             var tempenterprise = db.Enterprises.FirstOrDefault(s => s.ID == temp.EnterpriseID);
-            WeChatMinApi w = new WeChatMinApi(ConfigMini.AppID, ConfigMini.AppSecret);
+            IConfig config = new ConfigMini();
+            WeChatMinApi w = new WeChatMinApi(config);
             //防止企业用户串号修改
             if (AccontData.UserType == UserType.Enterprise
                 && temp.EnterpriseID != AccontData.EnterpriseID)

@@ -18,17 +18,17 @@ namespace AiCard.Common.WeChat
 {
     public class WeChatMinApi
     {
-        public WeChatMinApi(string appID, string secret)
+        private IConfig _config;
+
+        public WeChatMinApi(IConfig config)
         {
-            AppID = appID;
-            Secret = secret;
+            _config = config;
         }
 
-        private static AccessToken _accessToken = null;
+        public string AppID { get { return _config.AppID; } }
 
-        public string AppID { get; set; }
+        public string Secret { get { return _config.AppSecret; } }
 
-        public string Secret { get; set; }
         /// <summary>
         /// 获取token
         /// </summary>
@@ -183,11 +183,11 @@ namespace AiCard.Common.WeChat
         /// <returns></returns>
         public string GetAccessToken()
         {
-            if (_accessToken == null || _accessToken.End <= DateTime.Now)
+            if (_config.AccessToken == null || _config.AccessTokenEnd <= DateTime.Now)
             {
                 RefreshToken();
             }
-            return _accessToken.Code;
+            return _config.AccessToken;
         }
 
         /// <summary>
@@ -197,18 +197,15 @@ namespace AiCard.Common.WeChat
         public string RefreshToken()
         {
             var date = DateTime.Now;
-            if (_accessToken != null && _accessToken.End < date)
+            if (_config.AccessToken != null && _config.AccessTokenEnd < date)
             {
-                return _accessToken.Code;
+                return _config.AccessToken;
             }
             var api = new CommonApi.BaseApi($"https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid={AppID}&secret={Secret}", "GET");
             var result = api.CreateRequestReturnJson();
-            _accessToken = new WeChat.AccessToken()
-            {
-                Code = result["access_token"].Value<string>(),
-                End = DateTime.Now.AddSeconds(3500)
-            };
-            return _accessToken.Code;
+            _config.AccessToken = result["access_token"].Value<string>();
+            _config.AccessTokenEnd = DateTime.Now.AddSeconds(3500);
+            return _config.AccessToken;
         }
 
         public string SendMessage(string openID, string tempID, string formID, string page, object keyword)

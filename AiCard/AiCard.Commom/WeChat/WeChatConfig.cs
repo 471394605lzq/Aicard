@@ -9,45 +9,59 @@ using System.Web;
 namespace AiCard.Common.WeChat
 {
 
-    public abstract class BaseConfig
+    public interface IConfig
     {
-        public static string AppID { get; }
+        string AppID { get; }
 
-        public static string AppSecret { get; }
+        string AppSecret { get; }
 
-        public static string AccessToken { get; set; }
+        string AccessToken { get; set; }
 
-        public static string RefreshToken { get; set; }
+        string RefreshToken { get; set; }
+
+        DateTime AccessTokenEnd { get; set; }
     }
 
-    public class WeChatWorkConfig
+    public class WeChatWorkConfig : IConfig
     {
         /// <summary>
         /// 网页开放平台
         /// </summary>
-        public static string AppID = "1000004";
+        private static string appID = "1000004";
 
         /// <summary>
         /// 网页开放平台
         /// </summary>
-        public static string AppSecret = "-1k1RzNA3Z1lRsOnXF-fYPBxHv4m6fN8zgU_BOA8Y98";
+        private static string appSecret = "-1k1RzNA3Z1lRsOnXF-fYPBxHv4m6fN8zgU_BOA8Y98";
 
 
         /// <summary>
         /// AppID对应的公共AccessToken
         /// </summary>
-        public static string AccessToken = null;
+        private static string accessToken = null;
 
         /// <summary>
         /// AppID对应的公共RefreshToken
         /// </summary>
-        public static string RefreshToken = null;
+        private static string refreshToken = null;
+
+        private static DateTime accessTokenEnd;
+
+        public string AccessToken { get { return accessToken; } set { accessToken = value; } }
+
+        public string AppID { get { return appID; } }
+
+        public string AppSecret { get { return appSecret; } }
+
+        public string RefreshToken { get { return refreshToken; } set { refreshToken = value; } }
+
+        public DateTime AccessTokenEnd { get { return accessTokenEnd; } set { accessTokenEnd = value; } }
 
         public static String JsSign(string url, string noncestr, string timestamp)
         {
-            if (AccessToken == null)
+            if (accessToken == null)
             {
-                var api1 = new CommonApi.BaseApi($"https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid={AppID}&secret={AppSecret}", "GET");
+                var api1 = new CommonApi.BaseApi($"https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid={appID}&secret={appSecret}", "GET");
                 var json = api1.CreateRequestReturnJson();
                 var AccessToken = json["access_token"].Value<string>();
             }
@@ -55,7 +69,7 @@ namespace AiCard.Common.WeChat
             {
 
             }
-            var api2 = new CommonApi.BaseApi($"https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token={AccessToken}&type=jsapi", "GET");
+            var api2 = new CommonApi.BaseApi($"https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token={accessToken}&type=jsapi", "GET");
             var josn2 = api2.CreateRequestReturnJson();
             var str = $"jsapi_ticket={josn2["ticket"].Value<string>()}&noncestr={noncestr}&timestamp={timestamp}&url={url}";
             byte[] StrRes = Encoding.Default.GetBytes(str);
@@ -71,26 +85,72 @@ namespace AiCard.Common.WeChat
         }
     }
 
-    public static class ConfigPc
+    public class ConfigPc : IConfig
     {
-        public const string AppID = "wxbd54d6bab8add1e0";
+        private const string appID = "wxbd54d6bab8add1e0";
 
-        public const string AppSecret = "14c8f514897eeea2a02a5ffa6c3c4f32";
+        private const string appSecret = "14c8f514897eeea2a02a5ffa6c3c4f32";
 
-        public static string AccessToken = null;
+        private static string accessToken = null;
 
-        public static string RefreshToken = null;
+        private static string refreshToken = null;
+
+        private static DateTime accessTokenEnd;
+
+        public string AccessToken { get { return accessToken; } set { accessToken = value; } }
+
+        public DateTime AccessTokenEnd { get { return accessTokenEnd; } set { accessTokenEnd = value; } }
+
+        public string AppID { get { return appID; } }
+
+        public string AppSecret { get { return appSecret; } }
+
+        public string RefreshToken { get { return refreshToken; } set { refreshToken = value; } }
     }
 
-    public static class ConfigMini
+    public class ConfigMini : IConfig
     {
-        public const string AppID = "wx4f0894f87f291778";
+        private const string appID = "wx4f0894f87f291778";
 
-        public const string AppSecret = "b186bd1fe13e8a2fd1d2c66893941462";
+        private const string appSecret = "b186bd1fe13e8a2fd1d2c66893941462";
 
-        public static string AccessToken = null;
+        private static string accessToken = null;
 
-        public static string RefreshToken = null;
+        private static string refreshToken = null;
 
+        private static DateTime accessTokenEnd;
+
+        public string AccessToken { get { return accessToken; } set { accessToken = value; } }
+
+        public DateTime AccessTokenEnd { get { return accessTokenEnd; }  set { accessTokenEnd = value; } }
+
+        public string AppID { get { return appID; } }
+
+        public string AppSecret { get { return appSecret; } }
+
+        public string RefreshToken { get { return refreshToken; } set { refreshToken = value; } }
+    }
+
+    public class ConfigMiniPersonal : IConfig
+    {
+        private const string appID = "wxad81cad7f42d8097";
+
+        private const string appSecret = "18d242324c0e74283c06c3858e374728";
+
+        private static string accessToken = null;
+
+        private static string refreshToken = null;
+
+        private static DateTime accessTokenEnd;
+
+        public string AccessToken { get { return accessToken; } set { accessToken = value; } }
+
+        public string AppID { get { return appID; } }
+
+        public string AppSecret { get { return appSecret; } }
+
+        public string RefreshToken { get { return refreshToken; } set { refreshToken = value; } }
+
+        public DateTime AccessTokenEnd { get { return accessTokenEnd; } set { accessTokenEnd = value; } }
     }
 }
