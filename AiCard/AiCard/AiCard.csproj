@@ -306,6 +306,7 @@
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\ProductKindsViewModels.cs" />
     <Compile Include="Models\ProductViewModels.cs" />
+    <Compile Include="Models\ReqPage.cs" />
     <Compile Include="Models\RoleGroupViewModel.cs" />
     <Compile Include="Models\SelectRoleListViewModel.cs" />
     <Compile Include="Models\SelectRoleView.cs" />
@@ -313,6 +314,8 @@
     <Compile Include="Models\UserLogViewModels.cs" />
     <Compile Include="Models\UserManageViewModels.cs" />
     <Compile Include="Models\UserViewModels.cs" />
+    <Compile Include="Models\Vip\ReqVipCardList.cs" />
+    <Compile Include="Models\Vip\VipCardList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResultNotify\PayResultNotifyPage.aspx.cs">
       <DependentUpon>PayResultNotifyPage.aspx</DependentUpon>

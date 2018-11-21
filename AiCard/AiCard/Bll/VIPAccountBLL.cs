@@ -76,7 +76,7 @@ namespace AiCard.Bll
 
                             //上上级用户
                             vipship = db.VipRelationships.FirstOrDefault(p => p.UserID == parentUser.UserID );
-                            if (vipship != null)
+                            if (vipship != null && vBussType==1)//升级会员才有
                             {
                                 Vip grandfatherUser = db.Vips.FirstOrDefault(p => p.ID == vipship.ParentID && p.UserID == vipship.ParentUserID);
                                 if (grandfatherUser != null)
