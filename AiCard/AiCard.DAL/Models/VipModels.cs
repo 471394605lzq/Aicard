@@ -29,7 +29,7 @@ namespace AiCard.DAL.Models
         public decimal Amount { get; set; }
 
         /// <summary>
-        /// 可提金额
+        /// 总盈利金额
         /// </summary>
         public decimal TotalAmount { get; set; }
 
