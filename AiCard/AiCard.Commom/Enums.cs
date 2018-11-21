@@ -266,6 +266,29 @@ namespace AiCard.Common.Enums
         [Display(Name = "微信群分享")]
         ShareWeChatGroup = 104,
 
+
+        [Display(Name = "个人名片阅览")]
+        CardPersonalRead = 200,
+        [Display(Name = "个人名片点赞")]
+        CardPersonalLike = 201,
+        [Display(Name = "个人名片转发")]
+        CardPersonalShare = 202,
+        [Display(Name = "个人名片存到手机")]
+        CardPersonalSave = 203,
+
+
+        [Display(Name = "个人名片手机呼叫")]
+        CardPersonalMobileCall = 210,
+        [Display(Name = "个人名片邮件复制")]
+        CardPersonalEmailCopy = 211,
+        [Display(Name = "个人名片微信号复制")]
+        CardPersonalWechat = 212,
+        [Display(Name = "个人名片座机呼叫")]
+        CardPersonalPhoneCall = 213,
+        [Display(Name = "个人名片企业复制")]
+        CardPersonalEnterpriseCopy = 214,
+        [Display(Name = "个人名片地址导航")]
+        CardPersonalAddressNav = 215,
     }
 
     public enum ProductType

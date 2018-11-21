@@ -304,6 +304,7 @@
     <Compile Include="Models\EnterpriseViewModels.cs" />
     <Compile Include="Models\HomePageModularViewModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\PersonalCardViewModels.cs" />
     <Compile Include="Models\ProductKindsViewModels.cs" />
     <Compile Include="Models\ProductViewModels.cs" />
     <Compile Include="Models\ReqPage.cs" />
@@ -648,6 +649,7 @@
     <Content Include="Content\iconfont.ttf" />
     <Content Include="Content\Less\View\enterpriseManage.less" />
     <Content Include="Content\Less\View\homePageModularsManageIndex.less" />
+    <None Include="Properties\PublishProfiles\aicard.pubxml" />
     <None Include="Properties\PublishProfiles\AiCardRelease.pubxml" />
     <Content Include="Scripts\ChinaPCAS\pcas.json" />
     <Content Include="Scripts\ChinaPCAS\pcas - 复制.json" />
