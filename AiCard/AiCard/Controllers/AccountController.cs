@@ -766,14 +766,14 @@ namespace AiCard.Controllers
                     try
                     {
 
-                        string debug = JsonConvert.SerializeObject(new
-                        {
-                            model.EncryptedData,
-                            session,
-                            model.IV,
-                            AES = str
-                        });
-                        Comm.WriteLog("WeiXin", debug, DebugLogLevel.Normal);
+                        //string debug = JsonConvert.SerializeObject(new
+                        //{
+                        //    model.EncryptedData,
+                        //    session,
+                        //    model.IV,
+                        //    AES = str
+                        //});
+                        //Comm.WriteLog("WeiXin", debug, DebugLogLevel.Normal);
                         var jUser = JsonConvert.DeserializeObject<JObject>(str);
                         var unionID = jUser["unionId"]?.Value<string>();
                         if (unionID == null)

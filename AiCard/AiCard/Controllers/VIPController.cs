@@ -10,6 +10,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using WxPayAPI;
+using Newtonsoft.Json.Linq;
 namespace AiCard.Controllers
 {
     public class VIPController : Controller
@@ -17,6 +18,83 @@ namespace AiCard.Controllers
         ApplicationDbContext db = new ApplicationDbContext();
 
         OrderBLL orderbll = new OrderBLL();
+
+        /// <summary>
+        /// 注册VIP
+        /// </summary>
+        /// <param name="userID">用户ID</param>
+        /// <param name="iv">手机号</param>
+        /// <param name="code"></param>
+        /// <returns></returns>
+        public ActionResult CreateByWeChatPhone(string userID, string openID, string iv, string encryptedData, string code)
+        {
+
+            string mobile = null;
+            var session = Common.WeChat.Jscode2sessionResultList.GetSession(openID);
+            try
+            {
+                //从EncryptedData从解密用户数据
+                var str = Common.WeChat.Jscode2sessionResultList.AESDecrypt(encryptedData, session, iv);
+                var jObj = JsonConvert.DeserializeObject<JToken>(str);
+                mobile = jObj["purePhoneNumber"].Value<string>();
+            }
+            catch (Exception)
+            {
+                Comm.WriteLog("CreateByWeChatPhoneDecrypt", JsonConvert.SerializeObject(new { encryptedData, session, iv }), Common.Enums.DebugLogLevel.Error);
+                return Json(Comm.ToJsonResult("Decrypt Fail", "解密失败"));
+            }
+
+            if (db.Users.Any(s => s.PhoneNumber == mobile))
+            {
+                return Json(Comm.ToJsonResult("MobileHadUsed", "手机号已被使用"));
+            }
+
+            //if (!Reg.IsMobile(mobile))
+            //{
+            //    return Json(Comm.ToJsonResult("Moblie Error", "手机号不正确"));
+            //}
+            var user = db.Users.FirstOrDefault(s => s.Id == userID);
+           
+            if (user == null)
+            {
+                return Json(Comm.ToJsonResult("UserNoFound", "用户不存在"));
+            }
+            if (db.CardPersonals.Any(s => s.UserID == userID))
+            {
+                return Json(Comm.ToJsonResult("CardPersonalHadCreate", "该用户已经个人名片已存在"));
+            }
+            Vip parentVip = null;
+            if (!string.IsNullOrWhiteSpace(code))
+            {
+                //判断是否邀请码是否存在
+                parentVip = db.Vips.FirstOrDefault(s => s.State == Common.Enums.VipState.Enable && s.Code == code);
+                if (parentVip == null)
+                {
+                    return Json(Comm.ToJsonResult("CodeNoFound", "验证码不存在"));
+                }
+            }
+            //保存用户手机号到用户表
+            user.PhoneNumber = mobile;
+            //把名片已知信息填到个人名片
+            var card = new CardPersonal
+            {
+                UserID = userID,
+                Avatar = user.Avatar,
+                Enable = true,
+                Gender = Common.Enums.Gender.NoSet,
+                Name = user.NickName,
+                Mobile = mobile
+            };
+            db.CardPersonals.Add(card);
+            //db.SaveChanges();
+            if (parentVip != null)
+            {
+                //建立关系并给上级+3块
+            }
+            return Json(Comm.ToJsonResult("Success", "成功", new { PCardID = card.ID }));
+
+
+        }
 
         /// <summary>
         /// 升级VIP，创建订单及预调起支付
