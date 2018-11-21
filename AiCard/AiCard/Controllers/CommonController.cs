@@ -62,5 +62,30 @@ namespace AiCard.Controllers
                 return Json(Comm.ToJsonResult("Error", ex.Message), JsonRequestBehavior.AllowGet);
             }
         }
+
+        /// <summary>
+        /// 生成jssdk签名字符串
+        /// </summary>
+        /// <param name="url"></param>
+        /// <param name="noncestr"></param>
+        /// <param name="timestamp"></param>
+        /// <returns></returns>
+        [AllowCrossSiteJson]
+        public ActionResult CreateJsSign(string url, string noncestr, string timestamp)
+        {
+            try
+            {
+                string signstr = Common.WeChat.WeChatWorkConfig.JsSign(url, noncestr, timestamp);
+                var returndata = new
+                {
+                    data = signstr
+                };
+                return Json(Comm.ToJsonResult("Success", "获取成功", returndata), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(Comm.ToJsonResult("Success", ex.Message), JsonRequestBehavior.AllowGet);
+            }
+        }
     }
 }
