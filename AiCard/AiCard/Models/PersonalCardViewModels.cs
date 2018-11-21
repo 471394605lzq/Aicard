@@ -85,7 +85,7 @@ namespace AiCard.Models
         [Display(Name = "行业")]
         public string Industry { get; set; }
 
-        [Display(Name = "")]
+        [Display(Name = "企业")]
         public string Enterprise { get; set; }
 
 

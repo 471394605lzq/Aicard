@@ -54,7 +54,7 @@ namespace AiCard.Controllers
         }
 
         [HttpPost]
-        public ActionResult Create(string userID, string mobile)
+        public ActionResult Create(string userID, string mobile, string code)
         {
             if (!Reg.IsMobile(mobile))
             {
@@ -69,7 +69,16 @@ namespace AiCard.Controllers
             {
                 return Json(Comm.ToJsonResult("CardPersonalHadCreate", "该用户已经个人名片已存在"));
             }
-
+            Vip parentVip = null;
+            if (!string.IsNullOrWhiteSpace(code))
+            {
+                //判断是否邀请码是否存在
+                parentVip = db.Vips.FirstOrDefault(s => s.State == Common.Enums.VipState.Enable && s.Code == code);
+                if (parentVip == null)
+                {
+                    return Json(Comm.ToJsonResult("CodeNoFound", "验证码不存在"));
+                }
+            }
             var card = new CardPersonal
             {
                 UserID = userID,
@@ -81,6 +90,10 @@ namespace AiCard.Controllers
             };
             db.CardPersonals.Add(card);
             db.SaveChanges();
+            if (parentVip != null)
+            {
+                //建立关系并给上级+3块
+            }
             return Json(Comm.ToJsonResult("Success", "成功", new { PCardID = card.ID }));
         }
 
