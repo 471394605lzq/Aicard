@@ -13,7 +13,7 @@ namespace AiCard.Common.TxIm
     {
         //private static string dllPath = ConfigurationManager.AppSettings["sigcheckPath"]; //@"D:\AiCard\bin\sigcheck.dll";
 
-        private const string dllPath = @"F:\Aicard\AiCard\AiCard\bin\sigcheck.dll";
+        private const string dllPath = @"D:\AiCard\bin\sigcheck.dll";
 
         [DllImport(dllPath, EntryPoint = "tls_gen_sig", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         private extern static int tls_gen_sig(

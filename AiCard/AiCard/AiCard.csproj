@@ -645,6 +645,7 @@
     <Content Include="Content\iconfont.ttf" />
     <Content Include="Content\Less\View\enterpriseManage.less" />
     <Content Include="Content\Less\View\homePageModularsManageIndex.less" />
+    <None Include="Properties\PublishProfiles\aicard.pubxml" />
     <None Include="Properties\PublishProfiles\AiCardRelease.pubxml" />
     <Content Include="Scripts\ChinaPCAS\pcas.json" />
     <Content Include="Scripts\ChinaPCAS\pcas - 复制.json" />

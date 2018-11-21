@@ -82,6 +82,7 @@ namespace AiCard.Controllers
 
                 string sqlstr = string.Format(@"TrendAnalysis @enterpriseid,@userid,@timenumber,@browsetype,@consultcusttype");
                 List<TrendAnalysisModel> data = db.Database.SqlQuery<TrendAnalysisModel>(sqlstr, parameters).ToList();
+
                 return Json(Comm.ToJsonResult("Success", "成功", data), JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
