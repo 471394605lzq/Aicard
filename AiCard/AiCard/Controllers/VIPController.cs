@@ -29,14 +29,17 @@ namespace AiCard.Controllers
         /// <param name="sReqParameter">请求的参数</param>
         /// <returns></returns>
         [AllowCrossSiteJson]
-        public ActionResult Index(string sReqParameter="") {
+        public ActionResult Index(string sReqParameter = "")
+        {
             #region
             ReqVipCardList reqParam = JsonConvert.DeserializeObject<ReqVipCardList>(sReqParameter);
-            if (reqParam == null) {
-                reqParam = new Models.Vip.ReqVipCardList() {
-                    filter = string.Empty ,
-                    Page=1,
-                    PageSize =20
+            if (reqParam == null)
+            {
+                reqParam = new Models.Vip.ReqVipCardList()
+                {
+                    filter = string.Empty,
+                    Page = 1,
+                    PageSize = 20
                 };
             }
             string selectStr = string.Empty;
@@ -46,10 +49,12 @@ namespace AiCard.Controllers
                 using (ApplicationDbContext db = new ApplicationDbContext())
                 {
                     selectStr = $@"select t1.ID as VipID,t1.Amount,t1.TotalAmount,t1.VipChild2ndCount,t1.VipChild3rdCount,t1.FreeChildCount,
-                                    t1.[State] ,t2.Name,t2.Avatar,t2.PhoneNumber,t2.Gender
+                                    t1.[State] ,t2.Name,t2.Avatar,t2.Mobile,t2.Gender,t3.ID as UserID
                                     from Vips t1 
-                                    left join Cards t2 on t1.CardID=t2.ID
-                                    where t1.[Type]=={Common.Enums.VipRank.Vip99}";
+                                    left join CardPersonals t2 on t1.CardID=t2.ID
+                                    left join AspNetUsers t3 on t1.UserID=t3.ID
+                                    where t1.[Type]=={Common.Enums.VipRank.Vip99} 
+                                    order by ";
 
                     db.Database.SqlQuery<VipCardList>(selectStr);
                 }
@@ -57,12 +62,10 @@ namespace AiCard.Controllers
             }
             catch (Exception ex)
             {
-
-
-
-                throw;
+                Comm.WriteLog("VIPCotroller.Index", ex.Message, Common.Enums.DebugLogLevel.Error, ex: ex);
+                return Json(Comm.ToJsonResult("Error", "调用获取vip用户列表接口发生异常"), JsonRequestBehavior.AllowGet);
             }
-            return Json(Comm.ToJsonResult("", "", ""), JsonRequestBehavior.AllowGet);
+            return Json(Comm.ToJsonResult("Success", "成功", ""), JsonRequestBehavior.AllowGet);
             #endregion
         }
 
