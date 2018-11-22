@@ -86,7 +86,7 @@ namespace AiCard.Bll
                         if (inviteVip != null)
                         {
                             VipRelationship relation = db.VipRelationships.FirstOrDefault(p => p.UserID == vUserID && p.ParentUserID == inviteVip.UserID);
-                            if (relation != null)
+                            if (relation == null)
                             {
 
                                 relation = new VipRelationship()
