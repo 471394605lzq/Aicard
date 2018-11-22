@@ -932,9 +932,9 @@ namespace AiCard.Controllers
             catch (Exception)
             {
                 Comm.WriteLog("CreateByWeChatPhoneDecrypt", JsonConvert.SerializeObject(new { encryptedData, session, iv }), Common.Enums.DebugLogLevel.Error);
-                return Json(Comm.ToJsonResult("Decrypt Fail", "解密失败"));
+                return Json(Comm.ToJsonResult("DecryptFail", "解密失败，SessionKey过期，需要重新调用登录接口"));
             }
-            return Json(Comm.ToJsonResult("Success", "成功", mobile));
+            return Json(Comm.ToJsonResult("Success", "成功", mobile), JsonRequestBehavior.AllowGet);
         }
 
         #endregion
