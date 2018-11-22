@@ -15,6 +15,7 @@ using Newtonsoft.Json.Linq;
 using AiCard.Common.Enums;
 using AiCard.DAL.Models;
 using AiCard.Common;
+using AiCard.Common.WeChat;
 
 namespace AiCard.Controllers
 {
@@ -893,7 +894,48 @@ namespace AiCard.Controllers
             return user;
         }
 
+        public ActionResult GetPhoneNumberFromWeChat(string userID, string iv, string encryptedData)
+        {
+            var user = db.Users.FirstOrDefault(s => s.Id == userID);
 
+            if (user == null)
+            {
+                return Json(Comm.ToJsonResult("UserNoFound", "用户不存在"));
+            }
+            if (db.CardPersonals.Any(s => s.UserID == userID))
+            {
+                return Json(Comm.ToJsonResult("CardPersonalHadCreate", "该用户已经个人名片已存在"));
+            }
+            //把数据中的OpenID取出
+            var userOpenIDs = new Bll.Users.UserOpenID(user);
+            IConfig config = new ConfigMini();
+            var openID = userOpenIDs.SearchOpenID(config.AppID);
+            if (openID == null)
+            {
+                return Json(Comm.ToJsonResult("OpenIDIsNull", "OpenID不存在"));
+            }
+            string session = null;
+            try
+            {
+                session = Jscode2sessionResultList.GetSession(openID);
+            }
+            catch (Exception ex)
+            {
+                return Json(Comm.ToJsonResult("GetSessionFail", ex.Message));
+            }
+
+            string mobile = null;
+            try
+            {
+                mobile = Jscode2sessionResultList.AESDecryptPhoneNumber(encryptedData, session, iv);
+            }
+            catch (Exception)
+            {
+                Comm.WriteLog("CreateByWeChatPhoneDecrypt", JsonConvert.SerializeObject(new { encryptedData, session, iv }), Common.Enums.DebugLogLevel.Error);
+                return Json(Comm.ToJsonResult("Decrypt Fail", "解密失败"));
+            }
+            return Json(Comm.ToJsonResult("Success", "成功", mobile));
+        }
 
         #endregion
     }

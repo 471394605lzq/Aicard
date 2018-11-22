@@ -29,7 +29,7 @@ namespace AiCard.Bll.Users
         /// 查询OpenID
         /// </summary>
         /// <param name="appID"></param>
-        /// <returns></returns>
+        /// <returns>找不到的返回null</returns>
         public string SearchOpenID(string appID)
         {
             return _openIDs.FirstOrDefault(s => s.AppID == appID)?.OpenID;
