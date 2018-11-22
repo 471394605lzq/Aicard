@@ -717,16 +717,28 @@ namespace AiCard.Controllers
             }
             else
             {
-                Common.WeChat.IConfig config = new Common.WeChat.ConfigMini();
+                Common.WeChat.IConfig config;
+                switch (type)
+                {
+                    case WeChatAccount.AiCardMini:
+                        config = new Common.WeChat.ConfigMini();
+                        break;
+                    case WeChatAccount.AiCardPersonalMini:
+                        config = new Common.WeChat.ConfigMiniPersonal();
+                        break;
+                    default:
+                        return Json(Comm.ToJsonResult("Error", "Type参数有误"));
+                }
                 //小程序
                 Common.WeChat.WeChatMinApi wechat = new Common.WeChat.WeChatMinApi(config);
                 try
                 {
                     var result = wechat.Jscode2session(code);
-                    DAL.Models.ApplicationUser user = null;
+                    ApplicationUser user = null;
                     if (!string.IsNullOrWhiteSpace(result.UnionID))
                     {
                         user = db.Users.FirstOrDefault(s => s.WeChatID == result.UnionID);
+                        // 把OpenID存进数据库
                         var option = new Bll.Users.UserOpenID(user);
                         option.AddOpenID(config.AppID, result.OpenID);
                         db.SaveChanges();
