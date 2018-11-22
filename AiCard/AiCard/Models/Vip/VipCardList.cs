@@ -46,7 +46,9 @@ namespace AiCard.Models.Vip
         [Display(Name = "注册用户数")]
         public int FreeChildCount { get; set; }
         [Display(Name = "状态")]
-        public int State { get; set; }
+        public string StateName { get; set; }
+        [Display(Name = "性别")]
+        public string Gender { get; set; }
         /// <summary>
         /// 姓名
         /// </summary>

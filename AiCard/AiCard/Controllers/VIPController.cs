@@ -25,9 +25,55 @@ namespace AiCard.Controllers
     public class VIPController : Controller
     {
         ApplicationDbContext db = new ApplicationDbContext();
-
         OrderBLL orderbll = new OrderBLL();
 
+        #region 后台方法
+        /// <summary>
+        /// 获取VIP会员名片分页列表
+        /// </summary>
+        /// <param name="sReqParameter">请求的参数</param>
+        /// <returns></returns>
+        [AllowCrossSiteJson]
+        public ActionResult Index(string filter, int page = 1, int pageSize = 15)
+        {
+            #region
+            string selectStr = string.Empty;
+            try
+            {
+                #region
+                using (ApplicationDbContext db = new ApplicationDbContext())
+                {
+                    string sw = string.Empty;
+                    if (!string.IsNullOrWhiteSpace(filter))
+                    {
+                        sw = $" and (t2.Mobile like '%{filter}%' or t2.Name like '%{filter}%') ";
+                    }
+                    selectStr = $@"select t1.ID as VipID,t1.Amount,t1.TotalAmount,t1.VipChild2ndCount,t1.VipChild3rdCount,t1.FreeChildCount,
+                                    (case when t1.[State]=1 then '启用' else '禁用' end) as StateName ,t2.Name,t2.Avatar,t2.Mobile,
+                                    (case when t2.Gender=1 then '男' when t2.Gender=2 then '女' else '未设置' end) as Gender,t3.UserName as UserName
+                                    from Vips t1 
+                                    inner join CardPersonals t2 on t1.CardID=t2.ID
+                                    left join AspNetUsers t3 on t1.UserID=t3.ID
+                                    where t1.[Type]={(int)Common.Enums.VipRank.Vip99}  {sw}
+                                    order by t1.CreateDateTime desc";
+
+                    var query = db.Database.SqlQuery<VipCardList>(selectStr);
+                    var paged = query.ToPagedList(page, pageSize); 
+                    return View(paged);
+                }
+                #endregion
+            }
+            catch (Exception ex)
+            {
+                Comm.WriteLog("VIPCotroller.Index", ex.Message, Common.Enums.DebugLogLevel.Error, ex: ex);
+                return View($"获取vip用户信息发生异常：{ex.Message}");
+            }
+            #endregion
+        }
+
+        #endregion
+
+        #region 接口
         /// <summary>
         /// 注册VIP
         /// </summary>
@@ -74,7 +120,7 @@ namespace AiCard.Controllers
             {
                 return Json(Comm.ToJsonResult("DecryptFail", "解密失败，SessionKey过期，需要重新调用登录接口"));
             }
-            
+
             if (db.Users.Any(s => s.PhoneNumber == mobile))
             {
                 return Json(Comm.ToJsonResult("MobileHadUsed", "手机号已被使用"));
@@ -119,58 +165,7 @@ namespace AiCard.Controllers
 
         }
 
-        /// <summary>
-        /// 获取VIP会员名片分页列表
-        /// </summary>
-        /// <param name="sReqParameter">请求的参数</param>
-        /// <returns></returns>
-        [AllowCrossSiteJson]
-        public ActionResult Index(string sReqParameter = "")
-        {
-            #region
-            ReqVipCardList reqParam = JsonConvert.DeserializeObject<ReqVipCardList>(sReqParameter);
-            if (reqParam == null)
-            {
-                reqParam = new Models.Vip.ReqVipCardList()
-                {
-                    filter = string.Empty,
-                    Page = 1,
-                    PageSize = 20
-                };
-            }
-            string selectStr = string.Empty;
-            try
-            {
-                #region
-                using (ApplicationDbContext db = new ApplicationDbContext())
-                {
-                    string sw = string.Empty;
-                    if (!string.IsNullOrWhiteSpace(reqParam.filter))
-                    {
-                        sw = $" and (t2.Mobile like '%{reqParam.filter}%' or t3.UserName like '%{reqParam.filter}%') ";
-                    }
-                    selectStr = $@"select t1.ID as VipID,t1.Amount,t1.TotalAmount,t1.VipChild2ndCount,t1.VipChild3rdCount,t1.FreeChildCount,
-                                    t1.[State] ,t2.Name,t2.Avatar,t2.Mobile,t2.Gender,t3.UserName as UserName
-                                    from Vips t1 
-                                    left join CardPersonals t2 on t1.CardID=t2.ID
-                                    left join AspNetUsers t3 on t1.UserID=t3.ID
-                                    where t1.[Type]={(int)Common.Enums.VipRank.Vip99}  {sw}
-                                    order by t1.CreateDateTime desc";
-
-                    var query = db.Database.SqlQuery<VipCardList>(selectStr);
-                    var paged = query.ToPagedList(reqParam.Page, reqParam.PageSize);
-                    return Json(Comm.ToJsonResultForPagedList(paged, paged), JsonRequestBehavior.AllowGet);
-                }
-                #endregion
-            }
-            catch (Exception ex)
-            {
-                Comm.WriteLog("VIPCotroller.Index", ex.Message, Common.Enums.DebugLogLevel.Error, ex: ex);
-                return Json(Comm.ToJsonResult("Error", "调用获取vip用户列表接口发生异常"), JsonRequestBehavior.AllowGet);
-            }
-            //return Json(Comm.ToJsonResult("Success", "成功", ""), JsonRequestBehavior.AllowGet);
-            #endregion
-        }
+       
 
         /// <summary>
         /// 升级VIP，创建订单及预调起支付
@@ -314,6 +309,7 @@ namespace AiCard.Controllers
             //}
             return View();
         }
+        #endregion
 
         protected override void Dispose(bool disposing)
         {
