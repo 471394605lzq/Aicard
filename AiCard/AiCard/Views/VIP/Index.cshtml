@@ -1,0 +1,115 @@
+﻿@model IEnumerable<AiCard.Models.Vip.VipCardList>
+
+@{
+    ViewBag.Title = "VIP用户列表";
+    Layout = "~/Views/Shared/_LayoutBackground.cshtml";
+}
+
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav"></ul>
+            <form class="navbar-form navbar-left">
+                <div class="form-group" style="margin-left:20px;">
+                    <input type="text" name="filter" class="form-control" placeholder="搜索" value="@Request["filter"]">
+                </div>
+                <button type="submit" class="btn btn-default">搜索</button>
+            </form>
+        </div>
+    </div>
+</nav>
+<table class="table  table-hover table-striped">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.VipID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UserName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Gender)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Avatar)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Mobile)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Amount)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TotalAmount)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.VipChild2ndCount)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.VipChild3rdCount)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FreeChildCount)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.StateName)
+        </th>
+       
+        
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.VipID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Gender)
+            </td>
+            <td>
+              <img src="@Html.DisplayFor(modelItem => item.Avatar)" width="25" height="25" />  
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Mobile)
+            </td>
+           
+            <td>
+                @Html.DisplayFor(modelItem => item.Amount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TotalAmount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.VipChild2ndCount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.VipChild3rdCount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FreeChildCount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StateName)
+            </td>
+            
+            <td>
+                @*@Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |*@
+                @Html.ActionLink("查看详情", "Details", new { VipID = item.VipID  }) |
+                @Html.ActionLink("查看账户收支明细", "GetAccountDetail", new { VipID = item.VipID })|
+                @Html.ActionLink("查看下级用户", "GetChildDetail", new { VipID = item.VipID })
+            </td>
+        </tr>
+    }
+
+</table>
+@Html.PageList((PagedList.IPagedList<AiCard.Models.Vip.VipCardList>)Model, Url.PageUrl())

@@ -71,11 +71,7 @@ namespace AiCard.Common.WeChat
                 UnionID = result["unionid"]?.Value<string>(),
                 Session = result["session_key"].Value<string>(),
             };
-            if (result["unionid"] == null)
-            {
-                Jscode2sessionResultList.SetSession(jscode2Session.OpenID, jscode2Session.Session);
-
-            }
+            Jscode2sessionResultList.SetSession(jscode2Session.OpenID, jscode2Session.Session);
             return jscode2Session;
 
         }
@@ -297,7 +293,21 @@ namespace AiCard.Common.WeChat
             }
         }
 
-
+        public static string AESDecryptPhoneNumber(string encryptedData, string session, string iv)
+        {
+            try
+            {
+                //从EncryptedData从解密用户数据
+                var str = AESDecrypt(encryptedData, session, iv);
+                var jObj = JsonConvert.DeserializeObject<JToken>(str);
+                return  jObj["purePhoneNumber"].Value<string>();
+            }
+            catch (Exception)
+            {
+                //Comm.WriteLog("CreateByWeChatPhoneDecrypt", JsonConvert.SerializeObject(new { encryptedData, session, iv }), Common.Enums.DebugLogLevel.Error);
+                throw new Exception("手机号解密失败");
+            }
+        }
     }
 
 

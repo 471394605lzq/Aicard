@@ -7,6 +7,8 @@ using System.Text;
 using System.Threading.Tasks;
 using AiCard.Bll;
 using System.Web.Mvc;
+using AiCard.Models.Vip;
+using Newtonsoft.Json;
 
 namespace AiCard.Controllers.Tests
 {
@@ -25,6 +27,13 @@ namespace AiCard.Controllers.Tests
             //ActionResult obj = vip.Refund("2018112011422870401f1704d38996", "01f1704d-fd1f-409d-a3d1-eb23f2fd64");
 
             //ActionResult result = vip.CreateByWeChatPhone("f9df854b-24d5-4d09-bd9e-cf4147cec35e", "", "15521116670", "", "111111");
+
+            ReqVipCardList req = new ReqVipCardList() {
+                filter= "1562356",
+                Page=1,
+                PageSize=2
+            };
+            ActionResult result = vip.Index(JsonConvert.SerializeObject(req));
         }
     }
 }

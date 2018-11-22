@@ -336,6 +336,7 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\iconfont.css" />
+    <Content Include="Content\Images\ic_withdraw_list_40.png" />
     <Content Include="Content\Images\404\avatar.png" />
     <Content Include="Content\Images\404\default.jpg" />
     <Content Include="Content\Images\404\placeholder.png" />
@@ -929,6 +930,7 @@
     <Content Include="TxImKey\private_key" />
     <Content Include="TxImKey\public_key" />
     <Content Include="TxImKey\sig" />
+    <Content Include="Views\VIP\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -950,7 +952,6 @@
     <Folder Include="Views\UserSpeech\" />
     <Folder Include="Views\VipAmountLog\" />
     <Folder Include="Views\VipHome\" />
-    <Folder Include="Views\VIP\" />
     <Folder Include="WeChatSessionKey\" />
   </ItemGroup>
   <ItemGroup>

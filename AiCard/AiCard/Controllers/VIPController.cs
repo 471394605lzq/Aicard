@@ -12,6 +12,9 @@ using System.Web;
 using System.Web.Mvc;
 using WxPayAPI;
 using Newtonsoft.Json.Linq;
+using System.Data.Entity.Infrastructure;
+using PagedList;
+
 namespace AiCard.Controllers
 {
     /// <summary>
@@ -22,9 +25,55 @@ namespace AiCard.Controllers
     public class VIPController : Controller
     {
         ApplicationDbContext db = new ApplicationDbContext();
-
         OrderBLL orderbll = new OrderBLL();
 
+        #region 后台方法
+        /// <summary>
+        /// 获取VIP会员名片分页列表
+        /// </summary>
+        /// <param name="sReqParameter">请求的参数</param>
+        /// <returns></returns>
+        [AllowCrossSiteJson]
+        public ActionResult Index(string filter, int page = 1, int pageSize = 15)
+        {
+            #region
+            string selectStr = string.Empty;
+            try
+            {
+                #region
+                using (ApplicationDbContext db = new ApplicationDbContext())
+                {
+                    string sw = string.Empty;
+                    if (!string.IsNullOrWhiteSpace(filter))
+                    {
+                        sw = $" and (t2.Mobile like '%{filter}%' or t2.Name like '%{filter}%') ";
+                    }
+                    selectStr = $@"select t1.ID as VipID,t1.Amount,t1.TotalAmount,t1.VipChild2ndCount,t1.VipChild3rdCount,t1.FreeChildCount,
+                                    (case when t1.[State]=1 then '启用' else '禁用' end) as StateName ,t2.Name,t2.Avatar,t2.Mobile,
+                                    (case when t2.Gender=1 then '男' when t2.Gender=2 then '女' else '未设置' end) as Gender,t3.UserName as UserName
+                                    from Vips t1 
+                                    inner join CardPersonals t2 on t1.CardID=t2.ID
+                                    left join AspNetUsers t3 on t1.UserID=t3.ID
+                                    where t1.[Type]={(int)Common.Enums.VipRank.Vip99}  {sw}
+                                    order by t1.CreateDateTime desc";
+
+                    var query = db.Database.SqlQuery<VipCardList>(selectStr);
+                    var paged = query.ToPagedList(page, pageSize); 
+                    return View(paged);
+                }
+                #endregion
+            }
+            catch (Exception ex)
+            {
+                Comm.WriteLog("VIPCotroller.Index", ex.Message, Common.Enums.DebugLogLevel.Error, ex: ex);
+                return View($"获取vip用户信息发生异常：{ex.Message}");
+            }
+            #endregion
+        }
+
+        #endregion
+
+        #region 接口
         /// <summary>
         /// 注册VIP
         /// </summary>
@@ -32,22 +81,44 @@ namespace AiCard.Controllers
         /// <param name="iv">手机号</param>
         /// <param name="code"></param>
         /// <returns></returns>
-        public ActionResult CreateByWeChatPhone(string userID, string openID, string iv, string encryptedData, string code)
+        public ActionResult CreateByWeChatPhone(string userID, string iv, string encryptedData, string code)
         {
+            var user = db.Users.FirstOrDefault(s => s.Id == userID);
 
-            string mobile = null;
-            var session = Common.WeChat.Jscode2sessionResultList.GetSession(openID);
+            if (user == null)
+            {
+                return Json(Comm.ToJsonResult("UserNoFound", "用户不存在"));
+            }
+            if (db.CardPersonals.Any(s => s.UserID == userID))
+            {
+                return Json(Comm.ToJsonResult("CardPersonalHadCreate", "该用户已经个人名片已存在"));
+            }
+            //把数据中的OpenID取出
+            var userOpenIDs = new Bll.Users.UserOpenID(user);
+            IConfig config = new ConfigMini();
+            var openID = userOpenIDs.SearchOpenID(config.AppID);
+            if (openID == null)
+            {
+                return Json(Comm.ToJsonResult("OpenIDIsNull", "OpenID不存在"));
+            }
+            string session = null;
             try
             {
-                //从EncryptedData从解密用户数据
-                var str = Common.WeChat.Jscode2sessionResultList.AESDecrypt(encryptedData, session, iv);
-                var jObj = JsonConvert.DeserializeObject<JToken>(str);
-                mobile = jObj["purePhoneNumber"].Value<string>();
+                session = Jscode2sessionResultList.GetSession(openID);
+            }
+            catch (Exception ex)
+            {
+                return Json(Comm.ToJsonResult("GetSessionFail", ex.Message));
+            }
+
+            string mobile = null;
+            try
+            {
+                mobile = Jscode2sessionResultList.AESDecryptPhoneNumber(encryptedData, session, iv);
             }
             catch (Exception)
             {
-                Comm.WriteLog("CreateByWeChatPhoneDecrypt", JsonConvert.SerializeObject(new { encryptedData, session, iv }), Common.Enums.DebugLogLevel.Error);
-                return Json(Comm.ToJsonResult("Decrypt Fail", "解密失败"));
+                return Json(Comm.ToJsonResult("DecryptFail", "解密失败，SessionKey过期，需要重新调用登录接口"));
             }
 
             if (db.Users.Any(s => s.PhoneNumber == mobile))
@@ -59,16 +130,8 @@ namespace AiCard.Controllers
             //{
             //    return Json(Comm.ToJsonResult("Moblie Error", "手机号不正确"));
             //}
-            var user = db.Users.FirstOrDefault(s => s.Id == userID);
-           
-            if (user == null)
-            {
-                return Json(Comm.ToJsonResult("UserNoFound", "用户不存在"));
-            }
-            if (db.CardPersonals.Any(s => s.UserID == userID))
-            {
-                return Json(Comm.ToJsonResult("CardPersonalHadCreate", "该用户已经个人名片已存在"));
-            }
+
+
             Vip parentVip = null;
             if (!string.IsNullOrWhiteSpace(code))
             {
@@ -76,7 +139,7 @@ namespace AiCard.Controllers
                 parentVip = db.Vips.FirstOrDefault(s => s.State == Common.Enums.VipState.Enable && s.Code == code);
                 if (parentVip == null)
                 {
-                    return Json(Comm.ToJsonResult("CodeNoFound", "验证码不存在"));
+                    return Json(Comm.ToJsonResult("CodeNoFound", "邀请码不存在"));
                 }
             }
             //保存用户手机号到用户表
@@ -102,51 +165,7 @@ namespace AiCard.Controllers
 
         }
 
-        /// <summary>
-        /// 获取VIP会员名片分页列表
-        /// </summary>
-        /// <param name="sReqParameter">请求的参数</param>
-        /// <returns></returns>
-        [AllowCrossSiteJson]
-        public ActionResult Index(string sReqParameter = "")
-        {
-            #region
-            ReqVipCardList reqParam = JsonConvert.DeserializeObject<ReqVipCardList>(sReqParameter);
-            if (reqParam == null)
-            {
-                reqParam = new Models.Vip.ReqVipCardList()
-                {
-                    filter = string.Empty,
-                    Page = 1,
-                    PageSize = 20
-                };
-            }
-            string selectStr = string.Empty;
-            try
-            {
-                #region
-                using (ApplicationDbContext db = new ApplicationDbContext())
-                {
-                    selectStr = $@"select t1.ID as VipID,t1.Amount,t1.TotalAmount,t1.VipChild2ndCount,t1.VipChild3rdCount,t1.FreeChildCount,
-                                    t1.[State] ,t2.Name,t2.Avatar,t2.Mobile,t2.Gender,t3.ID as UserID
-                                    from Vips t1 
-                                    left join CardPersonals t2 on t1.CardID=t2.ID
-                                    left join AspNetUsers t3 on t1.UserID=t3.ID
-                                    where t1.[Type]=={Common.Enums.VipRank.Vip99} 
-                                    order by ";
-
-                    db.Database.SqlQuery<VipCardList>(selectStr);
-                }
-                #endregion
-            }
-            catch (Exception ex)
-            {
-                Comm.WriteLog("VIPCotroller.Index", ex.Message, Common.Enums.DebugLogLevel.Error, ex: ex);
-                return Json(Comm.ToJsonResult("Error", "调用获取vip用户列表接口发生异常"), JsonRequestBehavior.AllowGet);
-            }
-            return Json(Comm.ToJsonResult("Success", "成功", ""), JsonRequestBehavior.AllowGet);
-            #endregion
-        }
+       
 
         /// <summary>
         /// 升级VIP，创建订单及预调起支付
@@ -290,6 +309,7 @@ namespace AiCard.Controllers
             //}
             return View();
         }
+        #endregion
 
         protected override void Dispose(bool disposing)
         {
