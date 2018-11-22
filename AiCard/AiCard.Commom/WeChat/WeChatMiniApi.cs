@@ -304,7 +304,7 @@ namespace AiCard.Common.WeChat
             }
             catch (Exception)
             {
-                Comm.WriteLog("CreateByWeChatPhoneDecrypt", JsonConvert.SerializeObject(new { encryptedData, session, iv }), Common.Enums.DebugLogLevel.Error);
+                //Comm.WriteLog("CreateByWeChatPhoneDecrypt", JsonConvert.SerializeObject(new { encryptedData, session, iv }), Common.Enums.DebugLogLevel.Error);
                 throw new Exception("手机号解密失败");
             }
         }
