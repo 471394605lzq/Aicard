@@ -12,6 +12,9 @@ using System.Web;
 using System.Web.Mvc;
 using WxPayAPI;
 using Newtonsoft.Json.Linq;
+using System.Data.Entity.Infrastructure;
+using PagedList;
+
 namespace AiCard.Controllers
 {
     /// <summary>
@@ -127,15 +130,22 @@ namespace AiCard.Controllers
                 #region
                 using (ApplicationDbContext db = new ApplicationDbContext())
                 {
+                    string sw = string.Empty;
+                    if (!string.IsNullOrWhiteSpace(reqParam.filter))
+                    {
+                        sw = $" and (t2.Mobile like '%{reqParam.filter}%' or t3.UserName like '%{reqParam.filter}%') ";
+                    }
                     selectStr = $@"select t1.ID as VipID,t1.Amount,t1.TotalAmount,t1.VipChild2ndCount,t1.VipChild3rdCount,t1.FreeChildCount,
-                                    t1.[State] ,t2.Name,t2.Avatar,t2.Mobile,t2.Gender,t3.ID as UserID
+                                    t1.[State] ,t2.Name,t2.Avatar,t2.Mobile,t2.Gender,t3.UserName as UserName
                                     from Vips t1 
                                     left join CardPersonals t2 on t1.CardID=t2.ID
                                     left join AspNetUsers t3 on t1.UserID=t3.ID
-                                    where t1.[Type]=={Common.Enums.VipRank.Vip99} 
-                                    order by ";
+                                    where t1.[Type]={(int)Common.Enums.VipRank.Vip99}  {sw}
+                                    order by t1.CreateDateTime desc";
 
-                    db.Database.SqlQuery<VipCardList>(selectStr);
+                    var query = db.Database.SqlQuery<VipCardList>(selectStr);
+                    var paged = query.ToPagedList(reqParam.Page, reqParam.PageSize);
+                    return Json(Comm.ToJsonResultForPagedList(paged, paged), JsonRequestBehavior.AllowGet);
                 }
                 #endregion
             }
@@ -144,7 +154,7 @@ namespace AiCard.Controllers
                 Comm.WriteLog("VIPCotroller.Index", ex.Message, Common.Enums.DebugLogLevel.Error, ex: ex);
                 return Json(Comm.ToJsonResult("Error", "调用获取vip用户列表接口发生异常"), JsonRequestBehavior.AllowGet);
             }
-            return Json(Comm.ToJsonResult("Success", "成功", ""), JsonRequestBehavior.AllowGet);
+            //return Json(Comm.ToJsonResult("Success", "成功", ""), JsonRequestBehavior.AllowGet);
             #endregion
         }
 

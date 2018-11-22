@@ -929,6 +929,7 @@
     <Content Include="TxImKey\private_key" />
     <Content Include="TxImKey\public_key" />
     <Content Include="TxImKey\sig" />
+    <Content Include="Views\VIP\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -950,7 +951,6 @@
     <Folder Include="Views\UserSpeech\" />
     <Folder Include="Views\VipAmountLog\" />
     <Folder Include="Views\VipHome\" />
-    <Folder Include="Views\VIP\" />
     <Folder Include="WeChatSessionKey\" />
   </ItemGroup>
   <ItemGroup>
