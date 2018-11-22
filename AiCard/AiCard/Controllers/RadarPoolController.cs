@@ -115,17 +115,22 @@ namespace AiCard.Controllers
 
                 string sqlstr = string.Format(@"GetCustomerSource @userid,@timenumber");
                 List<CustomerActionModel> data = db.Database.SqlQuery<CustomerActionModel>(sqlstr, parameters).ToList();
-                var resultdata = data.Select(s => new 
+                var resultdata = data.Select(s => new
                 {
-                    amount = s.counts,
+                    counts = s.counts,
                     allcounts = s.allcounts,
                     source = s.action,
                     memo = GetEnumsName(s.action),
                     ratio = s.ratio,
-                    consts= "const"
+                    consts = "const"
                 });
-
-                return Json(Comm.ToJsonResult("Success", "成功", resultdata), JsonRequestBehavior.AllowGet);
+                var temp = resultdata.FirstOrDefault();
+                var rdata = new
+                {
+                    allcounts = temp == null ? 0 : temp.allcounts,
+                    data = resultdata
+                };
+                return Json(Comm.ToJsonResult("Success", "成功", rdata), JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -141,7 +146,7 @@ namespace AiCard.Controllers
             {
                 returnmane = ((Common.Enums.EnterpriseUserCustomerSource)val).GetDisplayName();
             }
-            finally
+            catch (Exception ex)
             {
                 returnmane = "未知";
             }
@@ -258,7 +263,8 @@ namespace AiCard.Controllers
         /// <param name="userid"></param>
         /// <param name="timenumber"></param>
         /// <returns></returns>
-        public ActionResult GetShareNumberAnalysis(int enterpriseid, string userid, int timenumber) {
+        public ActionResult GetShareNumberAnalysis(int enterpriseid, string userid, int timenumber)
+        {
             try
             {
                 if (!db.Cards.Any(s => s.EnterpriseID == enterpriseid && s.UserID == userid))
@@ -304,7 +310,8 @@ namespace AiCard.Controllers
         /// <param name="enterpriseid"></param>
         /// <param name="userid"></param>
         /// <returns></returns>
-        public ActionResult GetCustomerGenderProportion(int enterpriseid, string userid) {
+        public ActionResult GetCustomerGenderProportion(int enterpriseid, string userid)
+        {
             try
             {
                 if (!db.Cards.Any(s => s.EnterpriseID == enterpriseid && s.UserID == userid))
@@ -448,7 +455,7 @@ namespace AiCard.Controllers
                     counts = s.counts,
                     allcounts = s.allcounts,
                     avocation = s.action,
-                    avocationname= GetEnumsName(s.action),
+                    avocationname = GetEnumsName(s.action),
                     ratio = s.ratio
                 });
 
@@ -539,7 +546,7 @@ namespace AiCard.Controllers
         /// <param name="type"></param>
         /// <returns></returns>
         [AllowCrossSiteJson]
-        public ActionResult GetNoopsycheFollowList(Common.Enums.RankingsType? type, int enterpriseID, string userID, int? page = 1, int? pageSize = 20)
+        public ActionResult GetNoopsycheFollowList(Common.Enums.RankingsType? type, int enterpriseID, string userID, int? page = 1, int? pageSize = 2)
         {
             try
             {
@@ -547,63 +554,114 @@ namespace AiCard.Controllers
                 int endpagesize = page.Value * pageSize.Value;
                 //拼接参数
                 SqlParameter[] parameters = {
-                        new SqlParameter("@TargetUserID", SqlDbType.Int),
+                        new SqlParameter("@TargetUserID", SqlDbType.NVarChar),
                         new SqlParameter("@TargetEnterpriseID", SqlDbType.Int),
                         new SqlParameter("@starpagesize", SqlDbType.Int),
                         new SqlParameter("@endpagesize", SqlDbType.Int)
                     };
-                parameters[0].Value = enterpriseID;
-                parameters[1].Value = starpagesize;
-                parameters[2].Value = endpagesize;
+                parameters[0].Value = userID;
+                parameters[1].Value = enterpriseID;
+                parameters[2].Value = starpagesize;
+                parameters[3].Value = endpagesize;
 
-                SqlParameter[] myparameters = {
-                        new SqlParameter("@enterpriseID", SqlDbType.Int),
-                        new SqlParameter("@userID", SqlDbType.NVarChar)
-                    };
-                myparameters[0].Value = enterpriseID;
-                myparameters[1].Value = userID;
+                string sqlstr = string.Format(@"SELECT * FROM (SELECT CAST(ROW_NUMBER() over(order by CONVERT(CHAR(10),CreateDateTime,120) DESC) AS INTEGER) AS rownumber,
+                     CASE WHEN CONVERT(CHAR(10),CreateDateTime,120)=CONVERT(CHAR(10),GETDATE(),120) THEN '今天' WHEN CONVERT(CHAR(10),CreateDateTime,120)=CONVERT(CHAR(10),dateadd(day,-1,getdate()),120) 
+                     THEN '昨天' ELSE CONVERT(CHAR(10),CreateDateTime,120) END AS timestr,CONVERT(CHAR(10),CreateDateTime,120) AS datestr
+                     FROM dbo.UserLogs WHERE Type IN(12,40,60,70) AND TargetUserID=@TargetUserID AND TargetEnterpriseID=@TargetEnterpriseID
+                     GROUP BY CONVERT(CHAR(10),CreateDateTime,120)) t WHERE t.rownumber > @starpagesize AND t.rownumber<=@endpagesize");
+                List<NoopsycheFollowModel> data = db.Database.SqlQuery<NoopsycheFollowModel>(sqlstr, parameters).ToList();
 
-                if (type == Common.Enums.RankingsType.Activity)
+                List<NoopsycheFollowShowModel> returndatalist = new List<NoopsycheFollowShowModel>();
+                for (int i = 0; i < data.Count; i++)
                 {
-                    string sqlstr = string.Format(@"SELECT * FROM (SELECT CAST(ROW_NUMBER() over(order by CONVERT(CHAR(10),CreateDateTime,120) DESC) AS INTEGER) AS rownumber,
- CASE WHEN CONVERT(CHAR(10),CreateDateTime,120)=CONVERT(CHAR(10),GETDATE(),120) THEN '今天' WHEN CONVERT(CHAR(10),CreateDateTime,120)=CONVERT(CHAR(10),dateadd(day,-1,getdate()),120) 
-THEN '昨天' ELSE CONVERT(CHAR(10),CreateDateTime,120) END AS timestr,CONVERT(CHAR(10),CreateDateTime,120) AS datestr
- FROM dbo.UserLogs WHERE Type IN(12,30,40,60,70) AND TargetUserID='@TargetUserID' AND TargetEnterpriseID='@TargetEnterpriseID'
- GROUP BY CONVERT(CHAR(10),CreateDateTime,120) ORDER BY CONVERT(CHAR(10),CreateDateTime,120) DESC) t WHERE t.Ornumber > @starpagesize AND t.Ornumber<=@endpagesize");
-                    List<NoopsycheFollowModel> data = db.Database.SqlQuery<NoopsycheFollowModel>(sqlstr, parameters).ToList();
-                    for (int i=0;i<data.Count;i++) {
+                    string tempdatestr = data[i].datestr;
+                    SqlParameter[] myparameters = {
+                        new SqlParameter("@time", SqlDbType.NVarChar),
+                        new SqlParameter("@TargetUserID", SqlDbType.NVarChar),
+                        new SqlParameter("@TargetEnterpriseID", SqlDbType.Int)
+                         };
+                    myparameters[0].Value = tempdatestr;
+                    myparameters[1].Value = userID;
+                    myparameters[2].Value = enterpriseID;
+                    string listsqlstr = string.Format(@"SELECT DISTINCT CASE WHEN euc.CreateDateTime BETWEEN dateadd(day, -1, dateadd(ms, 0, DATEADD(dd, DATEDIFF(dd, 0, getdate()), 0))) 
+                        AND dateadd(day, -1, DATEADD(ms, -3, DATEADD(dd, DATEDIFF(dd, -1, getdate()), 0)))AND euc.OwnerID='' THEN '是' ELSE '否' END AS isnewcust,Type,Total,ec.RealName,us.Avatar,
+                        CONVERT(NVARCHAR(50),DATEPART(hh,ul.CreateDateTime))+':'+CONVERT(NVARCHAR(50),DATEPART(mi,ul.CreateDateTime)) as createtimestr,ec.ID 
+                        FROM dbo.UserLogs ul
+                        INNER JOIN dbo.EnterpriseCustomers ec ON ec.UserID=ul.UserID
+                        INNER JOIN dbo.AspNetUsers us ON us.Id=ec.UserID
+                        INNER JOIN dbo.EnterpriseUserCustomers euc ON euc.CustomerID=ec.ID
+                        WHERE Type IN(12,40,60,70) AND TargetUserID=@TargetUserID AND  TargetEnterpriseID=@TargetEnterpriseID AND
+                        ul.CreateDateTime BETWEEN dateadd(day, -1, dateadd(ms, 0, DATEADD(dd, DATEDIFF(dd, 0, @time), 0))) 
+                        AND dateadd(day, -1, DATEADD(ms, -3, DATEADD(dd, DATEDIFF(dd, -1, @time), 0)))");
 
-                    }
-                    string mysqlstr = string.Format(@"SELECT CAST(ROW_NUMBER() over(order by COUNT(c.Name) DESC) AS INTEGER) AS Ornumber, c.Name, c.Avatar, COUNT(c.Name) Counts,c.UserID AS ID,c.Position,ul.TargetUserID
-                                  FROM dbo.UserLogs ul
-                                  INNER JOIN dbo.Cards c ON c.UserID = ul.TargetUserID 
-								  WHERE ul.CreateDateTime BETWEEN dateadd(ms, 0, DATEADD(dd, DATEDIFF(dd, 0, getdate()), 0)) AND dateadd(ms, -3, DATEADD(dd, DATEDIFF(dd, -1, getdate()), 0))
-                                   AND c.EnterpriseID=@enterpriseID 
-                                  GROUP BY c.Name, c.Avatar,c.ID,c.Position,c.UserID");
-                    //AND ul.TargetUserID = @userID
-                    //List<RankingModel> mydata = db.Database.SqlQuery<RankingModel>(mysqlstr, myparameters).ToList();
-
-                    var resultdata = new
+                    List<NoopsycheFollowShowModel> mydata = db.Database.SqlQuery<NoopsycheFollowShowModel>(listsqlstr, myparameters).ToList();
+                    for (int j = 0; j < mydata.Count; j++)
                     {
-                        listdata = data,
-                        //mydata = mydata.Where(s => s.TargetUserID == userID).ToList()
-                    };
-                    return Json(Comm.ToJsonResult("Success", "成功", resultdata), JsonRequestBehavior.AllowGet);
+                        NoopsycheFollowShowModel model = new NoopsycheFollowShowModel();
+                        model.Avatar = mydata[j].Avatar;
+                        model.createtimestr = mydata[j].createtimestr;
+                        model.isnewcust = mydata[j].isnewcust;
+                        model.RealName = mydata[j].RealName;
+                        model.Total = mydata[j].Total;
+                        model.showstr = "第" + mydata[j].Total.ToString() + "次" + ((Common.Enums.NoopsycheFollowType)mydata[i].Type).GetDisplayName();
+                        model.showremarkstr = ((Common.Enums.NoopsycheFollowType)mydata[i].Type + 1).GetDisplayName();
+                        model.TitleTime = tempdatestr;
+                        model.ID = mydata[i].ID;
+                        returndatalist.Add(model);
+                    }
                 }
-                else
+                var resultdata = new
                 {
-                    return Json(Comm.ToJsonResult("Error", "失败"), JsonRequestBehavior.AllowGet);
-                }
+                    listdata = returndatalist
+                };
+                return Json(Comm.ToJsonResult("Success", "成功", resultdata), JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
                 return Json(Comm.ToJsonResult("Error", ex.Message), JsonRequestBehavior.AllowGet);
             }
         }
-        private class NoopsycheFollowModel {
+        //获取客户来源枚举名称
+        private string GetEnumsName<T>(int val, Enum e)
+        {
+            string returnmane = "";
+            try
+            {
+                returnmane = ((Common.Enums.EnterpriseUserCustomerSource)val).GetDisplayName();
+            }
+            catch (Exception ex)
+            {
+                returnmane = "未知";
+            }
+            return returnmane;
+        }
+        private class NoopsycheFollowModel
+        {
             public int rownumber { get; set; }
             public string timestr { get; set; }
             public string datestr { get; set; }
+        }
+        private class NoopsycheFollowShowModel
+        {
+            //是否是新客户
+            public string isnewcust { get; set; }
+            //类型
+            public int Type { get; set; }
+            //总数
+            public int Total { get; set; }
+            //客户姓名
+            public string RealName { get; set; }
+            //头像
+            public string Avatar { get; set; }
+            //时间(小时:分钟)
+            public string createtimestr { get; set; }
+            //显示第几次行为说明
+            public string showstr { get; set; }
+            //提示说明
+            public string showremarkstr { get; set; }
+            //时间标题
+            public string TitleTime { get; set; }
+            public int ID { get; set; }
         }
         private class CustActivityTopModel
         {

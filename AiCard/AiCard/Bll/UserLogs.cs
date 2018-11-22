@@ -104,11 +104,11 @@ namespace AiCard.Bll
                             log.TargetEnterpriseID = p.EnterpriseID;
                         }
                         break;
-                    case UserLogType.Communication:
                     case UserLogType.HomePageRead:
                     case UserLogType.ShopRead:
-                    case UserLogType.WeChatOpen:
                     case UserLogType.CardRead:
+                    case UserLogType.Communication:
+                    case UserLogType.WeChatOpen:
                     case UserLogType.CardShare:
                     case UserLogType.CardSave:
                     case UserLogType.CardLike:
@@ -156,6 +156,7 @@ namespace AiCard.Bll
                                 && s.Type == log.Type);
                     if (dbLog == null)
                     {
+                        log.Total = db.UserLogs.Count(s => s.RelationID == log.RelationID && s.Type == log.Type && s.UserID == log.UserID);
                         db.UserLogs.Add(log);
                     }
                     else
@@ -165,8 +166,8 @@ namespace AiCard.Bll
                 }
                 else
                 {
+                    log.Total = db.UserLogs.Count(s => s.RelationID == log.RelationID && s.Type == log.Type && s.UserID == log.UserID);
                     db.UserLogs.Add(log);
-
                 }
                 db.SaveChanges();//修改log
                 switch (log.Type)

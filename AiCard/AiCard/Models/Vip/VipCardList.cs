@@ -12,10 +12,10 @@ namespace AiCard.Models.Vip
     public class VipCardList
     {
         /// <summary>
-        /// 会员ID
+        /// 用户账号
         /// </summary>
         [Display(Name = "用户账号")]
-        public string UserID { get; set; }
+        public string UserName { get; set; }
         /// <summary>
         /// vip会员ID
         /// </summary>
@@ -46,7 +46,9 @@ namespace AiCard.Models.Vip
         [Display(Name = "注册用户数")]
         public int FreeChildCount { get; set; }
         [Display(Name = "状态")]
-        public int State { get; set; }
+        public string StateName { get; set; }
+        [Display(Name = "性别")]
+        public string Gender { get; set; }
         /// <summary>
         /// 姓名
         /// </summary>
@@ -61,6 +63,6 @@ namespace AiCard.Models.Vip
         /// 手机号
         /// </summary>
         [Display(Name = "手机号")]
-        public int Mobile { get; set; }
+        public string Mobile { get; set; }
     }
 }
