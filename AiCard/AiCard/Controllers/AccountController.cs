@@ -590,8 +590,9 @@ namespace AiCard.Controllers
         [HttpGet]
         public ActionResult LoginByWeiXinSilence(string state)
         {
+            Common.WeChat.IConfig config = new Common.WeChat.ConfigPc();
             var p = new Dictionary<string, string>();
-            p.Add("appid", Common.WeChat.ConfigPc.AppID);
+            p.Add("appid", config.AppID);
             p.Add("redirect_uri", "http://www.yumy.me/Account/LoginByWeiXin");
             p.Add("response_type", "code");
             p.Add("scope", "snsapi_base");
@@ -626,15 +627,16 @@ namespace AiCard.Controllers
                 return error("请求有误", "Code不能为空");
             }
 
-            if (type != WeChatAccount.AiCardMini)
+            if (type != WeChatAccount.AiCardMini && type != WeChatAccount.AiCardPersonalMini)
             {
+                Common.WeChat.IConfig config = new Common.WeChat.ConfigPc();
                 //非小程序
                 switch (type)
                 {
                     default:
                     case WeChatAccount.PC:
                         {
-                            Common.WeChat.WeChatApi wechat = new Common.WeChat.WeChatApi(Common.WeChat.ConfigPc.AppID, Common.WeChat.ConfigPc.AppSecret);
+                            Common.WeChat.WeChatApi wechat = new Common.WeChat.WeChatApi(config.AppID, config.AppSecret);
                             Common.WeChat.AccessTokenResult result;
                             try
                             {
@@ -715,19 +717,30 @@ namespace AiCard.Controllers
             }
             else
             {
-                string appID = Common.WeChat.ConfigMini.AppID;
-                string appSecret = Common.WeChat.ConfigMini.AppSecret;
+                Common.WeChat.IConfig config;
+                switch (type)
+                {
+                    case WeChatAccount.AiCardMini:
+                        config = new Common.WeChat.ConfigMini();
+                        break;
+                    case WeChatAccount.AiCardPersonalMini:
+                        config = new Common.WeChat.ConfigMiniPersonal();
+                        break;
+                    default:
+                        return Json(Comm.ToJsonResult("Error", "Type参数有误"));
+                }
                 //小程序
-                Common.WeChat.WeChatMinApi wechat = new Common.WeChat.WeChatMinApi(appID, appSecret);
+                Common.WeChat.WeChatMinApi wechat = new Common.WeChat.WeChatMinApi(config);
                 try
                 {
                     var result = wechat.Jscode2session(code);
-                    DAL.Models.ApplicationUser user = null;
+                    ApplicationUser user = null;
                     if (!string.IsNullOrWhiteSpace(result.UnionID))
                     {
                         user = db.Users.FirstOrDefault(s => s.WeChatID == result.UnionID);
+                        // 把OpenID存进数据库
                         var option = new Bll.Users.UserOpenID(user);
-                        option.AddOpenID(appID, result.OpenID);
+                        option.AddOpenID(config.AppID, result.OpenID);
                         db.SaveChanges();
                     }
                     return Json(Comm.ToJsonResult("Success", "成功", new
@@ -766,14 +779,14 @@ namespace AiCard.Controllers
                     try
                     {
 
-                        string debug = JsonConvert.SerializeObject(new
-                        {
-                            model.EncryptedData,
-                            session,
-                            model.IV,
-                            AES = str
-                        });
-                        Comm.WriteLog("WeiXin", debug, DebugLogLevel.Normal);
+                        //string debug = JsonConvert.SerializeObject(new
+                        //{
+                        //    model.EncryptedData,
+                        //    session,
+                        //    model.IV,
+                        //    AES = str
+                        //});
+                        //Comm.WriteLog("WeiXin", debug, DebugLogLevel.Normal);
                         var jUser = JsonConvert.DeserializeObject<JObject>(str);
                         var unionID = jUser["unionId"]?.Value<string>();
                         if (unionID == null)
@@ -817,9 +830,10 @@ namespace AiCard.Controllers
 
             string username, nickname, avart, unionId = model.UnionID;
             var user = db.Users.FirstOrDefault(s => s.WeChatID == unionId);
+            Common.WeChat.IConfig config = new Common.WeChat.ConfigMini();
             if (user != null)
             {
-                string appID = Common.WeChat.ConfigMini.AppID;
+                string appID = config.AppID;
                 var op1 = new Bll.Users.UserOpenID(user);
                 op1.AddOpenID(appID, model.OpenID);
                 db.SaveChanges();
@@ -866,7 +880,7 @@ namespace AiCard.Controllers
                 UserType = UserType.Personal
             };
             var option = new Bll.Users.UserOpenID(user);
-            option.AddOpenID(Common.WeChat.ConfigMini.AppID, model.OpenID);
+            option.AddOpenID(config.AppID, model.OpenID);
             var r = UserManager.Create(user);
             user = db.Users.FirstOrDefault(s => s.WeChatID == unionId);
 

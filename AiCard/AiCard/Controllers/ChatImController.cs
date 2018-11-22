@@ -11,7 +11,7 @@ namespace AiCard.Controllers
 {
     public class ChatImController : Controller
     {
-        ApplicationDbContext db = new  ApplicationDbContext();
+        ApplicationDbContext db = new ApplicationDbContext();
 
         /// <summary>
         /// 获取聊天说话用到用户信息
@@ -71,7 +71,8 @@ namespace AiCard.Controllers
         [HttpPost]
         public ActionResult SendMessage(string content, string fromUserID, string formID, string toUserID)
         {
-            var appID = Common.WeChat.ConfigMini.AppID;
+            Common.WeChat.IConfig config = new Common.WeChat.ConfigMini();
+            var appID = config.AppID;
             var toUser = db.Users.FirstOrDefault(s => s.Id == toUserID);
             var option = new Bll.Users.UserOpenID(toUser);
             string openID = option.SearchOpenID(appID);
@@ -84,7 +85,7 @@ namespace AiCard.Controllers
                 keyword3 = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
                 keyword4 = content,
             };
-            var result = new Common.WeChat.WeChatMinApi(Common.WeChat.ConfigMini.AppID, Common.WeChat.ConfigMini.AppSecret)
+            var result = new Common.WeChat.WeChatMinApi(config)
                     .SendMessage(openID, tempID, formID, null, key);
 
             return Json(Comm.ToJsonResult("Success", "", result));

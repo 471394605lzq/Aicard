@@ -170,7 +170,10 @@ namespace AiCard.Common.Enums
         /// 小程序
         /// </summary>
         AiCardMini,
-
+        /// <summary>
+        /// 小程序个人版
+        /// </summary>
+        AiCardPersonalMini
     }
 
     #endregion
