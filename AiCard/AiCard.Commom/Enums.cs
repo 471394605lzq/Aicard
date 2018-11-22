@@ -344,7 +344,9 @@ namespace AiCard.Common.Enums
         [Display(Name = "活跃度")]
         Activity,
         [Display(Name = "客户数")]
-        CustNumber
+        CustNumber,
+        [Display(Name = "全部")]
+        All
     }
     /// <summary>
     /// 客户活跃排行榜

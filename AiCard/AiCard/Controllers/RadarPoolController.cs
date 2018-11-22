@@ -115,13 +115,14 @@ namespace AiCard.Controllers
 
                 string sqlstr = string.Format(@"GetCustomerSource @userid,@timenumber");
                 List<CustomerActionModel> data = db.Database.SqlQuery<CustomerActionModel>(sqlstr, parameters).ToList();
-                var resultdata = data.Select(s => new
+                var resultdata = data.Select(s => new 
                 {
-                    counts = s.counts,
+                    amount = s.counts,
                     allcounts = s.allcounts,
                     source = s.action,
-                    sourcename = GetEnumsName(s.action),
-                    ratio = s.ratio
+                    memo = GetEnumsName(s.action),
+                    ratio = s.ratio,
+                    consts= "const"
                 });
 
                 return Json(Comm.ToJsonResult("Success", "成功", resultdata), JsonRequestBehavior.AllowGet);
@@ -131,6 +132,7 @@ namespace AiCard.Controllers
                 return Json(Comm.ToJsonResult("Error", ex.Message), JsonRequestBehavior.AllowGet);
             }
         }
+
         //获取客户来源枚举名称
         private string GetEnumsName(int val)
         {
@@ -231,7 +233,7 @@ namespace AiCard.Controllers
                             WHERE [Type] IN(@actionstr1,@actionstr2,@actionstr3)  
                             AND TargetUserID=@userid AND TargetEnterpriseID=@enterpriseid AND 
                             CreateDateTime BETWEEN dateadd(day, -@timenumber, dateadd(ms, 0, DATEADD(dd, DATEDIFF(dd, 0, getdate()), 0)))
-                            AND dateadd(day, -@timenumber, DATEADD(ms, -3, DATEADD(dd, DATEDIFF(dd, -1, getdate()), 0)))
+                            AND dateadd(day, -1, DATEADD(ms, -3, DATEADD(dd, DATEDIFF(dd, -1, getdate()), 0)))
                             GROUP BY [Type]";
                 string sqlstr = string.Format(sql, @"@enterpriseid,@userid,@timenumber,@actionstr1,@actionstr2,@actionstr3");
                 List<CustomerActionModel> data = db.Database.SqlQuery<CustomerActionModel>(sqlstr, parameters).ToList();
@@ -278,7 +280,7 @@ namespace AiCard.Controllers
                 parameters[4].Value = Common.Enums.UserLogType.ShareWeChatGroup;
                 string sql = @" SELECT DATENAME(HOUR,CreateDateTime) AS hourstr,COUNT(ID) counts FROM dbo.UserLogs WHERE [Type] IN(@actionstr1,@actionstr2) 
                                 AND TargetUserID=@userid AND TargetEnterpriseID=@enterpriseid AND 
-                                CreateDateTime BETWEEN dateadd(day, -@timenumber, dateadd(ms, 0, DATEADD(dd, DATEDIFF(dd, 0, getdate()), 0)))AND dateadd(day, -@timenumber, DATEADD(ms, -3, DATEADD(dd, DATEDIFF(dd, -1, getdate()), 0)))
+                                CreateDateTime BETWEEN dateadd(day, -@timenumber, dateadd(ms, 0, DATEADD(dd, DATEDIFF(dd, 0, getdate()), 0)))AND dateadd(day, -1, DATEADD(ms, -3, DATEADD(dd, DATEDIFF(dd, -1, getdate()), 0)))
                                 GROUP BY DATENAME(HOUR,CreateDateTime)";
                 string sqlstr = string.Format(sql, @"@enterpriseid,@userid,@timenumber,@actionstr1,@actionstr2");
                 List<TrendAnalysisModel> data = db.Database.SqlQuery<TrendAnalysisModel>(sqlstr, parameters).ToList();
@@ -487,7 +489,7 @@ namespace AiCard.Controllers
                 string sqlstr = string.Format(@"SELECT DATENAME(HOUR,ul.CreateDateTime) AS hourstr,COUNT(ul.ID) counts FROM dbo.UserLogs ul
                                                     INNER JOIN dbo.EnterpriseCustomers c ON c.UserID = ul.UserID
                                                     WHERE c.ID=@custID AND ul.CreateDateTime BETWEEN dateadd(day, -@timenumber, dateadd(ms, 0, DATEADD(dd, DATEDIFF(dd, 0, getdate()), 0)))
-                                                    AND dateadd(day, -@timenumber, DATEADD(ms, -3, DATEADD(dd, DATEDIFF(dd, -1, getdate()), 0)))
+                                                    AND dateadd(day, -1, DATEADD(ms, -3, DATEADD(dd, DATEDIFF(dd, -1, getdate()), 0)))
                                                     GROUP BY DATENAME(HOUR,CreateDateTime)");
                 List<TrendAnalysisModel> data = db.Database.SqlQuery<TrendAnalysisModel>(sqlstr, parameters).ToList();
                 return Json(Comm.ToJsonResult("Success", "成功", data), JsonRequestBehavior.AllowGet);
@@ -529,6 +531,80 @@ namespace AiCard.Controllers
             }
         }
 
+
+
+        /// <summary>
+        /// Ai雷达 智能追踪
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        [AllowCrossSiteJson]
+        public ActionResult GetNoopsycheFollowList(Common.Enums.RankingsType? type, int enterpriseID, string userID, int? page = 1, int? pageSize = 20)
+        {
+            try
+            {
+                int starpagesize = page.Value * pageSize.Value - pageSize.Value;
+                int endpagesize = page.Value * pageSize.Value;
+                //拼接参数
+                SqlParameter[] parameters = {
+                        new SqlParameter("@TargetUserID", SqlDbType.Int),
+                        new SqlParameter("@TargetEnterpriseID", SqlDbType.Int),
+                        new SqlParameter("@starpagesize", SqlDbType.Int),
+                        new SqlParameter("@endpagesize", SqlDbType.Int)
+                    };
+                parameters[0].Value = enterpriseID;
+                parameters[1].Value = starpagesize;
+                parameters[2].Value = endpagesize;
+
+                SqlParameter[] myparameters = {
+                        new SqlParameter("@enterpriseID", SqlDbType.Int),
+                        new SqlParameter("@userID", SqlDbType.NVarChar)
+                    };
+                myparameters[0].Value = enterpriseID;
+                myparameters[1].Value = userID;
+
+                if (type == Common.Enums.RankingsType.Activity)
+                {
+                    string sqlstr = string.Format(@"SELECT * FROM (SELECT CAST(ROW_NUMBER() over(order by CONVERT(CHAR(10),CreateDateTime,120) DESC) AS INTEGER) AS rownumber,
+ CASE WHEN CONVERT(CHAR(10),CreateDateTime,120)=CONVERT(CHAR(10),GETDATE(),120) THEN '今天' WHEN CONVERT(CHAR(10),CreateDateTime,120)=CONVERT(CHAR(10),dateadd(day,-1,getdate()),120) 
+THEN '昨天' ELSE CONVERT(CHAR(10),CreateDateTime,120) END AS timestr,CONVERT(CHAR(10),CreateDateTime,120) AS datestr
+ FROM dbo.UserLogs WHERE Type IN(12,30,40,60,70) AND TargetUserID='@TargetUserID' AND TargetEnterpriseID='@TargetEnterpriseID'
+ GROUP BY CONVERT(CHAR(10),CreateDateTime,120) ORDER BY CONVERT(CHAR(10),CreateDateTime,120) DESC) t WHERE t.Ornumber > @starpagesize AND t.Ornumber<=@endpagesize");
+                    List<NoopsycheFollowModel> data = db.Database.SqlQuery<NoopsycheFollowModel>(sqlstr, parameters).ToList();
+                    for (int i=0;i<data.Count;i++) {
+
+                    }
+                    string mysqlstr = string.Format(@"SELECT CAST(ROW_NUMBER() over(order by COUNT(c.Name) DESC) AS INTEGER) AS Ornumber, c.Name, c.Avatar, COUNT(c.Name) Counts,c.UserID AS ID,c.Position,ul.TargetUserID
+                                  FROM dbo.UserLogs ul
+                                  INNER JOIN dbo.Cards c ON c.UserID = ul.TargetUserID 
+								  WHERE ul.CreateDateTime BETWEEN dateadd(ms, 0, DATEADD(dd, DATEDIFF(dd, 0, getdate()), 0)) AND dateadd(ms, -3, DATEADD(dd, DATEDIFF(dd, -1, getdate()), 0))
+                                   AND c.EnterpriseID=@enterpriseID 
+                                  GROUP BY c.Name, c.Avatar,c.ID,c.Position,c.UserID");
+                    //AND ul.TargetUserID = @userID
+                    //List<RankingModel> mydata = db.Database.SqlQuery<RankingModel>(mysqlstr, myparameters).ToList();
+
+                    var resultdata = new
+                    {
+                        listdata = data,
+                        //mydata = mydata.Where(s => s.TargetUserID == userID).ToList()
+                    };
+                    return Json(Comm.ToJsonResult("Success", "成功", resultdata), JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    return Json(Comm.ToJsonResult("Error", "失败"), JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(Comm.ToJsonResult("Error", ex.Message), JsonRequestBehavior.AllowGet);
+            }
+        }
+        private class NoopsycheFollowModel {
+            public int rownumber { get; set; }
+            public string timestr { get; set; }
+            public string datestr { get; set; }
+        }
         private class CustActivityTopModel
         {
             public int Ornumber { get; set; }

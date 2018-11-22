@@ -72,7 +72,14 @@ namespace AiCard.Bll
                             db.VipAmountLogs.Add(logModel);
                             parentUser.TotalAmount += parentProfitAmount;
                             parentUser.Amount += parentProfitAmount;
-                            parentUser.VipChild2ndCount += 1;
+                            if (logType == Common.Enums.VipAmountLogType.NewCard)
+                            {
+                                parentUser.FreeChildCount  += 1;
+                            }
+                            else if (logType == Common.Enums.VipAmountLogType.NewChild2nd)
+                            {
+                                parentUser.VipChild2ndCount += 1;
+                            }
 
                             //上上级用户
                             vipship = db.VipRelationships.FirstOrDefault(p => p.UserID == parentUser.UserID );
