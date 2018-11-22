@@ -293,7 +293,30 @@ namespace AiCard.Common.Enums
         [Display(Name = "个人名片地址导航")]
         CardPersonalAddressNav = 215,
     }
+    /// <summary>
+    /// 用户智能追踪时显示
+    /// </summary>
+    public enum NoopsycheFollowType {
+        [Display(Name ="浏览你的名片")]
+        CardShow= UserLogType.CardRead,
+        [Display(Name = "成交在望哦")]
+        CardShowRemark = UserLogType.CardRead+1,
 
+        [Display(Name = "浏览你的动态")]
+        ArticleShow =UserLogType.ArticleRead,
+        [Display(Name = "看了TA对你的近况感兴趣")]
+        ArticleShowRemark = UserLogType.ArticleRead + 1,
+
+        [Display(Name = "浏览你的官网")]
+        HomePageShow = UserLogType.HomePageRead,
+        [Display(Name = "看了TA对你的公司感兴趣")]
+        HomePageShowRemark = UserLogType.HomePageRead + 1,
+
+        [Display(Name = "浏览你的商城")]
+        ShopShow = UserLogType.ShopRead,
+        [Display(Name = "尽快把握商机")]
+        ShopShowRemark = UserLogType.ShopRead + 1,
+    }
     public enum ProductType
     {
         [Display(Name = "实物")]
@@ -346,7 +369,9 @@ namespace AiCard.Common.Enums
         [Display(Name = "客户数")]
         CustNumber,
         [Display(Name = "全部")]
-        All
+        All,
+        [Display(Name = "新客户")]
+        NewCustomer
     }
     /// <summary>
     /// 客户活跃排行榜
