@@ -35,24 +35,46 @@ namespace AiCard.Controllers
         /// <param name="iv">手机号</param>
         /// <param name="code"></param>
         /// <returns></returns>
-        public ActionResult CreateByWeChatPhone(string userID, string openID, string iv, string encryptedData, string code)
+        public ActionResult CreateByWeChatPhone(string userID, string iv, string encryptedData, string code)
         {
+            var user = db.Users.FirstOrDefault(s => s.Id == userID);
 
-            string mobile = null;
-            var session = Common.WeChat.Jscode2sessionResultList.GetSession(openID);
+            if (user == null)
+            {
+                return Json(Comm.ToJsonResult("UserNoFound", "用户不存在"));
+            }
+            if (db.CardPersonals.Any(s => s.UserID == userID))
+            {
+                return Json(Comm.ToJsonResult("CardPersonalHadCreate", "该用户已经个人名片已存在"));
+            }
+            //把数据中的OpenID取出
+            var userOpenIDs = new Bll.Users.UserOpenID(user);
+            IConfig config = new ConfigMini();
+            var openID = userOpenIDs.SearchOpenID(config.AppID);
+            if (openID == null)
+            {
+                return Json(Comm.ToJsonResult("OpenIDIsNull", "OpenID不存在"));
+            }
+            string session = null;
             try
             {
-                //从EncryptedData从解密用户数据
-                var str = Common.WeChat.Jscode2sessionResultList.AESDecrypt(encryptedData, session, iv);
-                var jObj = JsonConvert.DeserializeObject<JToken>(str);
-                mobile = jObj["purePhoneNumber"].Value<string>();
+                session = Jscode2sessionResultList.GetSession(openID);
+            }
+            catch (Exception ex)
+            {
+                return Json(Comm.ToJsonResult("GetSessionFail", ex.Message));
+            }
+
+            string mobile = null;
+            try
+            {
+                mobile = Jscode2sessionResultList.AESDecryptPhoneNumber(encryptedData, session, iv);
             }
             catch (Exception)
             {
-                Comm.WriteLog("CreateByWeChatPhoneDecrypt", JsonConvert.SerializeObject(new { encryptedData, session, iv }), Common.Enums.DebugLogLevel.Error);
-                return Json(Comm.ToJsonResult("Decrypt Fail", "解密失败"));
+                return Json(Comm.ToJsonResult("DecryptFail", "解密失败，SessionKey过期，需要重新调用登录接口"));
             }
-
+            
             if (db.Users.Any(s => s.PhoneNumber == mobile))
             {
                 return Json(Comm.ToJsonResult("MobileHadUsed", "手机号已被使用"));
@@ -62,16 +84,8 @@ namespace AiCard.Controllers
             //{
             //    return Json(Comm.ToJsonResult("Moblie Error", "手机号不正确"));
             //}
-            var user = db.Users.FirstOrDefault(s => s.Id == userID);
-           
-            if (user == null)
-            {
-                return Json(Comm.ToJsonResult("UserNoFound", "用户不存在"));
-            }
-            if (db.CardPersonals.Any(s => s.UserID == userID))
-            {
-                return Json(Comm.ToJsonResult("CardPersonalHadCreate", "该用户已经个人名片已存在"));
-            }
+
+
             Vip parentVip = null;
             if (!string.IsNullOrWhiteSpace(code))
             {
@@ -79,7 +93,7 @@ namespace AiCard.Controllers
                 parentVip = db.Vips.FirstOrDefault(s => s.State == Common.Enums.VipState.Enable && s.Code == code);
                 if (parentVip == null)
                 {
-                    return Json(Comm.ToJsonResult("CodeNoFound", "验证码不存在"));
+                    return Json(Comm.ToJsonResult("CodeNoFound", "邀请码不存在"));
                 }
             }
             //保存用户手机号到用户表
