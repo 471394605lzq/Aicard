@@ -53,36 +53,7 @@ namespace AiCard.Controllers
             return Json(Common.Comm.ToJsonResultForPagedList(paged, model), JsonRequestBehavior.AllowGet);
         }
 
-        [HttpPost]
-        public ActionResult Create(string userID, string mobile)
-        {
-            if (!Reg.IsMobile(mobile))
-            {
-                return Json(Comm.ToJsonResult("Moblie Error", "手机号不正确"));
-            }
-            var user = db.Users.FirstOrDefault(s => s.Id == userID);
-            if (user == null)
-            {
-                return Json(Comm.ToJsonResult("UserNoFound", "用户不存在"));
-            }
-            if (db.CardPersonals.Any(s => s.UserID == userID))
-            {
-                return Json(Comm.ToJsonResult("CardPersonalHadCreate", "该用户已经个人名片已存在"));
-            }
-
-            var card = new CardPersonal
-            {
-                UserID = userID,
-                Avatar = user.Avatar,
-                Enable = true,
-                Gender = Common.Enums.Gender.NoSet,
-                Name = user.NickName,
-                Mobile = mobile
-            };
-            db.CardPersonals.Add(card);
-            db.SaveChanges();
-            return Json(Comm.ToJsonResult("Success", "成功", new { PCardID = card.ID }));
-        }
+        
 
         /// <summary>
         /// Ai雷达 我的主页获取名片信息
