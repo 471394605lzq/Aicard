@@ -3,6 +3,7 @@ using AiCard.Commom.WeChatPay;
 using AiCard.Common;
 using AiCard.Common.WeChat;
 using AiCard.DAL.Models;
+using AiCard.Models.Vip;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,11 @@ using WxPayAPI;
 using Newtonsoft.Json.Linq;
 namespace AiCard.Controllers
 {
+    /// <summary>
+    /// author:lym
+    /// date:2018-11-16
+    /// VIP会员控制器
+    /// </summary>
     public class VIPController : Controller
     {
         ApplicationDbContext db = new ApplicationDbContext();
@@ -94,6 +100,49 @@ namespace AiCard.Controllers
             return Json(Comm.ToJsonResult("Success", "成功", new { PCardID = card.ID }));
 
 
+        }
+
+        /// <summary>
+        /// 获取VIP会员名片分页列表
+        /// </summary>
+        /// <param name="sReqParameter">请求的参数</param>
+        /// <returns></returns>
+        [AllowCrossSiteJson]
+        public ActionResult Index(string sReqParameter="") {
+            #region
+            ReqVipCardList reqParam = JsonConvert.DeserializeObject<ReqVipCardList>(sReqParameter);
+            if (reqParam == null) {
+                reqParam = new Models.Vip.ReqVipCardList() {
+                    filter = string.Empty ,
+                    Page=1,
+                    PageSize =20
+                };
+            }
+            string selectStr = string.Empty;
+            try
+            {
+                #region
+                using (ApplicationDbContext db = new ApplicationDbContext())
+                {
+                    selectStr = $@"select t1.ID as VipID,t1.Amount,t1.TotalAmount,t1.VipChild2ndCount,t1.VipChild3rdCount,t1.FreeChildCount,
+                                    t1.[State] ,t2.Name,t2.Avatar,t2.PhoneNumber,t2.Gender
+                                    from Vips t1 
+                                    left join Cards t2 on t1.CardID=t2.ID
+                                    where t1.[Type]=={Common.Enums.VipRank.Vip99}";
+
+                    db.Database.SqlQuery<VipCardList>(selectStr);
+                }
+                #endregion
+            }
+            catch (Exception ex)
+            {
+
+
+
+                throw;
+            }
+            return Json(Comm.ToJsonResult("", "", ""), JsonRequestBehavior.AllowGet);
+            #endregion
         }
 
         /// <summary>

@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AiCard.DAL", "AiCard.DAL\Ai
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AiCard.Common", "AiCard.Commom\AiCard.Common.csproj", "{B5FF40C2-CEE8-43ED-8722-99638716BBB1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AiCardTests2", "AiCardTests2\AiCardTests2.csproj", "{BFB37304-6063-4DBF-9907-BCD280CC9973}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{B5FF40C2-CEE8-43ED-8722-99638716BBB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B5FF40C2-CEE8-43ED-8722-99638716BBB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B5FF40C2-CEE8-43ED-8722-99638716BBB1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BFB37304-6063-4DBF-9907-BCD280CC9973}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BFB37304-6063-4DBF-9907-BCD280CC9973}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BFB37304-6063-4DBF-9907-BCD280CC9973}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BFB37304-6063-4DBF-9907-BCD280CC9973}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -27,12 +27,14 @@ namespace AiCard.Common.WeChat
         /// <summary>
         /// 网页开放平台
         /// </summary>
-        private static string appID = "1000004";
+        public static string AppID = "wxbd54d6bab8add1e0";
+        //public static string AppID = "1000004";
 
         /// <summary>
         /// 网页开放平台
         /// </summary>
-        private static string appSecret = "-1k1RzNA3Z1lRsOnXF-fYPBxHv4m6fN8zgU_BOA8Y98";
+        public static string AppSecret = "14c8f514897eeea2a02a5ffa6c3c4f32";
+        //public static string AppSecret = "-1k1RzNA3Z1lRsOnXF-fYPBxHv4m6fN8zgU_BOA8Y98";
 
 
         /// <summary>
@@ -57,30 +59,43 @@ namespace AiCard.Common.WeChat
 
         public DateTime AccessTokenEnd { get { return accessTokenEnd; } set { accessTokenEnd = value; } }
 
+        public static DateTime? Expires = null;
+
         public static String JsSign(string url, string noncestr, string timestamp)
         {
-            if (accessToken == null)
+            if (string.IsNullOrWhiteSpace(AccessToken)|| Expires.Value < DateTime.Now)
             {
                 var api1 = new CommonApi.BaseApi($"https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid={appID}&secret={appSecret}", "GET");
                 var json = api1.CreateRequestReturnJson();
-                var AccessToken = json["access_token"].Value<string>();
+                AccessToken = json["access_token"].Value<string>();
+                Expires = DateTime.Now.AddSeconds(json["expires_in"].Value<int>());
             }
-            else
-            {
 
-            }
-            var api2 = new CommonApi.BaseApi($"https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token={accessToken}&type=jsapi", "GET");
-            var josn2 = api2.CreateRequestReturnJson();
-            var str = $"jsapi_ticket={josn2["ticket"].Value<string>()}&noncestr={noncestr}&timestamp={timestamp}&url={url}";
-            byte[] StrRes = Encoding.Default.GetBytes(str);
-            HashAlgorithm iSHA = new SHA1CryptoServiceProvider();
-            StrRes = iSHA.ComputeHash(StrRes);
-            StringBuilder EnText = new StringBuilder();
-            foreach (byte iByte in StrRes)
+            var api2 = new CommonApi.BaseApi($"https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token={AccessToken}&type=jsapi", "GET");
+            try
             {
-                EnText.AppendFormat("{0:x2}", iByte);
+                var josn2 = api2.CreateRequestReturnJson();
+
+                var str = $"jsapi_ticket={josn2["ticket"].Value<string>()}&noncestr={noncestr}&timestamp={timestamp}&url={url}";
+                Comm.WriteLog("JsSign", str, Enums.DebugLogLevel.Normal);
+                byte[] StrRes = Encoding.Default.GetBytes(str);
+                HashAlgorithm iSHA = new SHA1CryptoServiceProvider();
+                StrRes = iSHA.ComputeHash(StrRes);
+                StringBuilder EnText = new StringBuilder();
+                foreach (byte iByte in StrRes)
+                {
+                    EnText.AppendFormat("{0:x2}", iByte);
+                }
+                Comm.WriteLog("JsSign", EnText.ToString(), Enums.DebugLogLevel.Normal);
+                return EnText.ToString();
             }
-            return EnText.ToString();
+            catch (Exception ex)
+            {
+                Comm.WriteLog("JsSign", ex.Message, Enums.DebugLogLevel.Normal);
+                return "Error";
+            }
+
+
 
         }
     }
