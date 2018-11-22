@@ -27,13 +27,13 @@ namespace AiCard.Common.WeChat
         /// <summary>
         /// 网页开放平台
         /// </summary>
-        public static string AppID = "wxbd54d6bab8add1e0";
+        private static string appID = "wxbd54d6bab8add1e0";
         //public static string AppID = "1000004";
 
         /// <summary>
         /// 网页开放平台
         /// </summary>
-        public static string AppSecret = "14c8f514897eeea2a02a5ffa6c3c4f32";
+        private static string appSecret = "14c8f514897eeea2a02a5ffa6c3c4f32";
         //public static string AppSecret = "-1k1RzNA3Z1lRsOnXF-fYPBxHv4m6fN8zgU_BOA8Y98";
 
 
@@ -59,19 +59,19 @@ namespace AiCard.Common.WeChat
 
         public DateTime AccessTokenEnd { get { return accessTokenEnd; } set { accessTokenEnd = value; } }
 
-        public static DateTime? Expires = null;
+        
 
         public static String JsSign(string url, string noncestr, string timestamp)
         {
-            if (string.IsNullOrWhiteSpace(AccessToken)|| Expires.Value < DateTime.Now)
+            if (string.IsNullOrWhiteSpace(accessToken) || accessTokenEnd < DateTime.Now)
             {
                 var api1 = new CommonApi.BaseApi($"https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid={appID}&secret={appSecret}", "GET");
                 var json = api1.CreateRequestReturnJson();
-                AccessToken = json["access_token"].Value<string>();
-                Expires = DateTime.Now.AddSeconds(json["expires_in"].Value<int>());
+                accessToken = json["access_token"].Value<string>();
+                accessTokenEnd = DateTime.Now.AddSeconds(json["expires_in"].Value<int>());
             }
 
-            var api2 = new CommonApi.BaseApi($"https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token={AccessToken}&type=jsapi", "GET");
+            var api2 = new CommonApi.BaseApi($"https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token={accessToken}&type=jsapi", "GET");
             try
             {
                 var josn2 = api2.CreateRequestReturnJson();
