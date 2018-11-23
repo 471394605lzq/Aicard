@@ -583,16 +583,16 @@ namespace AiCard.Controllers
                     myparameters[0].Value = tempdatestr;
                     myparameters[1].Value = userID;
                     myparameters[2].Value = enterpriseID;
-                    string listsqlstr = string.Format(@"SELECT DISTINCT CASE WHEN euc.CreateDateTime BETWEEN dateadd(day, -1, dateadd(ms, 0, DATEADD(dd, DATEDIFF(dd, 0, getdate()), 0))) 
-                        AND dateadd(day, -1, DATEADD(ms, -3, DATEADD(dd, DATEDIFF(dd, -1, getdate()), 0)))AND euc.OwnerID='' THEN '是' ELSE '否' END AS isnewcust,Type,Total,ec.RealName,us.Avatar,
+                    string listsqlstr = string.Format(@"SELECT DISTINCT CASE WHEN euc.CreateDateTime BETWEEN dateadd(day, -0, dateadd(ms, 0, DATEADD(dd, DATEDIFF(dd, 0, getdate()), 0))) 
+                        AND dateadd(day, -0, DATEADD(ms, -3, DATEADD(dd, DATEDIFF(dd, -1, getdate()), 0)))AND euc.OwnerID='' THEN '是' ELSE '否' END AS isnewcust,Type,Total,ec.RealName,us.Avatar,
                         CONVERT(NVARCHAR(50),DATEPART(hh,ul.CreateDateTime))+':'+CONVERT(NVARCHAR(50),DATEPART(mi,ul.CreateDateTime)) as createtimestr,ec.ID 
                         FROM dbo.UserLogs ul
                         INNER JOIN dbo.EnterpriseCustomers ec ON ec.UserID=ul.UserID
                         INNER JOIN dbo.AspNetUsers us ON us.Id=ec.UserID
                         INNER JOIN dbo.EnterpriseUserCustomers euc ON euc.CustomerID=ec.ID
                         WHERE Type IN(12,40,60,70) AND TargetUserID=@TargetUserID AND  TargetEnterpriseID=@TargetEnterpriseID AND
-                        ul.CreateDateTime BETWEEN dateadd(day, -1, dateadd(ms, 0, DATEADD(dd, DATEDIFF(dd, 0, @time), 0))) 
-                        AND dateadd(day, -1, DATEADD(ms, -3, DATEADD(dd, DATEDIFF(dd, -1, @time), 0)))");
+                        ul.CreateDateTime BETWEEN dateadd(day, -0, dateadd(ms, 0, DATEADD(dd, DATEDIFF(dd, 0, @time), 0))) 
+                        AND dateadd(day, -0, DATEADD(ms, -3, DATEADD(dd, DATEDIFF(dd, -1, @time), 0)))");
 
                     List<NoopsycheFollowShowModel> mydata = db.Database.SqlQuery<NoopsycheFollowShowModel>(listsqlstr, myparameters).ToList();
                     for (int j = 0; j < mydata.Count; j++)
@@ -605,7 +605,7 @@ namespace AiCard.Controllers
                         model.Total = mydata[j].Total;
                         model.showstr = "第" + mydata[j].Total.ToString() + "次" + ((Common.Enums.NoopsycheFollowType)mydata[i].Type).GetDisplayName();
                         model.showremarkstr = ((Common.Enums.NoopsycheFollowType)mydata[i].Type + 1).GetDisplayName();
-                        model.TitleTime = tempdatestr;
+                        model.TitleTime = data[i].timestr;
                         model.ID = mydata[i].ID;
                         returndatalist.Add(model);
                     }
