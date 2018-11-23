@@ -637,7 +637,7 @@ namespace AiCard.Controllers
                     default:
                     case WeChatAccount.PC:
                         {
-                            Common.WeChat.WeChatApi wechat = new Common.WeChat.WeChatApi(config.AppID, config.AppSecret);
+                            Common.WeChat.WeChatApi wechat = new Common.WeChat.WeChatApi(config);
                             Common.WeChat.AccessTokenResult result;
                             try
                             {
@@ -648,7 +648,7 @@ namespace AiCard.Controllers
                                     Response.Cookies["WeChatOpenID"].Value = openID;
                                     return Json(Comm.ToJsonResult("Success", "成功", new { OpenID = openID }));
                                 }
-                                var accessToken = result.AccessToken;
+                                config.AccessToken = result.AccessToken;
                                 var unionid = result.UnionID;
                                 var user = db.Users.FirstOrDefault(s => s.WeChatID == unionid);
 
@@ -658,7 +658,7 @@ namespace AiCard.Controllers
                                     {
                                         if (user.UserName == user.NickName)
                                         {
-                                            var userInfo = wechat.GetUserInfoSns(openID, accessToken);
+                                            var userInfo = wechat.GetUserInfoSns(openID);
                                             string avart;
                                             try
                                             {
@@ -678,7 +678,7 @@ namespace AiCard.Controllers
                                     {
                                         try
                                         {
-                                            var userInfo = wechat.GetUserInfoSns(openID, accessToken);
+                                            var userInfo = wechat.GetUserInfoSns(openID);
                                             user = CreateByWeChat(userInfo);
                                         }
                                         catch (Exception)
@@ -731,7 +731,7 @@ namespace AiCard.Controllers
                         return Json(Comm.ToJsonResult("Error", "Type参数有误"));
                 }
                 //小程序
-                Common.WeChat.WeChatMinApi wechat = new Common.WeChat.WeChatMinApi(config);
+                WeChatMinApi wechat = new Common.WeChat.WeChatMinApi(config);
                 try
                 {
                     var result = wechat.Jscode2session(code);
@@ -740,6 +740,8 @@ namespace AiCard.Controllers
                     {
                         user = db.Users.FirstOrDefault(s => s.WeChatID == result.UnionID);
                         // 把OpenID存进数据库
+
+                        Comm.WriteLog("LoginByWeiXin", $"AppID={config.AppID}&OpenID={result.OpenID}", DebugLogLevel.Normal);
                         var option = new Bll.Users.UserOpenID(user);
                         option.AddOpenID(config.AppID, result.OpenID);
                         db.SaveChanges();
@@ -780,14 +782,14 @@ namespace AiCard.Controllers
                     try
                     {
 
-                        //string debug = JsonConvert.SerializeObject(new
-                        //{
-                        //    model.EncryptedData,
-                        //    session,
-                        //    model.IV,
-                        //    AES = str
-                        //});
-                        //Comm.WriteLog("WeiXin", debug, DebugLogLevel.Normal);
+                        string debug = JsonConvert.SerializeObject(new
+                        {
+                            model.EncryptedData,
+                            session,
+                            model.IV,
+                            AES = str
+                        });
+                        Comm.WriteLog("WeiXin", debug, DebugLogLevel.Normal);
                         var jUser = JsonConvert.DeserializeObject<JObject>(str);
                         var unionID = jUser["unionId"]?.Value<string>();
                         if (unionID == null)

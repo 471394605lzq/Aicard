@@ -1,19 +1,10 @@
 ﻿using AiCard.Bll;
-using AiCard.Commom.WeChatPay;
 using AiCard.Common;
 using AiCard.Common.WeChat;
 using AiCard.DAL.Models;
-using AiCard.Models.Vip;
-using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using WxPayAPI;
-using Newtonsoft.Json.Linq;
-using System.Data.Entity.Infrastructure;
-using PagedList;
 
 namespace AiCard.Controllers
 {
@@ -26,52 +17,6 @@ namespace AiCard.Controllers
     {
         ApplicationDbContext db = new ApplicationDbContext();
         OrderBLL orderbll = new OrderBLL();
-
-        #region 后台方法
-        /// <summary>
-        /// 获取VIP会员名片分页列表
-        /// </summary>
-        /// <param name="sReqParameter">请求的参数</param>
-        /// <returns></returns>
-        [AllowCrossSiteJson]
-        public ActionResult Index(string filter, int page = 1, int pageSize = 15)
-        {
-            #region
-            string selectStr = string.Empty;
-            try
-            {
-                #region
-                using (ApplicationDbContext db = new ApplicationDbContext())
-                {
-                    string sw = string.Empty;
-                    if (!string.IsNullOrWhiteSpace(filter))
-                    {
-                        sw = $" and (t2.Mobile like '%{filter}%' or t2.Name like '%{filter}%') ";
-                    }
-                    selectStr = $@"select t1.ID as VipID,t1.Amount,t1.TotalAmount,t1.VipChild2ndCount,t1.VipChild3rdCount,t1.FreeChildCount,
-                                    (case when t1.[State]=1 then '启用' else '禁用' end) as StateName ,t2.Name,t2.Avatar,t2.Mobile,
-                                    (case when t2.Gender=1 then '男' when t2.Gender=2 then '女' else '未设置' end) as Gender,t3.UserName as UserName
-                                    from Vips t1 
-                                    inner join CardPersonals t2 on t1.CardID=t2.ID
-                                    left join AspNetUsers t3 on t1.UserID=t3.ID
-                                    where t1.[Type]={(int)Common.Enums.VipRank.Vip99}  {sw}
-                                    order by t1.CreateDateTime desc";
-
-                    var query = db.Database.SqlQuery<VipCardList>(selectStr);
-                    var paged = query.ToPagedList(page, pageSize); 
-                    return View(paged);
-                }
-                #endregion
-            }
-            catch (Exception ex)
-            {
-                Comm.WriteLog("VIPCotroller.Index", ex.Message, Common.Enums.DebugLogLevel.Error, ex: ex);
-                return View($"获取vip用户信息发生异常：{ex.Message}");
-            }
-            #endregion
-        }
-
-        #endregion
 
         #region 接口
         /// <summary>
@@ -165,7 +110,7 @@ namespace AiCard.Controllers
 
         }
 
-       
+
 
         /// <summary>
         /// 升级VIP，创建订单及预调起支付
@@ -309,6 +254,68 @@ namespace AiCard.Controllers
             //}
             return View();
         }
+
+
+        public ActionResult GetVipInfo(string userID, int? vipID)
+        {
+
+            var query = from u in db.Users
+                        from v in db.Vips
+                        where u.Id == v.UserID
+                        select new
+                        {
+                            UserID = u.Id,
+                            u.Avatar,
+                            u.NickName,
+                            VipID = v.ID,
+                            v.State,
+                            v.Type,
+                            PCardID = v.CardID,
+                            v.FreeChildCount,
+                            v.VipChild2ndCount,
+                            v.VipChild3rdCount,
+                            v.TotalAmount,
+                            v.TotalAmountRank,
+                            v.TotalMonthAmountRank,
+                            v.TotalWeekAmountRank,
+                            v.CreateDateTime,
+                            v.CardID,
+                        };
+            if (vipID.HasValue)
+            {
+                query = query.Where(s => s.VipID == vipID);
+            }
+            else
+            {
+                query = query.Where(s => s.UserID == userID);
+            }
+            var vip = query.FirstOrDefault();
+            if (vip == null)
+            {
+                return Json(Comm.ToJsonResult("VipNoFound", "未注册"));
+            }
+            else
+            {
+                return Json(Comm.ToJsonResult("Success", "成功", new
+                {
+                    vip.VipID,
+                    vip.State,
+                    vip.Type,
+                    PCardID = vip.CardID,
+                    vip.FreeChildCount,
+                    vip.VipChild2ndCount,
+                    vip.VipChild3rdCount,
+                    vip.TotalAmount,
+                    vip.TotalAmountRank,
+                    vip.TotalMonthAmountRank,
+                    vip.TotalWeekAmountRank,
+                    CreateDateTime = vip.CreateDateTime.ToString("yyyy-MM-dd HH:mm:ss"),
+                    vip.UserID
+                }), JsonRequestBehavior.AllowGet);
+            }
+        }
+
+
         #endregion
 
         protected override void Dispose(bool disposing)

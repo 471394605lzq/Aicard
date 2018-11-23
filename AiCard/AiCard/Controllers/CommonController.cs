@@ -18,7 +18,7 @@ namespace AiCard.Controllers
         /// <param name="city"></param>
         /// <returns></returns>
         [AllowCrossSiteJson]
-        public ActionResult GetArea(int type,string province,string city)
+        public ActionResult GetArea(int type, string province, string city)
         {
             try
             {
@@ -75,7 +75,9 @@ namespace AiCard.Controllers
         {
             try
             {
-                string signstr = Common.WeChat.WeChatWorkConfig.JsSign(url, noncestr, timestamp);
+                Common.WeChat.IConfig config = new Common.WeChat.WeChatWorkConfig();
+                var wechat = new Common.WeChat.WeChatApi(config);
+                string signstr = wechat.JsSign(url, noncestr, timestamp);
                 var returndata = new
                 {
                     data = signstr
@@ -85,6 +87,27 @@ namespace AiCard.Controllers
             catch (Exception ex)
             {
                 return Json(Comm.ToJsonResult("Success", ex.Message), JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpPost]
+        public ActionResult UploadWeChatMedia(string mediaID)
+        {
+            try
+            {
+                var server = Common.CommModels.UploadServer.Local;
+                Common.WeChat.IConfig config = new Common.WeChat.WeChatWorkConfig();
+                var wechat = new Common.WeChat.WeChatApi(config);
+                string filePath = wechat.GetTempMedia(mediaID, server, ".mp3");
+                return Json(Comm.ToJsonResult("Success", "成功", new
+                {
+                    FileUrl = filePath,
+                    FileFullUrl = server == Common.CommModels.UploadServer.Local ? Url.ContentFull(filePath) : filePath
+                }));
+            }
+            catch (Exception ex)
+            {
+                return Json(Comm.ToJsonResult("Error", ex.Message));
             }
         }
     }

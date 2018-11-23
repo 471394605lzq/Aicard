@@ -105,8 +105,8 @@
             <td>
                 @*@Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |*@
                 @Html.ActionLink("查看详情", "Details", new { VipID = item.VipID  }) |
-                @Html.ActionLink("查看账户收支明细", "GetAccountDetail", new { VipID = item.VipID })|
-                @Html.ActionLink("查看下级用户", "GetChildDetail", new { VipID = item.VipID })
+                @Html.ActionLink("查看账户收支明细", "AccountDetail", new { VipID = item.VipID })|
+                @Html.ActionLink("查看下级用户", "ChildList", new { VipID = item.VipID })
             </td>
         </tr>
     }

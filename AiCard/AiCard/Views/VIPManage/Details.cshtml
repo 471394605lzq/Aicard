@@ -1,0 +1,207 @@
+﻿@model AiCard.Models.Vip.VipCardDetail
+
+@{
+    ViewBag.Title = "vip用户名片详情";
+    Layout = "~/Views/Shared/_LayoutBackground.cshtml";
+}
+
+<h2>vip用户名片详情</h2>
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Enterprise)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Enterprise)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UserName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UserName)
+        </dd>
+
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Gender)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Gender)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Avatar)
+        </dt>
+
+        <dd>
+            <img src="@Html.DisplayFor(model => model.Avatar)" width="50" height="50" />
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Mobile)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Mobile)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PhoneNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PhoneNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.WeChatCode)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.WeChatCode)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Position)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Position)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Remark)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Remark)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Info)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Info)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Voice)
+        </dt>
+
+        <dd>
+            <audio controls="controls">
+                @*<source src="song.ogg" type="audio/ogg">*@
+                <source src="@Html.DisplayFor(model => model.Voice)" type="audio/mpeg">
+            </audio>
+        </dd>
+
+        <dt>
+
+            @Html.DisplayNameFor(model => model.Video)
+        </dt>
+
+        <dd>
+            <video id="video1" width="420" style="margin-top:15px;">
+                <source src="@Html.DisplayFor(model => model.Video)" type="video/mp4" />
+            </video>
+            <br />
+            <button onclick="playPause()">播放/暂停</button>
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Images)
+        </dt>
+
+        <dd>
+            @{
+                dynamic images = Model.Images;
+                if (!string.IsNullOrWhiteSpace(images))
+                {
+                    images = images.Split(',');
+                    foreach (var item in images)
+                    {
+                        <img src="@item" width="50" height="50" />
+                    }
+                }
+            }
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.WeChatMiniQrCode)
+        </dt>
+
+        <dd>
+            <img src="@Html.DisplayFor(model => model.WeChatMiniQrCode)" width="50" height="50" />
+            
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Poster)
+        </dt>
+
+        <dd>
+            <img src="@Html.DisplayFor(model => model.Poster)" width="50" height="50" />
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Industry)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Industry)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Like)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Like)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.View)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.View)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @*@Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |*@
+    @Html.ActionLink("返回列表", "Index")
+</p>
+<script>
+    var myVideo = document.getElementById("video1");
+    function playPause() {
+        if (myVideo.paused)
+            myVideo.play();
+        else
+            myVideo.pause();
+    }
+</script>

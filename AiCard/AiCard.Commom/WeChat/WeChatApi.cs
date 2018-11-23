@@ -16,19 +16,20 @@ namespace AiCard.Common.WeChat
 {
     public class WeChatApi
     {
-        public WeChatApi(string appID, string secret)
+        private IConfig _config;
+
+        public WeChatApi(IConfig config)
         {
-            AppID = appID;
-            Secret = secret;
+            _config = config;
         }
 
-        private static AccessToken _accessToken = null;
 
 
 
-        public string AppID { get; set; }
 
-        public string Secret { get; set; }
+        public string AppID { get { return _config.AppID; } }
+
+        public string Secret { get { return _config.AppSecret; } }
 
         /// <summary>
         /// 使用Code换取OpenID，UnionID，Token等
@@ -38,20 +39,22 @@ namespace AiCard.Common.WeChat
         public AccessTokenResult GetAccessTokenSns(string code)
         {
             var p = new Dictionary<string, string>();
-            p.Add("appid", AppID);
-            p.Add("secret", Secret);
+            p.Add("appid", _config.AppID);
+            p.Add("secret", _config.AppSecret);
             p.Add("code", code);
             var result = new CommonApi.BaseApi($"https://api.weixin.qq.com/sns/oauth2/access_token{p.ToParam("?")}", "GET").CreateRequestReturnJson();
             if (result["errcode"] != null)
             {
                 throw new Exception(JsonConvert.SerializeObject(result));
             }
+            _config.AccessToken = result["access_token"].Value<string>();
+            _config.RefreshToken = result["refresh_token"].Value<string>();
             return new AccessTokenResult
             {
                 OpenID = result["openid"].Value<string>(),
-                AccessToken = result["access_token"].Value<string>(),
+                AccessToken = _config.AccessToken,
                 UnionID = result["unionid"].Value<string>(),
-                RefreshToken = result["refresh_token"].Value<string>()
+                RefreshToken = _config.RefreshToken
             };
         }
 
@@ -61,23 +64,25 @@ namespace AiCard.Common.WeChat
         /// </summary>
         /// <param name="refreshToken"></param>
         /// <returns></returns>
-        public AccessTokenResult RefreshAccessTokenSns(string refreshToken)
+        public AccessTokenResult RefreshAccessTokenSns()
         {
             var p = new Dictionary<string, string>();
-            p.Add("appid", AppID);
+            p.Add("appid", _config.AppID);
             p.Add("grant_type", "refresh_token");
-            p.Add("refresh_token", refreshToken);
+            p.Add("refresh_token", _config.RefreshToken);
             var result = new CommonApi.BaseApi($"https://api.weixin.qq.com/sns/oauth2/refresh_token{p.ToParam("?")}", "GET").CreateRequestReturnJson();
             if (result["errcode"] != null)
             {
                 throw new Exception(JsonConvert.SerializeObject(result));
             }
+            _config.AccessToken = result["access_token"].Value<string>();
+            _config.RefreshToken = result["refresh_token"].Value<string>();
             return new AccessTokenResult
             {
                 OpenID = result["openid"].Value<string>(),
-                AccessToken = result["access_token"].Value<string>(),
+                AccessToken = _config.AccessToken,
                 UnionID = result["unionid"].Value<string>(),
-                RefreshToken = result["refresh_token"].Value<string>()
+                RefreshToken = _config.RefreshToken
             };
         }
 
@@ -121,10 +126,10 @@ namespace AiCard.Common.WeChat
         /// <param name="openID"></param>
         /// <param name="accessToken"></param>
         /// <returns></returns>
-        public UserInfoResult GetUserInfoSns(string openID, string accessToken)
+        public UserInfoResult GetUserInfoSns(string openID)
         {
             var p = new Dictionary<string, string>();
-            p.Add("access_token", accessToken);
+            p.Add("access_token", _config.AccessToken);
             p.Add("openid", openID);
             p.Add("lang", "zh_CN");
             var result = new CommonApi.BaseApi($"https://api.weixin.qq.com/sns/userinfo{p.ToParam("?")}", "GET").CreateRequestReturnJson();
@@ -192,28 +197,24 @@ namespace AiCard.Common.WeChat
         /// <returns></returns>
         public string GetAccessToken()
         {
-            if (_accessToken == null || _accessToken.End <= DateTime.Now)
+            if (_config.AccessToken == null || _config.AccessTokenEnd <= DateTime.Now)
             {
                 RefreshToken();
             }
-            return _accessToken.Code;
+            return _config.AccessToken;
         }
 
         /// <summary>
         /// 刷新Token
         /// </summary>
         /// <returns></returns>
-        public string RefreshToken()
+        public void RefreshToken()
         {
             var date = DateTime.Now;
             var api = new CommonApi.BaseApi($"https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid={AppID}&secret={Secret}", "GET");
             var result = api.CreateRequestReturnJson();
-            _accessToken = new WeChat.AccessToken()
-            {
-                Code = result["access_token"].Value<string>(),
-                End = DateTime.Now.AddSeconds(3500)
-            };
-            return _accessToken.Code;
+            _config.AccessToken = result["access_token"].Value<string>();
+            _config.AccessTokenEnd = DateTime.Now.AddSeconds(3500);
         }
 
         public string GetMenu()
@@ -322,9 +323,10 @@ namespace AiCard.Common.WeChat
 
 
         /// <summary>
-        /// 上传
+        /// 上传 新增永久素材 
         /// </summary>
         /// <param name="file"></param>
+        /// <remarks>文档 https://qydev.weixin.qq.com/wiki/index.php?title=%E4%B8%8A%E4%BC%A0%E6%B0%B8%E4%B9%85%E7%B4%A0%E6%9D%90</remarks>
         /// <returns></returns>
         public string UploadFile(HttpPostedFileBase file)
         {
@@ -365,6 +367,80 @@ namespace AiCard.Common.WeChat
 
         }
 
+        /// <summary>
+        /// 获取微信的临时文件
+        /// </summary>
+        /// <param name="mediaID">媒体ID</param>
+        /// <param name="server">上传的服务器</param>
+        /// <param name="extension">文件的扩展名带(.xxx)</param>
+        /// <returns>本地服务返回~/Upload/xxxx.xxx,其他返回完整连接</returns>
+        /// <remarks>文档：https://qydev.weixin.qq.com/wiki/index.php?title=%E8%8E%B7%E5%8F%96%E4%B8%B4%E6%97%B6%E7%B4%A0%E6%9D%90%E6%96%87%E4%BB%B6 
+        /// <para>调试：https://mp.weixin.qq.com/debug/cgi-bin/apiinfo?t=index&type=%E5%9F%BA%E7%A1%80%E6%94%AF%E6%8C%81&form=%E4%B8%8B%E8%BD%BD%E5%A4%9A%E5%AA%92%E4%BD%93%E6%96%87%E4%BB%B6%E6%8E%A5%E5%8F%A3%20/media/get</para>
+        /// </remarks>
+        public string GetTempMedia(string mediaID, CommModels.UploadServer server, string extension)
+        {
+
+            var p = new Dictionary<string, string>();
+            p.Add("access_token", GetAccessToken());
+            p.Add("media_id", mediaID);
+            string url = $"https://qyapi.weixin.qq.com/cgi-bin/media/get{p.ToParam("?")}";
+            Comm.WriteLog("GetTempMedia", url, DebugLogLevel.Normal);
+            var api = new CommonApi.BaseApi(url, "GET");
+            try
+            {
+                var dPath = $"~/Upload/{DateTime.Now:yyyyMMddHHmmss}{Comm.Random.Next(1000, 9999)}{extension}";
+                var path = HttpContext.Current.Server.MapPath(dPath);
+                var result = api.CreateRequest();
+                using (Stream output = File.OpenWrite(path))
+                using (result)
+                {
+                    result.CopyTo(output);
+                }
+                switch (server)
+                {
+                    default:
+                    case CommModels.UploadServer.Local:
+                        return path;
+                    case CommModels.UploadServer.QinQiu:
+                        return new Qiniu.QinQiuApi().UploadFile(path, true);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+
+        }
+
+
+        public String JsSign(string url, string noncestr, string timestamp)
+        {
+
+            var api2 = new CommonApi.BaseApi($"https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token={GetAccessToken()}&type=jsapi", "GET");
+            try
+            {
+                var josn2 = api2.CreateRequestReturnJson();
+
+                var str = $"jsapi_ticket={josn2["ticket"].Value<string>()}&noncestr={noncestr}&timestamp={timestamp}&url={url}";
+                Comm.WriteLog("JsSign", $"accessToken:{_config.AccessToken} \r\n Url:{str}", Enums.DebugLogLevel.Normal);
+                byte[] StrRes = Encoding.Default.GetBytes(str);
+                System.Security.Cryptography.HashAlgorithm iSHA = new System.Security.Cryptography.SHA1CryptoServiceProvider();
+                StrRes = iSHA.ComputeHash(StrRes);
+                StringBuilder EnText = new StringBuilder();
+                foreach (byte iByte in StrRes)
+                {
+                    EnText.AppendFormat("{0:x2}", iByte);
+                }
+                Comm.WriteLog("JsSign", EnText.ToString(), Enums.DebugLogLevel.Normal);
+                return EnText.ToString();
+            }
+            catch (Exception ex)
+            {
+                Comm.WriteLog("JsSign", ex.Message, Enums.DebugLogLevel.Error);
+                throw new Exception(ex.Message);
+            }
+        }
     }
 
 
