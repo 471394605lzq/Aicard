@@ -20,7 +20,7 @@ namespace AiCard.Models.Vip
         /// 类别
         /// </summary>
         [Display(Name = "操作类型")]
-        public int Type { get; set; }
+        public Common.Enums.VipAmountLogType Type { get; set; }
         /// <summary>
         /// 金额
         /// <para>收入为+,提现为-</para>
