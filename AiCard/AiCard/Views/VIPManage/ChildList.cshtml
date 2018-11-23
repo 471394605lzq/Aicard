@@ -1,0 +1,75 @@
+﻿@model IEnumerable<AiCard.Models.Vip.VipChildList>
+
+@{
+    ViewBag.Title = "vip用户下级用户列表";
+    Layout = "~/Views/Shared/_LayoutBackground.cshtml";
+}
+
+<h3>vip用户下级用户列表</h3>
+
+
+<table class="table table-hover table-striped">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.CreateDateTime)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Type)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Enterprise)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Gender)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Avatar)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Mobile)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PhoneNumber)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.CreateDateTime)
+        </td>
+        <td>
+           @item.Type.GetDisplayName()
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Enterprise)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Gender)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+        <td>
+           <img src="@Html.DisplayFor(modelItem => item.Avatar)"  width="25" height="25" />
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Mobile)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PhoneNumber)
+        </td>
+       
+    </tr>
+}
+
+</table>
+@Html.PageList((PagedList.IPagedList<AiCard.Models.Vip.VipChildList>)Model, Url.PageUrl())
+
+<p>
+    @Html.ActionLink("返回列表", "Index")
+</p>

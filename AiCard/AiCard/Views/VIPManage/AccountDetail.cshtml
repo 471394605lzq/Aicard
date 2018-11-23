@@ -34,28 +34,7 @@
                 @Html.DisplayFor(modelItem => item.CreateDateTime)
             </td>
             <td>
-                @{
-                    var typeName = "";
-                    switch (item.Type)
-                    {
-                        case (int)AiCard.Common.Enums.VipAmountLogType.NewCard:
-                            typeName = AiCard.Common.Enums.VipAmountLogType.NewCard.GetDisplayName();
-                            break;
-                        case (int)AiCard.Common.Enums.VipAmountLogType.Forward:
-                            typeName = AiCard.Common.Enums.VipAmountLogType.Forward.GetDisplayName();
-                            break;
-                        case (int)AiCard.Common.Enums.VipAmountLogType.NewChild2nd:
-                            typeName = AiCard.Common.Enums.VipAmountLogType.NewChild2nd.GetDisplayName();
-                            break;
-                        case (int)AiCard.Common.Enums.VipAmountLogType.NewChild3rd:
-                            typeName = AiCard.Common.Enums.VipAmountLogType.NewChild3rd.GetDisplayName();
-                            break;
-                        default:
-                            break;
-                    }
-
-                }
-                @typeName
+                @item.Type.GetDisplayName()
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Amount)

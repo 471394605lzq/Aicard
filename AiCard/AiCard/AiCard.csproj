@@ -323,6 +323,7 @@
     <Compile Include="Models\Vip\VipAccountDetail.cs" />
     <Compile Include="Models\Vip\VipCardDetail.cs" />
     <Compile Include="Models\Vip\VipCardList.cs" />
+    <Compile Include="Models\Vip\VipChildList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResultNotify\PayResultNotifyPage.aspx.cs">
       <DependentUpon>PayResultNotifyPage.aspx</DependentUpon>
@@ -936,6 +937,7 @@
     <Content Include="Views\VIPManage\Index.cshtml" />
     <Content Include="Views\VIPManage\Details.cshtml" />
     <Content Include="Views\VIPManage\AccountDetail.cshtml" />
+    <Content Include="Views\VIPManage\ChildList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

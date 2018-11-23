@@ -145,8 +145,18 @@ namespace AiCard.Controllers
                 #region
                 using (ApplicationDbContext db = new ApplicationDbContext())
                 {
-                    
-                    return View();
+                    selectStr = $@"select t1.CreateDateTime,t2.Name,t2.Avatar,t2.Mobile,
+                                    (case when t2.Gender=1 then '男' when t2.Gender=2 then '女' else '未设置' end) as Gender,
+                                    t2.Enterprise,t2.PhoneNumber,t3.[Type]
+                                    from VipRelationships t1 
+                                    left join CardPersonals t2 on t1.UserID=t2.UserID 
+                                    left join Vips t3 on t3.ID=t1.VipID
+                                    where t1.ParentID={VipID} 
+                                    order by t1.CreateDateTime desc";
+
+                    var query = db.Database.SqlQuery<VipChildList>(selectStr);
+                    var paged = query.ToPagedList(page, pageSize);
+                    return View(paged);
                 }
                 #endregion
             }
