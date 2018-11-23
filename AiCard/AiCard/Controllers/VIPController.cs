@@ -280,6 +280,7 @@ namespace AiCard.Controllers
                             v.TotalWeekAmountRank,
                             v.CreateDateTime,
                             v.CardID,
+                            v.Code
                         };
             if (vipID.HasValue)
             {
@@ -310,7 +311,8 @@ namespace AiCard.Controllers
                     vip.TotalMonthAmountRank,
                     vip.TotalWeekAmountRank,
                     CreateDateTime = vip.CreateDateTime.ToString("yyyy-MM-dd HH:mm:ss"),
-                    vip.UserID
+                    vip.UserID,
+                    vip.Code
                 }), JsonRequestBehavior.AllowGet);
             }
         }

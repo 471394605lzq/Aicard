@@ -88,10 +88,11 @@ namespace AiCard.Controllers
                     return Json(Comm.ToJsonResult("PCardNoFound", "名片不存在", new
                     {
                         user.Avatar,
-                        user.NickName,
+                        Name = user.NickName,
                         UserID = user.Id
                     }), JsonRequestBehavior.AllowGet);
                 }
+                var vip = db.Vips.FirstOrDefault(s => s.CardID == card.ID);
                 var data = new
                 {
                     card.Name,
@@ -120,6 +121,7 @@ namespace AiCard.Controllers
                     Age = card.Birthday.GetAgeForBirthday(),
                     card.Gender,
                     Birthday = card.Birthday?.ToString("yyyy-MM-dd"),
+                    Code = vip.Code,
                 };
                 return Json(Comm.ToJsonResult("Success", "成功", data), JsonRequestBehavior.AllowGet);
             }
