@@ -292,7 +292,7 @@ namespace AiCard.Controllers
             var vip = query.FirstOrDefault();
             if (vip == null)
             {
-                return Json(Comm.ToJsonResult("VipNoFound", "未注册"));
+                return Json(Comm.ToJsonResult("VipNoFound", "未注册"), JsonRequestBehavior.AllowGet);
             }
             else
             {
