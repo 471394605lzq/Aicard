@@ -637,7 +637,7 @@ namespace AiCard.Controllers
                     default:
                     case WeChatAccount.PC:
                         {
-                            Common.WeChat.WeChatApi wechat = new Common.WeChat.WeChatApi(config.AppID, config.AppSecret);
+                            Common.WeChat.WeChatApi wechat = new Common.WeChat.WeChatApi(config);
                             Common.WeChat.AccessTokenResult result;
                             try
                             {
@@ -648,7 +648,7 @@ namespace AiCard.Controllers
                                     Response.Cookies["WeChatOpenID"].Value = openID;
                                     return Json(Comm.ToJsonResult("Success", "成功", new { OpenID = openID }));
                                 }
-                                var accessToken = result.AccessToken;
+                                config.AccessToken = result.AccessToken;
                                 var unionid = result.UnionID;
                                 var user = db.Users.FirstOrDefault(s => s.WeChatID == unionid);
 
@@ -658,7 +658,7 @@ namespace AiCard.Controllers
                                     {
                                         if (user.UserName == user.NickName)
                                         {
-                                            var userInfo = wechat.GetUserInfoSns(openID, accessToken);
+                                            var userInfo = wechat.GetUserInfoSns(openID);
                                             string avart;
                                             try
                                             {
@@ -678,7 +678,7 @@ namespace AiCard.Controllers
                                     {
                                         try
                                         {
-                                            var userInfo = wechat.GetUserInfoSns(openID, accessToken);
+                                            var userInfo = wechat.GetUserInfoSns(openID);
                                             user = CreateByWeChat(userInfo);
                                         }
                                         catch (Exception)

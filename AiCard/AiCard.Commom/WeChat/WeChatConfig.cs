@@ -59,45 +59,8 @@ namespace AiCard.Common.WeChat
 
         public DateTime AccessTokenEnd { get { return accessTokenEnd; } set { accessTokenEnd = value; } }
 
-        
-
-        public static String JsSign(string url, string noncestr, string timestamp)
-        {
-            if (string.IsNullOrWhiteSpace(accessToken) || accessTokenEnd < DateTime.Now)
-            {
-                var api1 = new CommonApi.BaseApi($"https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid={appID}&secret={appSecret}", "GET");
-                var json = api1.CreateRequestReturnJson();
-                accessToken = json["access_token"].Value<string>();
-                accessTokenEnd = DateTime.Now.AddSeconds(json["expires_in"].Value<int>());
-            }
-
-            var api2 = new CommonApi.BaseApi($"https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token={accessToken}&type=jsapi", "GET");
-            try
-            {
-                var josn2 = api2.CreateRequestReturnJson();
-
-                var str = $"jsapi_ticket={josn2["ticket"].Value<string>()}&noncestr={noncestr}&timestamp={timestamp}&url={url}";
-                Comm.WriteLog("JsSign", str, Enums.DebugLogLevel.Normal);
-                byte[] StrRes = Encoding.Default.GetBytes(str);
-                HashAlgorithm iSHA = new SHA1CryptoServiceProvider();
-                StrRes = iSHA.ComputeHash(StrRes);
-                StringBuilder EnText = new StringBuilder();
-                foreach (byte iByte in StrRes)
-                {
-                    EnText.AppendFormat("{0:x2}", iByte);
-                }
-                Comm.WriteLog("JsSign", EnText.ToString(), Enums.DebugLogLevel.Normal);
-                return EnText.ToString();
-            }
-            catch (Exception ex)
-            {
-                Comm.WriteLog("JsSign", ex.Message, Enums.DebugLogLevel.Normal);
-                return "Error";
-            }
 
 
-
-        }
     }
 
     public class ConfigPc : IConfig
@@ -137,7 +100,7 @@ namespace AiCard.Common.WeChat
 
         public string AccessToken { get { return accessToken; } set { accessToken = value; } }
 
-        public DateTime AccessTokenEnd { get { return accessTokenEnd; }  set { accessTokenEnd = value; } }
+        public DateTime AccessTokenEnd { get { return accessTokenEnd; } set { accessTokenEnd = value; } }
 
         public string AppID { get { return appID; } }
 

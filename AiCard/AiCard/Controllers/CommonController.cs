@@ -18,7 +18,7 @@ namespace AiCard.Controllers
         /// <param name="city"></param>
         /// <returns></returns>
         [AllowCrossSiteJson]
-        public ActionResult GetArea(int type,string province,string city)
+        public ActionResult GetArea(int type, string province, string city)
         {
             try
             {
@@ -75,7 +75,9 @@ namespace AiCard.Controllers
         {
             try
             {
-                string signstr = Common.WeChat.WeChatWorkConfig.JsSign(url, noncestr, timestamp);
+                Common.WeChat.IConfig config = new Common.WeChat.WeChatWorkConfig();
+                var wechat = new Common.WeChat.WeChatApi(config);
+                string signstr = wechat.JsSign(url, noncestr, timestamp);
                 var returndata = new
                 {
                     data = signstr
@@ -86,6 +88,13 @@ namespace AiCard.Controllers
             {
                 return Json(Comm.ToJsonResult("Success", ex.Message), JsonRequestBehavior.AllowGet);
             }
+        }
+
+
+        public ActionResult UploadWeChatMedia(string mediaID)
+        {
+
+            return Json(1);
         }
     }
 }
