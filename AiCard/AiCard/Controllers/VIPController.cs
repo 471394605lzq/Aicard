@@ -58,7 +58,7 @@ namespace AiCard.Controllers
                                     order by t1.CreateDateTime desc";
 
                     var query = db.Database.SqlQuery<VipCardList>(selectStr);
-                    var paged = query.ToPagedList(page, pageSize); 
+                    var paged = query.ToPagedList(page, pageSize);
                     return View(paged);
                 }
                 #endregion
@@ -165,7 +165,7 @@ namespace AiCard.Controllers
 
         }
 
-       
+
 
         /// <summary>
         /// 升级VIP，创建订单及预调起支付
@@ -309,6 +309,68 @@ namespace AiCard.Controllers
             //}
             return View();
         }
+
+
+        public ActionResult GetVipInfo(string userID, int? vipID)
+        {
+
+            var query = from u in db.Users
+                        from v in db.Vips
+                        where u.Id == v.UserID
+                        select new
+                        {
+                            UserID = u.Id,
+                            u.Avatar,
+                            u.NickName,
+                            VipID = v.ID,
+                            v.State,
+                            v.Type,
+                            PCardID = v.CardID,
+                            v.FreeChildCount,
+                            v.VipChild2ndCount,
+                            v.VipChild3rdCount,
+                            v.TotalAmount,
+                            v.TotalAmountRank,
+                            v.TotalMonthAmountRank,
+                            v.TotalWeekAmountRank,
+                            v.CreateDateTime,
+                            v.CardID,
+                        };
+            if (vipID.HasValue)
+            {
+                query = query.Where(s => s.VipID == vipID);
+            }
+            else
+            {
+                query = query.Where(s => s.UserID == userID);
+            }
+            var vip = query.FirstOrDefault();
+            if (vip == null)
+            {
+                return Json(Comm.ToJsonResult("VipNoFound", "未注册"));
+            }
+            else
+            {
+                return Json(Comm.ToJsonResult("Success", "成功", new
+                {
+                    vip.VipID,
+                    vip.State,
+                    vip.Type,
+                    PCardID = vip.CardID,
+                    vip.FreeChildCount,
+                    vip.VipChild2ndCount,
+                    vip.VipChild3rdCount,
+                    vip.TotalAmount,
+                    vip.TotalAmountRank,
+                    vip.TotalMonthAmountRank,
+                    vip.TotalWeekAmountRank,
+                    CreateDateTime = vip.CreateDateTime.ToString("yyyy-MM-dd HH:mm:ss"),
+                    vip.UserID
+                }), JsonRequestBehavior.AllowGet);
+            }
+        }
+
+
         #endregion
 
         protected override void Dispose(bool disposing)
