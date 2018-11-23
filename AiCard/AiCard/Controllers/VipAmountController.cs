@@ -4,6 +4,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using AiCard.DAL.Models;
+using AiCard.Common;
+
 namespace AiCard.Controllers
 {
     public class VipAmountController : Controller
@@ -87,6 +89,129 @@ namespace AiCard.Controllers
             }), JsonRequestBehavior.AllowGet);
         }
 
+        [HttpGet]
+        public ActionResult GetInfo(string userID)
+        {
+            var vip = db.Vips
+                .FirstOrDefault(s => s.UserID == userID
+                    && s.State == Common.Enums.VipState.Enable);
+            if (vip == null)
+            {
+                return Json(Comm.ToJsonResult("VipNoFound", "用户不是VIP"), JsonRequestBehavior.AllowGet);
+            }
+            var today = DateTime.Now.Date.AddSeconds(-1);
+            var todayTotalAmount = db.VipAmountLogs
+                .Where(s => s.UserID == userID && s.Amount > 0 && s.CreateDateTime > today)
+                .Sum(s => (decimal?)s.Amount) ?? 0;
+            return Json(Comm.ToJsonResult("Success", "成功", new
+            {
+                vip.Code,
+                vip.Amount,
+                vip.TotalAmount,
+                TodayTotalAmount = todayTotalAmount,
+            }), JsonRequestBehavior.AllowGet);
+
+        }
+
+        [HttpGet]
+        public ActionResult GetList(string userID, DateTime? date, int page = 1, int pageSize = 20,
+            Common.Enums.VipAmountGetListType type = Common.Enums.VipAmountGetListType.All)
+        {
+            DateTime start, end;
+            if (!date.HasValue)
+            {
+                date = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            }
+            start = date.Value.AddSeconds(-1);
+            end = date.Value.AddMonths(1);
+            var logs = from va in db.VipAmountLogs
+                       join u in db.Users.Select(x => new { x.Id, x.NickName, x.Avatar })
+                        on va.SourceUserID equals u.Id into vau
+                       where va.CreateDateTime > start && va.CreateDateTime < end
+                       select new
+                       {
+                           va.ID,
+                           va.CreateDateTime,
+                           va.Amount,
+                           va.Type,
+                           User = vau.FirstOrDefault()
+                       };
+            switch (type)
+            {
+                case Common.Enums.VipAmountGetListType.All:
+                    break;
+                case Common.Enums.VipAmountGetListType.Income:
+                    logs = logs.Where(s => s.Amount > 0);
+                    break;
+                case Common.Enums.VipAmountGetListType.Expense:
+                    logs = logs.Where(s => s.Amount < 0);
+                    break;
+                default:
+                    break;
+            }
+            var paged = logs.OrderByDescending(s => s.CreateDateTime).ToPagedList(page, pageSize);
+            var withdrawIcon = Url.ContentFull("~/Content/Images/ic_withdraw_list_40.png");
+            Func<DateTime, string> dateToStr = d =>
+            {
+                if (d.Date == DateTime.Now.Date)
+                {
+                    return d.ToString("今天 HH:mm");
+                }
+                else if (d.Date == DateTime.Now.Date.AddDays(-1))
+                {
+                    return d.ToString("昨天 HH:mm");
+                }
+                return d.ToString("MM-dd HH:mm");
+            };
+            var data = paged.Select(s =>
+            {
+                string image = s.User?.Avatar, name = s.User?.NickName ?? "", content = "", remark = "";
+                switch (s.Type)
+                {
+                    case Common.Enums.VipAmountLogType.NewCard:
+                        {
+                            content = "创建名片";
+                        }
+                        break;
+                    case Common.Enums.VipAmountLogType.NewChild2nd:
+                        {
+                            content = "成为你的一级用户";
+                        }
+                        break;
+                    case Common.Enums.VipAmountLogType.NewChild3rd:
+                        {
+                            content = "成为你的二级用户";
+                        }
+                        break;
+                    case Common.Enums.VipAmountLogType.Forward:
+                        {
+                            image = withdrawIcon;
+                            content = "提现";
+                        }
+                        break;
+                    case Common.Enums.VipAmountLogType.ForwardFail:
+                        {
+                            image = withdrawIcon;
+                            content = "提现";
+                            remark = "提现失败，资金返回余额";
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                return new
+                {
+                    Image = image,
+                    Name = name,
+                    Content = content,
+                    Remark = remark,
+                    DateTime = dateToStr(s.CreateDateTime),
+                    Amount = s.Amount
+                };
+            });
+            return Json(Comm.ToJsonResultForPagedList(paged, data), JsonRequestBehavior.AllowGet);
+        }
+
         /// <summary>
         /// 获取对应榜的数据
         /// </summary>
@@ -108,6 +233,8 @@ namespace AiCard.Controllers
                     return month;
             }
         }
+
+
 
         /// <summary>
         /// 对VIP进行排行处理

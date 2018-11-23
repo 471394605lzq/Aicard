@@ -475,7 +475,9 @@ namespace AiCard.Common.Enums
         [Display(Name = "新3级用户")]
         NewChild3rd,
         [Display(Name = "提现")]
-        Forward
+        Forward,
+        [Display(Name = "提现失败")]
+        ForwardFail
     }
 
     public enum VipForwardState
@@ -520,5 +522,17 @@ namespace AiCard.Common.Enums
         Week,
         [Display(Name = "月榜")]
         Month
+    }
+
+
+    public enum VipAmountGetListType
+    {
+        [Display(Name = "所有")]
+        All,
+        [Display(Name = "收入")]
+        Income,
+        [Display(Name = "支出")]
+        Expense
+
     }
 }

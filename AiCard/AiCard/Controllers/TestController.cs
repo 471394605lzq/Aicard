@@ -15,8 +15,13 @@ namespace AiCard.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        // GET: Test
-        public ActionResult Index(string userName)
+        public ActionResult Index()
+        {
+            return Json(new { d = DateTime.Now.ToString("今天 HH:mm"), d2 = DateTime.Now.ToString("MM-dd HH:mm") }, JsonRequestBehavior.AllowGet);
+        }
+
+        // 随机给VIP用户加入收益记录
+        public ActionResult AutoCreateVip()
         {
             var vips = db.Vips.ToList();
             int amount = 86;
@@ -34,12 +39,112 @@ namespace AiCard.Controllers
                 item.VipChild3rdCount = randomChild3;
                 item.FreeChildCount = freeChild;
                 item.Type = VipRank.Vip99;
-                
+
             }
             db.SaveChanges();
             return Json(vips, JsonRequestBehavior.AllowGet);
 
         }
+
+        public ActionResult AutoCreateVipAmountLog(string userID)
+        {
+            var vip = db.Vips.FirstOrDefault(s => s.UserID == userID);
+            var users = db.Users
+                .Where(s => s.Id != userID && s.UserType == UserType.Personal && s.Avatar != null)
+                .Select(s => s.Id)
+                .ToList();
+            int n = users.Count;
+            while (n > 1)
+            {
+                n--;
+                int k = Comm.Random.Next(n + 1);
+                var value = users[k];
+                users[k] = users[n];
+                users[n] = value;
+            }
+            var vip1 = users.Take(vip.FreeChildCount).ToList();
+            DateTime start = new DateTime(2018, 10, 1);
+            DateTime end = new DateTime(2018, 11, 22);
+            var sec = ((int)((end - start).TotalSeconds)) / vip1.Count;
+
+            var logs = vip1.Select(s =>
+            {
+                int index = vip1.IndexOf(s);
+                return new VipAmountLog
+                {
+                    UserID = userID,
+                    CreateDateTime = start.AddSeconds(index * sec),
+                    Amount = 3,
+                    Before = 0,
+                    SourceUserID = s,
+                    Type = VipAmountLogType.NewCard,
+                    VipID = vip.ID,
+                };
+            }).ToList();
+
+            n = 0;
+            List<string> vip2 = new List<string>();
+            while (n < vip.VipChild2ndCount)
+            {
+                var newUser = vip1.Skip(Comm.Random.Next(0, vip1.Count)).FirstOrDefault();
+                if (!vip2.Any(s => s == newUser))
+                {
+                    vip2.Add(newUser);
+                    var log = logs.FirstOrDefault(s => s.SourceUserID == newUser);
+                    logs.Add(new VipAmountLog
+                    {
+                        Amount = (86 * 0.5m),
+                        CreateDateTime = log.CreateDateTime.AddMinutes(3),
+                        SourceUserID = log.SourceUserID,
+                        Type = VipAmountLogType.NewChild2nd,
+                        UserID = userID,
+                        VipID = vip.ID,
+                    });
+                    n++;
+                }
+            }
+
+            var vip3 = users.Where(s => !vip1.Contains(s)).Take(vip.VipChild3rdCount);
+            logs.AddRange(vip3.Select(s => new VipAmountLog
+            {
+                Amount = 86 * 0.1m,
+                CreateDateTime = start.AddSeconds(sec * Comm.Random.Next(0, vip.FreeChildCount)),
+                SourceUserID = s,
+                Type = VipAmountLogType.NewChild3rd,
+                UserID = userID,
+                VipID = vip.ID
+            }));
+            vip.TotalAmount = logs.Sum(s => s.Amount);
+            List<decimal> takes = new List<decimal>();
+            for (int i = 0; i < (int)(vip.TotalAmount / 50); i++)
+            {
+                takes.Add(50);
+            }
+            for (int i = 0; i < 3; i++)
+            {
+                var t = takes.Take(Comm.Random.Next(1, takes.Count()));
+                if (t.Count() > 0)
+                {
+                    logs.Add(new VipAmountLog
+                    {
+                        Amount = -t.Take(Comm.Random.Next(1, takes.Count())).Sum(),
+                        CreateDateTime = logs.Min(s => s.CreateDateTime).AddDays(Comm.Random.Next(1, (int)(end - start).TotalDays)),
+                        Type = VipAmountLogType.Forward,
+                        UserID = userID,
+                        VipID = vip.ID,
+                    });
+                    takes.RemoveRange(0, t.Count());
+                }
+
+            }
+            vip.Amount = vip.TotalAmount - logs.Where(s => s.Type == VipAmountLogType.Forward).Sum(s => s.Amount);
+            logs = logs.OrderBy(s => s.CreateDateTime).ToList();
+            db.VipAmountLogs.AddRange(logs);
+            db.SaveChanges();
+            return Json(Comm.ToJsonResult("Success", "成功"), JsonRequestBehavior.AllowGet);
+        }
+
+
         #region 腾讯IM
 
         /// <summary>
