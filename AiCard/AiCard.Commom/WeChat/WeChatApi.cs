@@ -424,7 +424,7 @@ namespace AiCard.Common.WeChat
                 var josn2 = api2.CreateRequestReturnJson();
 
                 var str = $"jsapi_ticket={josn2["ticket"].Value<string>()}&noncestr={noncestr}&timestamp={timestamp}&url={url}";
-                Comm.WriteLog("JsSign", $"accessToken:{_config.AccessToken} Url:{str}", Enums.DebugLogLevel.Normal);
+                Comm.WriteLog("JsSign", $"accessToken:{_config.AccessToken} \r\n Url:{str}", Enums.DebugLogLevel.Normal);
                 byte[] StrRes = Encoding.Default.GetBytes(str);
                 System.Security.Cryptography.HashAlgorithm iSHA = new System.Security.Cryptography.SHA1CryptoServiceProvider();
                 StrRes = iSHA.ComputeHash(StrRes);

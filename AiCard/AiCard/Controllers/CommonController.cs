@@ -90,21 +90,25 @@ namespace AiCard.Controllers
             }
         }
 
-
+        [HttpPost]
         public ActionResult UploadWeChatMedia(string mediaID)
         {
             try
             {
+                var server = Common.CommModels.UploadServer.Local;
                 Common.WeChat.IConfig config = new Common.WeChat.WeChatWorkConfig();
                 var wechat = new Common.WeChat.WeChatApi(config);
-                wechat.GetTempMedia(mediaID, Common.CommModels.UploadServer.QinQiu, "");
+                string filePath = wechat.GetTempMedia(mediaID, server, ".mp3");
+                return Json(Comm.ToJsonResult("Success", "成功", new
+                {
+                    FileUrl = filePath,
+                    FileFullUrl = server == Common.CommModels.UploadServer.Local ? Url.ContentFull(filePath) : filePath
+                }));
             }
             catch (Exception ex)
             {
-
-                throw;
+                return Json(Comm.ToJsonResult("Error", ex.Message));
             }
-            return Json(1);
         }
     }
 }
