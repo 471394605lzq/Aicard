@@ -100,10 +100,17 @@ namespace AiCard.Controllers
                 Mobile = mobile
             };
             db.CardPersonals.Add(card);
-            //db.SaveChanges();
+            db.SaveChanges();
             if (parentVip != null)
             {
-                //建立关系并给上级+3块
+                var result = new Bll.VipBLL().CreateVipRelation(userID, code);
+                if (result.retCode == Comm.ReqResultCode.failed)
+                {
+                    //回滚
+                    db.CardPersonals.Remove(card);
+                    db.SaveChanges();
+                    return Json(Comm.ToJsonResult("Error", result.retMsg));
+                }
             }
             return Json(Comm.ToJsonResult("Success", "成功", new { PCardID = card.ID }));
 
