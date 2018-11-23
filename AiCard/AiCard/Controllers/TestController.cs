@@ -15,10 +15,40 @@ namespace AiCard.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        public ActionResult Index()
-        {
-            return Json(new { d = DateTime.Now.ToString("今天 HH:mm"), d2 = DateTime.Now.ToString("MM-dd HH:mm") }, JsonRequestBehavior.AllowGet);
-        }
+        //public ActionResult Index(string mediaID, CommModels.UploadServer server, string extension)
+        //{
+        //    var p = new Dictionary<string, string>();
+        //    p.Add("access_token", "15_J6Cff3BXspkaafKFsRusxRUMzGz4_S_Tdc5qv15JmvAcrsZSDW5hzkKF5e1WHw7Hb2z7Achx0pQsBNnqhEA8H3EGVNbQyXyNKjLNRgLJYfyc6scsjSJcOUyrg7GuWQyw_f6bXegTZqOlqSqXNZSdABAVHA");
+        //    p.Add("media_id", mediaID);
+        //    string url = $"https://qyapi.weixin.qq.com/cgi-bin/media/get{p.ToParam("?")}";
+        //    var api = new CommonApi.BaseApi(url, "GET");
+        //    string file = "";
+        //    try
+        //    {
+        //        var dPath = $"~/Upload/{DateTime.Now:yyyyMMddHHmmss}{Comm.Random.Next(1000, 9999)}{extension}";
+        //        var path = HttpContext.Current.Server.MapPath(dPath);
+        //        var result = api.CreateRequest();
+        //        using (System.IO.Stream output = File.OpenWrite(path))
+        //        using (result)
+        //        {
+        //            result.CopyTo(output);
+        //        }
+        //        switch (server)
+        //        {
+        //            default:
+        //            case CommModels.UploadServer.Local:
+        //                return path;
+        //            case CommModels.UploadServer.QinQiu:
+        //                return new Qiniu.QinQiuApi().UploadFile(path, true);
+        //        }
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new Exception(ex.Message);
+        //    }
+        //    return Json(new { d = DateTime.Now.ToString("今天 HH:mm"), d2 = DateTime.Now.ToString("MM-dd HH:mm") }, JsonRequestBehavior.AllowGet);
+        //}
 
         // 随机给VIP用户加入收益记录
         public ActionResult AutoCreateVip()

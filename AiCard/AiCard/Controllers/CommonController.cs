@@ -93,7 +93,17 @@ namespace AiCard.Controllers
 
         public ActionResult UploadWeChatMedia(string mediaID)
         {
+            try
+            {
+                Common.WeChat.IConfig config = new Common.WeChat.WeChatWorkConfig();
+                var wechat = new Common.WeChat.WeChatApi(config);
+                wechat.GetTempMedia(mediaID, Common.CommModels.UploadServer.QinQiu, "");
+            }
+            catch (Exception ex)
+            {
 
+                throw;
+            }
             return Json(1);
         }
     }
