@@ -379,10 +379,12 @@ namespace AiCard.Common.WeChat
         /// </remarks>
         public string GetTempMedia(string mediaID, CommModels.UploadServer server, string extension)
         {
+
             var p = new Dictionary<string, string>();
-            p.Add("access_token", _config.AccessToken);
+            p.Add("access_token", GetAccessToken());
             p.Add("media_id", mediaID);
             string url = $"https://qyapi.weixin.qq.com/cgi-bin/media/get{p.ToParam("?")}";
+            Comm.WriteLog("GetTempMedia", url, DebugLogLevel.Normal);
             var api = new CommonApi.BaseApi(url, "GET");
             try
             {
@@ -414,11 +416,8 @@ namespace AiCard.Common.WeChat
 
         public String JsSign(string url, string noncestr, string timestamp)
         {
-            if (_config.AccessToken == null || _config.AccessTokenEnd < DateTime.Now)
-            {
-                RefreshToken();
-            }
-            var api2 = new CommonApi.BaseApi($"https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token={_config.AccessToken}&type=jsapi", "GET");
+
+            var api2 = new CommonApi.BaseApi($"https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token={GetAccessToken()}&type=jsapi", "GET");
             try
             {
                 var josn2 = api2.CreateRequestReturnJson();
