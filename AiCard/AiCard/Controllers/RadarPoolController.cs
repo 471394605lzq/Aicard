@@ -550,6 +550,10 @@ namespace AiCard.Controllers
         {
             try
             {
+                if (!db.Cards.Any(s => s.EnterpriseID == enterpriseID && s.UserID == userID))
+                {
+                    return Json(Comm.ToJsonResult("CardNoFound", "名片不存在"));
+                }
                 int starpagesize = page.Value * pageSize.Value - pageSize.Value;
                 int endpagesize = page.Value * pageSize.Value;
                 //拼接参数
@@ -564,27 +568,30 @@ namespace AiCard.Controllers
                 parameters[2].Value = starpagesize;
                 parameters[3].Value = endpagesize;
 
-                string sqlstr = string.Format(@"SELECT * FROM (SELECT CAST(ROW_NUMBER() over(order by CONVERT(CHAR(10),CreateDateTime,120) DESC) AS INTEGER) AS rownumber,
+                List< List <NoopsycheFollowShowModel> > returndatalist = new List<List<NoopsycheFollowShowModel>>();
+                //全部
+                if (type == Common.Enums.RankingsType.All)
+                {
+                    string sqlstr = string.Format(@"SELECT * FROM (SELECT CAST(ROW_NUMBER() over(order by CONVERT(CHAR(10),CreateDateTime,120) DESC) AS INTEGER) AS rownumber,
                      CASE WHEN CONVERT(CHAR(10),CreateDateTime,120)=CONVERT(CHAR(10),GETDATE(),120) THEN '今天' WHEN CONVERT(CHAR(10),CreateDateTime,120)=CONVERT(CHAR(10),dateadd(day,-1,getdate()),120) 
                      THEN '昨天' ELSE CONVERT(CHAR(10),CreateDateTime,120) END AS timestr,CONVERT(CHAR(10),CreateDateTime,120) AS datestr
                      FROM dbo.UserLogs WHERE Type IN(12,40,60,70) AND TargetUserID=@TargetUserID AND TargetEnterpriseID=@TargetEnterpriseID
                      GROUP BY CONVERT(CHAR(10),CreateDateTime,120)) t WHERE t.rownumber > @starpagesize AND t.rownumber<=@endpagesize");
-                List<NoopsycheFollowModel> data = db.Database.SqlQuery<NoopsycheFollowModel>(sqlstr, parameters).ToList();
-
-                List<NoopsycheFollowShowModel> returndatalist = new List<NoopsycheFollowShowModel>();
-                for (int i = 0; i < data.Count; i++)
-                {
-                    string tempdatestr = data[i].datestr;
-                    SqlParameter[] myparameters = {
+                    List<NoopsycheFollowModel> data = db.Database.SqlQuery<NoopsycheFollowModel>(sqlstr, parameters).ToList();
+                    for (int i = 0; i < data.Count; i++)
+                    {
+                        List<NoopsycheFollowShowModel> list = new List<NoopsycheFollowShowModel>();
+                        string tempdatestr = data[i].datestr;
+                        SqlParameter[] myparameters = {
                         new SqlParameter("@time", SqlDbType.NVarChar),
                         new SqlParameter("@TargetUserID", SqlDbType.NVarChar),
                         new SqlParameter("@TargetEnterpriseID", SqlDbType.Int)
                          };
-                    myparameters[0].Value = tempdatestr;
-                    myparameters[1].Value = userID;
-                    myparameters[2].Value = enterpriseID;
-                    string listsqlstr = string.Format(@"SELECT DISTINCT CASE WHEN euc.CreateDateTime BETWEEN dateadd(day, -0, dateadd(ms, 0, DATEADD(dd, DATEDIFF(dd, 0, getdate()), 0))) 
-                        AND dateadd(day, -0, DATEADD(ms, -3, DATEADD(dd, DATEDIFF(dd, -1, getdate()), 0)))AND euc.OwnerID='' THEN '是' ELSE '否' END AS isnewcust,Type,Total,ec.RealName,us.Avatar,
+                        myparameters[0].Value = tempdatestr;
+                        myparameters[1].Value = userID;
+                        myparameters[2].Value = enterpriseID;
+                        string listsqlstr = string.Format(@"SELECT DISTINCT CASE WHEN euc.CreateDateTime BETWEEN dateadd(day, -0, dateadd(ms, 0, DATEADD(dd, DATEDIFF(dd, 0, getdate()), 0))) 
+                        AND dateadd(day, -0, DATEADD(ms, -3, DATEADD(dd, DATEDIFF(dd, -1, getdate()), 0))) THEN '是' ELSE '否' END AS isnewcust,Type,Total,ec.RealName,us.Avatar,
                         CONVERT(NVARCHAR(50),DATEPART(hh,ul.CreateDateTime))+':'+CONVERT(NVARCHAR(50),DATEPART(mi,ul.CreateDateTime)) as createtimestr,ec.ID 
                         FROM dbo.UserLogs ul
                         INNER JOIN dbo.EnterpriseCustomers ec ON ec.UserID=ul.UserID
@@ -592,23 +599,247 @@ namespace AiCard.Controllers
                         INNER JOIN dbo.EnterpriseUserCustomers euc ON euc.CustomerID=ec.ID
                         WHERE Type IN(12,40,60,70) AND TargetUserID=@TargetUserID AND  TargetEnterpriseID=@TargetEnterpriseID AND
                         ul.CreateDateTime BETWEEN dateadd(day, -0, dateadd(ms, 0, DATEADD(dd, DATEDIFF(dd, 0, @time), 0))) 
-                        AND dateadd(day, -0, DATEADD(ms, -3, DATEADD(dd, DATEDIFF(dd, -1, @time), 0)))");
+                        AND dateadd(day, -0, DATEADD(ms, -3, DATEADD(dd, DATEDIFF(dd, -1, @time), 0))) AND ul.Total=(SELECT MAX(Total) FROM dbo.UserLogs WHERE UserID=ec.UserID AND 
+						Type IN(12,40,60,70) AND TargetUserID=@TargetUserID AND  TargetEnterpriseID=@TargetEnterpriseID AND
+                        ul.CreateDateTime BETWEEN dateadd(day, -0, dateadd(ms, 0, DATEADD(dd, DATEDIFF(dd, 0, @time), 0))) 
+                        AND dateadd(day, -0, DATEADD(ms, -3, DATEADD(dd, DATEDIFF(dd, -1, @time), 0))) )");
 
+                        List<NoopsycheFollowShowModel> mydata = db.Database.SqlQuery<NoopsycheFollowShowModel>(listsqlstr, myparameters).ToList();
+                        for (int j = 0; j < mydata.Count; j++)
+                        {
+                            NoopsycheFollowShowModel model = new NoopsycheFollowShowModel();
+                            model.Avatar = mydata[j].Avatar;
+                            model.createtimestr = mydata[j].createtimestr;
+                            model.isnewcust = mydata[j].isnewcust;
+                            model.RealName = mydata[j].RealName;
+                            model.Total = mydata[j].Total;
+                            model.showstr = "第" + mydata[j].Total.ToString() + "次" + ((Common.Enums.NoopsycheFollowType)mydata[j].Type).GetDisplayName();
+                            model.showremarkstr = ((Common.Enums.NoopsycheFollowType)mydata[j].Type + 1).GetDisplayName();
+                            model.TitleTime = data[i].timestr;
+                            model.ID = mydata[j].ID;
+                            list.Add(model);
+                        }
+                        returndatalist.Add(list);
+                    }
+                    var resultdata = new
+                    {
+                        listdata = returndatalist
+                    };
+                    return Json(Comm.ToJsonResult("Success", "成功", resultdata), JsonRequestBehavior.AllowGet);
+                }
+                //新客户
+                else
+                {
+                    List<NoopsycheFollowShowModel> returnlist = new List<NoopsycheFollowShowModel>();
+                    string sqlstr = string.Format(@"SELECT  '是' AS isnewcust,Type,	Total,ec.RealName,us.Avatar,CONVERT(NVARCHAR(50),DATEPART(hh,ul.CreateDateTime))+':'+CONVERT(NVARCHAR(50),DATEPART(mi,ul.CreateDateTime)) as createtimestr,ec.ID 
+                        FROM dbo.UserLogs ul
+                        INNER JOIN dbo.EnterpriseCustomers ec ON ec.UserID=ul.UserID
+                        INNER JOIN dbo.AspNetUsers us ON us.Id=ec.UserID
+                        INNER JOIN dbo.EnterpriseUserCustomers euc ON euc.CustomerID=ec.ID
+                        WHERE Type IN(12,40,60,70) AND TargetUserID=@TargetUserID AND  TargetEnterpriseID=@TargetEnterpriseID 
+						 AND ul.Total=(SELECT MAX(Total) FROM dbo.UserLogs WHERE UserID=ec.UserID AND 
+						Type IN(12,40,60,70) AND TargetUserID=@TargetUserID AND  TargetEnterpriseID=@TargetEnterpriseID ) 
+						AND euc.CreateDateTime BETWEEN dateadd(day, -0, dateadd(ms, 0, DATEADD(dd, DATEDIFF(dd, 0, getdate()), 0))) 
+                        AND dateadd(day, -0, DATEADD(ms, -3, DATEADD(dd, DATEDIFF(dd, -1, getdate()), 0)))");
+                    List<NoopsycheFollowShowModel> data = db.Database.SqlQuery<NoopsycheFollowShowModel>(sqlstr, parameters).ToList();
+                    for (int j = 0; j < data.Count; j++)
+                    {
+                        NoopsycheFollowShowModel model = new NoopsycheFollowShowModel();
+                        model.Avatar = data[j].Avatar;
+                        model.createtimestr = data[j].createtimestr;
+                        model.isnewcust = data[j].isnewcust;
+                        model.RealName = data[j].RealName;
+                        model.Total = data[j].Total;
+                        model.showstr = "第" + data[j].Total.ToString() + "次" + ((Common.Enums.NoopsycheFollowType)data[j].Type).GetDisplayName();
+                        model.showremarkstr = ((Common.Enums.NoopsycheFollowType)data[j].Type + 1).GetDisplayName();
+                        model.TitleTime = "无";
+                        model.ID = data[j].ID;
+                        returnlist.Add(model);
+                    }
+                    var resultdata = new
+                    {
+                        listdata = returnlist
+                    };
+                    return Json(Comm.ToJsonResult("Success", "成功", resultdata), JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(Comm.ToJsonResult("Error", ex.Message), JsonRequestBehavior.AllowGet);
+            }
+        }
+
+
+        /// <summary>
+        /// Ai雷达 客户详情智能追踪
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        [AllowCrossSiteJson]
+        public ActionResult GetCustomerNoopsycheFollowList(int enterpriseID, int custID, string owerID, int? page = 1, int? pageSize = 2)
+        {
+            try
+            {
+                if (!db.EnterpriseUserCustomer.Any(s => s.CustomerID == custID && s.OwnerID == owerID))
+                {
+                    return Json(Comm.ToJsonResult("NoFound", "客户不存在"));
+                }
+                int starpagesize = page.Value * pageSize.Value - pageSize.Value;
+                int endpagesize = page.Value * pageSize.Value;
+                //拼接参数
+                SqlParameter[] parameters = {
+                        new SqlParameter("@CustomerID", SqlDbType.Int),
+                        new SqlParameter("@TargetUserID", SqlDbType.NVarChar),
+                        new SqlParameter("@TargetEnterpriseID", SqlDbType.Int),
+                        new SqlParameter("@starpagesize", SqlDbType.Int),
+                        new SqlParameter("@endpagesize", SqlDbType.Int)
+                    };
+                parameters[0].Value = custID;
+                parameters[1].Value = owerID;
+                parameters[2].Value = enterpriseID;
+                parameters[3].Value = starpagesize;
+                parameters[4].Value = endpagesize;
+
+                List<List<NoopsycheFollowShowModel>> returndatalist = new List<List<NoopsycheFollowShowModel>>();
+                    string sqlstr = string.Format(@"SELECT * FROM (SELECT CAST(ROW_NUMBER() over(order by CONVERT(CHAR(10),CreateDateTime,120) DESC) AS INTEGER) AS rownumber,
+                     CASE WHEN CONVERT(CHAR(10),CreateDateTime,120)=CONVERT(CHAR(10),GETDATE(),120) THEN '今天' WHEN CONVERT(CHAR(10),CreateDateTime,120)=CONVERT(CHAR(10),dateadd(day,-1,getdate()),120) 
+                     THEN '昨天' ELSE CONVERT(CHAR(10),CreateDateTime,120) END AS timestr,CONVERT(CHAR(10),CreateDateTime,120) AS datestr
+                     FROM dbo.UserLogs INNER JOIN dbo.EnterpriseCustomers ec ON ec.UserID=UserLogs.UserID WHERE Type IN(12,40,60,70) AND TargetUserID=@TargetUserID AND ec.ID=@CustomerID AND  TargetEnterpriseID=@TargetEnterpriseID
+                     GROUP BY CONVERT(CHAR(10),CreateDateTime,120)) t WHERE t.rownumber > @starpagesize AND t.rownumber<=@endpagesize");
+                    List<NoopsycheFollowModel> data = db.Database.SqlQuery<NoopsycheFollowModel>(sqlstr, parameters).ToList();
+                    for (int i = 0; i < data.Count; i++)
+                    {
+                        List<NoopsycheFollowShowModel> list = new List<NoopsycheFollowShowModel>();
+                        string tempdatestr = data[i].datestr;
+                        SqlParameter[] myparameters = {
+                        new SqlParameter("@time", SqlDbType.NVarChar),
+                        new SqlParameter("@TargetUserID", SqlDbType.NVarChar),
+                        new SqlParameter("@TargetEnterpriseID", SqlDbType.Int),
+                        new SqlParameter("@CustomerID", SqlDbType.Int)
+                         };
+                        myparameters[0].Value = tempdatestr;
+                        myparameters[1].Value = owerID;
+                        myparameters[2].Value = enterpriseID;
+                        myparameters[3].Value = custID;
+                    string listsqlstr = string.Format(@"SELECT Type,Total,
+                        CONVERT(NVARCHAR(50),DATEPART(hh,ul.CreateDateTime))+':'+CONVERT(NVARCHAR(50),DATEPART(mi,ul.CreateDateTime)) as createtimestr,ec.ID 
+                        FROM dbo.UserLogs ul
+                        INNER JOIN dbo.EnterpriseCustomers ec ON ec.UserID=ul.UserID
+                        WHERE Type IN(12,40,60,70) AND TargetUserID=@TargetUserID AND  TargetEnterpriseID=@TargetEnterpriseID AND ec.ID=@CustomerID AND
+                        ul.CreateDateTime BETWEEN dateadd(day, -0, dateadd(ms, 0, DATEADD(dd, DATEDIFF(dd, 0, @time), 0))) 
+                        AND dateadd(day, -0, DATEADD(ms, -3, DATEADD(dd, DATEDIFF(dd, -1, @time), 0))) AND ul.Total=(SELECT MAX(Total) FROM dbo.UserLogs WHERE UserID=ec.UserID AND 
+						Type IN(12,40,60,70) AND TargetUserID=@TargetUserID AND  TargetEnterpriseID=@TargetEnterpriseID AND ec.ID=@CustomerID AND
+                        ul.CreateDateTime BETWEEN dateadd(day, -0, dateadd(ms, 0, DATEADD(dd, DATEDIFF(dd, 0, @time), 0))) 
+                        AND dateadd(day, -0, DATEADD(ms, -3, DATEADD(dd, DATEDIFF(dd, -1, @time), 0))) )");
+                        List<NoopsycheFollowShowModel> mydata = db.Database.SqlQuery<NoopsycheFollowShowModel>(listsqlstr, myparameters).ToList();
+                        for (int j = 0; j < mydata.Count; j++)
+                        {
+                            NoopsycheFollowShowModel model = new NoopsycheFollowShowModel();
+                            model.createtimestr = mydata[j].createtimestr;
+                            model.Total = mydata[j].Total;
+                            model.showstr = "第" + mydata[j].Total.ToString() + "次" + ((Common.Enums.NoopsycheFollowType)mydata[j].Type).GetDisplayName();
+                            model.showremarkstr = ((Common.Enums.NoopsycheFollowType)mydata[j].Type + 1).GetDisplayName();
+                            model.TitleTime = data[i].timestr;
+                            model.ID = mydata[j].ID;
+                            list.Add(model);
+                        }
+                    returndatalist.Add(list);
+                }
+                    var resultdata = new
+                    {
+                        listdata = returndatalist
+                    };
+                    return Json(Comm.ToJsonResult("Success", "成功", resultdata), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(Comm.ToJsonResult("Error", ex.Message), JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        /// <summary>
+        /// Ai雷达 客户详情跟进记录
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        [AllowCrossSiteJson]
+        public ActionResult GetCustomerFollowRecordList(int enterpriseID, int custID, string owerID, int? page = 1, int? pageSize = 2)
+        {
+            try
+            {
+                if (!db.EnterpriseUserCustomer.Any(s => s.CustomerID == custID && s.OwnerID == owerID))
+                {
+                    return Json(Comm.ToJsonResult("NoFound", "客户不存在"));
+                }
+                int starpagesize = page.Value * pageSize.Value - pageSize.Value;
+                int endpagesize = page.Value * pageSize.Value;
+                //拼接参数
+                SqlParameter[] parameters = {
+                        new SqlParameter("@CustomerID", SqlDbType.Int),
+                        new SqlParameter("@TargetUserID", SqlDbType.NVarChar),
+                        new SqlParameter("@TargetEnterpriseID", SqlDbType.Int),
+                        new SqlParameter("@starpagesize", SqlDbType.Int),
+                        new SqlParameter("@endpagesize", SqlDbType.Int)
+                    };
+                parameters[0].Value = custID;
+                parameters[1].Value = owerID;
+                parameters[2].Value = enterpriseID;
+                parameters[3].Value = starpagesize;
+                parameters[4].Value = endpagesize;
+
+                List<List<NoopsycheFollowShowModel>> returndatalist = new List<List<NoopsycheFollowShowModel>>();
+                string sqlstr = string.Format(@"SELECT * FROM (SELECT CAST(ROW_NUMBER() over(order by CONVERT(CHAR(10),CreateDateTime,120) DESC) AS INTEGER) AS rownumber,
+                     CASE WHEN CONVERT(CHAR(10),CreateDateTime,120)=CONVERT(CHAR(10),GETDATE(),120) THEN '今天' WHEN CONVERT(CHAR(10),CreateDateTime,120)=CONVERT(CHAR(10),dateadd(day,-1,getdate()),120) 
+                     THEN '昨天' ELSE CONVERT(CHAR(10),CreateDateTime,120) END AS timestr,CONVERT(CHAR(10),CreateDateTime,120) AS datestr
+                     FROM dbo.UserLogs INNER JOIN dbo.EnterpriseCustomers ec ON ec.UserID=UserLogs.UserID WHERE Type IN(101,102,20) AND TargetUserID=@TargetUserID AND ec.ID=@CustomerID AND  TargetEnterpriseID=@TargetEnterpriseID
+                     GROUP BY CONVERT(CHAR(10),CreateDateTime,120)) t WHERE t.rownumber > @starpagesize AND t.rownumber<=@endpagesize");
+                List<NoopsycheFollowModel> data = db.Database.SqlQuery<NoopsycheFollowModel>(sqlstr, parameters).ToList();
+                for (int i = 0; i < data.Count; i++)
+                {
+                    List<NoopsycheFollowShowModel> list = new List<NoopsycheFollowShowModel>();
+                    string tempdatestr = data[i].datestr;
+                    SqlParameter[] myparameters = {
+                        new SqlParameter("@time", SqlDbType.NVarChar),
+                        new SqlParameter("@TargetUserID", SqlDbType.NVarChar),
+                        new SqlParameter("@TargetEnterpriseID", SqlDbType.Int),
+                        new SqlParameter("@CustomerID", SqlDbType.Int)
+                         };
+                    myparameters[0].Value = tempdatestr;
+                    myparameters[1].Value = owerID;
+                    myparameters[2].Value = enterpriseID;
+                    myparameters[3].Value = custID;
+                    string listsqlstr = string.Format(@"SELECT Type,0 as Total,ul.Remark,
+                        CONVERT(NVARCHAR(50),DATEPART(hh,ul.CreateDateTime))+':'+CONVERT(NVARCHAR(50),DATEPART(mi,ul.CreateDateTime)) as createtimestr,ec.ID 
+                        FROM dbo.UserLogs ul
+                        INNER JOIN dbo.EnterpriseCustomers ec ON ec.UserID=ul.UserID
+                        WHERE Type IN(101,102) AND TargetUserID=@TargetUserID AND  TargetEnterpriseID=@TargetEnterpriseID AND ec.ID=@CustomerID AND
+                        ul.CreateDateTime BETWEEN dateadd(day, -0, dateadd(ms, 0, DATEADD(dd, DATEDIFF(dd, 0, @time), 0))) 
+                        AND dateadd(day, -0, DATEADD(ms, -3, DATEADD(dd, DATEDIFF(dd, -1, @time), 0)))
+                        UNION ALL 
+						SELECT Type,Total,ul.Remark,
+                        CONVERT(NVARCHAR(50),DATEPART(hh,ul.CreateDateTime))+':'+CONVERT(NVARCHAR(50),DATEPART(mi,ul.CreateDateTime)) as createtimestr,ec.ID 
+                        FROM dbo.UserLogs ul
+                        INNER JOIN dbo.EnterpriseCustomers ec ON ec.UserID=ul.UserID
+                        WHERE Type IN(20) AND TargetUserID=@TargetUserID AND  TargetEnterpriseID=@TargetEnterpriseID AND ec.ID=@CustomerID AND
+                        ul.CreateDateTime BETWEEN dateadd(day, -0, dateadd(ms, 0, DATEADD(dd, DATEDIFF(dd, 0, @time), 0))) 
+                        AND dateadd(day, -0, DATEADD(ms, -3, DATEADD(dd, DATEDIFF(dd, -1, @time), 0)))
+						AND ul.Total=(SELECT MAX(Total) FROM dbo.UserLogs WHERE UserID=ec.UserID AND 
+						Type IN(20) AND TargetUserID=@TargetUserID AND  TargetEnterpriseID=@TargetEnterpriseID AND ec.ID=@CustomerID AND
+                        ul.CreateDateTime BETWEEN dateadd(day, -0, dateadd(ms, 0, DATEADD(dd, DATEDIFF(dd, 0, @time), 0))) 
+                        AND dateadd(day, -0, DATEADD(ms, -3, DATEADD(dd, DATEDIFF(dd, -1, @time), 0))))");
                     List<NoopsycheFollowShowModel> mydata = db.Database.SqlQuery<NoopsycheFollowShowModel>(listsqlstr, myparameters).ToList();
                     for (int j = 0; j < mydata.Count; j++)
                     {
                         NoopsycheFollowShowModel model = new NoopsycheFollowShowModel();
-                        model.Avatar = mydata[j].Avatar;
                         model.createtimestr = mydata[j].createtimestr;
-                        model.isnewcust = mydata[j].isnewcust;
-                        model.RealName = mydata[j].RealName;
                         model.Total = mydata[j].Total;
-                        model.showstr = "第" + mydata[j].Total.ToString() + "次" + ((Common.Enums.NoopsycheFollowType)mydata[i].Type).GetDisplayName();
-                        model.showremarkstr = ((Common.Enums.NoopsycheFollowType)mydata[i].Type + 1).GetDisplayName();
+                        model.showstr = mydata[j].Type == Common.Enums.UserLogType.Communication.GetHashCode() ? "第" + mydata[j].Total.ToString() + "次" + ((Common.Enums.NoopsycheFollowType)mydata[j].Type).GetDisplayName() : "";
+                        model.showremarkstr =mydata[j].Remark;
                         model.TitleTime = data[i].timestr;
-                        model.ID = mydata[i].ID;
-                        returndatalist.Add(model);
+                        model.ID = mydata[j].ID;
+                        list.Add(model);
                     }
+                    returndatalist.Add(list);
                 }
                 var resultdata = new
                 {
@@ -621,6 +852,8 @@ namespace AiCard.Controllers
                 return Json(Comm.ToJsonResult("Error", ex.Message), JsonRequestBehavior.AllowGet);
             }
         }
+
+
         //获取客户来源枚举名称
         private string GetEnumsName<T>(int val, Enum e)
         {
@@ -662,6 +895,7 @@ namespace AiCard.Controllers
             //时间标题
             public string TitleTime { get; set; }
             public int ID { get; set; }
+            public string Remark { get; set; }
         }
         private class CustActivityTopModel
         {

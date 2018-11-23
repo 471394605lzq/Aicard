@@ -316,6 +316,9 @@ namespace AiCard.Common.Enums
         ShopShow = UserLogType.ShopRead,
         [Display(Name = "尽快把握商机")]
         ShopShowRemark = UserLogType.ShopRead + 1,
+
+        [Display(Name ="进行洽谈")]
+        CommunicationShow=UserLogType.Communication
     }
     public enum ProductType
     {
