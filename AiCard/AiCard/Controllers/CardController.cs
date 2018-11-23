@@ -452,7 +452,7 @@ namespace AiCard.Controllers
                                   INNER JOIN dbo.Cards c ON c.UserID = ul.TargetUserID 
 								  WHERE ul.CreateDateTime BETWEEN dateadd(ms, 0, DATEADD(dd, DATEDIFF(dd, 0, getdate()), 0)) AND dateadd(ms, -3, DATEADD(dd, DATEDIFF(dd, -1, getdate()), 0))
                                    AND c.EnterpriseID=@enterpriseID 
-                                  GROUP BY c.Name, c.Avatar,c.ID,c.Position,c.UserID");
+                                  GROUP BY c.Name, c.Avatar,c.ID,c.Position,c.UserID,ul.TargetUserID");
                     //AND ul.TargetUserID = @userID
                     List<RankingModel> mydata = db.Database.SqlQuery<RankingModel>(mysqlstr, myparameters).ToList();
 
