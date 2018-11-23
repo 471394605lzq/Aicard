@@ -53,7 +53,7 @@ namespace AiCard.Controllers
             return Json(Common.Comm.ToJsonResultForPagedList(paged, model), JsonRequestBehavior.AllowGet);
         }
 
-        
+
 
         /// <summary>
         /// Ai雷达 我的主页获取名片信息
@@ -61,13 +61,37 @@ namespace AiCard.Controllers
         /// <param name="pCardID"></param>
         /// <returns></returns>
         [AllowCrossSiteJson]
-        public ActionResult GetCardInfo(int pCardID)
+        public ActionResult GetCardInfo(int? pCardID, string userID)
         {
             try
             {
-                var card = (from c in db.CardPersonals
-                            where c.ID == pCardID && c.Enable
-                            select c).FirstOrDefault();
+                var query = (from c in db.CardPersonals
+                             where c.ID == pCardID && c.Enable
+                             select c);
+                if (pCardID.HasValue)
+                {
+                    query = query.Where(s => s.ID == pCardID);
+                }
+                else
+                {
+                    query = query.Where(s => s.UserID == userID);
+                }
+
+                var card = query.FirstOrDefault();
+                if (card == null)
+                {
+                    var user = db.Users.FirstOrDefault(s => s.Id == userID);
+                    if (user == null)
+                    {
+                        return Json(Comm.ToJsonResult("UserNoFound", "用户不出在"), JsonRequestBehavior.AllowGet);
+                    }
+                    return Json(Comm.ToJsonResult("PCardNoFound", "名片不存在", new
+                    {
+                        user.Avatar,
+                        user.NickName,
+                        UserID = user.Id
+                    }), JsonRequestBehavior.AllowGet);
+                }
                 var data = new
                 {
                     card.Name,
