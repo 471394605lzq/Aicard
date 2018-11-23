@@ -1,0 +1,78 @@
+﻿@model IEnumerable<AiCard.Models.Vip.VipAccountDetail>
+
+@{
+    ViewBag.Title = "vip用户账户收支明细";
+    Layout = "~/Views/Shared/_LayoutBackground.cshtml";
+}
+
+<h3>vip用户账户收支明细</h3>
+
+<table class="table  table-hover table-striped">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.CreateDateTime)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Type)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Amount)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Before)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SourceUserName)
+        </th>
+
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreateDateTime)
+            </td>
+            <td>
+                @{
+                    var typeName = "";
+                    switch (item.Type)
+                    {
+                        case (int)AiCard.Common.Enums.VipAmountLogType.NewCard:
+                            typeName = AiCard.Common.Enums.VipAmountLogType.NewCard.GetDisplayName();
+                            break;
+                        case (int)AiCard.Common.Enums.VipAmountLogType.Forward:
+                            typeName = AiCard.Common.Enums.VipAmountLogType.Forward.GetDisplayName();
+                            break;
+                        case (int)AiCard.Common.Enums.VipAmountLogType.NewChild2nd:
+                            typeName = AiCard.Common.Enums.VipAmountLogType.NewChild2nd.GetDisplayName();
+                            break;
+                        case (int)AiCard.Common.Enums.VipAmountLogType.NewChild3rd:
+                            typeName = AiCard.Common.Enums.VipAmountLogType.NewChild3rd.GetDisplayName();
+                            break;
+                        default:
+                            break;
+                    }
+
+                }
+                @typeName
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Amount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Before)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SourceUserName)
+            </td>
+
+        </tr>
+       }
+
+</table>
+
+@Html.PageList((PagedList.IPagedList<AiCard.Models.Vip.VipAccountDetail>)Model, Url.PageUrl())
+<p>
+    @Html.ActionLink("返回列表", "Index")
+</p>

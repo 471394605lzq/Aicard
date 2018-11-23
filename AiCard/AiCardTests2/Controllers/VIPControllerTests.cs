@@ -33,7 +33,7 @@ namespace AiCard.Controllers.Tests
                 Page=1,
                 PageSize=2
             };
-            ActionResult result = vip.Index(JsonConvert.SerializeObject(req));
+            //ActionResult result = vip.Index(JsonConvert.SerializeObject(req));
         }
     }
 }
