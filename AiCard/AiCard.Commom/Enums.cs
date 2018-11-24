@@ -300,7 +300,7 @@ namespace AiCard.Common.Enums
         [Display(Name ="名片")]
         CardShow= UserLogType.CardRead,
         [Display(Name = "成交在望哦")]
-        CardShowRemark = UserLogType.CardRead+1,
+        CardShowRemark = UserLogType.CardRead + 1,
 
         [Display(Name = "动态")]
         ArticleShow =UserLogType.ArticleRead,
@@ -445,7 +445,8 @@ namespace AiCard.Common.Enums
         Disable,
         [Display(Name = "已启用")]
         Enable,
-
+        [Display(Name = "升级中")]
+        Uploading,
     }
 
     public enum EnterpriseUserCustomerSource

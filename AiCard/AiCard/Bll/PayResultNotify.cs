@@ -65,7 +65,7 @@ namespace AiCard.Bll
                         Order order = db.Orders.FirstOrDefault(p => p.Code == out_trade_no && p.State == Common.Enums.OrderState.UnHandle);
                         if (order != null)
                         {
-                            order.Amount = Convert.ToDecimal(notifyData.GetValue("total_fee").ToString())/100m;
+                            order.Amount = Convert.ToDecimal(notifyData.GetValue("total_fee").ToString()) / 100m;
                             order.PayCode = transaction_id;
                             order.PayResult = notifyData.ToJson();
                             order.State = notifyData.GetValue("result_code").ToString() == "SUCCESS" ? Common.Enums.OrderState.Success : Common.Enums.OrderState.Failed;
@@ -73,6 +73,9 @@ namespace AiCard.Bll
                             row = db.SaveChanges();
                             if (row > 0 && order.State == Common.Enums.OrderState.Success)
                             {
+                                var vip = db.Vips.FirstOrDefault(s => s.UserID == order.UserID);
+                                vip.Type = Common.Enums.VipRank.Vip99;
+                                db.SaveChanges();
                                 //查看是否需要计算上级收益
                                 VIPAccountBLL bll = new VIPAccountBLL();
                                 bll.CalculateVIPAmount(order.UserID, 1);

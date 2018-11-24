@@ -833,7 +833,19 @@ namespace AiCard.Controllers
 
             string username, nickname, avart, unionId = model.UnionID;
             var user = db.Users.FirstOrDefault(s => s.WeChatID == unionId);
-            Common.WeChat.IConfig config = new Common.WeChat.ConfigMini();
+            IConfig config = null;
+            switch (model.Type)
+            {
+                case WeChatAccount.AiCardMini:
+                    config = new ConfigMini();
+                    break;
+                case WeChatAccount.AiCardPersonalMini:
+                    config = new ConfigMiniPersonal();
+                    break;
+                case WeChatAccount.PC:
+                default:
+                    break;
+            }
             if (user != null)
             {
                 string appID = config.AppID;
@@ -906,15 +918,15 @@ namespace AiCard.Controllers
             }
             if (db.CardPersonals.Any(s => s.UserID == userID))
             {
-                return Json(Comm.ToJsonResult("CardPersonalHadCreate", "该用户已经个人名片已存在"));
+                return Json(Comm.ToJsonResult("CardPersonalHadCreate", "该用户已经个人名片已存在"), JsonRequestBehavior.AllowGet);
             }
             //把数据中的OpenID取出
             var userOpenIDs = new Bll.Users.UserOpenID(user);
-            IConfig config = new ConfigMini();
+            IConfig config = new ConfigMiniPersonal();
             var openID = userOpenIDs.SearchOpenID(config.AppID);
             if (openID == null)
             {
-                return Json(Comm.ToJsonResult("OpenIDIsNull", "OpenID不存在"));
+                return Json(Comm.ToJsonResult("OpenIDIsNull", "OpenID不存在"), JsonRequestBehavior.AllowGet);
             }
             string session = null;
             try
@@ -923,7 +935,7 @@ namespace AiCard.Controllers
             }
             catch (Exception ex)
             {
-                return Json(Comm.ToJsonResult("GetSessionFail", ex.Message));
+                return Json(Comm.ToJsonResult("GetSessionFail", ex.Message), JsonRequestBehavior.AllowGet);
             }
 
             string mobile = null;

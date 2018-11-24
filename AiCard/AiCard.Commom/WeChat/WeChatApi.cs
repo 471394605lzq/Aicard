@@ -379,9 +379,9 @@ namespace AiCard.Common.WeChat
         /// </remarks>
         public string GetTempMedia(string mediaID, CommModels.UploadServer server, string extension)
         {
-
+            RefreshToken();
             var p = new Dictionary<string, string>();
-            p.Add("access_token", GetAccessToken());
+            p.Add("access_token", _config.AccessToken);
             p.Add("media_id", mediaID);
             string url = $"https://qyapi.weixin.qq.com/cgi-bin/media/get{p.ToParam("?")}";
             Comm.WriteLog("GetTempMedia", url, DebugLogLevel.Normal);
@@ -476,6 +476,8 @@ namespace AiCard.Common.WeChat
         /// 是否已经关注
         /// </summary>
         public bool IsSubscribe { get; set; }
+
+        public WeChatAccount Type { get; set; } = WeChatAccount.AiCardMini;
     }
 
     public class AccessTokenResult

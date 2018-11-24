@@ -21,13 +21,16 @@ namespace AiCard.Bll
         /// </summary>
         /// <param name="vUserID">注册或升级的用户ID</param>
         /// <param name="vBussType">业务类型 0 注册/新建名片  1 升级会员</param>
-        public RequestResult CalculateVIPAmount(string vUserID,int vBussType) {
+        public RequestResult CalculateVIPAmount(string vUserID, int vBussType)
+        {
             #region
-            RequestResult result = new RequestResult() {
-                retCode=ReqResultCode.failed,
-                retMsg="计算佣金失败"
+            RequestResult result = new RequestResult()
+            {
+                retCode = ReqResultCode.failed,
+                retMsg = "计算佣金失败"
             };
-            if (string.IsNullOrWhiteSpace(vUserID)) {
+            if (string.IsNullOrWhiteSpace(vUserID))
+            {
                 result.retMsg = "操作用户ID不能为空";
                 return result;
             }
@@ -37,7 +40,8 @@ namespace AiCard.Bll
                 decimal GrandfatheredProfitAmount = 0;//上上级用户佣金
                 Common.Enums.VipAmountLogType logType = 0;//日志记录类型
                 int rows = 0;
-                switch (vBussType) {
+                switch (vBussType)
+                {
                     case 0:
                         parentProfitAmount = Comm.RegisterAmount();
                         logType = Common.Enums.VipAmountLogType.NewCard;
@@ -50,11 +54,12 @@ namespace AiCard.Bll
                     default:
                         break;
                 }
-                using (ApplicationDbContext db = new ApplicationDbContext()) {
-                    VipRelationship vipship = db.VipRelationships.FirstOrDefault(p=>p.UserID==vUserID);
+                using (ApplicationDbContext db = new ApplicationDbContext())
+                {
+                    VipRelationship vipship = db.VipRelationships.FirstOrDefault(p => p.UserID == vUserID);
                     if (vipship != null)
                     {
-                        Vip parentUser = db.Vips.FirstOrDefault(p=>p.ID == vipship .ParentID && p.UserID ==vipship .ParentUserID );
+                        Vip parentUser = db.Vips.FirstOrDefault(p => p.ID == vipship.ParentID && p.UserID == vipship.ParentUserID);
                         //上级用户
                         if (parentUser != null)
                         {
@@ -63,18 +68,18 @@ namespace AiCard.Bll
                             {
                                 Amount = +parentProfitAmount,
                                 Before = parentUser.Amount,
-                                CreateDateTime =DateTime.Now ,
-                                SourceUserID =vipship .UserID ,
+                                CreateDateTime = DateTime.Now,
+                                SourceUserID = vipship.UserID,
                                 Type = logType,
-                                UserID = parentUser .UserID,
-                                VipID =parentUser .ID 
+                                UserID = parentUser.UserID,
+                                VipID = parentUser.ID
                             };
                             db.VipAmountLogs.Add(logModel);
                             parentUser.TotalAmount += parentProfitAmount;
                             parentUser.Amount += parentProfitAmount;
                             if (logType == Common.Enums.VipAmountLogType.NewCard)
                             {
-                                parentUser.FreeChildCount  += 1;
+                                parentUser.FreeChildCount += 1;
                             }
                             else if (logType == Common.Enums.VipAmountLogType.NewChild2nd)
                             {
@@ -82,8 +87,8 @@ namespace AiCard.Bll
                             }
 
                             //上上级用户
-                            vipship = db.VipRelationships.FirstOrDefault(p => p.UserID == parentUser.UserID );
-                            if (vipship != null && vBussType==1)//升级会员才有
+                            vipship = db.VipRelationships.FirstOrDefault(p => p.UserID == parentUser.UserID);
+                            if (vipship != null && vBussType == 1)//升级会员才有
                             {
                                 Vip grandfatherUser = db.Vips.FirstOrDefault(p => p.ID == vipship.ParentID && p.UserID == vipship.ParentUserID);
                                 if (grandfatherUser != null)
@@ -95,7 +100,7 @@ namespace AiCard.Bll
                                         Before = grandfatherUser.Amount,
                                         CreateDateTime = DateTime.Now,
                                         SourceUserID = vipship.UserID,
-                                        Type = Common.Enums.VipAmountLogType.NewChild3rd ,
+                                        Type = Common.Enums.VipAmountLogType.NewChild3rd,
                                         UserID = grandfatherUser.UserID,
                                         VipID = grandfatherUser.ID
                                     };
@@ -106,17 +111,20 @@ namespace AiCard.Bll
                                 }
                             }
                             rows = db.SaveChanges();
-                            if (rows>0) {
+                            if (rows > 0)
+                            {
                                 result.retCode = ReqResultCode.success;
                                 result.retMsg = "计算佣金成功";
                             }
                         }
-                        else {
+                        else
+                        {
                             result.retCode = ReqResultCode.success;
                             result.retMsg = "上级用户不存在";
                         }
                     }
-                    else {
+                    else
+                    {
                         result.retCode = ReqResultCode.success;
                         result.retMsg = "非邀请注册，无需计算佣金";
                     }
