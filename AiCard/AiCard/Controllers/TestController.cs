@@ -352,7 +352,6 @@ namespace AiCard.Controllers
             return View();
         }
 
-
         [AllowCrossSiteJson]
         public ActionResult WirteLog(object data)
         {

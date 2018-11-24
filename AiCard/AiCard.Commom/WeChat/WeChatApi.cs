@@ -56,7 +56,7 @@ namespace AiCard.Common.WeChat
                 UnionID = result["unionid"].Value<string>(),
                 RefreshToken = _config.RefreshToken
             };
-        }
+        } 
 
 
         /// <summary>
