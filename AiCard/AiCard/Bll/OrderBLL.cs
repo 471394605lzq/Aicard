@@ -22,7 +22,7 @@ namespace AiCard.Bll
     {
         Random rand = new Random();
         WeChatPayment payment = new WeChatPayment();
-        
+
         /// <summary>
         /// 创建订单号
         /// </summary>
@@ -48,20 +48,26 @@ namespace AiCard.Bll
         /// 创建升级支付订单
         /// </summary>
         /// <param name="code"></param>
-        /// <param name="UserID"></param>
+        /// <param name="userID"></param>
         /// <returns></returns>
-        public object CreateUpGradeOrder(string code, string UserID)
+        public object CreateUpGradeOrder(string code, string userID)
         {
             //1.调用小程序登录API，获取openID
-            IConfig config = new ConfigMini();
+            IConfig config = new ConfigMiniPersonal();
             WeChatMinApi miniApi = new WeChatMinApi(config);
             Jscode2sessionResult openIDResule = miniApi.Jscode2session(code);
             if (openIDResule == null || string.IsNullOrWhiteSpace(openIDResule.OpenID))
             {
                 return new { retCode = "Error", retMsg = "无法获取openID,请确认code是否正确", objectData = "" };
             }
-
-            string OrderCode = CreateOrderCode(UserID);//创建订单号
+            //using (ApplicationDbContext db = new ApplicationDbContext())
+            //{
+            //    //防止用户重复提交订单，把Vip状态设为升级中
+            //    var vip = db.Vips.FirstOrDefault(s => s.UserID == userID);
+            //    vip.State = Common.Enums.VipState.Uploading;
+            //    db.SaveChanges();
+            //}
+            string OrderCode = CreateOrderCode(userID);//创建订单号
             decimal Amount = Comm.UpGradeAmount();//升级费用
             if (string.IsNullOrEmpty(OrderCode))
             {
@@ -81,7 +87,7 @@ namespace AiCard.Bll
                 trade_type = "JSAPI"
 
             };
-            
+
             RequestResult payResult = payment.GetUnifiedOrderResult(payData);
             WxPayData payreturnData = payResult.objectData;
             if (payResult.retCode != ReqResultCode.success || payreturnData == null)
@@ -104,9 +110,9 @@ namespace AiCard.Bll
                     State = Common.Enums.OrderState.UnHandle,
                     Channel = Common.Enums.PayChannel.WxPay,
                     Type = Common.Enums.OrderType.Receivable,
-                    UserID = UserID,
+                    UserID = userID,
                     CreateDateTime = DateTime.Now,
-                    PayCode=string.Empty,
+                    PayCode = string.Empty,
                     PayInput = JsonConvert.SerializeObject(payData)
                 };
                 db.Orders.Add(order);
@@ -138,6 +144,7 @@ namespace AiCard.Bll
                 package = "prepay_id=" + payreturnData.GetValue("prepay_id")?.ToString(),
                 signType = "MD5",
                 paySign = sign,
+                total_fee = payData.total_fee / 100m,
             };
             return new { retCode = "Success", retMsg = "成功", objectData = retModel };
         }
@@ -148,7 +155,8 @@ namespace AiCard.Bll
         /// <param name="orderCode">商户订单号</param>
         /// <param name="UserID">用户ID</param>
         /// <returns></returns>
-        public object RefundApply(string orderCode, string UserID) {
+        public object RefundApply(string orderCode, string UserID)
+        {
             if (string.IsNullOrEmpty(orderCode) || string.IsNullOrEmpty(UserID))
             {
                 return new { retCode = "Error", retMsg = "商户订单号和用户ID均不能为空", objectData = "" };
@@ -231,7 +239,7 @@ namespace AiCard.Bll
 
                 return new { retCode = "Error", retMsg = $"申请微信退款发生异常：{ex.Message}", objectData = "" };
             }
-           
+
             return new { retCode = "Success", retMsg = "成功", objectData = refundreturnData };
         }
     }

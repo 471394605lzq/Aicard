@@ -40,7 +40,7 @@ namespace AiCard.Controllers
             }
             //把数据中的OpenID取出
             var userOpenIDs = new Bll.Users.UserOpenID(user);
-            IConfig config = new ConfigMini();
+            IConfig config = new ConfigMiniPersonal();
             var openID = userOpenIDs.SearchOpenID(config.AppID);
             if (openID == null)
             {
@@ -99,7 +99,26 @@ namespace AiCard.Controllers
                 Name = user.NickName,
                 Mobile = mobile
             };
+
             db.CardPersonals.Add(card);
+            db.SaveChanges();
+            var vip = new Vip
+            {
+                Amount = 0,
+                CardID = card.ID,
+                CreateDateTime = DateTime.Now,
+                FreeChildCount = 0,
+                State = Common.Enums.VipState.Enable,
+                TotalAmount = 0,
+                TotalAmountRank = 0,
+                TotalMonthAmountRank = 0,
+                TotalWeekAmountRank = 0,
+                Type = Common.Enums.VipRank.Default,
+                UserID = userID,
+                VipChild2ndCount = 0,
+                VipChild3rdCount = 0
+            };
+            db.Vips.Add(vip);
             db.SaveChanges();
             if (parentVip != null)
             {
@@ -107,6 +126,7 @@ namespace AiCard.Controllers
                 if (result.retCode == Comm.ReqResultCode.failed)
                 {
                     //回滚
+                    db.Vips.Remove(vip);
                     db.CardPersonals.Remove(card);
                     db.SaveChanges();
                     return Json(Comm.ToJsonResult("Error", result.retMsg));
@@ -123,24 +143,37 @@ namespace AiCard.Controllers
         /// 升级VIP，创建订单及预调起支付
         /// </summary>
         /// <param name="code">微信小程序登录返回的code</param>
-        /// /// <param name="UserID">用户ID</param>
+        /// /// <param name="userID">用户ID</param>
         /// <returns></returns>
         [HttpPost]
         [AllowCrossSiteJson]
-        public ActionResult UpGradeVIP(string code, string UserID)
+        public ActionResult UpGradeVIP(string code, string userID)
         {
             if (string.IsNullOrWhiteSpace(code))
             {
-                return Json(Comm.ToJsonResult("Error", "code参数不能为空"), JsonRequestBehavior.AllowGet);
+                return Json(Comm.ToJsonResult("Error", "code参数不能为空"));
             }
-            if (string.IsNullOrWhiteSpace(UserID))
+            if (string.IsNullOrWhiteSpace(userID))
             {
-                return Json(Comm.ToJsonResult("Error", "用户ID不能为空"), JsonRequestBehavior.AllowGet);
+                return Json(Comm.ToJsonResult("Error", "用户ID不能为空"));
+            }
+            var vip = db.Vips.FirstOrDefault(s => s.UserID == userID);
+            if (vip == null)
+            {
+                return Json(Comm.ToJsonResult("NoVip", "没有注册会员"));
+            }
+            else if (vip.Type != Common.Enums.VipRank.Default)
+            {
+                return Json(Comm.ToJsonResult("VipHadUp", "已升级"));
+            }
+            else if (vip.State == Common.Enums.VipState.Uploading)
+            {
+                return Json(Comm.ToJsonResult("VipUploading", "升级中"));
             }
             dynamic result = null;
             try
             {
-                result = orderbll.CreateUpGradeOrder(code, UserID);
+                result = orderbll.CreateUpGradeOrder(code, userID);
             }
             catch (Exception ex)
             {
@@ -148,7 +181,6 @@ namespace AiCard.Controllers
                 return Json(Comm.ToJsonResult("Error", "调用升级接口发生异常"), JsonRequestBehavior.AllowGet);
 
             }
-
             return Json(Comm.ToJsonResult(result.retCode, result.retMsg, result.objectData), JsonRequestBehavior.AllowGet);
         }
 

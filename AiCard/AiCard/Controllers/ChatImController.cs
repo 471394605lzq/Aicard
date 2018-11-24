@@ -67,7 +67,14 @@ namespace AiCard.Controllers
             }), JsonRequestBehavior.AllowGet);
         }
 
-
+        /// <summary>
+        /// 推送消息
+        /// </summary>
+        /// <param name="content"></param>
+        /// <param name="fromUserID"></param>
+        /// <param name="formID"></param>
+        /// <param name="toUserID"></param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult SendMessage(string content, string fromUserID, string formID, string toUserID)
         {

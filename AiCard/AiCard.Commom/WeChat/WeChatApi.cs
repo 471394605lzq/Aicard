@@ -477,7 +477,7 @@ namespace AiCard.Common.WeChat
         /// </summary>
         public bool IsSubscribe { get; set; }
 
-        public string AppID { get; set; }
+        public WeChatAccount Type { get; set; } = WeChatAccount.AiCardMini;
     }
 
     public class AccessTokenResult

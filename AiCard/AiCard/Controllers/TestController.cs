@@ -18,9 +18,10 @@ namespace AiCard.Controllers
 
         public ActionResult Index(string mediaID, UploadServer server, string extension)
         {
-           
+
             return Json(new { d = DateTime.Now.ToString("今天 HH:mm"), d2 = DateTime.Now.ToString("MM-dd HH:mm") }, JsonRequestBehavior.AllowGet);
         }
+
 
         // 随机给VIP用户加入收益记录
         public ActionResult AutoCreateVip()
