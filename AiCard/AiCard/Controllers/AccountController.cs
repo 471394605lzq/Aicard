@@ -833,10 +833,10 @@ namespace AiCard.Controllers
 
             string username, nickname, avart, unionId = model.UnionID;
             var user = db.Users.FirstOrDefault(s => s.WeChatID == unionId);
-            Common.WeChat.IConfig config = new Common.WeChat.ConfigMini();
+            
             if (user != null)
             {
-                string appID = config.AppID;
+                string appID = model.AppID;
                 var op1 = new Bll.Users.UserOpenID(user);
                 op1.AddOpenID(appID, model.OpenID);
                 db.SaveChanges();
@@ -883,7 +883,7 @@ namespace AiCard.Controllers
                 UserType = UserType.Personal
             };
             var option = new Bll.Users.UserOpenID(user);
-            option.AddOpenID(config.AppID, model.OpenID);
+            option.AddOpenID(model.AppID, model.OpenID);
             var r = UserManager.Create(user);
             user = db.Users.FirstOrDefault(s => s.WeChatID == unionId);
 

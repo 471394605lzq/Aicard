@@ -476,6 +476,8 @@ namespace AiCard.Common.WeChat
         /// 是否已经关注
         /// </summary>
         public bool IsSubscribe { get; set; }
+
+        public string AppID { get; set; }
     }
 
     public class AccessTokenResult
