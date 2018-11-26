@@ -16,10 +16,10 @@ namespace AiCard.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        public ActionResult Index(string mediaID, UploadServer server, string extension)
+        public ActionResult Index()
         {
-
-            return Json(new { d = DateTime.Now.ToString("今天 HH:mm"), d2 = DateTime.Now.ToString("MM-dd HH:mm") }, JsonRequestBehavior.AllowGet);
+            
+            return Json(Comm.GetConfig<bool>("DebugLogApi"), JsonRequestBehavior.AllowGet);
         }
 
 
