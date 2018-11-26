@@ -324,7 +324,7 @@ namespace AiCard.Controllers
         public ActionResult SendMsgTo()
         {
             SendMsg s = new SendMsg();
-            string resultstr = s.SendSMS("18820716886", "347836", "你好");
+            string resultstr = s.SendSMS("18820716886,18820716283", "347836", "你好");
             return View();
         }
 
