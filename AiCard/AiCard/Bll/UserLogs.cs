@@ -167,7 +167,7 @@ namespace AiCard.Bll
                 else
                 {
                     int tempcount = db.UserLogs.Count(s => s.RelationID == log.RelationID && s.Type == log.Type && s.UserID == log.UserID);
-                    log.Total = tempcount == 0 ? 1 : tempcount;
+                    log.Total = tempcount == 0 ? 1 : tempcount + 1;
                     db.UserLogs.Add(log);
                 }
                 db.SaveChanges();//修改log

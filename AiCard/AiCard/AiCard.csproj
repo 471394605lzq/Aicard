@@ -823,6 +823,7 @@
     <Content Include="Scripts\Views\roleGroup.js" />
     <Content Include="Scripts\Views\testImList.js" />
     <Content Include="Scripts\Views\testIm.js" />
+    <Content Include="Scripts\Views\testIndex.js" />
     <Content Include="Scripts\Views\userManageIndex.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Views\Shared\phone.jpg" />
@@ -942,6 +943,7 @@
     <Content Include="Views\VIPManage\ChildList.cshtml" />
     <Content Include="Views\OrderManage\Index.cshtml" />
     <Content Include="Views\Test\TestSendMsg.cshtml" />
+    <Content Include="Views\Test\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
