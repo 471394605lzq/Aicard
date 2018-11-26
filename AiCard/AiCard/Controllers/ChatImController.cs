@@ -87,10 +87,10 @@ namespace AiCard.Controllers
             var api = new Common.TxIm.ImApi();
 
             var to = db.Users.FirstOrDefault(s => s.Id == toUserID);
-            if (to == null)
-            {
-                return Json(Comm.ToJsonResult("CardNoFound", "接收消息用户不存在"));
-            }
+            //if (to == null)
+            //{
+            //    return Json(Comm.ToJsonResult("CardNoFound", "接收消息用户不存在"));
+            //}
             try
             {
                 api.ImportUser(from.UserName, from.NickName, from.Avatar);
@@ -113,10 +113,10 @@ namespace AiCard.Controllers
                 },
                 To = new
                 {
-                    Avatar = to.Avatar,
-                    UserID = to.Id,
-                    UserName = to.UserName,
-                    NickName = to.NickName,
+                    Avatar =to==null?"": to.Avatar,
+                    UserID = to == null ? "" : to.Id,
+                    UserName = to == null ? "" : to.UserName,
+                    NickName = to == null ? "" : to.NickName,
                 }
             }), JsonRequestBehavior.AllowGet);
         }

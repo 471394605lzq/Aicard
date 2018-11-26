@@ -382,7 +382,7 @@ namespace AiCard.Common.WeChat
             RefreshToken();
             var p = new Dictionary<string, string>();
             p.Add("access_token", _config.AccessToken);
-            p.Add("media_id", mediaID);
+            p.Add("media_id", mediaID.Trim());
             string url = $"https://qyapi.weixin.qq.com/cgi-bin/media/get{p.ToParam("?")}";
             Comm.WriteLog("GetTempMedia", url, DebugLogLevel.Normal);
             var api = new CommonApi.BaseApi(url, "GET");
@@ -391,10 +391,15 @@ namespace AiCard.Common.WeChat
                 var dPath = $"~/Upload/{DateTime.Now:yyyyMMddHHmmss}{Comm.Random.Next(1000, 9999)}{extension}";
                 var path = HttpContext.Current.Server.MapPath(dPath);
                 var result = api.CreateRequest();
+                using (var reader = new StreamReader(result))
+                {
+                    Comm.WriteLog("GetTempMedia", reader.ReadToEnd(), DebugLogLevel.Normal);
+                }
                 using (Stream output = File.OpenWrite(path))
                 using (result)
                 {
                     result.CopyTo(output);
+                   
                 }
                 switch (server)
                 {
