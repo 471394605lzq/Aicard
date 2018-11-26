@@ -356,7 +356,18 @@ namespace AiCard.Controllers
             }
         }
 
-
+        [HttpPost]
+        public ActionResult ChangeVip(string userID, Common.Enums.VipState state)
+        {
+            var vip = db.Vips.FirstOrDefault(s => s.UserID == userID);
+            if (vip == null)
+            {
+                return Json(Comm.ToJsonResult("VipNoFound", "VIP不存在"));
+            }
+            vip.State = state;
+            db.SaveChanges();
+            return Json(Comm.ToJsonResult("Success", "成功"));
+        }
         #endregion
 
         protected override void Dispose(bool disposing)
