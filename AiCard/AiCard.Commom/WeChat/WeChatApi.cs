@@ -391,6 +391,7 @@ namespace AiCard.Common.WeChat
             var p = new Dictionary<string, string>();
             p.Add("access_token", _config.AccessToken);
             p.Add("media_id", mediaID);
+            Comm.WriteLog("GetTempMedia", mediaID, DebugLogLevel.Error);
             string url = $"https://qyapi.weixin.qq.com/cgi-bin/media/get{p.ToParam("?")}";
             Comm.WriteLog("GetTempMedia", url, DebugLogLevel.Normal);
             var api = new CommonApi.BaseApi(url, "GET");
