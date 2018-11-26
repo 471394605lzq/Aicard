@@ -8,7 +8,7 @@ namespace AiCard.Models.Vip
     /// <summary>
     /// vip用户列表请求参数
     /// </summary>
-    public sealed class ReqVipCardList :ReqPage
+    public sealed class MReqVipCardList :ReqPage
     {
         /// <summary>
         /// 模糊查询 姓名/手机号

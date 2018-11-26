@@ -9,7 +9,7 @@ namespace AiCard.Models.Vip
     /// <summary>
     /// VIP用户列表返回参数
     /// </summary>
-    public class VipCardList
+    public class MVipCardList
     {
         /// <summary>
         /// 用户账号

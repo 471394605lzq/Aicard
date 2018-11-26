@@ -42,7 +42,7 @@ namespace AiCard.Controllers
                                     where t1.[Type]={(int)Common.Enums.VipRank.Vip99}  {sw}
                                     order by t1.CreateDateTime desc";
 
-                    var query = db.Database.SqlQuery<VipCardList>(selectStr);
+                    var query = db.Database.SqlQuery<MVipCardList>(selectStr);
                     var paged = query.ToPagedList(page, pageSize);
                     return View(paged);
                 }
@@ -80,7 +80,7 @@ namespace AiCard.Controllers
                                     left join AspNetUsers t3 on t1.UserID=t3.ID
                                     where t1.ID={VipID} ";
 
-                    VipCardDetail detail = db.Database.SqlQuery<VipCardDetail>(selectStr).FirstOrDefault();
+                    MVipCardDetail detail = db.Database.SqlQuery<MVipCardDetail>(selectStr).FirstOrDefault();
 
                     return View(detail);
                 }
@@ -115,7 +115,7 @@ namespace AiCard.Controllers
                                     where t1.VipID={VipID} 
                                     order by t1.CreateDateTime desc";
 
-                    var query = db.Database.SqlQuery<VipAccountDetail>(selectStr);
+                    var query = db.Database.SqlQuery<MVipAccountDetail>(selectStr);
                     var paged = query.ToPagedList(page, pageSize);
                     return View(paged);
                 }
@@ -154,7 +154,7 @@ namespace AiCard.Controllers
                                     where t1.ParentID={VipID} 
                                     order by t1.CreateDateTime desc";
 
-                    var query = db.Database.SqlQuery<VipChildList>(selectStr);
+                    var query = db.Database.SqlQuery<MVipChildList>(selectStr);
                     var paged = query.ToPagedList(page, pageSize);
                     return View(paged);
                 }
