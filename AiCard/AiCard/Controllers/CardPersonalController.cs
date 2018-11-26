@@ -93,6 +93,35 @@ namespace AiCard.Controllers
                     }), JsonRequestBehavior.AllowGet);
                 }
                 var vip = db.Vips.FirstOrDefault(s => s.CardID == card.ID);
+                //获取最近访问的6个人头像
+                var leastUsers = (from l in db.UserLogs
+                                  from u in db.Users
+                                  where l.Type == Common.Enums.UserLogType.CardPersonalRead
+                                    && l.RelationID == card.ID
+                                    && u.Id == l.UserID
+                                  select new
+                                  {
+                                      UserID = u.Id,
+                                      u.Avatar,
+                                      l.CreateDateTime
+                                  }).GroupBy(s => new { s.UserID, s.Avatar })
+                                   .Select(s => new
+                                   {
+                                       s.Key.UserID,
+                                       s.Key.Avatar,
+                                       CreateDateTime = s.Max(x => x.CreateDateTime)
+                                   })
+                                   .OrderByDescending(s => s.CreateDateTime)
+                                   .Take(6)
+                                   .ToList();
+                Bll.UserLogs.Add(new UserLog
+                {
+                    UserID = userID,
+                    RelationID = card.ID,
+                    TargetUserID = card.UserID,
+                    Type = Common.Enums.UserLogType.CardPersonalRead
+                });
+
                 var data = new
                 {
                     card.Name,
@@ -123,6 +152,7 @@ namespace AiCard.Controllers
                     card.Gender,
                     Birthday = card.Birthday?.ToString("yyyy-MM-dd"),
                     Code = vip.Code,
+                    Viewers = leastUsers.Select(s => s.Avatar).ToList()
                 };
                 return Json(Comm.ToJsonResult("Success", "成功", data), JsonRequestBehavior.AllowGet);
             }
