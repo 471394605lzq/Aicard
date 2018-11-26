@@ -145,6 +145,7 @@
     <Compile Include="Qiniu\QinQiuApi.cs" />
     <Compile Include="QrCode.cs" />
     <Compile Include="Reg.cs" />
+    <Compile Include="SendMsg\SendMsg.cs" />
     <Compile Include="SteamCheck.cs" />
     <Compile Include="TxIm\ImApi.cs" />
     <Compile Include="TxIm\ImConfig.cs" />

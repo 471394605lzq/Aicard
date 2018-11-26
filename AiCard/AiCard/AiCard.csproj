@@ -938,6 +938,7 @@
     <Content Include="Views\VIPManage\Details.cshtml" />
     <Content Include="Views\VIPManage\AccountDetail.cshtml" />
     <Content Include="Views\VIPManage\ChildList.cshtml" />
+    <Content Include="Views\Test\TestSendMsg.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
