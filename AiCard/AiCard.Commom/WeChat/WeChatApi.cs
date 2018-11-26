@@ -56,7 +56,7 @@ namespace AiCard.Common.WeChat
                 UnionID = result["unionid"].Value<string>(),
                 RefreshToken = _config.RefreshToken
             };
-        } 
+        }
 
 
         /// <summary>
@@ -250,7 +250,7 @@ namespace AiCard.Common.WeChat
         /// <returns></returns>
         public List<TempMessage> GetAllTempMessage()
         {
-            var url = $"  https://api.weixin.qq.com/cgi-bin/template/get_all_private_template?access_token={GetAccessToken()}";
+            var url = $"https://api.weixin.qq.com/cgi-bin/template/get_all_private_template?access_token={GetAccessToken()}";
             var api = new CommonApi.BaseApi(url, "GET");
             var result = api.CreateRequestReturnJson();
 
@@ -379,10 +379,18 @@ namespace AiCard.Common.WeChat
         /// </remarks>
         public string GetTempMedia(string mediaID, CommModels.UploadServer server, string extension)
         {
-            RefreshToken();
+            try
+            {
+                RefreshToken();
+            }
+            catch (Exception ex)
+            {
+                Comm.WriteLog("GetTempMedia", "RefreshTokenError", DebugLogLevel.Error);
+            }
+
             var p = new Dictionary<string, string>();
             p.Add("access_token", _config.AccessToken);
-            p.Add("media_id", mediaID.Trim());
+            p.Add("media_id", mediaID);
             string url = $"https://qyapi.weixin.qq.com/cgi-bin/media/get{p.ToParam("?")}";
             Comm.WriteLog("GetTempMedia", url, DebugLogLevel.Normal);
             var api = new CommonApi.BaseApi(url, "GET");
@@ -399,7 +407,7 @@ namespace AiCard.Common.WeChat
                 using (result)
                 {
                     result.CopyTo(output);
-                   
+
                 }
                 switch (server)
                 {
