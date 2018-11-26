@@ -93,9 +93,16 @@ namespace AiCard.Controllers
         public ActionResult GetInfo(string userID)
         {
             var vip = db.Vips
-                .FirstOrDefault(s => s.UserID == userID
-                    && s.State == Common.Enums.VipState.Enable);
+                .FirstOrDefault(s => s.UserID == userID);
             if (vip == null)
+            {
+                return Json(Comm.ToJsonResult("VipNoCreate", "用户未注册"), JsonRequestBehavior.AllowGet);
+            }
+            else if (vip.Type == Common.Enums.VipRank.Default && vip.State == Common.Enums.VipState.Uploading)
+            {
+                return Json(Comm.ToJsonResult("VipUploading", "升级处理中"), JsonRequestBehavior.AllowGet);
+            }
+            else if (vip.Type == Common.Enums.VipRank.Default)
             {
                 return Json(Comm.ToJsonResult("VipNoFound", "用户不是VIP"), JsonRequestBehavior.AllowGet);
             }

@@ -19,8 +19,8 @@ namespace AiCard.Controllers
 
         public ActionResult Index()
         {
-            
-            return Json(Comm.GetConfig<bool>("DebugLogApi"), JsonRequestBehavior.AllowGet);
+
+            return Json(Bll.VipBLL.RandomCode(), JsonRequestBehavior.AllowGet);
         }
 
 
@@ -321,7 +321,8 @@ namespace AiCard.Controllers
         {
             return View();
         }
-        public ActionResult SendMsgTo() {
+        public ActionResult SendMsgTo()
+        {
             SendMsg s = new SendMsg();
             string resultstr = s.SendSMS("18820716886", "347836", "你好");
             return View();
