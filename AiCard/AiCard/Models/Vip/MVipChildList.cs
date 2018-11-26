@@ -9,7 +9,7 @@ namespace AiCard.Models.Vip
     /// <summary>
     /// vip用户下级用户信息
     /// </summary>
-    public class VipChildList
+    public class MVipChildList
     {
         /// <summary>
         /// 时间

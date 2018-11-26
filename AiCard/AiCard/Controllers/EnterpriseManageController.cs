@@ -251,12 +251,11 @@ namespace AiCard.Controllers
                         if (!item.ishave)
                         {
                             var img = this.Download(item.Avatar);
-                            string username = item.Mobile;
-                            var tempuser = new ApplicationUser { UserName = item.Mobile, RegisterDateTime = DateTime.Now, EnterpriseID = em.ID, LastLoginDateTime = DateTime.Now, UserType = UserType.Personal };
-                            var result = await UserManager.CreateAsync(tempuser, item.Mobile);
-                            //用户创建成果
-                            if (result.Succeeded)
-                            {
+                            //var tempuser = new ApplicationUser { UserName = item.Mobile, RegisterDateTime = DateTime.Now, EnterpriseID = em.ID, LastLoginDateTime = DateTime.Now, UserType = UserType.Personal };
+                            //var result = await UserManager.CreateAsync(tempuser, item.Mobile);
+                            ////用户创建成果
+                            //if (result.Succeeded)
+                            //{
                                 Common.Qiniu.QinQiuApi qin = new Common.Qiniu.QinQiuApi();
                                 var path = Server.MapPath(img);
                                 var img2 = qin.UploadFile(path);
@@ -264,7 +263,7 @@ namespace AiCard.Controllers
                                 {
                                     Name = item.Name,
                                     Avatar = img2,
-                                    UserID = tempuser.Id,
+                                    UserID = string.Empty,
                                     Email = item.Email,
                                     EnterpriseID = em.ID,
                                     Gender = item.Gender,
@@ -274,7 +273,7 @@ namespace AiCard.Controllers
                                 };
                                 db.Cards.Add(card);
                                 db.SaveChanges();
-                            }
+                            //}
                         }
                     }
                     catch (Exception ex)

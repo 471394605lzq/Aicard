@@ -9,6 +9,7 @@ using AiCard.Common.CommModels;
 using AiCard.Common.Enums;
 using AiCard.DAL.Models;
 using AiCard.Common;
+using AiCard.Commom.SendMsg;
 
 namespace AiCard.Controllers
 {
@@ -316,13 +317,21 @@ namespace AiCard.Controllers
             return View();
 
         }
+        public ActionResult TestSendMsg()
+        {
+            return View();
+        }
+        public ActionResult SendMsgTo() {
+            SendMsg s = new SendMsg();
+            string resultstr = s.SendSMS("18820716886", "347836", "你好");
+            return View();
+        }
 
         public ActionResult TestCkEdit()
         {
 
             return View();
         }
-
 
         [AllowCrossSiteJson]
         public ActionResult WirteLog(object data)

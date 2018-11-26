@@ -1,4 +1,4 @@
-﻿@model IEnumerable<AiCard.Models.Vip.VipChildList>
+﻿@model IEnumerable<AiCard.Models.Vip.MVipChildList>
 
 @{
     ViewBag.Title = "vip用户下级用户列表";
@@ -68,7 +68,7 @@
 }
 
 </table>
-@Html.PageList((PagedList.IPagedList<AiCard.Models.Vip.VipChildList>)Model, Url.PageUrl())
+@Html.PageList((PagedList.IPagedList<AiCard.Models.Vip.MVipChildList>)Model, Url.PageUrl())
 
 <p>
     @Html.ActionLink("返回列表", "Index")

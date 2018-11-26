@@ -1,4 +1,4 @@
-﻿@model IEnumerable<AiCard.Models.Vip.VipCardList>
+﻿@model IEnumerable<AiCard.Models.Vip.MVipCardList>
 
 @{
     ViewBag.Title = "VIP用户列表";
@@ -112,4 +112,4 @@
     }
 
 </table>
-@Html.PageList((PagedList.IPagedList<AiCard.Models.Vip.VipCardList>)Model, Url.PageUrl())
+@Html.PageList((PagedList.IPagedList<AiCard.Models.Vip.MVipCardList>)Model, Url.PageUrl())

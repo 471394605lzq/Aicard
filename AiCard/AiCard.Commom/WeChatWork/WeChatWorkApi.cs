@@ -34,7 +34,7 @@ namespace AiCard.Common.WeChatWork
             var api = new CommonApi.BaseApi($"https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid={corpid}&corpsecret={secret}", "get");
             var result = api.CreateRequestReturnJson();
             AccessToken = result["access_token"].Value<string>();
-        }
+        } 
 
 
         public List<Department> GetDepartment(int? pid = null)

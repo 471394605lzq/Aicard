@@ -193,7 +193,7 @@ namespace AiCard.Controllers
                     counts = s.counts,
                     allcounts = s.allcounts,
                     sharepath = s.action,
-                    sharepathname = GetEnumsName(s.action),
+                    sharepathname = GetCustLogEnumsName(s.action),
                     ratio = s.ratio
                 });
 
@@ -246,7 +246,7 @@ namespace AiCard.Controllers
                 {
                     counts = s.counts,
                     sharepage = s.action,
-                    sharepaagename = GetEnumsName(s.action),
+                    sharepaagename = GetCustLogEnumsName(s.action),
                 });
                 return Json(Comm.ToJsonResult("Success", "成功", resultdata), JsonRequestBehavior.AllowGet);
             }
@@ -332,7 +332,7 @@ namespace AiCard.Controllers
                     counts = s.counts,
                     allcounts = s.allcounts,
                     gender = s.action,
-                    gendername = GetEnumsName(s.action),
+                    gendername = GetCustGenderEnumsName(s.action),
                     ratio = s.ratio
                 });
 
@@ -343,6 +343,7 @@ namespace AiCard.Controllers
                 return Json(Comm.ToJsonResult("Error", ex.Message), JsonRequestBehavior.AllowGet);
             }
         }
+
 
         /// <summary>
         /// 年龄占比
@@ -455,7 +456,7 @@ namespace AiCard.Controllers
                     counts = s.counts,
                     allcounts = s.allcounts,
                     avocation = s.action,
-                    avocationname = GetEnumsName(s.action),
+                    avocationname = GetCustLogEnumsName(s.action),
                     ratio = s.ratio
                 });
 
@@ -467,7 +468,35 @@ namespace AiCard.Controllers
             }
         }
 
+        //获取客户行为枚举名称
+        private string GetCustLogEnumsName(int val)
+        {
+            string returnmane = "";
+            try
+            {
+                returnmane = ((Common.Enums.UserLogType)val).GetDisplayName();
+            }
+            catch (Exception ex)
+            {
+                returnmane = "未知";
+            }
+            return returnmane;
+        }
 
+        //获取客户性别枚举名称
+        private string GetCustGenderEnumsName(int val)
+        {
+            string returnmane = "";
+            try
+            {
+                returnmane = ((Common.Enums.Gender)val).GetDisplayName();
+            }
+            catch (Exception ex)
+            {
+                returnmane = "未知";
+            }
+            return returnmane;
+        }
 
 
 
@@ -613,7 +642,7 @@ namespace AiCard.Controllers
                             model.isnewcust = mydata[j].isnewcust;
                             model.RealName = mydata[j].RealName;
                             model.Total = mydata[j].Total;
-                            model.showstr = "第" + mydata[j].Total.ToString() + "次" + ((Common.Enums.NoopsycheFollowType)mydata[j].Type).GetDisplayName();
+                            model.showstr = ((Common.Enums.NoopsycheFollowType)mydata[j].Type).GetDisplayName();
                             model.showremarkstr = ((Common.Enums.NoopsycheFollowType)mydata[j].Type + 1).GetDisplayName();
                             model.TitleTime = data[i].timestr;
                             model.ID = mydata[j].ID;
@@ -650,7 +679,7 @@ namespace AiCard.Controllers
                         model.isnewcust = data[j].isnewcust;
                         model.RealName = data[j].RealName;
                         model.Total = data[j].Total;
-                        model.showstr = "第" + data[j].Total.ToString() + "次" + ((Common.Enums.NoopsycheFollowType)data[j].Type).GetDisplayName();
+                        model.showstr =  ((Common.Enums.NoopsycheFollowType)data[j].Type).GetDisplayName();
                         model.showremarkstr = ((Common.Enums.NoopsycheFollowType)data[j].Type + 1).GetDisplayName();
                         model.TitleTime = "无";
                         model.ID = data[j].ID;
@@ -737,7 +766,7 @@ namespace AiCard.Controllers
                             NoopsycheFollowShowModel model = new NoopsycheFollowShowModel();
                             model.createtimestr = mydata[j].createtimestr;
                             model.Total = mydata[j].Total;
-                            model.showstr = "第" + mydata[j].Total.ToString() + "次" + ((Common.Enums.NoopsycheFollowType)mydata[j].Type).GetDisplayName();
+                            model.showstr = ((Common.Enums.NoopsycheFollowType)mydata[j].Type).GetDisplayName();
                             model.showremarkstr = ((Common.Enums.NoopsycheFollowType)mydata[j].Type + 1).GetDisplayName();
                             model.TitleTime = data[i].timestr;
                             model.ID = mydata[j].ID;
@@ -831,9 +860,10 @@ namespace AiCard.Controllers
                     for (int j = 0; j < mydata.Count; j++)
                     {
                         NoopsycheFollowShowModel model = new NoopsycheFollowShowModel();
+                        model.Type = mydata[j].Type == Common.Enums.UserLogType.AddCustTab.GetHashCode() ? 102 : mydata[j].Type == Common.Enums.UserLogType.FollowUp.GetHashCode() ? 101 : 20;
                         model.createtimestr = mydata[j].createtimestr;
                         model.Total = mydata[j].Total;
-                        model.showstr = mydata[j].Type == Common.Enums.UserLogType.Communication.GetHashCode() ? "第" + mydata[j].Total.ToString() + "次" + ((Common.Enums.NoopsycheFollowType)mydata[j].Type).GetDisplayName() : "";
+                        model.showstr = mydata[j].Type == Common.Enums.UserLogType.Communication.GetHashCode() ? ((Common.Enums.NoopsycheFollowType)mydata[j].Type).GetDisplayName() : "";
                         model.showremarkstr =mydata[j].Remark;
                         model.TitleTime = data[i].timestr;
                         model.ID = mydata[j].ID;
@@ -854,20 +884,6 @@ namespace AiCard.Controllers
         }
 
 
-        //获取客户来源枚举名称
-        private string GetEnumsName<T>(int val, Enum e)
-        {
-            string returnmane = "";
-            try
-            {
-                returnmane = ((Common.Enums.EnterpriseUserCustomerSource)val).GetDisplayName();
-            }
-            catch (Exception ex)
-            {
-                returnmane = "未知";
-            }
-            return returnmane;
-        }
         private class NoopsycheFollowModel
         {
             public int rownumber { get; set; }

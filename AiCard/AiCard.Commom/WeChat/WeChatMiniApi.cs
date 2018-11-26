@@ -184,7 +184,7 @@ namespace AiCard.Common.WeChat
                 RefreshToken();
             }
             return _config.AccessToken;
-        }
+        } 
 
         /// <summary>
         /// 刷新Token
@@ -192,11 +192,11 @@ namespace AiCard.Common.WeChat
         /// <returns></returns>
         public string RefreshToken()
         {
-            var date = DateTime.Now;
-            if (_config.AccessToken != null && _config.AccessTokenEnd < date)
-            {
-                return _config.AccessToken;
-            }
+            //var date = DateTime.Now;
+            //if (_config.AccessToken != null && _config.AccessTokenEnd < date)
+            //{
+            //    return _config.AccessToken;
+            //}
             var api = new CommonApi.BaseApi($"https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid={AppID}&secret={Secret}", "GET");
             var result = api.CreateRequestReturnJson();
             _config.AccessToken = result["access_token"].Value<string>();
