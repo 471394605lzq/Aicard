@@ -65,6 +65,10 @@ namespace AiCard.Controllers
         {
             try
             {
+                if (string.IsNullOrWhiteSpace(userID))
+                {
+                    return Json(Comm.ToJsonResult("Error", "UserID为空"), JsonRequestBehavior.AllowGet);
+                }
                 var query = (from c in db.CardPersonals
                              where c.Enable
                              select c);
@@ -92,6 +96,13 @@ namespace AiCard.Controllers
                         UserID = user.Id
                     }), JsonRequestBehavior.AllowGet);
                 }
+                Bll.UserLogs.Add(new UserLog
+                {
+                    UserID = userID,
+                    RelationID = card.ID,
+                    TargetUserID = card.UserID,
+                    Type = Common.Enums.UserLogType.CardPersonalRead
+                });
                 var vip = db.Vips.FirstOrDefault(s => s.CardID == card.ID);
                 //获取最近访问的6个人头像
                 var leastUsers = (from l in db.UserLogs
@@ -114,13 +125,7 @@ namespace AiCard.Controllers
                                    .OrderByDescending(s => s.CreateDateTime)
                                    .Take(6)
                                    .ToList();
-                Bll.UserLogs.Add(new UserLog
-                {
-                    UserID = userID,
-                    RelationID = card.ID,
-                    TargetUserID = card.UserID,
-                    Type = Common.Enums.UserLogType.CardPersonalRead
-                });
+
 
                 var data = new
                 {
