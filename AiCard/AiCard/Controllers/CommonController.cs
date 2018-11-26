@@ -95,6 +95,10 @@ namespace AiCard.Controllers
         {
             try
             {
+                if (string.IsNullOrWhiteSpace(mediaID))
+                {
+                    return Json(Comm.ToJsonResult("Error", "mediaID不能为null"));
+                }
                 var server = Common.CommModels.UploadServer.Local;
                 Common.WeChat.IConfig config = new Common.WeChat.WeChatWorkConfig();
                 var wechat = new Common.WeChat.WeChatApi(config);
