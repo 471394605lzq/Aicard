@@ -20,7 +20,7 @@ namespace AiCard.Controllers
         public ActionResult Index()
         {
 
-            return Json(Bll.VipBLL.RandomCode(), JsonRequestBehavior.AllowGet);
+            return View();
         }
 
 

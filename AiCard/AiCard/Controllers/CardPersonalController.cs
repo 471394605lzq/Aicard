@@ -106,6 +106,7 @@ namespace AiCard.Controllers
                     card.Video,
                     card.Voice,
                     card.Info,
+                    card.Industry,
                     Images = card.Images.SplitToArray<string>() ?? new List<string>(),
                     PCardID = card.ID,
                     Enterprise = card.Enterprise,
