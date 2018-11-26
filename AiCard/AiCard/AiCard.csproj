@@ -283,6 +283,7 @@
     <Compile Include="Controllers\HomePageModularsController.cs" />
     <Compile Include="Controllers\HomePageModularsManageController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\OrderManageController.cs" />
     <Compile Include="Controllers\ProductKindsManageController.cs" />
     <Compile Include="Controllers\ProductsController.cs" />
     <Compile Include="Controllers\ProductsManageController.cs" />
@@ -308,6 +309,7 @@
     <Compile Include="Models\EnterpriseViewModels.cs" />
     <Compile Include="Models\HomePageModularViewModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\Order\MOrderInfo.cs" />
     <Compile Include="Models\PersonalCardViewModels.cs" />
     <Compile Include="Models\ProductKindsViewModels.cs" />
     <Compile Include="Models\ProductViewModels.cs" />
@@ -938,6 +940,7 @@
     <Content Include="Views\VIPManage\Details.cshtml" />
     <Content Include="Views\VIPManage\AccountDetail.cshtml" />
     <Content Include="Views\VIPManage\ChildList.cshtml" />
+    <Content Include="Views\OrderManage\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
