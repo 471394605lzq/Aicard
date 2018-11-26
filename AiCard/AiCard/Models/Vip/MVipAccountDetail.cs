@@ -9,7 +9,7 @@ namespace AiCard.Models.Vip
     /// <summary>
     /// vip用户账户收支明细
     /// </summary>
-    public sealed class VipAccountDetail
+    public sealed class MVipAccountDetail
     {
         /// <summary>
         /// 时间

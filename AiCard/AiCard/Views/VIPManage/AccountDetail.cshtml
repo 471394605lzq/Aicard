@@ -1,4 +1,4 @@
-﻿@model IEnumerable<AiCard.Models.Vip.VipAccountDetail>
+﻿@model IEnumerable<AiCard.Models.Vip.MVipAccountDetail>
 
 @{
     ViewBag.Title = "vip用户账户收支明细";
@@ -51,7 +51,7 @@
 
 </table>
 
-@Html.PageList((PagedList.IPagedList<AiCard.Models.Vip.VipAccountDetail>)Model, Url.PageUrl())
+@Html.PageList((PagedList.IPagedList<AiCard.Models.Vip.MVipAccountDetail>)Model, Url.PageUrl())
 <p>
     @Html.ActionLink("返回列表", "Index")
 </p>

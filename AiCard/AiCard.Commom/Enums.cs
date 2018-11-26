@@ -511,10 +511,12 @@ namespace AiCard.Common.Enums
         /// <summary>
         /// 收款
         /// </summary>
+        [Display(Name = "收款")]
         Receivable,
         /// <summary>
         /// 退款
         /// </summary>
+        [Display(Name = "退款")]
         Refund
     }
 

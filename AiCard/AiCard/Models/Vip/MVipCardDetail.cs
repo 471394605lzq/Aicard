@@ -9,7 +9,7 @@ namespace AiCard.Models.Vip
     /// <summary>
     /// VIP用户详情返回参数
     /// </summary>
-    public class VipCardDetail
+    public class MVipCardDetail
     {
         [Display(Name = "公司")]
         public string Enterprise { get; set; }

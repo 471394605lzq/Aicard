@@ -28,7 +28,7 @@ namespace AiCard.Controllers.Tests
 
             //ActionResult result = vip.CreateByWeChatPhone("f9df854b-24d5-4d09-bd9e-cf4147cec35e", "", "15521116670", "", "111111");
 
-            ReqVipCardList req = new ReqVipCardList() {
+            MReqVipCardList req = new MReqVipCardList() {
                 filter= "1562356",
                 Page=1,
                 PageSize=2
