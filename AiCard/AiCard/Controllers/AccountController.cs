@@ -740,11 +740,13 @@ namespace AiCard.Controllers
                     {
                         user = db.Users.FirstOrDefault(s => s.WeChatID == result.UnionID);
                         // 把OpenID存进数据库
-
-                        Comm.WriteLog("LoginByWeiXin", $"AppID={config.AppID}&OpenID={result.OpenID}", DebugLogLevel.Normal);
-                        var option = new Bll.Users.UserOpenID(user);
-                        option.AddOpenID(config.AppID, result.OpenID);
-                        db.SaveChanges();
+                        if (user != null)
+                        {
+                            Comm.WriteLog("LoginByWeiXin", $"AppID={config.AppID}&OpenID={result.OpenID}", DebugLogLevel.Normal);
+                            var option = new Bll.Users.UserOpenID(user);
+                            option.AddOpenID(config.AppID, result.OpenID);
+                            db.SaveChanges();
+                        }
                     }
                     return Json(Comm.ToJsonResult("Success", "成功", new
                     {
