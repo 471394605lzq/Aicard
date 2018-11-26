@@ -286,8 +286,10 @@ namespace AiCard.Controllers
                 {
                     pCard.District = model.District;
                 }
-
-
+                if (model.Enterprise != null)
+                {
+                    pCard.Enterprise = model.Enterprise;
+                }
                 db.SaveChanges();
                 return Json(Comm.ToJsonResult("Success", "成功"), JsonRequestBehavior.AllowGet);
             }

@@ -385,30 +385,30 @@ namespace AiCard.Common.WeChat
             }
             catch (Exception ex)
             {
-                Comm.WriteLog("GetTempMedia", "RefreshTokenError", DebugLogLevel.Error);
+                throw new Exception(ex.Message);
+
             }
 
             var p = new Dictionary<string, string>();
             p.Add("access_token", _config.AccessToken);
             p.Add("media_id", mediaID);
-            Comm.WriteLog("GetTempMedia", mediaID, DebugLogLevel.Error);
+
             string url = $"https://qyapi.weixin.qq.com/cgi-bin/media/get{p.ToParam("?")}";
-            Comm.WriteLog("GetTempMedia", url, DebugLogLevel.Normal);
+           
             var api = new CommonApi.BaseApi(url, "GET");
             try
             {
                 var dPath = $"~/Upload/{DateTime.Now:yyyyMMddHHmmss}{Comm.Random.Next(1000, 9999)}{extension}";
                 var path = HttpContext.Current.Server.MapPath(dPath);
                 var result = api.CreateRequest();
-                using (var reader = new StreamReader(result))
-                {
-                    Comm.WriteLog("GetTempMedia", reader.ReadToEnd(), DebugLogLevel.Normal);
-                }
+                string errorMsg;
+                var reader = new StreamReader(result);
+                errorMsg = reader.ReadToEnd();
+
+                Comm.WriteLog("GetTempMedia", errorMsg, DebugLogLevel.Normal);
                 using (Stream output = File.OpenWrite(path))
-                using (result)
                 {
                     result.CopyTo(output);
-
                 }
                 switch (server)
                 {
