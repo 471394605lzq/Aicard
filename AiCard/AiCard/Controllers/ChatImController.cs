@@ -68,6 +68,60 @@ namespace AiCard.Controllers
         }
 
         /// <summary>
+        /// 名片用户(fromUserID)跟普通用户(ToUserID)聊天用到的用户信息
+        /// </summary>
+        /// <param name="fromUserID">请求消息的用户ID</param>
+        /// <param name="cardID">名片的用户ID</param>
+        /// <returns></returns>
+        [AllowCrossSiteJson]
+        public ActionResult GetFromAndToUserID(string fromUserID, string toUserID)
+        {
+            var from = (from u in db.Users
+                        from c in db.Cards
+                        where u.Id == c.UserID && u.Id==fromUserID
+                        select new { u.Id, u.UserName, c.Avatar, NickName = c.Name }).FirstOrDefault();
+            if (from == null)
+            {
+                return Json(Comm.ToJsonResult("FromUserNoFound", "发送用户不存在"));
+            }
+            var api = new Common.TxIm.ImApi();
+
+            var to = db.Users.FirstOrDefault(s => s.Id == toUserID);
+            if (to == null)
+            {
+                return Json(Comm.ToJsonResult("CardNoFound", "接收消息用户不存在"));
+            }
+            try
+            {
+                api.ImportUser(from.UserName, from.NickName, from.Avatar);
+                api.ImportUser(to.UserName, to.NickName, to.Avatar);
+            }
+            catch (Exception ex)
+            {
+                Json(Comm.ToJsonResult("Error", ex.Message));
+            }
+
+            return Json(Comm.ToJsonResult("Success", "成功", new
+            {
+                From = new
+                {
+                    Avatar = from.Avatar,
+                    UserID = from.Id,
+                    UserName = from.UserName,
+                    NickName = from.NickName,
+                    Sign = Common.TxIm.SigCheck.Sign(from.UserName),
+                },
+                To = new
+                {
+                    Avatar = to.Avatar,
+                    UserID = to.Id,
+                    UserName = to.UserName,
+                    NickName = to.NickName,
+                }
+            }), JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
         /// 推送消息
         /// </summary>
         /// <param name="content"></param>
