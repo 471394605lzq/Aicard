@@ -66,7 +66,7 @@ namespace AiCard.Controllers
             try
             {
                 var query = (from c in db.CardPersonals
-                             where c.ID == pCardID && c.Enable
+                             where c.Enable
                              select c);
                 if (pCardID.HasValue)
                 {

@@ -110,5 +110,26 @@ namespace AiCard.Controllers
                 return Json(Comm.ToJsonResult("Error", ex.Message));
             }
         }
+
+        [HttpPost]
+        public ActionResult WriteLog(string name, string message, Common.Enums.DebugLogLevel level = Common.Enums.DebugLogLevel.Normal)
+        {
+            if (Comm.GetConfig<bool>("DebugLogApi"))
+            {
+                try
+                {
+                    Comm.WriteLog(name, message, level);
+                }
+                catch (Exception ex)
+                {
+                    return Json(Comm.ToJsonResult("Error", ex.Message));
+                }
+                return Json(Comm.ToJsonResult("Success", "成功"));
+            }
+            else
+            {
+                return Json(Comm.ToJsonResult("WriteLogDisable", "已关闭"));
+            }
+        }
     }
 }

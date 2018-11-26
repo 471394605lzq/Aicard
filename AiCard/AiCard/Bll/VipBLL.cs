@@ -104,7 +104,7 @@ namespace AiCard.Bll
                                     result.retMsg = "创建vip用户与上级关系时失败";
                                     return result;
                                 }
-                               
+
                             }
                         }
                     }
@@ -129,6 +129,27 @@ namespace AiCard.Bll
             result.retMsg = "操作成功";
             return result;
             #endregion
+        }
+
+        /// <summary>
+        /// 随机生成6位邀请码（0~9 A~Z）
+        /// </summary>
+        /// <returns></returns>
+        public static string RandomCode()
+        {
+            using (ApplicationDbContext db = new ApplicationDbContext())
+            {
+                string key = "0123456789ABCDEFGHIJKLNMOPQRSTUVWXYZ";
+                string code = "";
+                do
+                {
+                    for (int i = 0; i < 6; i++)
+                    {
+                        code += key[Common.Comm.Random.Next(0, key.Length - 1)];
+                    }
+                } while (db.Vips.Any(s => s.Code == code));//判断是否有重复
+                return code;
+            }
         }
     }
 }

@@ -73,8 +73,11 @@ namespace AiCard.Bll
                             row = db.SaveChanges();
                             if (row > 0 && order.State == Common.Enums.OrderState.Success)
                             {
+
                                 var vip = db.Vips.FirstOrDefault(s => s.UserID == order.UserID);
                                 vip.Type = Common.Enums.VipRank.Vip99;
+                                vip.State = Common.Enums.VipState.Enable;
+                                vip.Code = Bll.VipBLL.RandomCode();
                                 db.SaveChanges();
                                 //查看是否需要计算上级收益
                                 VIPAccountBLL bll = new VIPAccountBLL();
