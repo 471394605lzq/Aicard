@@ -186,6 +186,7 @@
     <None Include="TxIm\sig" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="ffmpeg\ffmpeg.exe" />
     <Content Include="IllegalWords\keywords.txt" />
   </ItemGroup>
   <ItemGroup />

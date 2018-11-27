@@ -11,6 +11,8 @@ using System.Net;
 using System.Text;
 using System.IO;
 using AiCard.Common.Enums;
+using System.Diagnostics;
+using System.Threading;
 
 namespace AiCard.Common.WeChat
 {
@@ -377,61 +379,67 @@ namespace AiCard.Common.WeChat
         /// <param name="server">上传的服务器</param>
         /// <param name="extension">文件的扩展名带(.xxx)</param>
         /// <returns>本地服务返回~/Upload/xxxx.xxx,其他返回完整连接</returns>
-        /// <remarks>文档：https://qydev.weixin.qq.com/wiki/index.php?title=%E8%8E%B7%E5%8F%96%E4%B8%B4%E6%97%B6%E7%B4%A0%E6%9D%90%E6%96%87%E4%BB%B6 
-        /// <para>调试：https://mp.weixin.qq.com/debug/cgi-bin/apiinfo?t=index&type=%E5%9F%BA%E7%A1%80%E6%94%AF%E6%8C%81&form=%E4%B8%8B%E8%BD%BD%E5%A4%9A%E5%AA%92%E4%BD%93%E6%96%87%E4%BB%B6%E6%8E%A5%E5%8F%A3%20/media/get</para>
+        /// <remarks>文档：https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1444738727 
         /// </remarks>
         public string GetTempMedia(string mediaID, CommModels.UploadServer server, string extension)
         {
-            try
-            {
-                RefreshToken();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-
-            }
-
             var p = new Dictionary<string, string>();
-            p.Add("access_token", _config.AccessToken);
+            p.Add("access_token", GetAccessToken());
             p.Add("media_id", mediaID);
 
-            string url = $"https://qyapi.weixin.qq.com/cgi-bin/media/get{p.ToParam("?")}";
-
-            var api = new CommonApi.BaseApi(url, "GET");
+            string url = $"https://api.weixin.qq.com/cgi-bin/media/get{p.ToParam("?")}";
+            //Comm.WriteLog("GetTempMedia", url, DebugLogLevel.Normal);
             try
             {
+                var api = new CommonApi.BaseApi(url, "GET");
                 var dPath = $"~/Upload/{DateTime.Now:yyyyMMddHHmmss}{Comm.Random.Next(1000, 9999)}{extension}";
                 var path = HttpContext.Current.Server.MapPath(dPath);
-                var result = api.CreateRequest();
-                string errorMsg;
-                var reader = new StreamReader(result);
-                errorMsg = reader.ReadToEnd();
 
-                Comm.WriteLog("GetTempMedia", errorMsg, DebugLogLevel.Normal);
-                using (Stream output = File.OpenWrite(path))
+                string mp3SavePth = $"~/Upload/{DateTime.Now:yyyyMMddHHmmss}{Comm.Random.Next(1000, 9999)}.mp3";
+                //将原来的视频转换成mp3格式成功
+                if (!string.IsNullOrEmpty(Comm.ConvertToMp3(path, mp3SavePth)))
                 {
-                    result.CopyTo(output);
-                }
-                switch (server)
-                {
-                    default:
-                    case CommModels.UploadServer.Local:
-                        return path;
-                    case CommModels.UploadServer.QinQiu:
-                        return new Qiniu.QinQiuApi().UploadFile(path, true);
-                }
+                    var result = api.CreateRequest();
+                    string errorMsg;
+                    var reader = new StreamReader(result);
+                    errorMsg = reader.ReadToEnd();
 
+                    //Comm.WriteLog("GetTempMedia", errorMsg, DebugLogLevel.Normal);
+                    result.Position = 0;
+                    using (Stream output = File.OpenWrite(mp3SavePth))
+                    {
+                        result.CopyTo(output);
+                    }
+                    switch (server)
+                    {
+                        default:
+                        case CommModels.UploadServer.Local:
+                            return dPath;
+                        case CommModels.UploadServer.QinQiu:
+                            return new Qiniu.QinQiuApi().UploadFile(mp3SavePth, true);
+                    }
+                }
+                else
+                {
+                    return "文件转换失败";
+                }
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                //throw new Exception(ex.Message);
+                Comm.WriteLog("GetTempMedia", ex.Message, DebugLogLevel.Error);
+                return ex.Message;
             }
 
         }
 
+      
+    
 
-        public String JsSign(string url, string noncestr, string timestamp)
+
+
+
+    public String JsSign(string url, string noncestr, string timestamp)
         {
 
             var api2 = new CommonApi.BaseApi($"https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token={GetAccessToken()}&type=jsapi", "GET");

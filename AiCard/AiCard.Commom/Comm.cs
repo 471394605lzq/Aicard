@@ -9,6 +9,9 @@ using System.Security.Cryptography;
 using AiCard.Common.Enums;
 using AiCard.Common.CommModels;
 using AiCard;
+using System.Diagnostics;
+using System.Threading;
+
 namespace AiCard.Common
 {
     public class Comm
@@ -516,6 +519,44 @@ namespace AiCard.Common
             memoryStream.Close();
             cryptoStream.Close();
             return Encoding.UTF8.GetString(plainTextBytes, 0, decryptedByteCount).TrimEnd("\0".ToCharArray());
+        }
+
+        public static string ConvertToMp3(string pathBefore, string pathLater)
+        {
+            string bgPath = System.Web.HttpContext.Current.Request.MapPath("~\\ffmpeg\\Images\\") + @"ffmpeg.exe -i " + pathBefore + " " + pathLater; ;
+            //string c = Server.MapPath("/ffmpeg/") + @"ffmpeg.exe -i " + pathBefore + " " + pathLater;
+            string str = RunCmd(bgPath);
+            return str;
+        }
+        /// <summary>
+        /// 执行Cmd命令
+        /// </summary>
+        private static string RunCmd(string c)
+        {
+            try
+            {
+                ProcessStartInfo info = new ProcessStartInfo("cmd.exe");
+                info.RedirectStandardOutput = false;
+                info.UseShellExecute = false;
+                Process p = Process.Start(info);
+                p.StartInfo.UseShellExecute = false;
+                p.StartInfo.RedirectStandardInput = true;
+                p.StartInfo.RedirectStandardOutput = true;
+                p.StartInfo.RedirectStandardError = true;
+                p.Start();
+                p.StandardInput.WriteLine(c);
+                p.StandardInput.AutoFlush = true;
+                Thread.Sleep(1000);
+                p.StandardInput.WriteLine("exit");
+                p.WaitForExit();
+                string outStr = p.StandardOutput.ReadToEnd();
+                p.Close();
+                return outStr;
+            }
+            catch (Exception ex)
+            {
+                return "error" + ex.Message;
+            }
         }
 
         /// <summary>
