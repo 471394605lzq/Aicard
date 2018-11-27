@@ -591,10 +591,10 @@ namespace AiCard.Controllers
         [HttpGet]
         public ActionResult LoginByWeiXinSilence(string state)
         {
-            Common.WeChat.IConfig config = new Common.WeChat.ConfigPc();
+            Common.WeChat.IConfig config = new Common.WeChat.WeChatWorkConfig();
             var p = new Dictionary<string, string>();
             p.Add("appid", config.AppID);
-            p.Add("redirect_uri", "http://www.yumy.me/Account/LoginByWeiXin");
+            p.Add("redirect_uri", "http://www.dtoao.com/Account/LoginByWeiXin");
             p.Add("response_type", "code");
             p.Add("scope", "snsapi_base");
             p.Add("state", state);
@@ -608,7 +608,6 @@ namespace AiCard.Controllers
         /// <param name="state">扩展参数</param>
         /// <param name="type">端口类别（Web App Mini）</param>
         /// <returns></returns>
-        [HttpPost]
         [AllowCrossSiteJson]
         public ActionResult LoginByWeiXin(string code, string state = null, WeChatAccount type = WeChatAccount.AiCardMini)
         {
@@ -620,29 +619,34 @@ namespace AiCard.Controllers
                  }
                  else
                  {
-                     return this.ToError("错误", content, Url.Action("Login", "Account"));
+                     return this.ToError("错误", detail, Url.Action("Login", "Account"));
                  }
              };
             if (string.IsNullOrWhiteSpace(code))
             {
                 return error("请求有误", "Code不能为空");
             }
-
+            if (Request.HttpMethod == "GET")
+            {
+                type = WeChatAccount.PC;
+            }
             if (type != WeChatAccount.AiCardMini && type != WeChatAccount.AiCardPersonalMini)
             {
-                Common.WeChat.IConfig config = new Common.WeChat.ConfigPc();
+
                 //非小程序
                 switch (type)
                 {
                     default:
                     case WeChatAccount.PC:
                         {
+                            Common.WeChat.IConfig config = new Common.WeChat.WeChatWorkConfig();
                             Common.WeChat.WeChatApi wechat = new Common.WeChat.WeChatApi(config);
                             Common.WeChat.AccessTokenResult result;
                             try
                             {
                                 result = wechat.GetAccessTokenSns(code);
                                 var openID = result.OpenID;
+
                                 if (state == "openid")
                                 {
                                     Response.Cookies["WeChatOpenID"].Value = openID;
@@ -670,7 +674,10 @@ namespace AiCard.Controllers
                                             }
                                             user.NickName = userInfo.NickName;
                                             user.Avatar = avart;
+                                           
                                         }
+                                        var option = new Bll.Users.UserOpenID(user);
+                                        option.AddOpenID(config.AppID, result.OpenID);
                                         user.LastLoginDateTime = DateTime.Now;
                                         db.SaveChanges();
                                     }
@@ -701,7 +708,7 @@ namespace AiCard.Controllers
                                         case "qrcode":
                                             return RedirectToAction("Index", "Tickets", new { mode = "qrcode" });
                                         default:
-                                            return Redirect(state); ;
+                                            return Redirect(state);
                                     }
                                 }
                                 catch (Exception ex)
@@ -844,8 +851,9 @@ namespace AiCard.Controllers
                 case WeChatAccount.AiCardPersonalMini:
                     config = new ConfigMiniPersonal();
                     break;
-                case WeChatAccount.PC:
                 default:
+                case WeChatAccount.PC:
+                    config = new WeChatWorkConfig();
                     break;
             }
             if (user != null)

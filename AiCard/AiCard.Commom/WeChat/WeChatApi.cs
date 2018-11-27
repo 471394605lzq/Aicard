@@ -42,7 +42,10 @@ namespace AiCard.Common.WeChat
             p.Add("appid", _config.AppID);
             p.Add("secret", _config.AppSecret);
             p.Add("code", code);
-            var result = new CommonApi.BaseApi($"https://api.weixin.qq.com/sns/oauth2/access_token{p.ToParam("?")}", "GET").CreateRequestReturnJson();
+            p.Add("grant_type", "authorization_code");
+            string url = $"https://api.weixin.qq.com/sns/oauth2/access_token{p.ToParam("?")}";
+            Comm.WriteLog("GetAccessTokenSns", url, DebugLogLevel.Normal);
+            var result = new CommonApi.BaseApi(url, "GET").CreateRequestReturnJson();
             if (result["errcode"] != null)
             {
                 throw new Exception(JsonConvert.SerializeObject(result));
@@ -394,7 +397,7 @@ namespace AiCard.Common.WeChat
             p.Add("media_id", mediaID);
 
             string url = $"https://qyapi.weixin.qq.com/cgi-bin/media/get{p.ToParam("?")}";
-           
+
             var api = new CommonApi.BaseApi(url, "GET");
             try
             {
