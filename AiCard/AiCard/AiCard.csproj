@@ -264,6 +264,7 @@
     <Compile Include="Bll\VIPAccountBLL.cs" />
     <Compile Include="Bll\Users.cs" />
     <Compile Include="Bll\VipBLL.cs" />
+    <Compile Include="Bll\VipForwardBLL.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ArticleCommentController.cs" />
     <Compile Include="Controllers\ArticleController.cs" />
