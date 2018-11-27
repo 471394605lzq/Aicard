@@ -523,7 +523,7 @@ namespace AiCard.Common
 
         public static string ConvertToMp3(string pathBefore, string pathLater)
         {
-            string bgPath = System.Web.HttpContext.Current.Request.MapPath("~\\ffmpeg\\Images\\") + @"ffmpeg.exe -i " + pathBefore + " " + pathLater; ;
+            string bgPath = System.Web.HttpContext.Current.Request.MapPath("~/App_Start/ffmpeg/") + @"ffmpeg.exe -i " + pathBefore + " " + pathLater; ;
             //string c = Server.MapPath("/ffmpeg/") + @"ffmpeg.exe -i " + pathBefore + " " + pathLater;
             string str = RunCmd(bgPath);
             return str;
