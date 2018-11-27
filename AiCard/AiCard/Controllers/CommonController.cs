@@ -99,10 +99,10 @@ namespace AiCard.Controllers
                 {
                     return Json(Comm.ToJsonResult("Error", "mediaID不能为null"));
                 }
-                var server = Common.CommModels.UploadServer.Local;
-                Common.WeChat.IConfig config = new Common.WeChat.ConfigWeChatWork();
+                var server = Common.CommModels.UploadServer.QinQiu;
+                Common.WeChat.IConfig config = new Common.WeChat.WeChatWorkConfig();
                 var wechat = new Common.WeChat.WeChatApi(config);
-                string filePath = wechat.GetTempMedia(mediaID, server, ".mp3");
+                string filePath = wechat.GetTempMedia(mediaID, server, ".amr");
                 return Json(Comm.ToJsonResult("Success", "成功", new
                 {
                     FileUrl = filePath,

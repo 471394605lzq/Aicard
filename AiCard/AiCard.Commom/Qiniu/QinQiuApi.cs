@@ -11,6 +11,8 @@ using Qiniu.IO;
 using Qiniu.RS;
 using Qiniu.Http;
 using System.Configuration;
+using System.Diagnostics;
+using System.Threading;
 
 namespace AiCard.Common.Qiniu
 {
@@ -37,7 +39,7 @@ namespace AiCard.Common.Qiniu
             Config.SetZone(ZoneID.CN_South, false);
 
         }
-
+        //上传文件到七牛云
         public string UploadFile(string path, bool isDeleteAfterUpload = false, bool isCover = false)
         {
 
@@ -82,7 +84,43 @@ namespace AiCard.Common.Qiniu
             return KeyToLink(jResult["key"].Value<string>());
         }
 
-        public void DeleteFile(string key)
+    /// <summary>
+    /// 上传文件并预转格式
+    /// </summary>
+    /// <param name="key">要转换格式的文件名</param>
+    /// <param name="filePath">文件路径</param>
+    /// <returns></returns>
+    //private string upload(string key, string filePath)
+    //{
+    //    //设置文件上传后所存储的空间名称
+    //    String bucket = "amrtest";
+
+    //    //普通上传,只需要设置上传的空间名就可以了,第二个参数可以设定token过期时间
+    //    PutPolicy put = new PutPolicy();
+
+    //    //对转码后的文件进行使用saveas参数自定义命名，也可以不指定,文件会默认命名并保存在当前空间。
+    //    string mp3tpname = key.Split('.')[0].ToString() + ".mp3";
+    //    String urlbase64 = Qiniu.Util.Base64URLSafe.Encode(bucket + ":" + mp3tpname);
+
+    //    //一般指文件要上传到的目标存储空间（Bucket）。若为“Bucket”，
+    //    //表示限定只能传到该Bucket（仅限于新增文件）；若为”Bucket:Key”，表示限定特定的文件，可修改该文件。
+    //    put.Scope = bucket + ":" + key;
+    //    // 可选。 若非0, 即使Scope为 Bucket:Key 的形式也是insert only.
+    //    put.InsertOnly = 0;
+    //    // "|"竖线前是你要转换格式的命令；竖线后是转换完成后，文件的命名和存储的空间的名称！
+    //    put.PersistentOps = "avthumb/mp3/ab/128k/ar/44100/acodec/libmp3lame|saveas/" + urlbase64;
+    //    //规定文件要在那个“工厂”进行改装，也就是队列名称！
+    //    put.PersistentPipeline = "LittleBai";
+    //    //音视频转码持久化完成后，七牛的服务器会向用户发送处理结果通知。这里指定的url就是用于接收通知的接口。
+    //    //设置了`persistentOps`,则需要同时设置此字段
+    //    put.PersistentNotifyUrl = "http://***.###.com/***/default.aspx";
+
+    //    //返回数据格式：{"hash":"FvipQyyMwI0gvGc7_NUd8OVBuJ85","key":"55456.amr","persistentId":"z0.57eb86a945a2652644d64308"}
+    //    return "";// ret.Response.ToString();
+    //}
+
+
+    public void DeleteFile(string key)
         {
             BucketManager bm = new BucketManager(mac);
             HttpResult result = bm.Delete(Bucket, key);
