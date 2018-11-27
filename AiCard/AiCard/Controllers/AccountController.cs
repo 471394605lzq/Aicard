@@ -591,7 +591,7 @@ namespace AiCard.Controllers
         [HttpGet]
         public ActionResult LoginByWeiXinSilence(string state)
         {
-            Common.WeChat.IConfig config = new Common.WeChat.WeChatWorkConfig();
+            Common.WeChat.IConfig config = new Common.WeChat.ConfigWeChatWork();
             var p = new Dictionary<string, string>();
             p.Add("appid", config.AppID);
             p.Add("redirect_uri", "http://www.dtoao.com/Account/LoginByWeiXin");
@@ -639,7 +639,7 @@ namespace AiCard.Controllers
                     default:
                     case WeChatAccount.PC:
                         {
-                            Common.WeChat.IConfig config = new Common.WeChat.WeChatWorkConfig();
+                            Common.WeChat.IConfig config = new Common.WeChat.ConfigWeChatWork();
                             Common.WeChat.WeChatApi wechat = new Common.WeChat.WeChatApi(config);
                             Common.WeChat.AccessTokenResult result;
                             try
@@ -853,7 +853,7 @@ namespace AiCard.Controllers
                     break;
                 default:
                 case WeChatAccount.PC:
-                    config = new WeChatWorkConfig();
+                    config = new ConfigWeChatWork();
                     break;
             }
             if (user != null)

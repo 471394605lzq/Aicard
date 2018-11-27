@@ -182,10 +182,10 @@ namespace AiCard.Controllers
                 {
                     return Json(Comm.ToJsonResult("Error", "名片不存在"));
                 }
-                if (!ModelState.IsValid)
-                {
-                    return Json(Comm.ToJsonResult("Error", ModelState.FirstErrorMessage()));
-                }
+                //if (!ModelState.IsValid)
+                //{
+                //    return Json(Comm.ToJsonResult("Error", ModelState.FirstErrorMessage()));
+                //}
                 if (model.Name != null)
                 {
                     if (!string.IsNullOrWhiteSpace(model.Name.Trim()))
@@ -200,23 +200,51 @@ namespace AiCard.Controllers
                 }
                 if (model.Email != null)
                 {
-                    if (Reg.IsEmail(model.Email.Trim()))
+                    if (string.IsNullOrWhiteSpace(model.Email))
                     {
-                        pCard.Email = model.Email.Trim();
+                        pCard.Email = null;
+                    }
+                    else if (Reg.IsEmail(model.Email))
+                    {
+                        pCard.Email = model.Email;
                     }
                     else
                     {
                         return Json(Comm.ToJsonResult("Error", "邮箱格式不正确"));
                     }
 
+
                 }
                 if (model.Mobile != null)
                 {
-                    pCard.Mobile = model.Mobile.Trim();
+                    if (string.IsNullOrWhiteSpace(model.Mobile))
+                    {
+                        pCard.Mobile = null;
+                    }
+                    else if (Reg.IsMobile(model.Mobile))
+                    {
+                        pCard.Mobile = model.Mobile;
+                    }
+                    else
+                    {
+                        return Json(Comm.ToJsonResult("Error", "手机号格式不正确"));
+                    }
                 }
                 if (model.PhoneNumber != null)
                 {
-                    pCard.PhoneNumber = model.PhoneNumber.Trim();
+                    if (string.IsNullOrWhiteSpace(model.PhoneNumber))
+                    {
+                        model.PhoneNumber = null;
+                    }
+                    else if (Reg.IsPhone(model.PhoneNumber))
+                    {
+                        pCard.PhoneNumber = model.PhoneNumber;
+                    }
+                    else
+                    {
+                        return Json(Comm.ToJsonResult("Error", "座机号格式不正确"));
+                    }
+
                 }
                 if (model.Position != null)
                 {
@@ -256,14 +284,21 @@ namespace AiCard.Controllers
                 }
                 if (model.Birthday != null)
                 {
-                    DateTime birthday;
-                    if (DateTime.TryParse(model.Birthday, out birthday))
+                    if (string.IsNullOrWhiteSpace(model.Birthday))
                     {
-                        pCard.Birthday = birthday;
+                        pCard.Birthday = null;
                     }
                     else
                     {
-                        Json(Comm.ToJsonResult("Error", "生日的格式不正确"));
+                        DateTime birthday;
+                        if (DateTime.TryParse(model.Birthday, out birthday))
+                        {
+                            pCard.Birthday = birthday;
+                        }
+                        else
+                        {
+                            Json(Comm.ToJsonResult("Error", "生日的格式不正确"));
+                        }
                     }
                 }
                 if (model.Gender.HasValue)
@@ -290,6 +325,44 @@ namespace AiCard.Controllers
                 {
                     pCard.Enterprise = model.Enterprise;
                 }
+                if (model.Lat != null)
+                {
+                    if (string.IsNullOrWhiteSpace(model.Lat))
+                    {
+                        pCard.Lat = null;
+                    }
+                    else
+                    {
+                        double temp;
+                        if (double.TryParse(model.Lat, out temp))
+                        {
+                            pCard.Lat = temp;
+                        }
+                        else
+                        {
+                            Json(Comm.ToJsonResult("Error", "纬度格式不正确"));
+                        }
+                    }
+                }
+                if (model.Lng != null)
+                {
+                    if (string.IsNullOrWhiteSpace(model.Lng))
+                    {
+                        pCard.Lng = null;
+                    }
+                    else
+                    {
+                        double temp;
+                        if (double.TryParse(model.Lng, out temp))
+                        {
+                            pCard.Lng = temp;
+                        }
+                        else
+                        {
+                            Json(Comm.ToJsonResult("Error", "纬度格式不正确"));
+                        }
+                    }
+                }
                 db.SaveChanges();
                 return Json(Comm.ToJsonResult("Success", "成功"), JsonRequestBehavior.AllowGet);
             }
@@ -298,6 +371,52 @@ namespace AiCard.Controllers
                 return Json(Comm.ToJsonResult("Error500", ex.Message), JsonRequestBehavior.AllowGet);
             }
         }
+
+        [HttpPost]
+        public ActionResult GeneratePosters(int pCardID, string img)
+        {
+
+            return Json(Comm.ToJsonResult("Success", "成功"));
+        }
+
+        /// <summary>
+        /// 刷新所有
+        /// </summary>
+        /// <returns></returns>
+        [Authorize(Users = "admin")]
+        public ActionResult ReflashWeCharQrCode()
+        {
+            Common.WeChat.IConfig config = new Common.WeChat.ConfigMiniPersonal();
+            var api = new Common.WeChat.WeChatMinApi(config);
+            Func<int, string> getQrCode = pCardID =>
+            {
+                var p = new Dictionary<string, string>();
+                p.Add("PCardID", pCardID.ToString());
+                return api.GetWXACodeUnlimit(Common.WeChat.WeChatPagePersonal.CardDetail, p);
+            };
+            var cards = db.CardPersonals.Where(s => s.WeChatMiniQrCode == null).ToList();
+            foreach (var item in cards)
+            {
+                item.WeChatMiniQrCode = getQrCode(item.ID);
+            }
+            db.SaveChanges();
+            return Json("Success", JsonRequestBehavior.AllowGet);
+
+        }
+
+        [HttpGet]
+        public ActionResult GetDefaultPosters()
+        {
+            var imgs = new string[] { "~/Content/Poster/img_poster1.png",
+                "~/Content/Poster/img_poster2.png",
+                "~/Content/Poster/img_poster3.png",
+                "~/Content/Poster/img_poster4.png",
+                "~/Content/Poster/img_poster5.png"};
+            imgs = imgs.Select(s => Url.ContentFull(s)).ToArray();
+            return Json(Comm.ToJsonResult("Success", "成功", imgs));
+        }
+
+
 
         protected override void Dispose(bool disposing)
         {
