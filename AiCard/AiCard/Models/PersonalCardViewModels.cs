@@ -7,7 +7,7 @@ using System.Web;
 
 namespace AiCard.Models
 {
-    public class PersonalCardViewModels : IGprs, IDistrict
+    public class PersonalCardViewModels : IDistrict
     {
         [Required]
         [Display(Name = "名片")]
@@ -65,10 +65,10 @@ namespace AiCard.Models
         public string Address { get; set; }
 
         [Display(Name = "纬度")]
-        public double? Lat { get; set; }
+        public string Lat { get; set; }
 
         [Display(Name = "经度")]
-        public double? Lng { get; set; }
+        public string Lng { get; set; }
 
         [Display(Name = "省")]
         public string Province { get; set; }

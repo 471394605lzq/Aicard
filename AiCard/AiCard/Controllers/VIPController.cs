@@ -3,6 +3,7 @@ using AiCard.Common;
 using AiCard.Common.WeChat;
 using AiCard.DAL.Models;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -89,6 +90,7 @@ namespace AiCard.Controllers
             }
             //保存用户手机号到用户表
             user.PhoneNumber = mobile;
+
             //把名片已知信息填到个人名片
             var card = new CardPersonal
             {
@@ -102,6 +104,15 @@ namespace AiCard.Controllers
 
             db.CardPersonals.Add(card);
             db.SaveChanges();
+            try
+            {
+                card.WeChatMiniQrCode = GetWeChatQrCode(card.ID);
+                db.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                Comm.WriteLog(this.GetType().ToString(), ex.Message, Common.Enums.DebugLogLevel.Error);
+            }
             var vip = new Vip
             {
                 Amount = 0,
@@ -369,6 +380,15 @@ namespace AiCard.Controllers
             return Json(Comm.ToJsonResult("Success", "成功"));
         }
         #endregion
+
+        public string GetWeChatQrCode(int pCardID)
+        {
+            Common.WeChat.IConfig config = new Common.WeChat.ConfigMiniPersonal();
+            var api = new Common.WeChat.WeChatMinApi(config);
+            var p = new Dictionary<string, string>();
+            p.Add("PCardID", pCardID.ToString());
+            return api.GetWXACodeUnlimit(Common.WeChat.WeChatPagePersonal.CardDetail, p);
+        }
 
         protected override void Dispose(bool disposing)
         {

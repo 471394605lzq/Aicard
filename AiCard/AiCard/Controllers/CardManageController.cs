@@ -257,7 +257,8 @@ namespace AiCard.Controllers
                 {
                     var scene = new Dictionary<string, string>();
                     scene.Add("CardId", model.ID.ToString());
-                    t.WeChatMiniQrCode = w.GetWXACodeUnlimit(WeChatPage.CardDetail, scene);
+                    
+                    t.WeChatMiniQrCode = w.GetWXACodeUnlimit(Common.WeChat.WeChatPage.CardDetail, scene);
                 }
                 db.SaveChanges();
                 return RedirectToAction("Index");

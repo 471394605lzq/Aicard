@@ -80,14 +80,24 @@ namespace AiCard.Common.WeChat
         /// </summary>
         /// <param name="code"></param>
         /// <returns></returns>
-        public string GetWXACodeUnlimit(WeChatPage page, Dictionary<string, string> scene)
+        public string GetWXACodeUnlimit(Enum type, Dictionary<string, string> scene)
         {
             var p = new Dictionary<string, string>();
             p.Add("access_token", GetAccessToken());
-            string path = $"Type={(int)page}&{scene.ToParam()}";
+
+            string path = $"Type={Convert.ToInt32(type)}&{scene.ToParam()}";
+            string page = "";//中转页面
+            if (_config.AppID == new ConfigMini().AppID)
+            {
+                page = $"pages/test1/test1";
+            }
+            else if (_config.AppID == new ConfigMiniPersonal().AppID)
+            {
+                page = $"pages/test1/test1";
+            }
             var data = new
             {
-                page = $"pages/test1/test1",
+                page = page,
                 scene = path,
                 is_hyaline = true,
                 //line_color= "{ 'r':'255','g':'255','b':'255'}"
@@ -184,7 +194,7 @@ namespace AiCard.Common.WeChat
                 RefreshToken();
             }
             return _config.AccessToken;
-        } 
+        }
 
         /// <summary>
         /// 刷新Token
@@ -300,7 +310,7 @@ namespace AiCard.Common.WeChat
                 //从EncryptedData从解密用户数据
                 var str = AESDecrypt(encryptedData, session, iv);
                 var jObj = JsonConvert.DeserializeObject<JToken>(str);
-                return  jObj["purePhoneNumber"].Value<string>();
+                return jObj["purePhoneNumber"].Value<string>();
             }
             catch (Exception)
             {
@@ -317,6 +327,13 @@ namespace AiCard.Common.WeChat
         CardDetail = 1
 
     }
+
+    public enum WeChatPagePersonal
+    {
+        CardDetail = 1
+
+    }
+
 }
 
 
