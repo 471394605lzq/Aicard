@@ -235,7 +235,7 @@ namespace AiCard.Controllers
                 {
                     if (string.IsNullOrWhiteSpace(model.PhoneNumber))
                     {
-                        model.PhoneNumber = null;
+                        pCard.PhoneNumber = null;
                     }
                     else if (Reg.IsPhone(model.PhoneNumber))
                     {
@@ -312,19 +312,19 @@ namespace AiCard.Controllers
                 }
                 if (model.City != null)
                 {
-                    pCard.City = model.City;
+                    pCard.City = model.City.Trim();
                 }
                 if (model.Province != null)
                 {
-                    pCard.Province = model.Province;
+                    pCard.Province = model.Province.Trim();
                 }
                 if (model.District != null)
                 {
-                    pCard.District = model.District;
+                    pCard.District = model.District.Trim();
                 }
                 if (model.Enterprise != null)
                 {
-                    pCard.Enterprise = model.Enterprise;
+                    pCard.Enterprise = model.Enterprise.Trim();
                 }
                 if (model.Lat != null)
                 {
