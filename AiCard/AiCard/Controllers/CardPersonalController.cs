@@ -27,7 +27,7 @@ namespace AiCard.Controllers
                                   c.Birthday,
                                   c.Gender,
                                   c.Position,
-                                  VipType = v.Type,
+                                  v.Type,
                                   c.Industry,
                                   c.UserID,
                                   c.City,
@@ -47,7 +47,7 @@ namespace AiCard.Controllers
                 s.Position,
                 s.Industry,
                 s.City,
-                s.VipType
+                s.Type
             });
 
             return Json(Common.Comm.ToJsonResultForPagedList(paged, model), JsonRequestBehavior.AllowGet);

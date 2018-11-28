@@ -360,11 +360,6 @@
     <Content Include="Content\Images\map_mark_bs.png" />
     <Content Include="Content\Images\map_mark_bs_active.png" />
     <Content Include="Content\Images\phone.jpg" />
-    <Content Include="Content\Images\Poster\img_poster1.png" />
-    <Content Include="Content\Images\Poster\img_poster2.png" />
-    <Content Include="Content\Images\Poster\img_poster3.png" />
-    <Content Include="Content\Images\Poster\img_poster4.png" />
-    <Content Include="Content\Images\Poster\img_poster5.png" />
     <Content Include="Content\Images\ui-icons_444444_256x240.png" />
     <Content Include="Content\Images\ui-icons_555555_256x240.png" />
     <Content Include="Content\Images\ui-icons_777620_256x240.png" />
