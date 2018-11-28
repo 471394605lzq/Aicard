@@ -189,4 +189,58 @@ namespace AiCard.DAL.Models
         public DateTime CreateDateTime { get; set; }
 
     }
+
+    public class AddEnterpriseCustomer
+    {
+        public int ID { get; set; }
+
+        /// <summary>
+        /// 企业ID
+        /// </summary>
+        public int EnterpriseID { get; set; }
+        /// <summary>
+        /// 用户ID
+        /// </summary>
+        public string UserID { get; set; }
+
+
+        ///// <summary>
+        ///// 来源
+        ///// </summary>
+        public Common.Enums.EnterpriseUserCustomerSource Source { get; set; }
+
+        /// <summary>
+        /// 昵称
+        /// </summary>
+        public string NickName { get; set; }
+
+        /// <summary>
+        /// 头像
+        /// </summary>
+        public string HeadImgUrl { get; set; }
+
+        /// <summary>
+        /// 统一用户ID
+        /// </summary>
+        public string UnionID { get; set; }
+
+        /// <summary>
+        /// 加密的用户信息
+        /// </summary>
+        public string EncryptedData { get; set; }
+
+
+        public string IV { get; set; }
+
+        public string OpenID { get; set; }
+
+        /// <summary>
+        /// 是否已经关注
+        /// </summary>
+        public bool IsSubscribe { get; set; }
+
+        public WeChatAccount Type { get; set; } = WeChatAccount.AiCardMini;
+
+    }
+
 }

@@ -350,8 +350,10 @@ namespace AiCard.Controllers
         }
         public ActionResult SendMsgTo()
         {
+            //string mp3SavePth = System.Web.HttpContext.Current.Request.MapPath($"~/Upload/{DateTime.Now:yyyyMMddHHmmss}{Comm.Random.Next(1000, 9999)}.mp3");
+            //Comm.ConvertToMp3($"E:/201811271125152499.amr", mp3SavePth);
             SendMsg s = new SendMsg();
-            string resultstr = s.SendSMS("18820716886,18820716283", "347836", "你好");
+            var resultstr = s.SendSMS("18820716886", "402477", "你好");
             return View();
         }
 

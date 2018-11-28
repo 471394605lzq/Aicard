@@ -524,15 +524,15 @@ namespace AiCard.Common
 
         public static string ConvertToMp3(string pathBefore, string pathLater)
         {
-            string bgPath = System.Web.HttpContext.Current.Request.MapPath("~/App_Start/ffmpeg/") + @"ffmpeg.exe -i " + pathBefore + " " + pathLater; ;
+            string bgPath = System.Web.HttpContext.Current.Request.MapPath("~/App_Start/ffmpeg/") + @"ffmpeg.exe -i " + pathBefore + " " + pathLater;
             //string c = Server.MapPath("/ffmpeg/") + @"ffmpeg.exe -i " + pathBefore + " " + pathLater;
-            string str = RunCmd(bgPath);
+            string str = RunCmd(bgPath, pathLater);
             return str;
         }
         /// <summary>
         /// 执行Cmd命令
         /// </summary>
-        private static string RunCmd(string c)
+        private static string RunCmd(string c,string filename)
         {
             try
             {
@@ -552,6 +552,8 @@ namespace AiCard.Common
                 p.WaitForExit();
                 string outStr = p.StandardOutput.ReadToEnd();
                 p.Close();
+               
+                //Comm.WriteLog("RunCmd1", reader, DebugLogLevel.Error);
                 return outStr;
             }
             catch (Exception ex)
@@ -559,6 +561,8 @@ namespace AiCard.Common
                 return "error" + ex.Message;
             }
         }
+
+
 
         /// <summary>
         /// 生成海报方法
