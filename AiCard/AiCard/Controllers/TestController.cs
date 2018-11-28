@@ -17,8 +17,16 @@ namespace AiCard.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-       
 
+
+        public ActionResult Index()
+        {
+            string text = "🔥Vision🔥";
+            var reg = new System.Text.RegularExpressions.Regex(Reg.EMOJI);
+            var temp = reg.Matches(text);
+            var list = reg.Split(text);
+            return Json("1", JsonRequestBehavior.AllowGet);
+        }
 
 
         public string GetWeChatQrCode(int pCardID)

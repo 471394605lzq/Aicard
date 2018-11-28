@@ -11,7 +11,7 @@ using AiCard.Common.CommModels;
 using AiCard;
 using System.Diagnostics;
 using System.Threading;
-
+using AiCard.Common.Qiniu;
 
 namespace AiCard.Common
 {
@@ -769,15 +769,43 @@ namespace AiCard.Common
             g1.FillRectangle(Brushes.White, new Rectangle(0, 0, bitMap.Width, bitMap.Height));
 
             //设置背景图
-            Image bgimage = DrawingPictures.DownloadImg(model.BgImage);
-            g1.DrawImage(bgimage, new Rectangle(0, 0, bitMap.Width, 380 * resize));
+            Image imgBg, imgAvatar, imgQrCode;
+            try
+            {
+                imgBg = DrawingPictures.DownloadImg(model.BgImage);
+            }
+            catch (Exception ex)
+            {
+                Comm.WriteLog("MergePosterPersonalImage", "背景图下载失败", DebugLogLevel.Warning, ex: ex);
+                throw new Exception("背景图下载失败");
+            }
+            try
+            {
+                imgAvatar = DrawingPictures.CutEllipse(DrawingPictures.DownloadImg(model.Avatar));
+            }
+            catch (Exception ex)
+            {
+                Comm.WriteLog("MergePosterPersonalImage", "头像图下载失败", DebugLogLevel.Warning, ex: ex);
+                throw new Exception("头像图下载失败");
+            }
+            try
+            {
+                imgQrCode = DrawingPictures.CutEllipse(DrawingPictures.DownloadImg(model.QrCode));
+            }
+            catch (Exception ex)
+            {
+                Comm.WriteLog("MergePosterPersonalImage", "头像图下载失败", DebugLogLevel.Warning, ex: ex);
+                throw new Exception("二维码图下载失败");
+            }
+
+            g1.DrawImage(imgBg, new Rectangle(0, 0, bitMap.Width, 380 * resize));
             if (!string.IsNullOrWhiteSpace(model.Avatar))
             {
                 //拼接头像图片
                 int size = 48 * resize;
-                Image avimage = DrawingPictures.CutEllipse(DrawingPictures.DownloadImg(model.Avatar));
+                imgAvatar = DrawingPictures.CutEllipse(DrawingPictures.DownloadImg(model.Avatar));
                 g1.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-                g1.DrawImage(avimage, 8 * resize, 390 * resize, 48 * resize, 48 * resize);
+                g1.DrawImage(imgAvatar, 8 * resize, 390 * resize, 48 * resize, 48 * resize);
             }
 
             if (!string.IsNullOrWhiteSpace(model.QrCode))
@@ -792,44 +820,50 @@ namespace AiCard.Common
                 g1.FillEllipse(brush, rect);
 
                 //拼接二维码图片
-                Image image = DrawingPictures.DownloadImg(model.QrCode);
+                imgQrCode = DrawingPictures.DownloadImg(model.QrCode);
 
-                g1.DrawImage(image, new Rectangle(xQrCode, yQrCode, qrCodeSize, qrCodeSize));
+                g1.DrawImage(imgQrCode, new Rectangle(xQrCode, yQrCode, qrCodeSize, qrCodeSize));
             }
 
             //姓名
             int fontSize = 12 * resize;
-            FontFamily ffDefault = new FontFamily("微软雅黑");
             Font fDefault = new Font("微软雅黑", fontSize);
             Font fEmoji = new Font("Segoe UI Emoji", fontSize);
             Color fc = Color.FromArgb(255, 44, 54, 76);
             Brush fb = new SolidBrush(fc);
             int fx = 64 * resize, fy = 405 * resize;
-            g1.DrawString(System.Text.RegularExpressions.Regex.Replace(model.Name, Reg.EMOJI, ""), fDefault, fb, fx, 405 * resize);
-            //for (int i = 0; i < model.Name.Length; i++)
-            //{
-            //    Font f;
-            //    string txt = model.Name[i].ToString();
-
-            //    if (Reg.IsEmoji(txt))
-            //    {
-            //        f = fEmoji;
-            //    }
-            //    else
-            //    {
-            //        f = fDefault;
-            //    }
-            //    g1.DrawString(txt, f, fb, fx, 405 * resize);
-            //    fx += (int)(Math.Ceiling(g1.MeasureString(txt, f).Width));
-            //}
+            var emojis = System.Text.RegularExpressions.Regex.Matches(model.Name, Reg.EMOJI);
+            for (int i = 0; i < model.Name.Length;)
+            {
+                bool isFind = false;
+                foreach (System.Text.RegularExpressions.Match item in emojis)
+                {
+                    if (item.Index == i)
+                    {
+                        g1.DrawString(item.Value, fEmoji, fb, fx, 405 * resize);
+                        fx += (int)(Math.Ceiling(g1.MeasureString(item.Value, fEmoji).Width));
+                        i += item.Length;
+                        isFind = true;
+                        break;
+                    }
+                }
+                if (i == model.Name.Length || isFind)
+                {
+                    continue;
+                }
+                string txt = model.Name[i].ToString();
+                g1.DrawString(txt, fDefault, fb, fx, 405 * resize);
+                fx += (int)(Math.Ceiling(g1.MeasureString(txt, fDefault).Width));
+                i++;
+            }
 
             // 保存输出到本地
-            var path = $"~/Upload/{model.OutputPath}.jpg";
+            var path = $"~/Upload/{model.FileName}.jpg";
             string savePath = System.Web.HttpContext.Current.Server.MapPath(path);
             bitMap.Save(savePath);
-            //微信小程序的限制，图片放到七牛上无法缓存，然后无法把海报保存到相册
+            ////微信小程序的限制，图片放到七牛上无法缓存，然后无法把海报保存到相册
             //QinQiuApi qniu = new QinQiuApi();
-            //string resultpath = qniu.UploadFile(savePath, true, true);
+            //string resultpath = qniu.UploadFile(savePath, true);
             g1.Dispose();
             bitMap.Dispose();
             return path;

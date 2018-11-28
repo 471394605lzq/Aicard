@@ -373,7 +373,7 @@ namespace AiCard.Controllers
             }
         }
 
-        
+        [HttpPost]
         public ActionResult GeneratePosters(int pCardID, string img)
         {
             var card = db.CardPersonals.FirstOrDefault(s => s.ID == pCardID);
@@ -383,16 +383,17 @@ namespace AiCard.Controllers
             }
             if (!string.IsNullOrWhiteSpace(card.WeChatMiniQrCode))
             {
-                Comm.MergePosterPersonalImage(new Common.CommModels.DrawingPictureProsonal
+                var path = Comm.MergePosterPersonalImage(new Common.CommModels.DrawingPictureProsonal
                 {
                     Avatar = card.Avatar,
                     BgImage = img,
                     Name = card.Name,
                     QrCode = card.WeChatMiniQrCode,
-                    OutputPath = $"{DateTime.Now:yyyyMMddHHmm}{Comm.Random.Next(1000, 9999)}"
+                    FileName = $"{pCardID}_{new System.IO.FileInfo(img.Replace("http://", "~").Replace("http://", "~")).Name}"
                 });
+                return Json(Comm.ToJsonResult("Success", "成功", Url.ContentFull(path)));
             }
-            return Json(Comm.ToJsonResult("Success", "成功"));
+            return Json(Comm.ToJsonResult("QrCodeNoFound", "分享二维码不存在"));
         }
 
         /// <summary>
@@ -423,7 +424,7 @@ namespace AiCard.Controllers
         [HttpGet]
         public ActionResult GetDefaultPosters()
         {
-            var imgs = new string[] { "~/Content/Poster/img_poster1.png",
+            var imgs = new string[] { "~/Content/Images/Poster/img_poster1.png",
                 "~/Content/Images/Poster/img_poster2.png",
                 "~/Content/Images/Poster/img_poster3.png",
                 "~/Content/Images/Poster/img_poster4.png",
@@ -432,7 +433,47 @@ namespace AiCard.Controllers
             return Json(Comm.ToJsonResult("Success", "成功", imgs));
         }
 
+        [HttpGet]
+        public ActionResult GetPostersAfterGenerate(int pCardID)
+        {
+            var imgs = new string[] { "~/Content/Images/Poster/img_poster1.png",
+                "~/Content/Images/Poster/img_poster2.png",
+                "~/Content/Images/Poster/img_poster3.png",
+                "~/Content/Images/Poster/img_poster4.png",
+                "~/Content/Images/Poster/img_poster5.png"};
+            imgs = imgs.Select(s => Url.ContentFull(s)).ToArray();
+            var card = db.CardPersonals.FirstOrDefault(s => s.ID == pCardID);
+            if (card == null)
+            {
+                return Json(Comm.ToJsonResult("CardNoFound", "名片不存在"), JsonRequestBehavior.AllowGet);
+            }
+            if (!string.IsNullOrWhiteSpace(card.WeChatMiniQrCode))
+            {
+                try
+                {
+                    for (int i = 0; i < imgs.Length; i++)
+                    {
+                        imgs[i] = Comm.MergePosterPersonalImage(new Common.CommModels.DrawingPictureProsonal
+                        {
+                            Avatar = card.Avatar,
+                            BgImage = imgs[i],
+                            Name = card.Name,
+                            QrCode = card.WeChatMiniQrCode,
+                            FileName = $"{pCardID}_p{i}"
+                        });
+                    }
 
+                    return Json(Comm.ToJsonResult("Success", "成功", imgs.Select(s => Url.ContentFull(s))), JsonRequestBehavior.AllowGet);
+                }
+                catch (Exception ex)
+                {
+                    return Json(Comm.ToJsonResult("Error", ex.Message), JsonRequestBehavior.AllowGet);
+                }
+
+            }
+            return Json(Comm.ToJsonResult("QrCodeNoFound", "分享二维码不存在"), JsonRequestBehavior.AllowGet);
+
+        }
 
         protected override void Dispose(bool disposing)
         {

@@ -78,6 +78,6 @@ namespace AiCard.Common.CommModels
 
         public string Name { get; set; }
 
-        public string OutputPath { get; set; }
+        public string FileName { get; set; }
     }
 }
