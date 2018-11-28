@@ -12,6 +12,7 @@ using AiCard;
 using System.Diagnostics;
 using System.Threading;
 
+
 namespace AiCard.Common
 {
     public class Comm
@@ -753,5 +754,91 @@ namespace AiCard.Common
             }
             return path;
         }
+
+        /// <summary>
+        /// 生成海报方法
+        /// </summary>
+        /// <param name="model">海报内容model</param>
+        /// <returns>返回海报图片地址(本地)</returns>
+        public static string MergePosterPersonalImage(DrawingPictureProsonal model)
+        {
+            int resize = 3;
+
+            // 初始化背景图片的宽高
+            Bitmap bitMap = new Bitmap(303 * resize, 452 * resize);
+            // 初始化画板
+            Graphics g1 = Graphics.FromImage(bitMap);
+
+            ////设置画布背景颜色为白色
+            g1.FillRectangle(Brushes.White, new Rectangle(0, 0, bitMap.Width, bitMap.Height));
+
+            //设置背景图
+            Image bgimage = DrawingPictures.DownloadImg(model.BgImage);
+            g1.DrawImage(bgimage, new Rectangle(0, 0, bitMap.Width, 380 * resize));
+            if (!string.IsNullOrWhiteSpace(model.Avatar))
+            {
+                //拼接头像图片
+                int size = 48 * resize;
+                Image avimage = DrawingPictures.CutEllipse(DrawingPictures.DownloadImg(model.Avatar));
+                g1.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+                g1.DrawImage(avimage, 8 * resize, 390 * resize, 48 * resize, 48 * resize);
+            }
+
+            if (!string.IsNullOrWhiteSpace(model.QrCode))
+            {
+                //拼接二维码之前画一个白色的圆底
+                var padding = 3 * resize;
+                var qrCodeSize = 56 * resize;
+                int xQrCode = 243 * resize;
+                int yQrCode = 388 * resize;
+                Rectangle rect = new Rectangle(xQrCode - padding, yQrCode - padding, qrCodeSize + (padding * 2), qrCodeSize + (padding * 2));
+                Brush brush = new SolidBrush(Color.White);
+                g1.FillEllipse(brush, rect);
+
+                //拼接二维码图片
+                Image image = DrawingPictures.DownloadImg(model.QrCode);
+
+                g1.DrawImage(image, new Rectangle(xQrCode, yQrCode, qrCodeSize, qrCodeSize));
+            }
+
+            //姓名
+            int fontSize = 12 * resize;
+            FontFamily ffDefault = new FontFamily("微软雅黑");
+            Font fDefault = new Font("微软雅黑", fontSize);
+            Font fEmoji = new Font("Segoe UI Emoji", fontSize);
+            Color fc = Color.FromArgb(255, 44, 54, 76);
+            Brush fb = new SolidBrush(fc);
+            int fx = 64 * resize, fy = 405 * resize;
+            g1.DrawString(System.Text.RegularExpressions.Regex.Replace(model.Name, Reg.EMOJI, ""), fDefault, fb, fx, 405 * resize);
+            //for (int i = 0; i < model.Name.Length; i++)
+            //{
+            //    Font f;
+            //    string txt = model.Name[i].ToString();
+
+            //    if (Reg.IsEmoji(txt))
+            //    {
+            //        f = fEmoji;
+            //    }
+            //    else
+            //    {
+            //        f = fDefault;
+            //    }
+            //    g1.DrawString(txt, f, fb, fx, 405 * resize);
+            //    fx += (int)(Math.Ceiling(g1.MeasureString(txt, f).Width));
+            //}
+
+            // 保存输出到本地
+            var path = $"~/Upload/{model.OutputPath}.jpg";
+            string savePath = System.Web.HttpContext.Current.Server.MapPath(path);
+            bitMap.Save(savePath);
+            //微信小程序的限制，图片放到七牛上无法缓存，然后无法把海报保存到相册
+            //QinQiuApi qniu = new QinQiuApi();
+            //string resultpath = qniu.UploadFile(savePath, true, true);
+            g1.Dispose();
+            bitMap.Dispose();
+            return path;
+        }
+
+
     }
 }

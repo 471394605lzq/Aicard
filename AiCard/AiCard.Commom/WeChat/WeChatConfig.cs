@@ -22,7 +22,7 @@ namespace AiCard.Common.WeChat
         DateTime AccessTokenEnd { get; set; }
     }
 
-    public class WeChatWorkConfig : IConfig
+    public class ConfigWeChatWork : IConfig
     {
         /// <summary>
         /// 网页开放平台

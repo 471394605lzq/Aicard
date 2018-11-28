@@ -17,10 +17,17 @@ namespace AiCard.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        public ActionResult Index()
-        {
+       
 
-            return View();
+
+
+        public string GetWeChatQrCode(int pCardID)
+        {
+            Common.WeChat.IConfig config = new Common.WeChat.ConfigMiniPersonal();
+            var api = new Common.WeChat.WeChatMinApi(config);
+            var p = new Dictionary<string, string>();
+            p.Add("PCardID", pCardID.ToString());
+            return api.GetWXACodeUnlimit(Common.WeChat.WeChatPagePersonal.CardDetail, p);
         }
 
 
@@ -52,7 +59,19 @@ namespace AiCard.Controllers
 
         public ActionResult AutoCreateVipAmountLog(string userID)
         {
+            int amount = 86;
             var vip = db.Vips.FirstOrDefault(s => s.UserID == userID);
+            var freeChild = Common.Comm.Random.Next(1, 100);
+            var randomChild2 = Common.Comm.Random.Next(1, freeChild);
+            var randomChild3 = Common.Comm.Random.Next(1, 100);
+
+            vip.TotalAmount = freeChild * 3m + randomChild2 * amount * 0.5m + randomChild3 * amount * 0.1m;
+            var take = 50 * Common.Comm.Random.Next(0, (int)(vip.TotalAmount % 50));
+            vip.Amount = vip.TotalAmount - take;
+            vip.VipChild2ndCount = randomChild2;
+            vip.VipChild3rdCount = randomChild3;
+            vip.FreeChildCount = freeChild;
+            db.SaveChanges();
             var users = db.Users
                 .Where(s => s.Id != userID && s.UserType == UserType.Personal && s.Avatar != null)
                 .Select(s => s.Id)
