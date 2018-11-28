@@ -52,37 +52,7 @@ namespace AiCard.Controllers
             return Json(Comm.ToJsonResultForPagedList(paged, paged), JsonRequestBehavior.AllowGet);
         }
 
-        /// <summary>
-        /// 新增客户
-        /// </summary>
-        /// <param name="cust"></param>
-        /// <returns></returns>
-        [HttpPost]
-        [AllowCrossSiteJson]
-        public ActionResult AddEnterPriseCustomer(EnterpriseCustomer cust)
-        {
-            try
-            {
-                var model = new EnterpriseCustomer
-                {
-                    RealName = cust.RealName,
-                    Address = cust.Address,
-                    Birthday = cust.Birthday,
-
-                };
-                db.EnterpriseCustomers.Add(model);
-                db.SaveChanges();
-                var returndata = new
-                {
-                    ID = model.ID
-                };
-                return Json(Comm.ToJsonResult("Success", "新增成功", returndata), JsonRequestBehavior.AllowGet);
-            }
-            catch (Exception ex)
-            {
-                return Json(Comm.ToJsonResult("Error", ex.Message), JsonRequestBehavior.AllowGet);
-            }
-        }
+       
 
         /// <summary>
         /// 今日新增客户总数、未跟进客户数

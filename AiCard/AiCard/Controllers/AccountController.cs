@@ -961,6 +961,107 @@ namespace AiCard.Controllers
             return Json(Comm.ToJsonResult("Success", "成功", mobile), JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// 新增客户
+        /// </summary>
+        /// <param name="cust"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [AllowCrossSiteJson]
+        public ActionResult AddEnterPriseCustomer(AddEnterpriseCustomer model)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(model.UnionID))
+                {
+                    if (string.IsNullOrWhiteSpace(model.OpenID))
+                    {
+                        return Json(Comm.ToJsonResult("OpenIDNoFound", $"OpenID不能为空"));
+                    }
+                    //如果用户没关注公众号，获取不了UnionID，从EncryptedData从解密用户数据
+                    var session = Common.WeChat.Jscode2sessionResultList.GetSession(model.OpenID);
+                    var str = Common.WeChat.Jscode2sessionResultList.AESDecrypt(model.EncryptedData, session, model.IV);
+                    try
+                    {
+                        string debug = JsonConvert.SerializeObject(new
+                        {
+                            model.EncryptedData,
+                            session,
+                            model.IV,
+                            AES = str
+                        });
+                        Comm.WriteLog("WeiXin", debug, DebugLogLevel.Normal);
+                        var jUser = JsonConvert.DeserializeObject<JObject>(str);
+                        var unionID = jUser["unionId"]?.Value<string>();
+                        if (unionID == null)
+                        {
+                            return Json(Comm.ToJsonResult("UnionIDNoFound", "获取不了UnionID"));
+                        }
+                        model.UnionID = unionID;
+                    }
+                    catch (Exception)
+                    {
+                        //如果解密后发现昵称有乱码
+                        //如"nickName\":\"涓€鐪兼湜宸?,\"gender\":1,
+                        //把乱码部分全部去掉重新解析
+                        try
+                        {
+                            var index = str.IndexOf("\"unionId\"");
+                            var newStr = str.Remove(1, index - 1);
+                            var jUser = JsonConvert.DeserializeObject<JObject>(newStr);
+                            var unionID = jUser["unionId"]?.Value<string>();
+                            model.UnionID = unionID;
+                        }
+                        catch (Exception)
+                        {
+                            return Json(Comm.ToJsonResult("AESDecryptFail", "解密失败", new { Info = model, Aes = str, Session = session }));
+                        }
+                    }
+                }
+                UserInfoResult wmodel = new UserInfoResult();
+                wmodel.EncryptedData = model.EncryptedData;
+                wmodel.HeadImgUrl = model.HeadImgUrl;
+                wmodel.IsSubscribe = model.IsSubscribe;
+                wmodel.IV = model.IV;
+                wmodel.NickName = model.NickName;
+                wmodel.OpenID = model.OpenID;
+                wmodel.Type = model.Type;
+                wmodel.UnionID = model.UnionID;
+                var user = CreateByWeChat(wmodel);
+                if (user != null)
+                {
+                    var addmodel = new EnterpriseCustomer
+                    {
+                        RealName = model.NickName,
+                        EnterpriseID = model.EnterpriseID,
+                        UserID = user.Id
+                    };
+                    db.EnterpriseCustomers.Add(addmodel);
+                    int reruenrow=db.SaveChanges();
+                    if (reruenrow > 0)
+                    {
+                        var returndata = new
+                        {
+                            ID = addmodel.ID
+                        };
+                        return Json(Comm.ToJsonResult("Success", "新增成功", returndata), JsonRequestBehavior.AllowGet);
+                    }
+                    else {
+                        return Json(Comm.ToJsonResult("Error", "新增客户失败"));
+                    }
+                }
+                else
+                {
+                    return Json(Comm.ToJsonResult("Error", "新增客户失败"));
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return Json(Comm.ToJsonResult("Error", "新增客户失败", ex.Message));
+            }
+        }
+
         #endregion
     }
 }

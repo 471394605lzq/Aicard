@@ -51,7 +51,7 @@ namespace AiCard.Controllers
             {
                 From = new
                 {
-                    Avatar = from.Avatar,
+                    Avatar = from.Avatar.SplitToArray<string>(',')[0],
                     UserID = from.Id,
                     UserName = from.UserName,
                     NickName = from.NickName,
@@ -59,7 +59,7 @@ namespace AiCard.Controllers
                 },
                 To = new
                 {
-                    Avatar = to.Avatar,
+                    Avatar = to.Avatar.SplitToArray<string>(',')[0],
                     UserID = to.Id,
                     UserName = to.UserName,
                     NickName = to.NickName,
@@ -105,7 +105,7 @@ namespace AiCard.Controllers
             {
                 From = new
                 {
-                    Avatar = from.Avatar,
+                    Avatar = from.Avatar.SplitToArray<string>(',')[0],
                     UserID = from.Id,
                     UserName = from.UserName,
                     NickName = from.NickName,

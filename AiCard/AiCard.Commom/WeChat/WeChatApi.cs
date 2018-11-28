@@ -395,10 +395,8 @@ namespace AiCard.Common.WeChat
                 var dPath = $"~/Upload/{DateTime.Now:yyyyMMddHHmmss}{Comm.Random.Next(1000, 9999)}{extension}";
                 var path = HttpContext.Current.Server.MapPath(dPath);
 
-                string mp3SavePth = $"~/Upload/{DateTime.Now:yyyyMMddHHmmss}{Comm.Random.Next(1000, 9999)}.mp3";
-                //将原来的视频转换成mp3格式成功
-                if (!string.IsNullOrEmpty(Comm.ConvertToMp3(path, mp3SavePth)))
-                {
+                //string mp3SavePth = System.Web.HttpContext.Current.Request.MapPath($"~/Upload/{DateTime.Now:yyyyMMddHHmmss}{Comm.Random.Next(1000, 9999)}.mp3");
+                
                     var result = api.CreateRequest();
                     string errorMsg;
                     var reader = new StreamReader(result);
@@ -406,7 +404,7 @@ namespace AiCard.Common.WeChat
 
                     //Comm.WriteLog("GetTempMedia", errorMsg, DebugLogLevel.Normal);
                     result.Position = 0;
-                    using (Stream output = File.OpenWrite(mp3SavePth))
+                    using (Stream output = File.OpenWrite(path))
                     {
                         result.CopyTo(output);
                     }
@@ -416,13 +414,8 @@ namespace AiCard.Common.WeChat
                         case CommModels.UploadServer.Local:
                             return dPath;
                         case CommModels.UploadServer.QinQiu:
-                            return new Qiniu.QinQiuApi().UploadFile(mp3SavePth, true);
+                            return new Qiniu.QinQiuApi().upload(path, true);
                     }
-                }
-                else
-                {
-                    return "文件转换失败";
-                }
             }
             catch (Exception ex)
             {

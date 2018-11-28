@@ -334,6 +334,13 @@
     <Compile Include="ResultNotify\PayResultNotifyPage.aspx.designer.cs">
       <DependentUpon>PayResultNotifyPage.aspx</DependentUpon>
     </Compile>
+    <Compile Include="ResultNotify\PersistentNotifyUrl.aspx.cs">
+      <DependentUpon>PersistentNotifyUrl.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ResultNotify\PersistentNotifyUrl.aspx.designer.cs">
+      <DependentUpon>PersistentNotifyUrl.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -379,6 +386,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="ResultNotify\PayResultNotifyPage.aspx" />
+    <Content Include="ResultNotify\PersistentNotifyUrl.aspx" />
     <Content Include="Scripts\ai.0.22.9-build00167.js" />
     <Content Include="Scripts\ai.0.22.9-build00167.min.js" />
     <Content Include="Scripts\bootstrap.js" />

@@ -142,6 +142,7 @@
     <Compile Include="Interface\ISms.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Qiniu\Base64.cs" />
     <Compile Include="Qiniu\QinQiuApi.cs" />
     <Compile Include="QrCode.cs" />
     <Compile Include="Reg.cs" />
