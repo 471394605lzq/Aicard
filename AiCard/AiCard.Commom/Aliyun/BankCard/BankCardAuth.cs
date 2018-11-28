@@ -58,7 +58,7 @@ namespace AiCard.Commom.Aliyun.BankCard
         /// </summary>
         /// <param name="bankModel"></param>
         /// <returns></returns>
-        public static RequestResult BankAuthenticate(BankCardModel bankModel) {
+        public static RequestResult Bank4Authenticate(BankCardModel bankModel) {
             RequestResult result = new RequestResult() {
                 retCode= ReqResultCode.failed,
                 retMsg="认证请求失败"
