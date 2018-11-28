@@ -113,31 +113,31 @@ namespace AiCard.Controllers
             {
                 Comm.WriteLog(this.GetType().ToString(), ex.Message, Common.Enums.DebugLogLevel.Error);
             }
-            var vip = new Vip
-            {
-                Amount = 0,
-                CardID = card.ID,
-                CreateDateTime = DateTime.Now,
-                FreeChildCount = 0,
-                State = Common.Enums.VipState.Enable,
-                TotalAmount = 0,
-                TotalAmountRank = 0,
-                TotalMonthAmountRank = 0,
-                TotalWeekAmountRank = 0,
-                Type = Common.Enums.VipRank.Default,
-                UserID = userID,
-                VipChild2ndCount = 0,
-                VipChild3rdCount = 0
-            };
-            db.Vips.Add(vip);
-            db.SaveChanges();
+            //var vip = new Vip
+            //{
+            //    Amount = 0,
+            //    CardID = card.ID,
+            //    CreateDateTime = DateTime.Now,
+            //    FreeChildCount = 0,
+            //    State = Common.Enums.VipState.Enable,
+            //    TotalAmount = 0,
+            //    TotalAmountRank = 0,
+            //    TotalMonthAmountRank = 0,
+            //    TotalWeekAmountRank = 0,
+            //    Type = Common.Enums.VipRank.Default,
+            //    UserID = userID,
+            //    VipChild2ndCount = 0,
+            //    VipChild3rdCount = 0
+            //};
+            //db.Vips.Add(vip);
+            //db.SaveChanges();
             if (parentVip != null)
             {
                 var result = new Bll.VipBLL().CreateVipRelation(userID, code);
                 if (result.retCode == Comm.ReqResultCode.failed)
                 {
                     //回滚
-                    db.Vips.Remove(vip);
+                    //db.Vips.Remove(vip);
                     db.CardPersonals.Remove(card);
                     db.SaveChanges();
                     return Json(Comm.ToJsonResult("Error", result.retMsg));
