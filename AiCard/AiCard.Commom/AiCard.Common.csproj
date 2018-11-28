@@ -112,6 +112,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Aliyun\BankCard\BankCardAuth.cs" />
+    <Compile Include="Aliyun\BankCard\BankCardAuthResult.cs" />
+    <Compile Include="Aliyun\BankCard\BankCardModel.cs" />
     <Compile Include="Comm.cs" />
     <Compile Include="CommModels\ImageResizer.cs" />
     <Compile Include="CommonApi.cs" />
