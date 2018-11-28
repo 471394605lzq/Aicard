@@ -157,6 +157,7 @@ namespace AiCard.Controllers
                     card.Gender,
                     Birthday = card.Birthday?.ToString("yyyy-MM-dd"),
                     Code = vip.Code,
+                    Type = vip.Type,
                     Viewers = leastUsers.Select(s => s.Avatar).ToList()
                 };
                 return Json(Comm.ToJsonResult("Success", "成功", data), JsonRequestBehavior.AllowGet);
