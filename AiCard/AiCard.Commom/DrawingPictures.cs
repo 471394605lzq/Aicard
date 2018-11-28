@@ -175,6 +175,19 @@ namespace AiCard.Common
             return filePath;
         }
 
+        public static Image DownloadImg(string strPath)
+        {
+            using (WebClient my = new WebClient())
+            {
+                var mybyte = my.DownloadData(strPath);
+                using (MemoryStream ms = new MemoryStream(mybyte))
+                {
+                    System.Drawing.Image img = System.Drawing.Image.FromStream(ms);
+                    return img;
+                }
+            }
+
+        }
 
         //画一个box
         public static void SetBox(Bitmap bitMap, Graphics gh, int width, int height, Color cl, Color bgcl, int x, int y, int bordersize)
@@ -191,6 +204,29 @@ namespace AiCard.Common
             gh.DrawLine(new Pen(cl, bordersize), new Point(x, y), new Point(x + width, y));
             gh.DrawLine(new Pen(cl, bordersize), new Point(x + width, y), new Point(x + width, y + height));
             gh.DrawLine(new Pen(cl, bordersize), new Point(x, y + height), new Point(x + width, y + height));
+        }
+
+        public static Image CutEllipse(Image img)
+        {
+            int x = img.Width / 2;
+            int y = img.Height / 2;
+            int r = Math.Min(x, y);
+
+            Bitmap tmp = null;
+            tmp = new Bitmap(2 * r, 2 * r);
+            using (Graphics g = Graphics.FromImage(tmp))
+            {
+                g.SmoothingMode = SmoothingMode.AntiAlias;
+                g.TranslateTransform(tmp.Width / 2, tmp.Height / 2);
+                GraphicsPath gp = new GraphicsPath();
+                gp.AddEllipse(0 - r, 0 - r, 2 * r, 2 * r);
+                Region rg = new Region(gp);
+                g.SetClip(rg, CombineMode.Replace);
+                Bitmap bmp = new Bitmap(img);
+                g.DrawImage(bmp, new Rectangle(-r, -r, 2 * r, 2 * r), new Rectangle(x - r, y - r, 2 * r, 2 * r), GraphicsUnit.Pixel);
+
+            }
+            return tmp;
         }
     }
 }

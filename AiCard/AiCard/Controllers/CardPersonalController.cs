@@ -27,7 +27,7 @@ namespace AiCard.Controllers
                                   c.Birthday,
                                   c.Gender,
                                   c.Position,
-                                  VipType = v.Type,
+                                  v.Type,
                                   c.Industry,
                                   c.UserID,
                                   c.City,
@@ -47,7 +47,7 @@ namespace AiCard.Controllers
                 s.Position,
                 s.Industry,
                 s.City,
-                s.VipType
+                s.Type
             });
 
             return Json(Common.Comm.ToJsonResultForPagedList(paged, model), JsonRequestBehavior.AllowGet);
@@ -372,10 +372,25 @@ namespace AiCard.Controllers
             }
         }
 
-        [HttpPost]
+        
         public ActionResult GeneratePosters(int pCardID, string img)
         {
-
+            var card = db.CardPersonals.FirstOrDefault(s => s.ID == pCardID);
+            if (card == null)
+            {
+                return Json(Comm.ToJsonResult("CardNoFound", "名片不存在"));
+            }
+            if (!string.IsNullOrWhiteSpace(card.WeChatMiniQrCode))
+            {
+                Comm.MergePosterPersonalImage(new Common.CommModels.DrawingPictureProsonal
+                {
+                    Avatar = card.Avatar,
+                    BgImage = img,
+                    Name = card.Name,
+                    QrCode = card.WeChatMiniQrCode,
+                    OutputPath = $"{DateTime.Now:yyyyMMddHHmm}{Comm.Random.Next(1000, 9999)}"
+                });
+            }
             return Json(Comm.ToJsonResult("Success", "成功"));
         }
 
@@ -408,10 +423,10 @@ namespace AiCard.Controllers
         public ActionResult GetDefaultPosters()
         {
             var imgs = new string[] { "~/Content/Poster/img_poster1.png",
-                "~/Content/Poster/img_poster2.png",
-                "~/Content/Poster/img_poster3.png",
-                "~/Content/Poster/img_poster4.png",
-                "~/Content/Poster/img_poster5.png"};
+                "~/Content/Images/Poster/img_poster2.png",
+                "~/Content/Images/Poster/img_poster3.png",
+                "~/Content/Images/Poster/img_poster4.png",
+                "~/Content/Images/Poster/img_poster5.png"};
             imgs = imgs.Select(s => Url.ContentFull(s)).ToArray();
             return Json(Comm.ToJsonResult("Success", "成功", imgs));
         }

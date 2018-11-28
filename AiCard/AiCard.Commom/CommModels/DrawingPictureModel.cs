@@ -61,12 +61,23 @@ namespace AiCard.Common.CommModels
         ///// 标签2的颜色样式
         ///// </summary>
         //public string tagstyle2 { get; set; }
-
-
-
     }
-    public class TagModel {
+    public class TagModel
+    {
         public string TagName { get; set; }
         public CardTabStyle TagStyle { get; set; }
+    }
+
+    public class DrawingPictureProsonal
+    {
+        public string BgImage { get; set; }
+
+        public string QrCode { get; set; }
+
+        public string Avatar { get; set; }
+
+        public string Name { get; set; }
+
+        public string OutputPath { get; set; }
     }
 }

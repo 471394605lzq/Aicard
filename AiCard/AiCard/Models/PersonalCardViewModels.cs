@@ -51,11 +51,9 @@ namespace AiCard.Models
         public string Info { get; set; }
 
         [Display(Name = "语音")]
-        //public string Voice { get; set; }
         public string Voice { get; set; }
 
         [Display(Name = "视频")]
-        //public string Video { get; set; }
         public string Video { get; set; }
 
         [Display(Name = "图片")]
