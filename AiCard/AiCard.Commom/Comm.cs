@@ -532,7 +532,7 @@ namespace AiCard.Common
         /// <summary>
         /// 执行Cmd命令
         /// </summary>
-        private static string RunCmd(string c,string filename)
+        private static string RunCmd(string c, string filename)
         {
             try
             {
@@ -552,7 +552,7 @@ namespace AiCard.Common
                 p.WaitForExit();
                 string outStr = p.StandardOutput.ReadToEnd();
                 p.Close();
-               
+
                 //Comm.WriteLog("RunCmd1", reader, DebugLogLevel.Error);
                 return outStr;
             }
@@ -845,7 +845,7 @@ namespace AiCard.Common
                     if (item.Index == i)
                     {
                         g1.DrawString(item.Value, fEmoji, fb, fx, 405 * resize);
-                        fx += (int)(Math.Ceiling(g1.MeasureString(item.Value, fEmoji).Width));
+                        fx += (int)(Math.Ceiling(g1.MeasureString(item.Value, fEmoji).Width)) - 4 * resize;
                         i += item.Length;
                         isFind = true;
                         break;
@@ -857,13 +857,15 @@ namespace AiCard.Common
                 }
                 string txt = model.Name[i].ToString();
                 g1.DrawString(txt, fDefault, fb, fx, 405 * resize);
-                fx += (int)(Math.Ceiling(g1.MeasureString(txt, fDefault).Width));
+                fx += (int)(Math.Ceiling(g1.MeasureString(txt, fDefault).Width)) - 4 * resize;
                 i++;
             }
 
             // 保存输出到本地
-            var path = $"~/Upload/{model.FileName}.jpg";
+            var path = $"~/Upload/{model.FileName}.png";
             string savePath = System.Web.HttpContext.Current.Server.MapPath(path);
+            bitMap = new Bitmap(DrawingPictures.RoundCorners((Image)bitMap, 4 * resize, Color.Transparent));
+            bitMap.MakeTransparent();
             bitMap.Save(savePath);
             ////微信小程序的限制，图片放到七牛上无法缓存，然后无法把海报保存到相册
             //QinQiuApi qniu = new QinQiuApi();
