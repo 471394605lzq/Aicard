@@ -85,6 +85,16 @@ namespace AiCard.DAL.Models
         public int TotalMonthAmountRank { get; set; }
 
         /// <summary>
+        /// 月收益
+        /// </summary>
+        public decimal TotalMonthAmount { get; set; }
+
+        /// <summary>
+        /// 周收益
+        /// </summary>
+        public decimal TotalWeekAmount { get; set; }
+
+        /// <summary>
         /// 创建时间
         /// </summary>
         public DateTime CreateDateTime { get; set; }

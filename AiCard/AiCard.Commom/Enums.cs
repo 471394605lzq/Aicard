@@ -296,14 +296,15 @@ namespace AiCard.Common.Enums
     /// <summary>
     /// 用户智能追踪时显示
     /// </summary>
-    public enum NoopsycheFollowType {
-        [Display(Name ="名片")]
-        CardShow= UserLogType.CardRead,
+    public enum NoopsycheFollowType
+    {
+        [Display(Name = "名片")]
+        CardShow = UserLogType.CardRead,
         [Display(Name = "成交在望哦")]
         CardShowRemark = UserLogType.CardRead + 1,
 
         [Display(Name = "动态")]
-        ArticleShow =UserLogType.ArticleRead,
+        ArticleShow = UserLogType.ArticleRead,
         [Display(Name = "看了TA对你的近况感兴趣")]
         ArticleShowRemark = UserLogType.ArticleRead + 1,
 
@@ -318,7 +319,7 @@ namespace AiCard.Common.Enums
         ShopShowRemark = UserLogType.ShopRead + 1,
 
         [Display(Name = "洽谈")]
-        CommunicationShow=UserLogType.Communication
+        CommunicationShow = UserLogType.Communication
     }
     public enum ProductType
     {
@@ -541,4 +542,5 @@ namespace AiCard.Common.Enums
         Expense
 
     }
+    
 }
