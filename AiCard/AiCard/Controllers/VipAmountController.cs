@@ -248,18 +248,77 @@ namespace AiCard.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult UploadTotalAmountRank()
+        public ActionResult UploadTotalAmountRank(Common.Enums.VipTotalAmountRankType type)
         {
-            //统计总榜
-            var sql = $@"UPDATE Vips 
-            SET TotalAmountRank= v2.[Rank]
-            FROM
-            dbo.Vips Join
-            (SELECT DENSE_RANK() OVER (ORDER BY TotalAmount  Desc) AS [Rank],ID 
-            FROM dbo.Vips v1 WHERE v1.TotalAmount>0) AS v2 ON v2.ID = Vips.ID";
-            var countTotalAmount = db.Database.ExecuteSqlCommand(sql);
-            return Json(Common.Comm.ToJsonResult("Success", "统计排行完成"));
+            switch (type)
+            {
+                case Common.Enums.VipTotalAmountRankType.All:
+                    {
+                        //统计总榜
+                        var sql = $@"UPDATE Vips 
+                            SET TotalAmountRank= v2.[Rank]
+                            FROM
+                            dbo.Vips Join
+                            (SELECT DENSE_RANK() OVER (ORDER BY TotalAmount  Desc) AS [Rank],ID 
+                            FROM dbo.Vips v1 WHERE v1.TotalAmount>0) AS v2 ON v2.ID = Vips.ID";
+                        db.Database.ExecuteSqlCommand(sql);
+                    }
+                    break;
+                case Common.Enums.VipTotalAmountRankType.Week:
+                    {
+                        //清理过去上周的排名和金额
+                        var query = @"UPDATE dbo.Vips SET TotalWeekAmountRank=0 WHERE TotalWeekAmountRank>0";
+                        db.Database.ExecuteSqlCommand(query);
+                        var date = DateTime.Now;
+                        var start = date.Date.AddDays(-(int)date.DayOfWeek);
+                        var end = start.AddDays(7);
+                        //重新排名
+                        var sql = $@"SET TotalWeekAmountRank = varank.[Rank],TotalWeekAmount = varank.Amount
+                            FROM
+                            dbo.Vips join
+                            (SELECT DENSE_RANK() OVER (ORDER BY Amount) AS [Rank],UserID,va.Amount
+                            FROM
+                            (SELECT UserID,SUM(Amount) Amount FROM dbo.VipAmountLogs 
+                            WHERE Amount>0 AND CreateDateTime>=@start AND CreateDateTime<@end
+                            GROUP BY UserID)AS va) AS varank ON varank.UserID = Vips.UserID";
+                        db.Database.ExecuteSqlCommand(sql,
+                            new System.Data.SqlClient.SqlParameter("@start", start),
+                            new System.Data.SqlClient.SqlParameter("@end", end));
+                    }
+                    break;
+                case Common.Enums.VipTotalAmountRankType.Month:
+                    {
+                        //清理过去上月的排名和金额
+                        var query = @"UPDATE dbo.Vips SET TotalMonthAmountRank=0 WHERE TotalMonthAmountRank>0";
+                        db.Database.ExecuteSqlCommand(query);
+                        var date = DateTime.Now;
+                        var start = new DateTime(date.Year, date.Month, 1);
+                        var end = start.AddMonths(1);
+                        //重新排名
+                        var sql = $@"UPDATE dbo.Vips
+                            SET TotalMonthAmountRank = varank.[Rank],TotalMonthAmount = varank.Amount
+                            FROM
+                            dbo.Vips join
+                            (SELECT DENSE_RANK() OVER (ORDER BY Amount) AS [Rank],UserID,va.Amount
+                            FROM
+                            (SELECT UserID,SUM(Amount) Amount FROM dbo.VipAmountLogs 
+                            WHERE Amount>0 AND CreateDateTime>=@start AND CreateDateTime<@end
+                            GROUP BY UserID)AS va) AS varank ON varank.UserID = Vips.UserID";
+                        db.Database.ExecuteSqlCommand(sql,
+                            new System.Data.SqlClient.SqlParameter("@start", start),
+                            new System.Data.SqlClient.SqlParameter("@end", end));
+
+                    }
+                    break;
+                default:
+                    break;
+            }
+
+            return Json(Common.Comm.ToJsonResult("Success", $"统计{type.GetDisplayName()}排行完成"));
         }
+
+
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
