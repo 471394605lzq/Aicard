@@ -21,10 +21,8 @@ namespace AiCard.Controllers
 
         public ActionResult Index()
         {
-            string text = "🔥Vision🔥";
-            var reg = new System.Text.RegularExpressions.Regex(Reg.EMOJI);
-            var temp = reg.Matches(text);
-            var list = reg.Split(text);
+            var date = DateTime.Now;
+            var d = date.DayOfWeek;
             return Json("1", JsonRequestBehavior.AllowGet);
         }
 
