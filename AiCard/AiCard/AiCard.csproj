@@ -264,6 +264,7 @@
     <Compile Include="Bll\VIPAccountBLL.cs" />
     <Compile Include="Bll\Users.cs" />
     <Compile Include="Bll\VipBLL.cs" />
+    <Compile Include="Bll\VipForwardAccountBLL.cs" />
     <Compile Include="Bll\VipForwardBLL.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ArticleCommentController.cs" />
@@ -298,6 +299,7 @@
     <Compile Include="Controllers\VipAmountController.cs" />
     <Compile Include="Controllers\VIPController.cs" />
     <Compile Include="Controllers\CardPersonalController.cs" />
+    <Compile Include="Controllers\VipForwardAccountController.cs" />
     <Compile Include="Controllers\VIPManageController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -958,6 +960,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Models\CommModels\" />
+    <Folder Include="Models\VipForward\" />
     <Folder Include="Upload\" />
     <Folder Include="Views\ArticleComment\" />
     <Folder Include="Views\Article\" />
@@ -974,6 +977,7 @@
     <Folder Include="Views\UserLog\" />
     <Folder Include="Views\UserSpeech\" />
     <Folder Include="Views\VipAmountLog\" />
+    <Folder Include="Views\VipForwardAccount\" />
     <Folder Include="Views\VipHome\" />
     <Folder Include="Views\VIP\" />
     <Folder Include="WeChatSessionKey\" />
