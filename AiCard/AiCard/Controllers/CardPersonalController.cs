@@ -104,6 +104,12 @@ namespace AiCard.Controllers
                     Type = Common.Enums.UserLogType.CardPersonalRead
                 });
                 var vip = db.Vips.FirstOrDefault(s => s.CardID == card.ID);
+                var likeCount = db.UserLogs
+                    .Count(s => s.Type == Common.Enums.UserLogType.CardPersonalLike
+                    && s.RelationID == pCardID);
+                var hadLike = db.UserLogs.Any(s => s.RelationID == pCardID
+                    && s.Type == Common.Enums.UserLogType.CardPersonalLike
+                    && s.UserID == userID);
                 //获取最近访问的6个人头像
                 var leastUsers = (from l in db.UserLogs
                                   from u in db.Users
@@ -158,7 +164,9 @@ namespace AiCard.Controllers
                     Birthday = card.Birthday?.ToString("yyyy-MM-dd"),
                     Code = vip.Code,
                     Type = vip.Type,
-                    Viewers = leastUsers.Select(s => s.Avatar).ToList()
+                    Viewers = leastUsers.Select(s => s.Avatar).ToList(),
+                    LikeCount = likeCount,
+                    HadLike = hadLike,
                 };
                 return Json(Comm.ToJsonResult("Success", "成功", data), JsonRequestBehavior.AllowGet);
             }
