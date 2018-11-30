@@ -113,16 +113,13 @@ namespace AiCard.Controllers
             {
                 Comm.WriteLog(this.GetType().ToString(), ex.Message, Common.Enums.DebugLogLevel.Error);
             }
-            if (parentVip != null)
+            var result = new Bll.VipBLL().CreateVipRelation(userID, code);
+            if (result.retCode == Comm.ReqResultCode.failed)
             {
-                var result = new Bll.VipBLL().CreateVipRelation(userID, code);
-                if (result.retCode == Comm.ReqResultCode.failed)
-                {
-                    //回滚
-                    db.CardPersonals.Remove(card);
-                    db.SaveChanges();
-                    return Json(Comm.ToJsonResult("Error", result.retMsg));
-                }
+                //回滚
+                db.CardPersonals.Remove(card);
+                db.SaveChanges();
+                return Json(Comm.ToJsonResult("Error", result.retMsg));
             }
             return Json(Comm.ToJsonResult("Success", "成功", new { PCardID = card.ID }));
 
