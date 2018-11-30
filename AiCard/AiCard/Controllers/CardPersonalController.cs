@@ -132,7 +132,7 @@ namespace AiCard.Controllers
                     card.Name,
                     card.Avatar,
                     card.Position,
-                    card.PhoneNumber,
+                    Phone = card.PhoneNumber,
                     card.Mobile,
                     card.Email,
                     card.WeChatCode,
@@ -143,7 +143,7 @@ namespace AiCard.Controllers
                     card.Industry,
                     Images = card.Images.SplitToArray<string>() ?? new List<string>(),
                     PCardID = card.ID,
-                    Enterprise = card.Enterprise,
+                    EnterpriseName = card.Enterprise,
                     card.Address,
                     card.City,
                     card.District,
@@ -231,15 +231,15 @@ namespace AiCard.Controllers
                         return Json(Comm.ToJsonResult("Error", "手机号格式不正确"));
                     }
                 }
-                if (model.PhoneNumber != null)
+                if (model.Phone != null)
                 {
-                    if (string.IsNullOrWhiteSpace(model.PhoneNumber))
+                    if (string.IsNullOrWhiteSpace(model.Phone))
                     {
                         pCard.PhoneNumber = null;
                     }
-                    else if (Reg.IsPhone(model.PhoneNumber))
+                    else if (Reg.IsPhone(model.Phone))
                     {
-                        pCard.PhoneNumber = model.PhoneNumber;
+                        pCard.PhoneNumber = model.Phone;
                     }
                     else
                     {
@@ -322,9 +322,9 @@ namespace AiCard.Controllers
                 {
                     pCard.District = model.District.Trim();
                 }
-                if (model.Enterprise != null)
+                if (model.EnterpriseName != null)
                 {
-                    pCard.Enterprise = model.Enterprise.Trim();
+                    pCard.Enterprise = model.EnterpriseName.Trim();
                 }
                 if (model.Lat != null)
                 {

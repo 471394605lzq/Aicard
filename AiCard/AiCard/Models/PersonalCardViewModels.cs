@@ -24,11 +24,9 @@ namespace AiCard.Models
         public string Avatar { get; set; }
 
         [Display(Name = "座机")]
-        [RegularExpression(Reg.PHONE, ErrorMessage = "{0}格式不正确")]
-        public string PhoneNumber { get; set; }
+        public string Phone { get; set; }
 
         [Display(Name = "Email")]
-        [RegularExpression(Reg.EMAIL, ErrorMessage = "{0}格式不正确")]
         public string Email { get; set; }
 
         [Display(Name = "微信号")]
@@ -84,7 +82,7 @@ namespace AiCard.Models
         public string Industry { get; set; }
 
         [Display(Name = "企业")]
-        public string Enterprise { get; set; }
+        public string EnterpriseName { get; set; }
 
 
     }
