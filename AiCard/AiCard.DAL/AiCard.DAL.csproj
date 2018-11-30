@@ -241,6 +241,10 @@
     <Compile Include="Migrations\201811290325077_AddVipForwardAccount.Designer.cs">
       <DependentUpon>201811290325077_AddVipForwardAccount.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201811300253005_AddVerificationCode.cs" />
+    <Compile Include="Migrations\201811300253005_AddVerificationCode.Designer.cs">
+      <DependentUpon>201811300253005_AddVerificationCode.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ArticleModels.cs" />
     <Compile Include="Models\CardModels.cs" />
@@ -259,6 +263,7 @@
     <Compile Include="Models\UserLogModels.cs" />
     <Compile Include="Models\UserProductTopModels.cs" />
     <Compile Include="Models\UserSpeechModels.cs" />
+    <Compile Include="Models\VerificationCode.cs" />
     <Compile Include="Models\VipRelationshipModels.cs" />
     <Compile Include="Models\VipForwardAccountModels.cs" />
     <Compile Include="Models\VipModels.cs" />
@@ -393,6 +398,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201811290325077_AddVipForwardAccount.resx">
       <DependentUpon>201811290325077_AddVipForwardAccount.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201811300253005_AddVerificationCode.resx">
+      <DependentUpon>201811300253005_AddVerificationCode.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
