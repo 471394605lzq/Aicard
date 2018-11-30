@@ -15,7 +15,7 @@ namespace AiCard.Models
 
         public CardCreateEditViewModel()
         {
-            
+
         }
 
         public string UserID { get; set; }
@@ -113,6 +113,7 @@ namespace AiCard.Models
 
         [Display(Name = "排序")]
         public int Sort { get; set; }
+        public string ActiveImage { get; set; }
     }
 
     public class CardListViewModel
