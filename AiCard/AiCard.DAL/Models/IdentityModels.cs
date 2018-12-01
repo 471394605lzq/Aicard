@@ -133,6 +133,9 @@ namespace AiCard.DAL.Models
 
         public DbSet<VipForwardAccount> VipForwardAccounts { get; set; }
 
+        public DbSet<VerificationCode> VerificationCodes { get; set; }
+
+
         public SqlConnection Connection { get; internal set; }
 
 

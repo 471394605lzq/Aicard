@@ -13,6 +13,7 @@ using System.Net;
 using AiCard.Common.WeChat;
 using AiCard.Common.Enums;
 using AiCard.DAL.Models;
+using AiCard.Common;
 
 namespace AiCard.Controllers
 {
@@ -62,7 +63,34 @@ namespace AiCard.Controllers
         public ActionResult Index(string filter, bool? enable = null, int page = 1)
         {
             Sidebar();
-            var m = db.Cards.Include(s => s.Enterprise).Include(s => s.User);
+            //var m = db.Cards.Include(s => s.Enterprise).Include(s => s.User);
+            var m = from a in db.Cards
+                    join b in db.Enterprises on a.EnterpriseID equals b.ID into ib
+                    join c in db.Users on a.UserID equals c.Id into ic
+                    select new CardShowModel
+                    {
+                        ActiveImage = "https://radar.dtoao.com/#/Accredit?id=" + a.ID,
+                        Avatar = a.Avatar,
+                        Birthday = a.Birthday,
+                        Email = a.Email,
+                        Enable = a.Enable,
+                        EnterpriseName = ib.FirstOrDefault().Name,
+                        Gender = a.Gender,
+                        ID = a.ID,
+                        EnterpriseID = a.EnterpriseID,
+                        Images = a.Images,
+                        Industry = a.Industry,
+                        Info = a.Info,
+                        Mobile = a.Mobile,
+                        Name = a.Name,
+                        PhoneNumber = a.PhoneNumber,
+                        Position = a.Position,
+                        Remark = a.Remark,
+                        Sort = a.Sort,
+                        UserName = ic.FirstOrDefault().UserName
+                    };
+
+           
             if (!string.IsNullOrWhiteSpace(filter))
             {
                 m = m.Where(s => s.Name.Contains(filter));
@@ -77,6 +105,10 @@ namespace AiCard.Controllers
                 m = m.Where(s => s.EnterpriseID == AccontData.EnterpriseID);
             }
             var paged = m.OrderByDescending(s => s.ID).ToPagedList(page);
+            foreach (var item in paged)
+            {
+                item.ActiveImage = "~/Common/qrcode?data=" + Url.Encode(item.ActiveImage);
+            }
             return View(paged);
         }
         //新增
@@ -257,7 +289,7 @@ namespace AiCard.Controllers
                 {
                     var scene = new Dictionary<string, string>();
                     scene.Add("CardId", model.ID.ToString());
-                    
+
                     t.WeChatMiniQrCode = w.GetWXACodeUnlimit(Common.WeChat.WeChatPage.CardDetail, scene);
                 }
                 db.SaveChanges();

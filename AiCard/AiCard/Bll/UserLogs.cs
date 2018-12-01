@@ -146,6 +146,25 @@ namespace AiCard.Bll
                             log.TargetUserID = c.UserID;
                             break;
                         }
+                    case UserLogType.CardPersonalAddressNav:
+                    case UserLogType.CardPersonalEmailCopy:
+                    case UserLogType.CardPersonalEnterpriseCopy:
+                    case UserLogType.CardPersonalLike:
+                    case UserLogType.CardPersonalMobileCall:
+                    case UserLogType.CardPersonalPhoneCall:
+                    case UserLogType.CardPersonalRead:
+                    case UserLogType.CardPersonalSave:
+                    case UserLogType.CardPersonalShare:
+                    case UserLogType.CardPersonalWechat:
+                        {
+                            var card = db.CardPersonals.FirstOrDefault(s => s.ID == log.RelationID && s.Enable);
+                            if (card == null)
+                            {
+                                throw new Exception("个人卡片不存在");
+                            }
+                            log.TargetUserID = card.UserID;
+                            break;
+                        }
                     default:
                         break;
                 }
@@ -186,7 +205,6 @@ namespace AiCard.Bll
                             {
                                 art.Like = count;
                             }
-
                             db.SaveChanges();//更新点赞数量或分享数
                             break;
                         }
@@ -224,6 +242,14 @@ namespace AiCard.Bll
                             t.Count = db.UserLogs.Count(s => s.RelationID == log.RelationID
                                 && s.Type == UserLogType.CardTab);
                             db.SaveChanges();//更新卡片标签
+                            break;
+                        }
+                    case UserLogType.CardPersonalLike:
+                        {
+                            var c = db.CardPersonals.FirstOrDefault(s => s.ID == log.RelationID);
+                            c.Like = db.UserLogs.Count(s => s.RelationID == log.RelationID
+                                && s.Type == UserLogType.CardPersonalLike);
+                            db.SaveChanges();
                             break;
                         }
                     default:
