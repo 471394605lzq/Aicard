@@ -324,7 +324,6 @@
     <Compile Include="Models\UserLogViewModels.cs" />
     <Compile Include="Models\UserManageViewModels.cs" />
     <Compile Include="Models\UserViewModels.cs" />
-    <Compile Include="Models\VipForward\MReqBankForward.cs" />
     <Compile Include="Models\Vip\MReqVipCardList.cs" />
     <Compile Include="Models\Vip\MVipAccountDetail.cs" />
     <Compile Include="Models\Vip\MVipCardDetail.cs" />
@@ -346,6 +345,13 @@
       <DependentUpon>PersistentNotifyUrl.aspx</DependentUpon>
     </Compile>
     <Compile Include="Startup.cs" />
+    <Compile Include="WebForm1.aspx.cs">
+      <DependentUpon>WebForm1.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebForm1.aspx.designer.cs">
+      <DependentUpon>WebForm1.aspx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-theme.css" />
@@ -399,6 +405,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Site.less" />
+    <Content Include="WebForm1.aspx" />
     <None Include="compilerconfig.json" />
     <None Include="compilerconfig.json.defaults">
       <DependentUpon>compilerconfig.json</DependentUpon>
@@ -961,6 +968,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Models\CommModels\" />
+    <Folder Include="Models\VipForward\" />
     <Folder Include="Upload\" />
     <Folder Include="Views\ArticleComment\" />
     <Folder Include="Views\Article\" />

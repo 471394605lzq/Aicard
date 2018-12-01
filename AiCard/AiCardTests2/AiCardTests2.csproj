@@ -92,21 +92,10 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
     <Compile Include="Controllers\VIPControllerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="WebForm1.aspx.cs">
-      <DependentUpon>WebForm1.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="WebForm1.aspx.designer.cs">
-      <DependentUpon>WebForm1.aspx.cs</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AiCard.Commom\AiCard.Common.csproj">
-      <Project>{B5FF40C2-CEE8-43ED-8722-99638716BBB1}</Project>
-      <Name>AiCard.Common</Name>
-    </ProjectReference>
     <ProjectReference Include="..\AiCard\AiCard.csproj">
       <Project>{3A1387D4-3418-4B19-B0CF-6EA4F89ACFD7}</Project>
       <Name>AiCard</Name>
@@ -115,9 +104,6 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="WebForm1.aspx" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
