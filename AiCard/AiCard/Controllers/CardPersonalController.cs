@@ -82,6 +82,7 @@ namespace AiCard.Controllers
                 }
 
                 var card = query.FirstOrDefault();
+
                 if (card == null)
                 {
                     var user = db.Users.FirstOrDefault(s => s.Id == userID);
@@ -96,14 +97,19 @@ namespace AiCard.Controllers
                         UserID = user.Id
                     }), JsonRequestBehavior.AllowGet);
                 }
-                Bll.UserLogs.Add(new UserLog
+                pCardID = card.ID;
+                if (card.UserID != userID)
                 {
-                    UserID = userID,
-                    RelationID = card.ID,
-                    TargetUserID = card.UserID,
-                    Type = Common.Enums.UserLogType.CardPersonalRead
-                });
-                var vip = db.Vips.FirstOrDefault(s => s.CardID == card.ID);
+                    Bll.UserLogs.Add(new UserLog
+                    {
+                        UserID = userID,
+                        RelationID = card.ID,
+                        TargetUserID = card.UserID,
+                        Type = Common.Enums.UserLogType.CardPersonalRead
+                    });
+                }
+              
+                var vip = db.Vips.FirstOrDefault(s => s.CardID == pCardID);
                 var likeCount = db.UserLogs
                     .Count(s => s.Type == Common.Enums.UserLogType.CardPersonalLike
                     && s.RelationID == pCardID);
