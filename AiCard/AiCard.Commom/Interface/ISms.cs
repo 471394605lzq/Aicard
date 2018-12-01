@@ -1008,7 +1008,7 @@ namespace AiCard
         /// <exception cref="ArgumentNullException">参数不能为空</exception>
         /// <exception cref="Exception"></exception>
         /// <returns>包体内容</returns>
-        public SmsResult SendSMS(string to, string templateId, string param)
+        public SmsResult SendSMS(string to, string templateId, string param,bool issave)
         {
 
             if (to == null)
