@@ -74,11 +74,11 @@ namespace AiCard.Controllers
         /// <param name="cardID">名片的用户ID</param>
         /// <returns></returns>
         [AllowCrossSiteJson]
-        public ActionResult GetFromAndToUserID(string fromUserID, string toUserID)
+        public ActionResult GetFromAndToUserID(string fromUserName, string toUserName)
         {
             var from = (from u in db.Users
                         from c in db.Cards
-                        where u.Id == c.UserID && u.Id==fromUserID
+                        where u.Id == c.UserID && u.UserName== fromUserName
                         select new { u.Id, u.UserName, c.Avatar, NickName = c.Name }).FirstOrDefault();
             if (from == null)
             {
@@ -86,7 +86,7 @@ namespace AiCard.Controllers
             }
             var api = new Common.TxIm.ImApi();
 
-            var to = db.Users.FirstOrDefault(s => s.Id == toUserID);
+            var to = db.Users.FirstOrDefault(s => s.UserName == toUserName);
             //if (to == null)
             //{
             //    return Json(Comm.ToJsonResult("CardNoFound", "接收消息用户不存在"));

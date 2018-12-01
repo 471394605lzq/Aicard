@@ -240,9 +240,11 @@ namespace AiCard.Controllers
             var user = db.Users.FirstOrDefault(s => s.Id == userID);
             var em = db.Enterprises.FirstOrDefault(s => s.ID == enterpriseid);
             int cardcount = em.CardCount;
+            string temptelnumber = string.Empty;
 
             if (cardcount > users.Count)
             {
+                temptelnumber = string.Join(",", users.Select(j => j.Mobile));
                 foreach (var item in users)
                 {
                     try
@@ -256,23 +258,23 @@ namespace AiCard.Controllers
                             ////用户创建成果
                             //if (result.Succeeded)
                             //{
-                                Common.Qiniu.QinQiuApi qin = new Common.Qiniu.QinQiuApi();
-                                var path = Server.MapPath(img);
-                                var img2 = qin.UploadFile(path);
-                                Card card = new Card
-                                {
-                                    Name = item.Name,
-                                    Avatar = img2,
-                                    UserID = string.Empty,
-                                    Email = item.Email,
-                                    EnterpriseID = em.ID,
-                                    Gender = item.Gender,
-                                    Mobile = item.Mobile,
-                                    PhoneNumber = item.Telephone,
-                                    Position = item.Position
-                                };
-                                db.Cards.Add(card);
-                                db.SaveChanges();
+                            Common.Qiniu.QinQiuApi qin = new Common.Qiniu.QinQiuApi();
+                            var path = Server.MapPath(img);
+                            var img2 = qin.UploadFile(path);
+                            Card card = new Card
+                            {
+                                Name = item.Name,
+                                Avatar = img2,
+                                UserID = null,
+                                Email = item.Email,
+                                EnterpriseID = em.ID,
+                                Gender = item.Gender,
+                                Mobile = item.Mobile,
+                                PhoneNumber = item.Telephone,
+                                Position = item.Position,
+                            };
+                            db.Cards.Add(card);
+                            db.SaveChanges();
                             //}
                         }
                     }
@@ -281,6 +283,8 @@ namespace AiCard.Controllers
                         return Json(Comm.ToJsonResult("Error", ex.Message), JsonRequestBehavior.AllowGet);
                     }
                 }
+                SendMsg s = new SendMsg();
+                var resultstr = s.SendSMS(temptelnumber, "403689", "");
                 return Json(Comm.ToJsonResult("Success", "同步成功", new { data = users }), JsonRequestBehavior.AllowGet);
             }
             else
@@ -490,7 +494,7 @@ namespace AiCard.Controllers
             {
                 var t = db.Enterprises.FirstOrDefault(s => s.ID == enterprise.ID);
                 t.Name = enterprise.Name;
-                if (AccountData.EnterpriseID != 0)
+                if (AccountData.UserType == UserType.Admin)
                 {
                     t.Code = enterprise.Code;
                     t.CardCount = enterprise.CardCount;
