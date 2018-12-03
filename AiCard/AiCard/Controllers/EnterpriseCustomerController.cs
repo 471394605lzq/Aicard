@@ -243,6 +243,9 @@ namespace AiCard.Controllers
                                  Birthday=c.Birthday,
                                  Company=c.Company,
                                  Address=c.Address,
+                                 Province=c.Province,
+                                 City=c.City,
+                                 District=c.District,
                                  Remark=uscuta.Select(s=>s.Remark)
                              }).FirstOrDefault();
                 var data = new
@@ -257,6 +260,9 @@ namespace AiCard.Controllers
                     Birthday =Convert.ToDateTime(query.Birthday).ToString("yyyy-MM-dd"),
                     Company = query.Company,
                     Address = query.Address,
+                    Province = query.Province,
+                    City = query.City,
+                    District = query.District,
                     Remark = query.Remark
                 };
                 return Json(Comm.ToJsonResult("Success", "成功", data), JsonRequestBehavior.AllowGet);
@@ -323,6 +329,18 @@ namespace AiCard.Controllers
                 if (model.Company != null)
                 {
                     t.Company = model.Company;
+                }
+                if (model.Province != null)
+                {
+                    t.Province = model.Province;
+                }
+                if (model.City != null)
+                {
+                    t.City = model.City;
+                }
+                if (model.District != null)
+                {
+                    t.District = model.District;
                 }
                 if (model.Address != null)
                 {
