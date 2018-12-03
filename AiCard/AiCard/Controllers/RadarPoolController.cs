@@ -621,7 +621,7 @@ namespace AiCard.Controllers
                         myparameters[2].Value = enterpriseID;
                         string listsqlstr = string.Format(@"SELECT DISTINCT CASE WHEN euc.CreateDateTime BETWEEN dateadd(day, -0, dateadd(ms, 0, DATEADD(dd, DATEDIFF(dd, 0, getdate()), 0))) 
                         AND dateadd(day, -0, DATEADD(ms, -3, DATEADD(dd, DATEDIFF(dd, -1, getdate()), 0))) THEN '是' ELSE '否' END AS isnewcust,Type,Total,ec.RealName,us.Avatar,
-                        CONVERT(NVARCHAR(50),DATEPART(hh,ul.CreateDateTime))+':'+CONVERT(NVARCHAR(50),DATEPART(mi,ul.CreateDateTime)) as createtimestr,ec.ID,us.id as custid 
+                        CONVERT(NVARCHAR(50),DATEPART(hh,ul.CreateDateTime))+':'+CONVERT(NVARCHAR(50),DATEPART(mi,ul.CreateDateTime)) as createtimestr,ec.ID,us.UserName as custid 
                         FROM dbo.UserLogs ul
                         INNER JOIN dbo.EnterpriseCustomers ec ON ec.UserID=ul.UserID
                         INNER JOIN dbo.AspNetUsers us ON us.Id=ec.UserID
@@ -661,7 +661,7 @@ namespace AiCard.Controllers
                 else
                 {
                     List<NoopsycheFollowShowModel> returnlist = new List<NoopsycheFollowShowModel>();
-                    string sqlstr = string.Format(@"SELECT  '是' AS isnewcust,Type,	Total,ec.RealName,us.Avatar,CONVERT(NVARCHAR(50),DATEPART(hh,ul.CreateDateTime))+':'+CONVERT(NVARCHAR(50),DATEPART(mi,ul.CreateDateTime)) as createtimestr,ec.ID ,us.id as custid 
+                    string sqlstr = string.Format(@"SELECT  '是' AS isnewcust,Type,	Total,ec.RealName,us.Avatar,CONVERT(NVARCHAR(50),DATEPART(hh,ul.CreateDateTime))+':'+CONVERT(NVARCHAR(50),DATEPART(mi,ul.CreateDateTime)) as createtimestr,ec.ID ,us.UserName as custid 
                         FROM dbo.UserLogs ul
                         INNER JOIN dbo.EnterpriseCustomers ec ON ec.UserID=ul.UserID
                         INNER JOIN dbo.AspNetUsers us ON us.Id=ec.UserID

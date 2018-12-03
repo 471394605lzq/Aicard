@@ -284,7 +284,7 @@ namespace AiCard.Controllers
                     }
                 }
                 SendMsg s = new SendMsg();
-                var resultstr = s.SendSMS(temptelnumber, "403689", "",false);
+                var resultstr = s.SendSMS(temptelnumber, "403689", "");
                 return Json(Comm.ToJsonResult("Success", "同步成功", new { data = users }), JsonRequestBehavior.AllowGet);
             }
             else
