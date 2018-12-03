@@ -324,6 +324,7 @@
     <Compile Include="Models\UserLogViewModels.cs" />
     <Compile Include="Models\UserManageViewModels.cs" />
     <Compile Include="Models\UserViewModels.cs" />
+    <Compile Include="Models\VipForward\MReqVipForward.cs" />
     <Compile Include="Models\Vip\MReqVipCardList.cs" />
     <Compile Include="Models\Vip\MVipAccountDetail.cs" />
     <Compile Include="Models\Vip\MVipCardDetail.cs" />
@@ -960,7 +961,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Models\CommModels\" />
-    <Folder Include="Models\VipForward\" />
     <Folder Include="Upload\" />
     <Folder Include="Views\ArticleComment\" />
     <Folder Include="Views\Article\" />

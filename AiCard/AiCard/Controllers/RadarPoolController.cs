@@ -621,7 +621,7 @@ namespace AiCard.Controllers
                         myparameters[2].Value = enterpriseID;
                         string listsqlstr = string.Format(@"SELECT DISTINCT CASE WHEN euc.CreateDateTime BETWEEN dateadd(day, -0, dateadd(ms, 0, DATEADD(dd, DATEDIFF(dd, 0, getdate()), 0))) 
                         AND dateadd(day, -0, DATEADD(ms, -3, DATEADD(dd, DATEDIFF(dd, -1, getdate()), 0))) THEN '是' ELSE '否' END AS isnewcust,Type,Total,ec.RealName,us.Avatar,
-                        CONVERT(NVARCHAR(50),DATEPART(hh,ul.CreateDateTime))+':'+CONVERT(NVARCHAR(50),DATEPART(mi,ul.CreateDateTime)) as createtimestr,ec.ID 
+                        CONVERT(NVARCHAR(50),DATEPART(hh,ul.CreateDateTime))+':'+CONVERT(NVARCHAR(50),DATEPART(mi,ul.CreateDateTime)) as createtimestr,ec.ID,us.UserName as custid 
                         FROM dbo.UserLogs ul
                         INNER JOIN dbo.EnterpriseCustomers ec ON ec.UserID=ul.UserID
                         INNER JOIN dbo.AspNetUsers us ON us.Id=ec.UserID
@@ -646,6 +646,7 @@ namespace AiCard.Controllers
                             model.showremarkstr = ((Common.Enums.NoopsycheFollowType)mydata[j].Type + 1).GetDisplayName();
                             model.TitleTime = data[i].timestr;
                             model.ID = mydata[j].ID;
+                            model.custid = mydata[j].custid;
                             list.Add(model);
                         }
                         returndatalist.Add(list);
@@ -660,7 +661,7 @@ namespace AiCard.Controllers
                 else
                 {
                     List<NoopsycheFollowShowModel> returnlist = new List<NoopsycheFollowShowModel>();
-                    string sqlstr = string.Format(@"SELECT  '是' AS isnewcust,Type,	Total,ec.RealName,us.Avatar,CONVERT(NVARCHAR(50),DATEPART(hh,ul.CreateDateTime))+':'+CONVERT(NVARCHAR(50),DATEPART(mi,ul.CreateDateTime)) as createtimestr,ec.ID 
+                    string sqlstr = string.Format(@"SELECT  '是' AS isnewcust,Type,	Total,ec.RealName,us.Avatar,CONVERT(NVARCHAR(50),DATEPART(hh,ul.CreateDateTime))+':'+CONVERT(NVARCHAR(50),DATEPART(mi,ul.CreateDateTime)) as createtimestr,ec.ID ,us.UserName as custid 
                         FROM dbo.UserLogs ul
                         INNER JOIN dbo.EnterpriseCustomers ec ON ec.UserID=ul.UserID
                         INNER JOIN dbo.AspNetUsers us ON us.Id=ec.UserID
@@ -683,6 +684,7 @@ namespace AiCard.Controllers
                         model.showremarkstr = ((Common.Enums.NoopsycheFollowType)data[j].Type + 1).GetDisplayName();
                         model.TitleTime = "无";
                         model.ID = data[j].ID;
+                        model.custid = data[j].custid;
                         returnlist.Add(model);
                     }
                     var resultdata = new
@@ -912,6 +914,7 @@ namespace AiCard.Controllers
             public string TitleTime { get; set; }
             public int ID { get; set; }
             public string Remark { get; set; }
+            public string custid{get;set;}
         }
         private class CustActivityTopModel
         {

@@ -1,5 +1,5 @@
 ﻿@*@model AiCard.Models.Enterprise*@
-@model IEnumerable<AiCard.WeChatWork.Models.User>
+@model IEnumerable<AiCard.Common.WeChatWork.Models.User>
 @{
     ViewBag.Title = "同步微信用户";
     Layout = "~/Views/Shared/_LayoutBackground.cshtml";
@@ -106,7 +106,7 @@
         }
 
     </table>
-    @Html.PageList((PagedList.IPagedList<AiCard.WeChatWork.Models.User>)Model, Url.PageUrl())
+    @Html.PageList((PagedList.IPagedList<AiCard.Common.WeChatWork.Models.User>)Model, Url.PageUrl())
     <div class="form-group" style="border-top:1px solid #e8e8e8;padding-top:15px;">
         <div class="col-md-offset-2 col-md-10">
             <input id="btnSubmit" type="submit" value="开始同步" class="btn btn-default" />

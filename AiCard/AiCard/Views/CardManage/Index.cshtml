@@ -1,4 +1,4 @@
-﻿@model PagedList.IPagedList<AiCard.DAL.Models.Card>
+﻿@model PagedList.IPagedList<AiCard.Models.CardShowModel>
 @{
     ViewBag.Title = "名片管理";
     Layout = "~/Views/Shared/_LayoutBackground.cshtml";
@@ -48,6 +48,9 @@
     <thead>
         <tr>
             <th>
+                <input id="chkAll" type="checkbox" name="name" value="" />
+            </th>
+            <th>
                 所属企业
             </th>
             <th>
@@ -89,6 +92,9 @@
             <th>
                 图片
             </th>
+            <th>
+                激活二维码
+            </th>
             <th>操作</th>
         </tr>
     </thead>
@@ -98,10 +104,13 @@
     {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Enterprise.Name)
+                <input data-id="@item.ID" data-item="@Newtonsoft.Json.JsonConvert.SerializeObject(item)" class="chk" type="checkbox" name="name" value="" />
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.User.UserName)
+                @Html.DisplayFor(modelItem => item.EnterpriseName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserName)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
@@ -139,6 +148,9 @@
             </td>
             <td>
                 @Html.TableImg(item.Images == null ? "" : item.Images == "" ? "" : item.Images.SplitToArray<string>()[0])
+            </td>
+            <td>
+                @Html.TableImg(item.ActiveImage)
             </td>
             <td>
                 @if (this.User.IsInRole(SysRole.CardManageEdit) || this.User.IsInRole(SysRole.ECardManageEdit))

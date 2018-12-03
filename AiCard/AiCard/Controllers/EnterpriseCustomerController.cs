@@ -194,7 +194,7 @@ namespace AiCard.Controllers
                 {
                     return Json(Comm.ToJsonResult("CustomerNoFound", "客户不存在"));
                 }
-                if (db.EnterpriseCustomerTabs.Any(s => s.CustomerID == customerID && s.Name == tabsName))
+                if (db.EnterpriseCustomerTabs.Any(s => s.CustomerID == customerID&&s.OwnerID== ownerID && s.Name == tabsName))
                 {
                     return Json(Comm.ToJsonResult("HadAdd", $"{tabsName}已经存在"));
                 }

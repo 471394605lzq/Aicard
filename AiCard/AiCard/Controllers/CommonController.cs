@@ -135,5 +135,17 @@ namespace AiCard.Controllers
                 return Json(Comm.ToJsonResult("WriteLogDisable", "已关闭"));
             }
         }
+
+
+        [HttpGet]
+        public FileResult QrCode(string data)
+        {
+            var steam = new System.IO.MemoryStream();
+            System.Drawing.Image image = Common.QrCode.Generate(data);
+            image.Save(steam, System.Drawing.Imaging.ImageFormat.Jpeg);
+            image.Dispose();
+            return File(steam.ToArray(), "image/jpeg");
+        }
+
     }
 }
