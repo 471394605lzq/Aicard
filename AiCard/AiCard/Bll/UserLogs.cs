@@ -168,7 +168,8 @@ namespace AiCard.Bll
                     default:
                         break;
                 }
-                if (log.Type == UserLogType.ArticleLike || log.Type == UserLogType.CardLike)
+                //点赞处理
+                if (log.Type == UserLogType.ArticleLike || log.Type == UserLogType.CardLike || log.Type == UserLogType.CardPersonalLike)
                 {
                     var dbLog = db.UserLogs.FirstOrDefault(s => s.RelationID == log.RelationID
                                 && s.UserID == log.UserID
@@ -245,10 +246,19 @@ namespace AiCard.Bll
                             break;
                         }
                     case UserLogType.CardPersonalLike:
+                    case UserLogType.CardPersonalRead:
                         {
                             var c = db.CardPersonals.FirstOrDefault(s => s.ID == log.RelationID);
-                            c.Like = db.UserLogs.Count(s => s.RelationID == log.RelationID
-                                && s.Type == UserLogType.CardPersonalLike);
+                            var count = db.UserLogs.Count(s => s.RelationID == log.RelationID
+                                    && s.Type == UserLogType.CardPersonalLike);
+                            if (log.Type == UserLogType.CardPersonalLike)
+                            {
+                                c.Like = count;
+                            }
+                            else if (log.Type == UserLogType.CardPersonalRead)
+                            {
+                                c.View = count;
+                            }
                             db.SaveChanges();
                             break;
                         }

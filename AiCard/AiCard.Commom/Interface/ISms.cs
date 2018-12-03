@@ -110,7 +110,7 @@ namespace AiCard
         private string m_restPort = "443";
         private string m_mainAccount = "6c44c7ddbc7c16dfd9d38f732c142bb6";
         private string m_mainToken = "b0329bed5fadffb63656836689485414";
-        private string m_appId = "986bd050b12c4d5db377cd6a22a0ce1b";
+        private string m_appId = "79daf513aaf049e5a54f0647c986e309";
         private bool m_isWriteLog = false;
 
         private EBodyType m_bodyType = EBodyType.EType_JSON;
@@ -1008,7 +1008,7 @@ namespace AiCard
         /// <exception cref="ArgumentNullException">参数不能为空</exception>
         /// <exception cref="Exception"></exception>
         /// <returns>包体内容</returns>
-        public SmsResult SendSMS(string to, string templateId, string param)
+        public SmsResult SendSMS(string to, string templateId, string param,bool issave)
         {
 
             if (to == null)
