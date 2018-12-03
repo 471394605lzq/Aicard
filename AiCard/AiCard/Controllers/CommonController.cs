@@ -146,6 +146,14 @@ namespace AiCard.Controllers
             image.Dispose();
             return File(steam.ToArray(), "image/jpeg");
         }
+        /// <summary>
+        /// 发送短信验证码
+        /// </summary>
+        /// <param name="phonenumber">手机号</param>
+        /// <returns></returns>
+        public ActionResult SendVerificationCodeMsgComm(string phonenumber) {
 
+            return null;
+        }
     }
 }
