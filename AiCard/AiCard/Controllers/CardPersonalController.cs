@@ -108,7 +108,7 @@ namespace AiCard.Controllers
                         Type = Common.Enums.UserLogType.CardPersonalRead
                     });
                 }
-              
+
                 var vip = db.Vips.FirstOrDefault(s => s.CardID == pCardID);
                 var likeCount = db.UserLogs
                     .Count(s => s.Type == Common.Enums.UserLogType.CardPersonalLike
@@ -138,7 +138,8 @@ namespace AiCard.Controllers
                                    .Take(6)
                                    .ToList();
 
-
+                var defVideo = "http://image.dtoao.com/trailer.mp4";
+                var defImages = new string[] { "http://image.dtoao.com/14149new.jpg" }.ToList();
                 var data = new
                 {
                     card.Name,
@@ -149,11 +150,12 @@ namespace AiCard.Controllers
                     card.Email,
                     card.WeChatCode,
                     card.Remark,
-                    card.Video,
+                    Video = card.Video == null ? defVideo : card.Video,
                     card.Voice,
+                    VideoThumbnail = card.Video == null ? Comm.ResizeImage(defVideo) : Comm.ResizeImage(card.Video),
                     card.Info,
                     card.Industry,
-                    Images = card.Images.SplitToArray<string>() ?? new List<string>(),
+                    Images = card.Images.SplitToArray<string>() ?? defImages,
                     PCardID = card.ID,
                     EnterpriseName = card.Enterprise,
                     card.Address,
