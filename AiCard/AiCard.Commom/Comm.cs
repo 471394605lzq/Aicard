@@ -25,7 +25,7 @@ namespace AiCard.Common
         /// <returns></returns>
         public static decimal UpGradeAmount()
         {
-            return 99m;
+            return 86m;
         }
 
 

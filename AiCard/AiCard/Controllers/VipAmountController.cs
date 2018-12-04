@@ -134,7 +134,7 @@ namespace AiCard.Controllers
             var logs = from va in db.VipAmountLogs
                        join u in db.Users.Select(x => new { x.Id, x.NickName, x.Avatar })
                         on va.SourceUserID equals u.Id into vau
-                       where va.CreateDateTime > start && va.CreateDateTime < end
+                       where va.CreateDateTime > start && va.CreateDateTime < end && va.UserID == userID
                        select new
                        {
                            va.ID,
