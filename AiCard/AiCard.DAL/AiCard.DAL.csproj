@@ -269,6 +269,7 @@
     <Compile Include="Models\VipModels.cs" />
     <Compile Include="Models\VipAmountLogModels.cs" />
     <Compile Include="Models\VipForwardModels.cs" />
+    <Compile Include="Models\WeChatNotifyFrom.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
