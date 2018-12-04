@@ -190,7 +190,7 @@ namespace AiCard.Controllers
                 {
                     return Json(Comm.ToJsonResult("Error", "标签内容不能为空"), JsonRequestBehavior.AllowGet);
                 }
-                if (!db.EnterpriseCustomers.Any(s => s.ID == customerID))
+                if (!db.EnterpriseUserCustomer.Any(s => s.CustomerID == customerID&&s.OwnerID==ownerID))
                 {
                     return Json(Comm.ToJsonResult("CustomerNoFound", "客户不存在"));
                 }

@@ -1,4 +1,5 @@
 ﻿using AiCard.Common;
+using AiCard.DAL.Models;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,7 @@ namespace AiCard.Controllers
 {
     public class CommonController : Controller
     {
+        private ApplicationDbContext db = new ApplicationDbContext();
         /// <summary>
         /// 获取区域信息
         /// </summary>
@@ -151,9 +153,31 @@ namespace AiCard.Controllers
         /// </summary>
         /// <param name="phonenumber">手机号</param>
         /// <returns></returns>
-        public ActionResult SendVerificationCodeMsgComm(string phonenumber) {
-
-            return null;
+        public ActionResult SendVerificationCodeMsgComm(string phonenumber)
+        {
+            try
+            {
+                string codenum = Comm.GenerateCheckCodeNum(5);
+                SendMsg s = new SendMsg();
+                var result = s.SendSMS(phonenumber, "403796", codenum);
+                if (result.IsSuccess.Equals("000000"))
+                {
+                    VerificationCode model = new VerificationCode();
+                    model.Code = codenum;
+                    model.CreateDate = DateTime.Now;
+                    model.To = phonenumber;
+                    db.VerificationCodes.Add(model);
+                    db.SaveChanges();
+                }
+                return Json(Comm.ToJsonResult("Success", "发送成功"), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(Comm.ToJsonResult("Success", ex.Message), JsonRequestBehavior.AllowGet);
+            }
         }
+
+       
+
     }
 }
