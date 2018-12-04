@@ -1062,6 +1062,102 @@ namespace AiCard.Controllers
             }
         }
 
+
+
+        [HttpPost]
+        [AllowCrossSiteJson]
+        public ActionResult VerufucatuibCard(string phonenumber, string verificationcode, string wxcode)
+        {
+            var vcodemodel = db.VerificationCodes.FirstOrDefault(s => s.To == phonenumber && s.Code == verificationcode);
+            var cardmodel = db.Cards.FirstOrDefault(s=>s.Mobile==phonenumber);
+            DateTime date1 = new DateTime();
+            DateTime date2 = vcodemodel.CreateDate;
+            TimeSpan timeSpan = date2 - date1;
+            //验证手机短信验证码是否正确
+            if (vcodemodel == null || vcodemodel.Code != verificationcode)
+            {
+                return Json(Comm.ToJsonResult("Error", "验证码不正确"));
+            }
+            //验证手机短信验证码是否过时
+            else if (timeSpan.TotalMinutes > 30)
+            {
+                return Json(Comm.ToJsonResult("Error", "验证码过时"));
+            }
+            else if (cardmodel == null)
+            {
+                return Json(Comm.ToJsonResult("Error", "名片不存在"));
+            }
+            else
+            {
+                Common.WeChat.IConfig config = new Common.WeChat.ConfigWeChatWork();
+                Common.WeChat.WeChatApi wechat = new Common.WeChat.WeChatApi(config);
+                Common.WeChat.AccessTokenResult result;
+
+                try
+                {
+                    //根据微信code获取到accesstoken、openid
+                    result = wechat.GetAccessTokenSns(wxcode);
+                    var openID = result.OpenID;
+                    config.AccessToken = result.AccessToken;
+                    var unionid = result.UnionID;
+                    var user = db.Users.FirstOrDefault(s => s.WeChatID == unionid);
+                    try
+                    {
+                        if (user != null)
+                        {
+                            if (user.UserName == user.NickName)
+                            {
+                                var userInfo = wechat.GetUserInfoSns(openID);
+                                string avart;
+                                try
+                                {
+                                    avart = this.Download(userInfo.HeadImgUrl);
+                                }
+                                catch (Exception)
+                                {
+                                    avart = "~/Content/Images/404/avatar.png";
+                                }
+                                user.NickName = userInfo.NickName;
+                                user.Avatar = avart;
+                            }
+                            var option = new Bll.Users.UserOpenID(user);
+                            option.AddOpenID(config.AppID, result.OpenID);
+                            user.LastLoginDateTime = DateTime.Now;
+                            db.SaveChanges();
+                            cardmodel.UserID = user.Id;
+                            db.SaveChanges();
+                        }
+                        else
+                        {
+                            try
+                            {
+                                var userInfo = wechat.GetUserInfoSns(openID);
+                                user = CreateByWeChat(userInfo);
+                                cardmodel.UserID = user.Id;
+                                db.SaveChanges();
+                            }
+                            catch (Exception)
+                            {
+                                user = CreateByWeChat(new Common.WeChat.UserInfoResult { UnionID = unionid });
+                                cardmodel.UserID = user.Id;
+                                db.SaveChanges();
+                            }
+
+                        }
+                        return Json(Comm.ToJsonResult("Success", "激活成功", new UserForApiViewModel(user)));
+                    }
+                    catch (Exception ex)
+                    {
+                        return Json(Comm.ToJsonResult("Error", ex.Message));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return Json(Comm.ToJsonResult("Error", ex.Message));
+                }
+            }
+        }
+
         #endregion
     }
 }

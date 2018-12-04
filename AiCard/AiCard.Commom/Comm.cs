@@ -25,7 +25,7 @@ namespace AiCard.Common
         /// <returns></returns>
         public static decimal UpGradeAmount()
         {
-            return 99m;
+            return 86m;
         }
 
 
@@ -874,7 +874,25 @@ namespace AiCard.Common
             bitMap.Dispose();
             return path;
         }
-
+        /// <summary>
+        /// 生成指定数量长度的随机字符串
+        /// </summary>
+        /// <param name="codeCount"></param>
+        /// <returns></returns>
+        public static string GenerateCheckCodeNum(int codeCount)
+        {
+            int rep = 0;
+            string str = string.Empty;
+            long num2 = DateTime.Now.Ticks + rep;
+            rep++;
+            Random random = new Random(((int)(((ulong)num2) & 0xffffffffL)) | ((int)(num2 >> rep)));
+            for (int i = 0; i < codeCount; i++)
+            {
+                int num = random.Next();
+                str = str + ((char)(0x30 + ((ushort)(num % 10)))).ToString();
+            }
+            return str;
+        }
 
     }
 }
