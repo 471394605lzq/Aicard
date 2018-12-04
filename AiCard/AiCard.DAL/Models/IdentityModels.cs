@@ -217,6 +217,10 @@ namespace AiCard.DAL.Models
         /// </summary>
         public DbSet<VerificationCode> VerificationCodes { get; set; }
 
+        /// <summary>
+        /// 微信小程序推送
+        /// </summary>
+        public DbSet<WeChatMiniNotifyForm> WeChatMiniNotifyForms { get; set; }
 
         public SqlConnection Connection { get; internal set; }
 

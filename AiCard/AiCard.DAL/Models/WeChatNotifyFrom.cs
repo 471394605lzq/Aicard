@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AiCard.DAL.Models
 {
-    public class WeChatNotifyFrom
+    public class WeChatMiniNotifyForm
     {
         public int ID { get; set; }
 
@@ -16,6 +16,10 @@ namespace AiCard.DAL.Models
 
         public string AppID { get; set; }
 
+        public string FormID { get; set; }
+
         public DateTime CreateDateTime { get; set; }
+
+        public DateTime EndDateTime { get; set; }
     }
 }
