@@ -154,7 +154,7 @@ namespace AiCard.Controllers
                     VideoThumbnail = string.IsNullOrWhiteSpace(card.Video) ? null : Comm.ResizeImage(card.Video),
                     card.Info,
                     card.Industry,
-                    Images = card.Images.SplitToArray<string>() ?? null,
+                    Images = card.Images.SplitToArray<string>() ?? new List<string>(),
                     PCardID = card.ID,
                     EnterpriseName = card.Enterprise,
                     card.Address,
