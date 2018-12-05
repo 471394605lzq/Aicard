@@ -52,7 +52,7 @@ namespace AiCard.Controllers
             return Json(Comm.ToJsonResultForPagedList(paged, paged), JsonRequestBehavior.AllowGet);
         }
 
-       
+
 
         /// <summary>
         /// 今日新增客户总数、未跟进客户数
@@ -192,8 +192,8 @@ namespace AiCard.Controllers
                                             WHERE OwnerID=@ownerID GROUP BY Name)s)  t WHERE t.rownumber > @starpagesize AND t.rownumber<=@endpagesize");
 
                 List<CustTabCountModel> data = db.Database.SqlQuery<CustTabCountModel>(sqlstr, parameters).ToList();
-                List<List<CustTabCountModel>> usernamelistdata = new List<List<CustTabCountModel>>();
-                string getmamelistsql = string.Format(@"SELECT TOP 10 ec.RealName as UserName,et.Name as TaName FROM dbo.EnterpriseCustomerTabs et
+                //List<List<CustTabCountModel>> usernamelistdata = new List<List<CustTabCountModel>>();
+                string getmamelistsql = string.Format(@"SELECT TOP 10 ec.RealName as UserName FROM dbo.EnterpriseCustomerTabs et
                                                     JOIN dbo.EnterpriseCustomers ec ON ec.ID=et.CustomerID WHERE et.OwnerID=@ownerID and et.Name=@name");
                 if (data.Count > 0)
                 {
@@ -205,14 +205,13 @@ namespace AiCard.Controllers
                         };
                         p2[0].Value = ownerID;
                         p2[1].Value = data[i].TaName;
-                        List<CustTabCountModel> data2 = db.Database.SqlQuery<CustTabCountModel>(getmamelistsql, p2).ToList();
-                        usernamelistdata.Add(data2);
+                        data[i].UserNameList= db.Database.SqlQuery<UserNameListModel>(getmamelistsql, p2).ToList();
+                        //usernamelistdata.Add(data2);
                     }
                 }
                 var resultdata = new
                 {
-                    tabdata = data,
-                    usernamelistdata = usernamelistdata
+                    tabdata = data
                 };
 
                 //return Json(Comm.ToJsonResultForPagedList(paged, paged), JsonRequestBehavior.AllowGet);
@@ -225,12 +224,16 @@ namespace AiCard.Controllers
                 return Json(Comm.ToJsonResult("Error", ex.Message), JsonRequestBehavior.AllowGet);
             }
         }
-        private class CustTabCountModel {
+        private class CustTabCountModel
+        {
             public string TaName { get; set; }
             public int Count { get; set; }
+            public List<UserNameListModel> UserNameList { get; set; }
+        }
+        private class UserNameListModel
+        {
             public string UserName { get; set; }
         }
-
         /// <summary>
         /// 设置客户自定义标签
         /// </summary>
@@ -247,11 +250,11 @@ namespace AiCard.Controllers
                 {
                     return Json(Comm.ToJsonResult("Error", "标签内容不能为空"), JsonRequestBehavior.AllowGet);
                 }
-                if (!db.EnterpriseUserCustomer.Any(s => s.CustomerID == customerID&&s.OwnerID==ownerID))
+                if (!db.EnterpriseUserCustomer.Any(s => s.CustomerID == customerID && s.OwnerID == ownerID))
                 {
                     return Json(Comm.ToJsonResult("CustomerNoFound", "客户不存在"));
                 }
-                if (db.EnterpriseCustomerTabs.Any(s => s.CustomerID == customerID&&s.OwnerID== ownerID && s.Name == tabsName))
+                if (db.EnterpriseCustomerTabs.Any(s => s.CustomerID == customerID && s.OwnerID == ownerID && s.Name == tabsName))
                 {
                     return Json(Comm.ToJsonResult("HadAdd", $"{tabsName}已经存在"));
                 }
@@ -286,37 +289,37 @@ namespace AiCard.Controllers
                 var query = (from c in db.EnterpriseCustomers
                              from u in db.Users
                              join cut in db.EnterpriseCustomerTabs.Where(s => s.OwnerID == userID) on c.ID equals cut.CustomerID into cuta
-                             join uscut in db.EnterpriseUserCustomer.Where(s=>s.OwnerID==userID) on c.ID equals uscut.CustomerID into uscuta
+                             join uscut in db.EnterpriseUserCustomer.Where(s => s.OwnerID == userID) on c.ID equals uscut.CustomerID into uscuta
                              where c.ID == custID
                              select new
                              {
                                  Name = c.RealName,
-                                 UserName=u.UserName,
+                                 UserName = u.UserName,
                                  Avatar = u.Avatar,
                                  CustTabs = cuta,
-                                 Position=c.Position,
-                                 Email=c.Email,
-                                 Mobile=c.Mobile,
-                                 Gender=c.Gender,
-                                 Birthday=c.Birthday,
-                                 Company=c.Company,
-                                 Address=c.Address,
-                                 Province=c.Province,
-                                 City=c.City,
-                                 District=c.District,
-                                 Remark=uscuta.Select(s=>s.Remark)
+                                 Position = c.Position,
+                                 Email = c.Email,
+                                 Mobile = c.Mobile,
+                                 Gender = c.Gender,
+                                 Birthday = c.Birthday,
+                                 Company = c.Company,
+                                 Address = c.Address,
+                                 Province = c.Province,
+                                 City = c.City,
+                                 District = c.District,
+                                 Remark = uscuta.Select(s => s.Remark)
                              }).FirstOrDefault();
                 var data = new
                 {
                     Name = query.Name,
-                    UserName=query.UserName,
+                    UserName = query.UserName,
                     Avatar = query.Avatar,
                     CustTabs = query.CustTabs,
                     Position = query.Position,
                     Email = query.Email,
                     Mobile = query.Mobile,
                     Gender = query.Gender,
-                    Birthday =Convert.ToDateTime(query.Birthday).ToString("yyyy-MM-dd"),
+                    Birthday = Convert.ToDateTime(query.Birthday).ToString("yyyy-MM-dd"),
                     Company = query.Company,
                     Address = query.Address,
                     Province = query.Province,
