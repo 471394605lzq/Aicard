@@ -75,6 +75,7 @@ namespace AiCard.Bll
                                 VipID = parentUser.ID
                             };
                             db.VipAmountLogs.Add(logModel);
+
                             parentUser.TotalAmount += parentProfitAmount;
                             parentUser.Amount += parentProfitAmount;
                             if (logType == Common.Enums.VipAmountLogType.NewCard)
@@ -88,9 +89,10 @@ namespace AiCard.Bll
 
                             //上上级用户
                             VipRelationship parentship = db.VipRelationships.FirstOrDefault(p => p.UserID == parentUser.UserID);
+                            Vip grandfatherUser = null;
                             if (parentship != null && vBussType == 1)//升级会员才有
                             {
-                                Vip grandfatherUser = db.Vips.FirstOrDefault(p => p.ID == parentship.ParentID && p.UserID == parentship.ParentUserID);
+                                grandfatherUser = db.Vips.FirstOrDefault(p => p.ID == parentship.ParentID && p.UserID == parentship.ParentUserID);
                                 if (grandfatherUser != null)
                                 {
                                     //佣金记录
@@ -111,10 +113,29 @@ namespace AiCard.Bll
                                 }
                             }
                             rows = db.SaveChanges();
+
+
                             if (rows > 0)
                             {
                                 result.retCode = ReqResultCode.success;
                                 result.retMsg = "计算佣金成功";
+                            }
+                            switch (logType)
+                            {
+                                case Common.Enums.VipAmountLogType.NewCard:
+                                    WeChatNofity(parentUser.UserID, parentProfitAmount, $"注册了名片得到了{parentProfitAmount}元奖励");
+                                    break;
+                                case Common.Enums.VipAmountLogType.NewChild2nd:
+                                    WeChatNofity(parentUser.UserID, parentProfitAmount, $"成为了您的一级会员得到了{parentProfitAmount}元奖励");
+                                    break;
+                                case Common.Enums.VipAmountLogType.NewChild3rd:
+                                    if (grandfatherUser.UserID != null)
+                                    {
+                                        WeChatNofity(grandfatherUser.UserID, GrandfatheredProfitAmount, $"成为了您的二级会员得到了{GrandfatheredProfitAmount}元奖励");
+                                    }
+                                    break;
+                                default:
+                                    break;
                             }
                         }
                         else
@@ -142,5 +163,24 @@ namespace AiCard.Bll
             #endregion
         }
 
+        public void WeChatNofity(string userID, decimal amount, string content)
+        {
+            using (ApplicationDbContext db = new ApplicationDbContext())
+            {
+                var config = new Common.WeChat.ConfigMiniPersonal();
+                Common.WeChat.WeChatMinApi wechat = new Common.WeChat.WeChatMinApi(config);
+                var user = db.Users.FirstOrDefault(s => s.Id == userID);
+                var option = new Bll.Users.UserOpenID(user);
+                var openID = option.SearchOpenID(config.AppID);
+                var form = db.WeChatMiniNotifyForms.FirstOrDefault(s => s.AppID == config.AppID
+                    && s.UserID == userID
+                    && s.EndDateTime > DateTime.Now);
+                var temp = new Common.WeChat.WeChatMessageTemp.PReceivableNotifyWeChatMessage(amount, content, DateTime.Now);
+                wechat.SendMessage(openID, form.FormID, null, temp);
+                db.WeChatMiniNotifyForms.Remove(form);
+                db.SaveChanges();
+            }
+
+        }
     }
 }
