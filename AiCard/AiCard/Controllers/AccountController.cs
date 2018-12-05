@@ -1089,7 +1089,7 @@ namespace AiCard.Controllers
         [AllowCrossSiteJson]
         public ActionResult VerufucatuibCard(string phonenumber, string verificationcode, string wxcode,int cardid)
         {
-            var vcodemodel = db.VerificationCodes.FirstOrDefault(s => s.To == phonenumber.Trim() && s.Code == verificationcode);
+            var vcodemodel = db.VerificationCodes.FirstOrDefault(s => s.To == phonenumber.Replace(" ", "") && s.Code == verificationcode);
             Card cardmodel = new Card();
             if (cardid <= 0 )
             {
@@ -1158,6 +1158,7 @@ namespace AiCard.Controllers
                             user.LastLoginDateTime = DateTime.Now;
                             db.SaveChanges();
                             cardmodel.UserID = user.Id;
+                            cardmodel.Enable = true;
                             db.SaveChanges();
                         }
                         else
@@ -1167,12 +1168,14 @@ namespace AiCard.Controllers
                                 var userInfo = wechat.GetUserInfoSns(openID);
                                 user = CreateByWeChat(userInfo);
                                 cardmodel.UserID = user.Id;
+                                cardmodel.Enable = true;
                                 db.SaveChanges();
                             }
                             catch (Exception)
                             {
                                 user = CreateByWeChat(new Common.WeChat.UserInfoResult { UnionID = unionid });
                                 cardmodel.UserID = user.Id;
+                                cardmodel.Enable = true;
                                 db.SaveChanges();
                             }
 

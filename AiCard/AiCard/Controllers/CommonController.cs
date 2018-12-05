@@ -165,7 +165,7 @@ namespace AiCard.Controllers
                     VerificationCode model = new VerificationCode();
                     model.Code = codenum;
                     model.CreateDate = DateTime.Now;
-                    model.To = phonenumber;
+                    model.To = phonenumber.Replace(" ", "");
                     db.VerificationCodes.Add(model);
                     db.SaveChanges();
                 }
