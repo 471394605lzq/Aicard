@@ -1093,7 +1093,7 @@ namespace AiCard.Controllers
             Card cardmodel = new Card();
             if (cardid <= 0 )
             {
-                cardmodel = db.Cards.FirstOrDefault(s => s.Mobile == phonenumber);
+                cardmodel = db.Cards.FirstOrDefault(s => s.Mobile == phonenumber.Replace(" ", ""));
             }
             else {
                 cardmodel = db.Cards.FirstOrDefault(s => s.ID == cardid);
