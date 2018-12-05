@@ -300,7 +300,8 @@ namespace AiCard.Bll
                 var wechat = new Common.WeChat.WeChatMinApi(config);
                 if (targetUser == null)
                 {
-                    throw new Exception("推送用户不存在");
+                    return;
+                    //throw new Exception("推送用户不存在");
                 }
                 var userOpenID = new Bll.Users.UserOpenID(targetUser);
                 string openID = userOpenID.SearchOpenID(config.AppID);
