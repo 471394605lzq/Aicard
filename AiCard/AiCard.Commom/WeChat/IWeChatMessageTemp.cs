@@ -12,14 +12,14 @@ namespace AiCard.Common.WeChat.WeChatMessageTemp
 
         object Data { get; }
 
-        
+
     }
 
-    public class ReceivableNotifyWeChatMessage : IWeChatMessageTemp
+    public class PReceivableNotifyWeChatMessage : IWeChatMessageTemp
     {
         private object data;
 
-        public ReceivableNotifyWeChatMessage(decimal amount, string remark, DateTime dateTime)
+        public PReceivableNotifyWeChatMessage(decimal amount, string remark, DateTime dateTime)
         {
             data = new
             {
@@ -47,11 +47,11 @@ namespace AiCard.Common.WeChat.WeChatMessageTemp
     }
 
 
-    public class NewUserNotifyWeChatMessage : IWeChatMessageTemp
+    public class PNewUserNotifyWeChatMessage : IWeChatMessageTemp
     {
         private object data;
 
-        public NewUserNotifyWeChatMessage(string nickname, DateTime dateTime)
+        public PNewUserNotifyWeChatMessage(string nickname, DateTime dateTime)
         {
             data = new
             {
@@ -77,11 +77,11 @@ namespace AiCard.Common.WeChat.WeChatMessageTemp
         }
     }
 
-    public class DefaultNotifyWeChatMessage : IWeChatMessageTemp
+    public class PDefaultNotifyWeChatMessage : IWeChatMessageTemp
     {
         private object data;
 
-        public DefaultNotifyWeChatMessage(string nickname, string content, DateTime datetTime)
+        public PDefaultNotifyWeChatMessage(string nickname, string content, DateTime datetTime)
         {
             data = new
             {
@@ -108,4 +108,35 @@ namespace AiCard.Common.WeChat.WeChatMessageTemp
         }
     }
 
+    public class EDefaultNotifyWeChatMessage : IWeChatMessageTemp
+    {
+        private object data;
+
+        public EDefaultNotifyWeChatMessage(string project, string nickname, string content, DateTime datetTime)
+        {
+            data = new
+            {
+                keyword1 = new { value = project },
+                keyword2 = new { value = nickname },
+                keyword3 = new { value = datetTime.ToString("yyyy-MM-dd HH:mm:ss") },
+                keyword4 = new { value = content }
+            };
+        }
+
+        public object Data
+        {
+            get
+            {
+                return data;
+            }
+        }
+
+        public string ID
+        {
+            get
+            {
+                return "szJbdS4HgheYYCoDRy4sWwGZltbdSWYARzK5VYrzh1c";
+            }
+        }
+    }
 }

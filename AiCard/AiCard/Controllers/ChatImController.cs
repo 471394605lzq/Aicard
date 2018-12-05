@@ -78,7 +78,7 @@ namespace AiCard.Controllers
         {
             var from = (from u in db.Users
                         from c in db.Cards
-                        where u.Id == c.UserID && u.UserName== fromUserName
+                        where u.Id == c.UserID && u.UserName == fromUserName
                         select new { u.Id, u.UserName, c.Avatar, NickName = c.Name }).FirstOrDefault();
             if (from == null)
             {
@@ -113,7 +113,7 @@ namespace AiCard.Controllers
                 },
                 To = new
                 {
-                    Avatar =to==null?"": to.Avatar,
+                    Avatar = to == null ? "" : to.Avatar,
                     UserID = to == null ? "" : to.Id,
                     UserName = to == null ? "" : to.UserName,
                     NickName = to == null ? "" : to.NickName,
@@ -136,18 +136,12 @@ namespace AiCard.Controllers
             var appID = config.AppID;
             var toUser = db.Users.FirstOrDefault(s => s.Id == toUserID);
             var option = new Bll.Users.UserOpenID(toUser);
+            var e = db.Enterprises.FirstOrDefault(s => s.ID == toUser.EnterpriseID);
             string openID = option.SearchOpenID(appID);
-            string tempID = "szJbdS4HgheYYCoDRy4sWwGZltbdSWYARzK5VYrzh1c";
             var fromUser = db.Users.FirstOrDefault(s => s.Id == fromUserID);
-            object key = new
-            {
-                keyword1 = "AI名片",
-                keyword2 = fromUser.NickName,
-                keyword3 = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
-                keyword4 = content,
-            };
+            var temp = new Common.WeChat.WeChatMessageTemp.EDefaultNotifyWeChatMessage(e.Name, fromUser.NickName, content, DateTime.Now);
             var result = new Common.WeChat.WeChatMinApi(config)
-                    .SendMessage(openID, tempID, formID, null, key);
+                    .SendMessage(openID, formID, null, temp);
 
             return Json(Comm.ToJsonResult("Success", "", result));
         }
