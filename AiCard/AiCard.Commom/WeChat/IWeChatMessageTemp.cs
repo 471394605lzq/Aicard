@@ -87,7 +87,7 @@ namespace AiCard.Common.WeChat.WeChatMessageTemp
             {
                 keyword1 = new { value = nickname },
                 keyword2 = new { value = content },
-                keyword3 = new { value = datetTime }
+                keyword3 = new { value = datetTime.ToString("yyyy-MM-dd HH:mm:ss") }
             };
         }
 
