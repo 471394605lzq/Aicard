@@ -98,7 +98,7 @@ namespace AiCard.Controllers
             parms[0].Value = userID;
             parms[1].Value = type;
             parms[2].Value = Common.Enums.EnterpriseUserCustomerState.NoFllow;
-            string sqlstr = string.Format(@"GetCustInfoByType @userid,@statetype,@statetype");
+            string sqlstr = string.Format(@"GetCustInfoByType @userid,@type,@statetype");
             List<CustInfoModel> data = db.Database.SqlQuery<CustInfoModel>(sqlstr, parms).ToList();
             return Json(Comm.ToJsonResult("Success", "成功", data), JsonRequestBehavior.AllowGet);
         }
@@ -171,53 +171,59 @@ namespace AiCard.Controllers
             //                 Users = ec.Select(s => s.RealName).Take(10)
             //             });
             //var paged = query.OrderBy(s => s.Name).ToPagedList(page, pageSize);
+            try
+            {
+                int starpagesize = page.Value * pageSize.Value - pageSize.Value;
+                int endpagesize = page.Value * pageSize.Value;
 
-            int starpagesize = page.Value * pageSize.Value - pageSize.Value;
-            int endpagesize = page.Value * pageSize.Value;
-
-            //拼接参数
-            SqlParameter[] parameters = {
+                //拼接参数
+                SqlParameter[] parameters = {
                         new SqlParameter("@ownerID", SqlDbType.NVarChar),
                         new SqlParameter("@starpagesize", SqlDbType.Int),
                         new SqlParameter("@endpagesize", SqlDbType.Int)
                     };
-            parameters[1].Value = ownerID;
-            parameters[3].Value = starpagesize;
-            parameters[4].Value = endpagesize;
+                parameters[0].Value = ownerID;
+                parameters[1].Value = starpagesize;
+                parameters[2].Value = endpagesize;
 
-            SqlParameter[] p2 = {
-                new SqlParameter("@ownerID",SqlDbType.NVarChar),
-                new SqlParameter("@name",SqlDbType.NVarChar),
-            };
-
-            string sqlstr = string.Format(@"SELECT CAST(ROW_NUMBER() over(order by CONVERT(CHAR(10),Name,120) DESC) AS INTEGER) AS rownumber,t.counts,t.Name FROM(
+                string sqlstr = string.Format(@"SELECT* FROM(SELECT CAST(ROW_NUMBER() over(order by CONVERT(CHAR(10),Name,120) DESC) AS INTEGER) AS rownumber,counts as Count,Name as TaName FROM(
                                             SELECT  COUNT(CustomerID) AS counts,et.Name FROM dbo.EnterpriseCustomerTabs et
                                             JOIN dbo.EnterpriseCustomers ec ON et.CustomerID=ec.ID
-                                            WHERE OwnerID=@ownerID GROUP BY Name)  t WHERE t.rownumber > @starpagesize AND t.rownumber<=@endpagesize");
+                                            WHERE OwnerID=@ownerID GROUP BY Name)s)  t WHERE t.rownumber > @starpagesize AND t.rownumber<=@endpagesize");
 
-            List<CustTabCountModel> data = db.Database.SqlQuery<CustTabCountModel>(sqlstr, parameters).ToList();
-            List<List<CustTabCountModel>> usernamelistdata = new List<List<CustTabCountModel>>();
-            string getmamelistsql = string.Format(@"SELECT TOP 10 ec.RealName as UserName,et.Name as TaName FROM dbo.EnterpriseCustomerTabs et
+                List<CustTabCountModel> data = db.Database.SqlQuery<CustTabCountModel>(sqlstr, parameters).ToList();
+                List<List<CustTabCountModel>> usernamelistdata = new List<List<CustTabCountModel>>();
+                string getmamelistsql = string.Format(@"SELECT TOP 10 ec.RealName as UserName,et.Name as TaName FROM dbo.EnterpriseCustomerTabs et
                                                     JOIN dbo.EnterpriseCustomers ec ON ec.ID=et.CustomerID WHERE et.OwnerID=@ownerID and et.Name=@name");
-            if (data.Count > 0)
-            {
-                for (int i = 0; i < data.Count; i++)
+                if (data.Count > 0)
                 {
-                    p2[0].Value = ownerID;
-                    p2[1].Value = data[i].TaName;
-                    List<CustTabCountModel> data2 = db.Database.SqlQuery<CustTabCountModel>(getmamelistsql, p2).ToList();
-                    usernamelistdata.Add(data2);
+                    for (int i = 0; i < data.Count; i++)
+                    {
+                        SqlParameter[] p2 = {
+                            new SqlParameter("@ownerID",SqlDbType.NVarChar),
+                            new SqlParameter("@name",SqlDbType.NVarChar),
+                        };
+                        p2[0].Value = ownerID;
+                        p2[1].Value = data[i].TaName;
+                        List<CustTabCountModel> data2 = db.Database.SqlQuery<CustTabCountModel>(getmamelistsql, p2).ToList();
+                        usernamelistdata.Add(data2);
+                    }
                 }
+                var resultdata = new
+                {
+                    tabdata = data,
+                    usernamelistdata = usernamelistdata
+                };
+
+                //return Json(Comm.ToJsonResultForPagedList(paged, paged), JsonRequestBehavior.AllowGet);
+
+
+                return Json(Comm.ToJsonResult("Success", "成功", resultdata), JsonRequestBehavior.AllowGet);
             }
-            var resultdata = new {
-                tabdata=data,
-                usernamelistdata= usernamelistdata
-            };
-
-            //return Json(Comm.ToJsonResultForPagedList(paged, paged), JsonRequestBehavior.AllowGet);
-            
-
-            return Json(Comm.ToJsonResult("Success", "成功", resultdata), JsonRequestBehavior.AllowGet);
+            catch (Exception ex)
+            {
+                return Json(Comm.ToJsonResult("Error", ex.Message), JsonRequestBehavior.AllowGet);
+            }
         }
         private class CustTabCountModel {
             public string TaName { get; set; }
@@ -285,6 +291,7 @@ namespace AiCard.Controllers
                              select new
                              {
                                  Name = c.RealName,
+                                 UserName=u.UserName,
                                  Avatar = u.Avatar,
                                  CustTabs = cuta,
                                  Position=c.Position,
@@ -302,6 +309,7 @@ namespace AiCard.Controllers
                 var data = new
                 {
                     Name = query.Name,
+                    UserName=query.UserName,
                     Avatar = query.Avatar,
                     CustTabs = query.CustTabs,
                     Position = query.Position,
