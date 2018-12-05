@@ -185,19 +185,44 @@ namespace AiCard.Controllers
             parameters[3].Value = starpagesize;
             parameters[4].Value = endpagesize;
 
+            SqlParameter[] p2 = {
+                new SqlParameter("@ownerID",SqlDbType.NVarChar),
+                new SqlParameter("@name",SqlDbType.NVarChar),
+            };
+
             string sqlstr = string.Format(@"SELECT CAST(ROW_NUMBER() over(order by CONVERT(CHAR(10),Name,120) DESC) AS INTEGER) AS rownumber,t.counts,t.Name FROM(
                                             SELECT  COUNT(CustomerID) AS counts,et.Name FROM dbo.EnterpriseCustomerTabs et
                                             JOIN dbo.EnterpriseCustomers ec ON et.CustomerID=ec.ID
-                                            WHERE OwnerID=ownerID GROUP BY Name)  t WHERE t.rownumber > @starpagesize AND t.rownumber<=@endpagesize");
+                                            WHERE OwnerID=@ownerID GROUP BY Name)  t WHERE t.rownumber > @starpagesize AND t.rownumber<=@endpagesize");
+
+            List<CustTabCountModel> data = db.Database.SqlQuery<CustTabCountModel>(sqlstr, parameters).ToList();
+            List<List<CustTabCountModel>> usernamelistdata = new List<List<CustTabCountModel>>();
+            string getmamelistsql = string.Format(@"SELECT TOP 10 ec.RealName as UserName,et.Name as TaName FROM dbo.EnterpriseCustomerTabs et
+                                                    JOIN dbo.EnterpriseCustomers ec ON ec.ID=et.CustomerID WHERE et.OwnerID=@ownerID and et.Name=@name");
+            if (data.Count > 0)
+            {
+                for (int i = 0; i < data.Count; i++)
+                {
+                    p2[0].Value = ownerID;
+                    p2[1].Value = data[i].TaName;
+                    List<CustTabCountModel> data2 = db.Database.SqlQuery<CustTabCountModel>(getmamelistsql, p2).ToList();
+                    usernamelistdata.Add(data2);
+                }
+            }
+            var resultdata = new {
+                tabdata=data,
+                usernamelistdata= usernamelistdata
+            };
 
             //return Json(Comm.ToJsonResultForPagedList(paged, paged), JsonRequestBehavior.AllowGet);
-            List<CustTabCountModel> data = db.Database.SqlQuery<CustTabCountModel>(sqlstr, parameters).ToList();
+            
 
-            return Json(Comm.ToJsonResult("Success", "成功", data), JsonRequestBehavior.AllowGet);
+            return Json(Comm.ToJsonResult("Success", "成功", resultdata), JsonRequestBehavior.AllowGet);
         }
         private class CustTabCountModel {
             public string TaName { get; set; }
             public int Count { get; set; }
+            public string UserName { get; set; }
         }
 
         /// <summary>
