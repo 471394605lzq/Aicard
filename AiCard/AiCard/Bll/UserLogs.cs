@@ -80,6 +80,7 @@ namespace AiCard.Bll
                 switch (log.Type)
                 {
                     case UserLogType.FollowUp:
+                    case UserLogType.AddCustTab:
                         {
                             var a = db.EnterpriseCustomers.FirstOrDefault(s => s.ID == log.RelationID);
                             log.TargetEnterpriseID = a.EnterpriseID;
