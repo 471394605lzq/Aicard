@@ -114,7 +114,7 @@ namespace AiCard.Bll
                 RequestResult ret = bll.CalculateVIPAmount(vUserID, 0);
                 if (ret.retCode != ReqResultCode.success)
                 {
-                    result.retMsg = "vip用户关系建立成功，佣金计算失败";
+                    result.retMsg = ret.retMsg;
                     return result;
                 }
             }
