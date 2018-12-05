@@ -822,7 +822,7 @@ namespace AiCard.Controllers
                 string sqlstr = string.Format(@"SELECT * FROM (SELECT CAST(ROW_NUMBER() over(order by CONVERT(CHAR(10),CreateDateTime,120) DESC) AS INTEGER) AS rownumber,
                      CASE WHEN CONVERT(CHAR(10),CreateDateTime,120)=CONVERT(CHAR(10),GETDATE(),120) THEN '今天' WHEN CONVERT(CHAR(10),CreateDateTime,120)=CONVERT(CHAR(10),dateadd(day,-1,getdate()),120) 
                      THEN '昨天' ELSE CONVERT(CHAR(10),CreateDateTime,120) END AS timestr,CONVERT(CHAR(10),CreateDateTime,120) AS datestr
-                     FROM dbo.UserLogs INNER JOIN dbo.EnterpriseCustomers ec ON ec.UserID=UserLogs.UserID WHERE Type IN(101,102,20) AND TargetUserID=@TargetUserID AND ec.ID=@CustomerID AND  TargetEnterpriseID=@TargetEnterpriseID
+                     FROM dbo.UserLogs INNER JOIN dbo.EnterpriseCustomers ec ON ec.ID=UserLogs.RelationID  WHERE Type IN(101,102,20) AND UserLogs.UserID=@TargetUserID AND ec.ID=@CustomerID AND  TargetEnterpriseID=@TargetEnterpriseID
                      GROUP BY CONVERT(CHAR(10),CreateDateTime,120)) t WHERE t.rownumber > @starpagesize AND t.rownumber<=@endpagesize");
                 List<NoopsycheFollowModel> data = db.Database.SqlQuery<NoopsycheFollowModel>(sqlstr, parameters).ToList();
                 for (int i = 0; i < data.Count; i++)
@@ -842,20 +842,20 @@ namespace AiCard.Controllers
                     string listsqlstr = string.Format(@"SELECT Type,0 as Total,ul.Remark,
                         CONVERT(NVARCHAR(50),DATEPART(hh,ul.CreateDateTime))+':'+CONVERT(NVARCHAR(50),DATEPART(mi,ul.CreateDateTime)) as createtimestr,ec.ID 
                         FROM dbo.UserLogs ul
-                        INNER JOIN dbo.EnterpriseCustomers ec ON ec.UserID=ul.UserID
-                        WHERE Type IN(101,102) AND TargetUserID=@TargetUserID AND  TargetEnterpriseID=@TargetEnterpriseID AND ec.ID=@CustomerID AND
+                        INNER JOIN dbo.EnterpriseCustomers ec ON ec.ID=ul.RelationID
+                        WHERE Type IN(101,102) AND ul.UserID=@TargetUserID AND  TargetEnterpriseID=@TargetEnterpriseID AND ec.ID=@CustomerID AND
                         ul.CreateDateTime BETWEEN dateadd(day, -0, dateadd(ms, 0, DATEADD(dd, DATEDIFF(dd, 0, @time), 0))) 
                         AND dateadd(day, -0, DATEADD(ms, -3, DATEADD(dd, DATEDIFF(dd, -1, @time), 0)))
                         UNION ALL 
 						SELECT Type,Total,ul.Remark,
                         CONVERT(NVARCHAR(50),DATEPART(hh,ul.CreateDateTime))+':'+CONVERT(NVARCHAR(50),DATEPART(mi,ul.CreateDateTime)) as createtimestr,ec.ID 
                         FROM dbo.UserLogs ul
-                        INNER JOIN dbo.EnterpriseCustomers ec ON ec.UserID=ul.UserID
-                        WHERE Type IN(20) AND TargetUserID=@TargetUserID AND  TargetEnterpriseID=@TargetEnterpriseID AND ec.ID=@CustomerID AND
+                        INNER JOIN dbo.EnterpriseCustomers ec ON ec.ID=ul.RelationID
+                        WHERE Type IN(20) AND ul.UserID=@TargetUserID AND  TargetEnterpriseID=@TargetEnterpriseID AND ec.ID=@CustomerID AND
                         ul.CreateDateTime BETWEEN dateadd(day, -0, dateadd(ms, 0, DATEADD(dd, DATEDIFF(dd, 0, @time), 0))) 
                         AND dateadd(day, -0, DATEADD(ms, -3, DATEADD(dd, DATEDIFF(dd, -1, @time), 0)))
 						AND ul.Total=(SELECT MAX(Total) FROM dbo.UserLogs WHERE UserID=ec.UserID AND 
-						Type IN(20) AND TargetUserID=@TargetUserID AND  TargetEnterpriseID=@TargetEnterpriseID AND ec.ID=@CustomerID AND
+						Type IN(20) AND ul.UserID=@TargetUserID AND  TargetEnterpriseID=@TargetEnterpriseID AND ec.ID=@CustomerID AND
                         ul.CreateDateTime BETWEEN dateadd(day, -0, dateadd(ms, 0, DATEADD(dd, DATEDIFF(dd, 0, @time), 0))) 
                         AND dateadd(day, -0, DATEADD(ms, -3, DATEADD(dd, DATEDIFF(dd, -1, @time), 0))))");
                     List<NoopsycheFollowShowModel> mydata = db.Database.SqlQuery<NoopsycheFollowShowModel>(listsqlstr, myparameters).ToList();
