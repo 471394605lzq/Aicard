@@ -137,7 +137,7 @@ namespace AiCard.Controllers
                                    .OrderByDescending(s => s.CreateDateTime)
                                    .Take(6)
                                    .ToList();
-
+                var notifyCount = db.WeChatMiniNotifyForms.Count(s => s.UserID == userID && s.EndDateTime > DateTime.Now);
 
                 var data = new
                 {
@@ -174,6 +174,7 @@ namespace AiCard.Controllers
                     Viewers = leastUsers.Select(s => s.Avatar).ToList(),
                     LikeCount = likeCount,
                     HadLike = hadLike,
+                    NotifyCount = notifyCount
                 };
                 return Json(Comm.ToJsonResult("Success", "成功", data), JsonRequestBehavior.AllowGet);
             }
