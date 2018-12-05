@@ -129,14 +129,10 @@ namespace AiCard.Bll
                                 case Common.Enums.VipAmountLogType.NewChild2nd:
                                     WeChatNofity(parentUser.UserID, parentProfitAmount, $"{vUser.NickName}成为了您的一级会员得到了{parentProfitAmount}元奖励");
                                     break;
-                                case Common.Enums.VipAmountLogType.NewChild3rd:
-                                    if (grandfatherUser.UserID != null)
-                                    {
-                                        WeChatNofity(grandfatherUser.UserID, GrandfatheredProfitAmount, $"{vUser.NickName}成为了您的二级会员得到了{GrandfatheredProfitAmount}元奖励");
-                                    }
-                                    break;
-                                default:
-                                    break;
+                            }
+                            if (grandfatherUser != null)
+                            {
+                                WeChatNofity(grandfatherUser.UserID, GrandfatheredProfitAmount, $"{vUser.NickName}成为了您的二级会员得到了{GrandfatheredProfitAmount}元奖励");
                             }
                         }
                         else
