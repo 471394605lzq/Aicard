@@ -214,6 +214,15 @@ namespace AiCard.Common.WeChat
             return _config.AccessToken;
         }
 
+        /// <summary>
+        /// 发送小程序推送
+        /// </summary>
+        /// <param name="openID">OpenID</param>
+        /// <param name="tempID">模版ID</param>
+        /// <param name="formID">FromID</param>
+        /// <param name="page">跳转页面</param>
+        /// <param name="keyword">参数</param>
+        /// <returns></returns>
         public string SendMessage(string openID, string tempID, string formID, string page, object keyword)
         {
             var p = new Dictionary<string, string>();
@@ -228,6 +237,11 @@ namespace AiCard.Common.WeChat
             };
             var api = new CommonApi.BaseApi($"https://api.weixin.qq.com/cgi-bin/message/wxopen/template/send?{p.ToParam()}", "POST", data);
             var result = api.CreateRequestReturnJson();
+            var message = result["errmsg"].Value<string>();
+            if (message != "ok")
+            {
+                throw new Exception(message);
+            }
             return JsonConvert.SerializeObject(result);
         }
     }

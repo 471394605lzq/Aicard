@@ -279,18 +279,30 @@ namespace AiCard.Bll
                             }
                             var userOpenID = new Bll.Users.UserOpenID(user);
                             string openID = userOpenID.SearchOpenID(config.AppID);
-                            var formID = db.WeChatMiniNotifyForms
+                            var form = db.WeChatMiniNotifyForms
                                 .FirstOrDefault(s => s.UserID == log.TargetUserID
-                                    && s.EndDateTime > DateTime.Now).FormID;
-                            if (formID != null)
+                                    && s.EndDateTime > DateTime.Now);
+                            if (form != null)
                             {
                                 var fromUser = db.Users.FirstOrDefault(s => s.Id == log.UserID);
+
                                 var keyword = new
                                 {
-                                    keyword1 = fromUser.NickName,
-                                    keyword2 = log.CreateDateTime.ToString("yyyy-MM-dd HH:mm:ss")
+                                    keyword1 = new { value = fromUser.NickName },
+                                    keyword2 = new { value = log.CreateDateTime.ToString("yyyy-MM-dd HH:mm:ss") }
                                 };
-                                wechat.SendMessage(openID, "yRNGFeRZqFmopwfbW6ocHqG41Ef8p2ycW8TJnswx8yc", formID, null, keyword);
+                                try
+                                {
+                                    wechat.SendMessage(openID, "yRNGFeRZqFmopwfbW6ocHqG41Ef8p2ycW8TJnswx8yc", form.FormID, null, keyword);
+                                }
+                                catch (Exception)
+                                {
+                                }
+                                finally
+                                {
+                                    db.WeChatMiniNotifyForms.Remove(form);
+                                    db.SaveChanges();
+                                }
                             }
 
                         }
