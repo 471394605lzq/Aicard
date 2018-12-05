@@ -218,21 +218,20 @@ namespace AiCard.Common.WeChat
         /// 发送小程序推送
         /// </summary>
         /// <param name="openID">OpenID</param>
-        /// <param name="tempID">模版ID</param>
         /// <param name="formID">FromID</param>
         /// <param name="page">跳转页面</param>
-        /// <param name="keyword">参数</param>
+        /// <param name="temp">模版<see cref="AiCard.Common.WeChat.WeChatMessageTemp.IWeChatMessageTemp"/> </param>
         /// <returns></returns>
-        public string SendMessage(string openID, string tempID, string formID, string page, object keyword)
+        public string SendMessage(string openID, string formID, string page, WeChatMessageTemp.IWeChatMessageTemp temp)
         {
             var p = new Dictionary<string, string>();
             p.Add("access_token", GetAccessToken());
             var data = new
             {
                 touser = openID,
-                template_id = tempID,
+                template_id = temp.ID,
                 page = page,
-                data = keyword,
+                data = temp.Data,
                 form_id = formID,
             };
             var api = new CommonApi.BaseApi($"https://api.weixin.qq.com/cgi-bin/message/wxopen/template/send?{p.ToParam()}", "POST", data);

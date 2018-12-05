@@ -265,52 +265,86 @@ namespace AiCard.Bll
                     default:
                         break;
                 }
-                ///消息推送
-                switch (log.Type)
-                {
-                    case UserLogType.CardPersonalRead:
-                        {
-                            Common.WeChat.IConfig config = new Common.WeChat.ConfigMiniPersonal();
-                            var wechat = new Common.WeChat.WeChatMinApi(config);
-                            var user = db.Users.FirstOrDefault(s => s.Id == log.TargetUserID);
-                            if (user == null)
-                            {
-                                throw new Exception("推送用户不存在");
-                            }
-                            var userOpenID = new Bll.Users.UserOpenID(user);
-                            string openID = userOpenID.SearchOpenID(config.AppID);
-                            var form = db.WeChatMiniNotifyForms
-                                .FirstOrDefault(s => s.UserID == log.TargetUserID
-                                    && s.EndDateTime > DateTime.Now);
-                            if (form != null)
-                            {
-                                var fromUser = db.Users.FirstOrDefault(s => s.Id == log.UserID);
 
-                                var keyword = new
-                                {
-                                    keyword1 = new { value = fromUser.NickName },
-                                    keyword2 = new { value = log.CreateDateTime.ToString("yyyy-MM-dd HH:mm:ss") }
-                                };
-                                try
-                                {
-                                    wechat.SendMessage(openID, "yRNGFeRZqFmopwfbW6ocHqG41Ef8p2ycW8TJnswx8yc", form.FormID, null, keyword);
-                                }
-                                catch (Exception)
-                                {
-                                }
-                                finally
-                                {
-                                    db.WeChatMiniNotifyForms.Remove(form);
-                                    db.SaveChanges();
-                                }
-                            }
 
-                        }
-                        break;
-                    default:
-                        break;
-                }
             }
+            Common.WeChat.IConfig config = null;
+            if ((int)log.Type < 200)
+            {
+                config = new Common.WeChat.ConfigMini();
+            }
+            else if ((int)log.Type >= 200)
+            {
+                config = new Common.WeChat.ConfigMiniPersonal();
+            }
+            if (config != null)
+            {
+                NotifyByLog(log, config);
+            }
+         
+        }
+        ///消息推送
+        public static void NotifyByLog(UserLog log, Common.WeChat.IConfig config)
+        {
+            using (ApplicationDbContext db = new ApplicationDbContext())
+            {
+                var targetUser = db.Users.FirstOrDefault(s => s.Id == log.TargetUserID);
+                var user = db.Users.FirstOrDefault(s => s.Id == log.UserID);
+                var wechat = new Common.WeChat.WeChatMinApi(config);
+                if (targetUser == null)
+                {
+                    throw new Exception("推送用户不存在");
+                }
+                var userOpenID = new Bll.Users.UserOpenID(targetUser);
+                string openID = userOpenID.SearchOpenID(config.AppID);
+                var form = db.WeChatMiniNotifyForms
+                    .FirstOrDefault(s => s.UserID == log.TargetUserID
+                        && s.EndDateTime > DateTime.Now);
+                var fromUser = db.Users.FirstOrDefault(s => s.Id == log.UserID);
+                if (form == null)
+                {
+                    return;
+                }
+                Common.WeChat.WeChatMessageTemp.IWeChatMessageTemp iTempMessage;
+                try
+                {
+                    switch (log.Type)
+                    {
+                        case UserLogType.CardPersonalRead:
+                            {
+                                iTempMessage = new Common.WeChat.WeChatMessageTemp.NewUserNotifyWeChatMessage(fromUser.NickName, log.CreateDateTime);
+                                wechat.SendMessage(openID, form.FormID, null, iTempMessage);
+                            }
+                            break;
+                        case UserLogType.CardPersonalAddressNav:
+                        case UserLogType.CardPersonalEmailCopy:
+                        case UserLogType.CardPersonalEnterpriseCopy:
+                        case UserLogType.CardPersonalMobileCall:
+                        case UserLogType.CardPersonalLike:
+                        case UserLogType.CardPersonalPhoneCall:
+                        case UserLogType.CardPersonalSave:
+                        case UserLogType.CardPersonalShare:
+                        case UserLogType.CardPersonalWechat:
+                            {
+                                iTempMessage = new Common.WeChat.WeChatMessageTemp.DefaultNotifyWeChatMessage(fromUser.NickName, $"{fromUser.NickName}{log.Type.GetDisplayName()}", log.CreateDateTime);
+                                wechat.SendMessage(openID, form.FormID, null, iTempMessage);
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                catch (Exception)
+                {
+                }
+                finally
+                {
+                    db.WeChatMiniNotifyForms.Remove(form);
+                    db.SaveChanges();
+                }
+
+            }
+
         }
     }
 }
