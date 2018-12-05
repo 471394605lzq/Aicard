@@ -713,7 +713,7 @@ namespace AiCard.Controllers
                                                 var card = db.Cards.FirstOrDefault(s => s.UserID == user.Id);
                                                 if (card != null)
                                                 {
-                                                    return Redirect($"https://radar.dtoao.com/#/Login?userID={user.Id}&enterpriseID={card.EnterpriseID}&cardID={card.ID}");
+                                                    return Redirect($"https://radar.dtoao.com/#/Login?userID={user.Id}&enterpriseID={card.EnterpriseID}&cardID={card.ID}&userName={user.UserName}");
                                                 }
                                                 else
                                                 {
@@ -1087,18 +1087,19 @@ namespace AiCard.Controllers
         /// <returns></returns>
         [HttpPost]
         [AllowCrossSiteJson]
-        public ActionResult VerufucatuibCard(string phonenumber, string verificationcode, string wxcode,int cardid)
+        public ActionResult VerufucatuibCard(string phonenumber, string verificationcode, string wxcode, int cardid)
         {
             var vcodemodel = db.VerificationCodes.FirstOrDefault(s => s.To == phonenumber.Replace(" ", "") && s.Code == verificationcode);
             Card cardmodel = new Card();
-            if (cardid <= 0 )
+            if (cardid <= 0)
             {
                 cardmodel = db.Cards.FirstOrDefault(s => s.Mobile == phonenumber.Replace(" ", ""));
             }
-            else {
+            else
+            {
                 cardmodel = db.Cards.FirstOrDefault(s => s.ID == cardid);
             }
-             
+
             //验证手机短信验证码是否正确
             if (vcodemodel == null || vcodemodel.Code != verificationcode)
             {
@@ -1107,7 +1108,7 @@ namespace AiCard.Controllers
             //验证手机短信验证码是否过时
             else
             {
-                DateTime date1 =DateTime.Now;
+                DateTime date1 = DateTime.Now;
                 DateTime date2 = vcodemodel.CreateDate;
                 TimeSpan timeSpan = date1 - date2;
                 int timespanint = Convert.ToInt32(timeSpan.TotalMinutes);
