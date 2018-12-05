@@ -131,4 +131,26 @@ namespace AiCard.Common.WeChat
 
         public DateTime AccessTokenEnd { get { return accessTokenEnd; } set { accessTokenEnd = value; } }
     }
+    public class ConfigOpen : IConfig
+    {
+        private const string appID = "wxfa198eede0c55bc1";
+
+        private const string appSecret = "e6c9b85d554c0697213ddba58d388148";
+
+        private static string accessToken = null;
+
+        private static string refreshToken = null;
+
+        private static DateTime accessTokenEnd;
+
+        public string AccessToken { get { return accessToken; } set { accessToken = value; } }
+
+        public string AppID { get { return appID; } }
+
+        public string AppSecret { get { return appSecret; } }
+
+        public string RefreshToken { get { return refreshToken; } set { refreshToken = value; } }
+
+        public DateTime AccessTokenEnd { get { return accessTokenEnd; } set { accessTokenEnd = value; } }
+    }
 }

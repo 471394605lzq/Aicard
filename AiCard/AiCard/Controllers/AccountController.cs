@@ -1122,7 +1122,7 @@ namespace AiCard.Controllers
             }
             else
             {
-                Common.WeChat.IConfig config = new Common.WeChat.ConfigWeChatWork();
+                Common.WeChat.IConfig config = new Common.WeChat.ConfigOpen();
                 Common.WeChat.WeChatApi wechat = new Common.WeChat.WeChatApi(config);
                 Common.WeChat.AccessTokenResult result;
 
