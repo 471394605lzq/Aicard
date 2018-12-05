@@ -160,12 +160,12 @@ namespace AiCard.Controllers
                 string codenum = Comm.GenerateCheckCodeNum(5);
                 SendMsg s = new SendMsg();
                 var result = s.SendSMS(phonenumber, "403796", codenum);
-                if (result.IsSuccess.Equals("000000"))
+                if (result.Message.Equals("000000"))
                 {
                     VerificationCode model = new VerificationCode();
                     model.Code = codenum;
                     model.CreateDate = DateTime.Now;
-                    model.To = phonenumber;
+                    model.To = phonenumber.Replace(" ", "");
                     db.VerificationCodes.Add(model);
                     db.SaveChanges();
                 }

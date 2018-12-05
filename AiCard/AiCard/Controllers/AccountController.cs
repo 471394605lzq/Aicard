@@ -1089,29 +1089,34 @@ namespace AiCard.Controllers
         [AllowCrossSiteJson]
         public ActionResult VerufucatuibCard(string phonenumber, string verificationcode, string wxcode,int cardid)
         {
-            var vcodemodel = db.VerificationCodes.FirstOrDefault(s => s.To == phonenumber && s.Code == verificationcode);
+            var vcodemodel = db.VerificationCodes.FirstOrDefault(s => s.To == phonenumber.Replace(" ", "") && s.Code == verificationcode);
             Card cardmodel = new Card();
             if (cardid <= 0 )
             {
-                cardmodel = db.Cards.FirstOrDefault(s => s.Mobile == phonenumber);
+                cardmodel = db.Cards.FirstOrDefault(s => s.Mobile == phonenumber.Replace(" ", ""));
             }
             else {
                 cardmodel = db.Cards.FirstOrDefault(s => s.ID == cardid);
             }
-            DateTime date1 = new DateTime();
-            DateTime date2 = vcodemodel.CreateDate;
-            TimeSpan timeSpan = date2 - date1;
+             
             //验证手机短信验证码是否正确
             if (vcodemodel == null || vcodemodel.Code != verificationcode)
             {
                 return Json(Comm.ToJsonResult("Error", "验证码不正确"));
             }
             //验证手机短信验证码是否过时
-            else if (timeSpan.TotalMinutes > 30)
+            else
             {
-                return Json(Comm.ToJsonResult("Error", "验证码过时"));
+                DateTime date1 =DateTime.Now;
+                DateTime date2 = vcodemodel.CreateDate;
+                TimeSpan timeSpan = date1 - date2;
+                int timespanint = Convert.ToInt32(timeSpan.TotalMinutes);
+                if (timespanint > 30)
+                {
+                    return Json(Comm.ToJsonResult("Error", "验证码超时"));
+                }
             }
-            else if (cardmodel == null)
+            if (cardmodel == null)
             {
                 return Json(Comm.ToJsonResult("Error", "名片不存在"));
             }
@@ -1153,6 +1158,7 @@ namespace AiCard.Controllers
                             user.LastLoginDateTime = DateTime.Now;
                             db.SaveChanges();
                             cardmodel.UserID = user.Id;
+                            cardmodel.Enable = true;
                             db.SaveChanges();
                         }
                         else
@@ -1162,12 +1168,14 @@ namespace AiCard.Controllers
                                 var userInfo = wechat.GetUserInfoSns(openID);
                                 user = CreateByWeChat(userInfo);
                                 cardmodel.UserID = user.Id;
+                                cardmodel.Enable = true;
                                 db.SaveChanges();
                             }
                             catch (Exception)
                             {
                                 user = CreateByWeChat(new Common.WeChat.UserInfoResult { UnionID = unionid });
                                 cardmodel.UserID = user.Id;
+                                cardmodel.Enable = true;
                                 db.SaveChanges();
                             }
 
