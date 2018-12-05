@@ -245,6 +245,10 @@
     <Compile Include="Migrations\201811300253005_AddVerificationCode.Designer.cs">
       <DependentUpon>201811300253005_AddVerificationCode.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201812041204308_AddWeChatMiniNotifyForm.cs" />
+    <Compile Include="Migrations\201812041204308_AddWeChatMiniNotifyForm.Designer.cs">
+      <DependentUpon>201812041204308_AddWeChatMiniNotifyForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ArticleModels.cs" />
     <Compile Include="Models\CardModels.cs" />
@@ -269,6 +273,7 @@
     <Compile Include="Models\VipModels.cs" />
     <Compile Include="Models\VipAmountLogModels.cs" />
     <Compile Include="Models\VipForwardModels.cs" />
+    <Compile Include="Models\WeChatNotifyFrom.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -401,6 +406,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201811300253005_AddVerificationCode.resx">
       <DependentUpon>201811300253005_AddVerificationCode.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201812041204308_AddWeChatMiniNotifyForm.resx">
+      <DependentUpon>201812041204308_AddWeChatMiniNotifyForm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -265,6 +265,39 @@ namespace AiCard.Bll
                     default:
                         break;
                 }
+                ///消息推送
+                switch (log.Type)
+                {
+                    case UserLogType.CardPersonalRead:
+                        {
+                            Common.WeChat.IConfig config = new Common.WeChat.ConfigMiniPersonal();
+                            var wechat = new Common.WeChat.WeChatMinApi(config);
+                            var user = db.Users.FirstOrDefault(s => s.Id == log.TargetUserID);
+                            if (user == null)
+                            {
+                                throw new Exception("推送用户不存在");
+                            }
+                            var userOpenID = new Bll.Users.UserOpenID(user);
+                            string openID = userOpenID.SearchOpenID(config.AppID);
+                            var formID = db.WeChatMiniNotifyForms
+                                .FirstOrDefault(s => s.UserID == log.TargetUserID
+                                    && s.EndDateTime > DateTime.Now).FormID;
+                            if (formID != null)
+                            {
+                                var fromUser = db.Users.FirstOrDefault(s => s.Id == log.UserID);
+                                var keyword = new
+                                {
+                                    keyword1 = fromUser.NickName,
+                                    keyword2 = log.CreateDateTime.ToString("yyyy-MM-dd HH:mm:ss")
+                                };
+                                wechat.SendMessage(openID, "yRNGFeRZqFmopwfbW6ocHqG41Ef8p2ycW8TJnswx8yc", formID, null, keyword);
+                            }
+
+                        }
+                        break;
+                    default:
+                        break;
+                }
             }
         }
     }

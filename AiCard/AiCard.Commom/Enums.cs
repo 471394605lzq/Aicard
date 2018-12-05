@@ -434,9 +434,9 @@ namespace AiCard.Common.Enums
         [Display(Name = "免费")]
         Default,
         /// <summary>
-        /// 99元VIP
+        /// 86元VIP
         /// </summary>
-        [Display(Name = "掌柜")]
+        [Display(Name = "盟主")]
         Vip99
     }
 
