@@ -127,27 +127,57 @@ namespace AiCard.Controllers
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [AllowCrossSiteJson]
-        public ActionResult GetEnterpriseCustomerListByTabs(string tabsName, int page = 1, int pageSize = 20)
+        public ActionResult GetEnterpriseCustomerListByTabs(string tabsName,string OwnerID, int? page = 1, int? pageSize = 20)
         {
-            var query = from ct in db.EnterpriseCustomerTabs
-                        from cus in db.EnterpriseCustomers
-                        from us in db.Users
-                        where ct.CustomerID == cus.ID && us.Id == cus.UserID
-                        select new
-                        {
-                            ID = cus.ID,
-                            Name = cus.RealName,
-                            Avatar = us.Avatar,
-                            TabsID = ct.ID
-                        };
 
-            //根据标签匹配
-            if (!string.IsNullOrWhiteSpace(tabsName))
-            {
-                query = query.Where(s => s.Name == tabsName);
-            }
-            var paged = query.OrderBy(s => s.ID).ToPagedList(page, pageSize);
-            return Json(Comm.ToJsonResultForPagedList(paged, paged), JsonRequestBehavior.AllowGet);
+            int starpagesize = page.Value * pageSize.Value - pageSize.Value;
+            int endpagesize = page.Value * pageSize.Value;
+
+            //拼接参数
+            SqlParameter[] parameters = {
+                        new SqlParameter("@tabsName", SqlDbType.NVarChar),
+                        new SqlParameter("@OwnerID", SqlDbType.NVarChar),
+                        new SqlParameter("@starpagesize", SqlDbType.Int),
+                        new SqlParameter("@endpagesize", SqlDbType.Int)
+                    };
+            parameters[0].Value = tabsName;
+            parameters[1].Value = OwnerID;
+            parameters[2].Value = starpagesize;
+            parameters[3].Value = endpagesize;
+
+            string sqlstr = string.Format(@"SELECT* FROM(SELECT CAST(ROW_NUMBER() over(order by CONVERT(CHAR(10),Name,120) DESC) AS INTEGER) AS rownumber,counts as Count,Name as TaName FROM(
+                                            SELECT  * FROM dbo.EnterpriseCustomerTabs et
+                                            JOIN dbo.EnterpriseCustomers ec ON et.CustomerID=ec.ID
+											WHERE et.Name=@tabsName AND et.OwnerID=@OwnerID)s)  t WHERE t.rownumber > @starpagesize AND t.rownumber<=@endpagesize");
+            List<UserListModel> data = db.Database.SqlQuery<UserListModel>(sqlstr, parameters).ToList();
+            return Json(Comm.ToJsonResult("Success", "成功", data), JsonRequestBehavior.AllowGet);
+
+            //var query = from ct in db.EnterpriseCustomerTabs
+            //            from cus in db.EnterpriseCustomers
+            //            from us in db.Users
+            //            where ct.CustomerID == cus.ID && us.Id == cus.UserID
+            //            select new
+            //            {
+            //                ID = cus.ID,
+            //                Name = cus.RealName,
+            //                Avatar = us.Avatar,
+            //                TabsID = ct.ID
+            //            };
+
+            ////根据标签匹配
+            //if (!string.IsNullOrWhiteSpace(tabsName))
+            //{
+            //    query = query.Where(s => s.Name == tabsName);
+            //}
+            //var paged = query.OrderBy(s => s.ID).ToPagedList(page, pageSize);
+            //return Json(Comm.ToJsonResultForPagedList(paged, paged), JsonRequestBehavior.AllowGet);
+        }
+        private class UserListModel
+        {
+            public string Name { get; set; }
+            public int ID { get; set; }
+            public string Avatar { get; set; }
+            public int TabsID { get; set; }
         }
 
         /// <summary>
@@ -287,15 +317,15 @@ namespace AiCard.Controllers
             try
             {
                 var query = (from c in db.EnterpriseCustomers
-                             from u in db.Users
+                             join u in db.Users on c.UserID equals u.Id into ut
                              join cut in db.EnterpriseCustomerTabs.Where(s => s.OwnerID == userID) on c.ID equals cut.CustomerID into cuta
                              join uscut in db.EnterpriseUserCustomer.Where(s => s.OwnerID == userID) on c.ID equals uscut.CustomerID into uscuta
                              where c.ID == custID
                              select new
                              {
                                  Name = c.RealName,
-                                 UserName = u.UserName,
-                                 Avatar = u.Avatar,
+                                 UserName = ut.Select(s=>s.UserName),
+                                 Avatar = ut.Select(s=>s.Avatar),
                                  CustTabs = cuta,
                                  Position = c.Position,
                                  Email = c.Email,
