@@ -171,7 +171,18 @@ namespace AiCard.Controllers
                              Users = ec.Select(s => s.RealName).Take(10)
                          });
             var paged = query.OrderBy(s => s.Name).ToPagedList(page, pageSize);
+
+            string sqlstr = string.Format(@"SELECT * FROM (SELECT CAST(ROW_NUMBER() over(order by CONVERT(CHAR(10),CreateDateTime,120) DESC) AS INTEGER) AS rownumber,
+                     CASE WHEN CONVERT(CHAR(10),CreateDateTime,120)=CONVERT(CHAR(10),GETDATE(),120) THEN '今天' WHEN CONVERT(CHAR(10),CreateDateTime,120)=CONVERT(CHAR(10),dateadd(day,-1,getdate()),120) 
+                     THEN '昨天' ELSE CONVERT(CHAR(10),CreateDateTime,120) END AS timestr,CONVERT(CHAR(10),CreateDateTime,120) AS datestr
+                     FROM dbo.UserLogs INNER JOIN dbo.EnterpriseCustomers ec ON ec.UserID=UserLogs.UserID WHERE Type IN(101,102,20) AND TargetUserID=@TargetUserID AND ec.ID=@CustomerID AND  TargetEnterpriseID=@TargetEnterpriseID
+                     GROUP BY CONVERT(CHAR(10),CreateDateTime,120)) t WHERE t.rownumber > @starpagesize AND t.rownumber<=@endpagesize");
+
             return Json(Comm.ToJsonResultForPagedList(paged, paged), JsonRequestBehavior.AllowGet);
+        }
+        private class CustTabCountModel {
+            public string TaName { get; set; }
+            public int Count { get; set; }
         }
 
         /// <summary>

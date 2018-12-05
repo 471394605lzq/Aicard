@@ -1084,20 +1084,24 @@ namespace AiCard.Controllers
             else {
                 cardmodel = db.Cards.FirstOrDefault(s => s.ID == cardid);
             }
-            DateTime date1 = new DateTime();
-            DateTime date2 = vcodemodel.CreateDate;
-            TimeSpan timeSpan = date2 - date1;
+
             //验证手机短信验证码是否正确
             if (vcodemodel == null || vcodemodel.Code != verificationcode)
             {
                 return Json(Comm.ToJsonResult("Error", "验证码不正确"));
             }
             //验证手机短信验证码是否过时
-            else if (timeSpan.TotalMinutes > 30)
+            else
             {
-                return Json(Comm.ToJsonResult("Error", "验证码过时"));
+                DateTime date1 = new DateTime();
+                DateTime date2 = vcodemodel.CreateDate;
+                TimeSpan timeSpan = date2 - date1;
+                if (timeSpan.TotalMinutes > 30)
+                {
+                    return Json(Comm.ToJsonResult("Error", "验证码过时"));
+                }
             }
-            else if (cardmodel == null)
+            if (cardmodel == null)
             {
                 return Json(Comm.ToJsonResult("Error", "名片不存在"));
             }
