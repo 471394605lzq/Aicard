@@ -158,27 +158,41 @@ namespace AiCard.Controllers
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [AllowCrossSiteJson]
-        public ActionResult GetEnterpriseCustomerTabCountList(string ownerID, int page = 1, int pageSize = 20)
+        public ActionResult GetEnterpriseCustomerTabCountList(string ownerID, int? page = 1, int? pageSize = 20)
         {
-            var query = (from ct in db.EnterpriseCustomerTabs
-                         join c in db.EnterpriseCustomers on ct.CustomerID equals c.ID into ec
-                         where ct.OwnerID == ownerID
-                         select new
-                         {
-                             ID = ct.ID,
-                             Name = ct.Name,
-                             Count = ec.Count(),
-                             Users = ec.Select(s => s.RealName).Take(10)
-                         });
-            var paged = query.OrderBy(s => s.Name).ToPagedList(page, pageSize);
+            //var query = (from ct in db.EnterpriseCustomerTabs
+            //             join c in db.EnterpriseCustomers on ct.CustomerID equals c.ID into ec
+            //             where ct.OwnerID == ownerID
+            //             select new
+            //             {
+            //                 ID = ct.ID,
+            //                 Name = ct.Name,
+            //                 Count = ec.Count(),
+            //                 Users = ec.Select(s => s.RealName).Take(10)
+            //             });
+            //var paged = query.OrderBy(s => s.Name).ToPagedList(page, pageSize);
 
-            string sqlstr = string.Format(@"SELECT * FROM (SELECT CAST(ROW_NUMBER() over(order by CONVERT(CHAR(10),CreateDateTime,120) DESC) AS INTEGER) AS rownumber,
-                     CASE WHEN CONVERT(CHAR(10),CreateDateTime,120)=CONVERT(CHAR(10),GETDATE(),120) THEN '今天' WHEN CONVERT(CHAR(10),CreateDateTime,120)=CONVERT(CHAR(10),dateadd(day,-1,getdate()),120) 
-                     THEN '昨天' ELSE CONVERT(CHAR(10),CreateDateTime,120) END AS timestr,CONVERT(CHAR(10),CreateDateTime,120) AS datestr
-                     FROM dbo.UserLogs INNER JOIN dbo.EnterpriseCustomers ec ON ec.UserID=UserLogs.UserID WHERE Type IN(101,102,20) AND TargetUserID=@TargetUserID AND ec.ID=@CustomerID AND  TargetEnterpriseID=@TargetEnterpriseID
-                     GROUP BY CONVERT(CHAR(10),CreateDateTime,120)) t WHERE t.rownumber > @starpagesize AND t.rownumber<=@endpagesize");
+            int starpagesize = page.Value * pageSize.Value - pageSize.Value;
+            int endpagesize = page.Value * pageSize.Value;
 
-            return Json(Comm.ToJsonResultForPagedList(paged, paged), JsonRequestBehavior.AllowGet);
+            //拼接参数
+            SqlParameter[] parameters = {
+                        new SqlParameter("@ownerID", SqlDbType.NVarChar),
+                        new SqlParameter("@starpagesize", SqlDbType.Int),
+                        new SqlParameter("@endpagesize", SqlDbType.Int)
+                    };
+            parameters[1].Value = ownerID;
+            parameters[3].Value = starpagesize;
+            parameters[4].Value = endpagesize;
+
+            string sqlstr = string.Format(@"SELECT CAST(ROW_NUMBER() over(order by CONVERT(CHAR(10),Name,120) DESC) AS INTEGER) AS rownumber,t.counts,t.Name FROM(
+                                            SELECT  COUNT(CustomerID) AS counts,et.Name FROM dbo.EnterpriseCustomerTabs et
+                                            JOIN dbo.EnterpriseCustomers ec ON et.CustomerID=ec.ID
+                                            WHERE OwnerID=ownerID GROUP BY Name)  t WHERE t.rownumber > @starpagesize AND t.rownumber<=@endpagesize");
+
+            //return Json(Comm.ToJsonResultForPagedList(paged, paged), JsonRequestBehavior.AllowGet);
+            List<CustTabCountModel> data = db.Database.SqlQuery<CustTabCountModel>(sqlstr, parameters).ToList();
+            return Json(Comm.ToJsonResult("Success", "成功", data), JsonRequestBehavior.AllowGet);
         }
         private class CustTabCountModel {
             public string TaName { get; set; }
