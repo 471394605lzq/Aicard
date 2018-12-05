@@ -1107,12 +1107,13 @@ namespace AiCard.Controllers
             //验证手机短信验证码是否过时
             else
             {
-                DateTime date1 = new DateTime();
+                DateTime date1 =DateTime.Now;
                 DateTime date2 = vcodemodel.CreateDate;
-                TimeSpan timeSpan = date2 - date1;
-                if (timeSpan.TotalMinutes > 30)
+                TimeSpan timeSpan = date1 - date2;
+                int timespanint = Convert.ToInt32(timeSpan.TotalMinutes);
+                if (timespanint > 30)
                 {
-                    return Json(Comm.ToJsonResult("Error", "验证码过时"));
+                    return Json(Comm.ToJsonResult("Error", "验证码超时"));
                 }
             }
             if (cardmodel == null)
