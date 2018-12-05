@@ -139,7 +139,7 @@ namespace AiCard.Controllers
                                    .ToList();
 
                 var defVideo = "http://image.dtoao.com/trailer.mp4";
-                var defImages = new string[] { "http://image.dtoao.com/14149new.jpg" }.ToList();
+                var defImages = new string[] { "http://image.dtoao.com/201810191936594601.jpg" }.ToList();
                 var data = new
                 {
                     card.Name,

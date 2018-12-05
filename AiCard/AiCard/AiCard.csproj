@@ -301,6 +301,7 @@
     <Compile Include="Controllers\CardPersonalController.cs" />
     <Compile Include="Controllers\VipForwardAccountController.cs" />
     <Compile Include="Controllers\VIPManageController.cs" />
+    <Compile Include="Controllers\WeChatMiniController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -980,6 +981,7 @@
     <Folder Include="Views\VipForwardAccount\" />
     <Folder Include="Views\VipHome\" />
     <Folder Include="Views\VIP\" />
+    <Folder Include="Views\WeChatMini\" />
     <Folder Include="WeChatSessionKey\" />
   </ItemGroup>
   <ItemGroup>
