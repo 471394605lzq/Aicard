@@ -79,6 +79,13 @@ namespace AiCard.Bll
                 ///验证
                 switch (log.Type)
                 {
+                    case UserLogType.FollowUp:
+                        {
+                            var a = db.EnterpriseCustomers.FirstOrDefault(s => s.ID == log.RelationID);
+                            log.TargetEnterpriseID = a.EnterpriseID;
+                            log.TargetUserID = a.UserID;
+                        }
+                        break;
                     case UserLogType.ArticleLike:
                     case UserLogType.ArticleComment:
                     case UserLogType.ArticleRead:
@@ -293,7 +300,8 @@ namespace AiCard.Bll
                 var wechat = new Common.WeChat.WeChatMinApi(config);
                 if (targetUser == null)
                 {
-                    throw new Exception("推送用户不存在");
+                    return;
+                    //throw new Exception("推送用户不存在");
                 }
                 var userOpenID = new Bll.Users.UserOpenID(targetUser);
                 string openID = userOpenID.SearchOpenID(config.AppID);

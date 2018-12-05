@@ -713,11 +713,11 @@ namespace AiCard.Controllers
                                                 var card = db.Cards.FirstOrDefault(s => s.UserID == user.Id);
                                                 if (card != null)
                                                 {
-                                                    return Redirect($"http://radar.dtoao.com/#/Login?userID={user.Id}&enterpriseID={card.EnterpriseID}&cardID={card.ID}");
+                                                    return Redirect($"https://radar.dtoao.com/#/Login?userID={user.Id}&enterpriseID={card.EnterpriseID}&cardID={card.ID}");
                                                 }
                                                 else
                                                 {
-                                                    return Redirect($"http://radar.dtoao.com/#/Login?error=名片不存在");
+                                                    return Redirect($"https://radar.dtoao.com/#/Login?error=名片不存在");
                                                 }
                                             }
                                         default:
