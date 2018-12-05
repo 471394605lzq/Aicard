@@ -312,7 +312,7 @@ namespace AiCard.Bll
                     {
                         case UserLogType.CardPersonalRead:
                             {
-                                iTempMessage = new Common.WeChat.WeChatMessageTemp.NewUserNotifyWeChatMessage(fromUser.NickName, log.CreateDateTime);
+                                iTempMessage = new Common.WeChat.WeChatMessageTemp.PNewUserNotifyWeChatMessage(fromUser.NickName, log.CreateDateTime);
                                 wechat.SendMessage(openID, form.FormID, null, iTempMessage);
                             }
                             break;
@@ -326,7 +326,7 @@ namespace AiCard.Bll
                         case UserLogType.CardPersonalShare:
                         case UserLogType.CardPersonalWechat:
                             {
-                                iTempMessage = new Common.WeChat.WeChatMessageTemp.DefaultNotifyWeChatMessage(fromUser.NickName, $"{fromUser.NickName}{log.Type.GetDisplayName()}", log.CreateDateTime);
+                                iTempMessage = new Common.WeChat.WeChatMessageTemp.PDefaultNotifyWeChatMessage(fromUser.NickName, $"{fromUser.NickName}{log.Type.GetDisplayName()}", log.CreateDateTime);
                                 wechat.SendMessage(openID, form.FormID, null, iTempMessage);
                             }
                             break;
