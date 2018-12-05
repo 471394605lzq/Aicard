@@ -170,7 +170,7 @@ namespace AiCard.Controllers
                              Count = ec.Count(),
                              Users = ec.Select(s => s.RealName).Take(10)
                          });
-            var paged = query.OrderBy(s => s.ID).ToPagedList(page, pageSize);
+            var paged = query.OrderBy(s => s.Name).ToPagedList(page, pageSize);
             return Json(Comm.ToJsonResultForPagedList(paged, paged), JsonRequestBehavior.AllowGet);
         }
 
