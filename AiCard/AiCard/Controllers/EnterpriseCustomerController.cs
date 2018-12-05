@@ -134,22 +134,24 @@ namespace AiCard.Controllers
             int endpagesize = page.Value * pageSize.Value;
 
             //拼接参数
-            SqlParameter[] parameters = {
-                        new SqlParameter("@tabsName", SqlDbType.NVarChar),
+            SqlParameter[] p = {
+                        new SqlParameter("@tname", SqlDbType.NVarChar),
                         new SqlParameter("@OwnerID", SqlDbType.NVarChar),
                         new SqlParameter("@starpagesize", SqlDbType.Int),
                         new SqlParameter("@endpagesize", SqlDbType.Int)
                     };
-            parameters[0].Value = tabsName;
-            parameters[1].Value = OwnerID;
-            parameters[2].Value = starpagesize;
-            parameters[3].Value = endpagesize;
+            p[0].Value = tabsName;
+            p[1].Value = OwnerID;
+            p[2].Value = starpagesize;
+            p[3].Value = endpagesize;
 
-            string sqlstr = string.Format(@"SELECT* FROM(SELECT CAST(ROW_NUMBER() over(order by CONVERT(CHAR(10),Name,120) DESC) AS INTEGER) AS rownumber,counts as Count,Name as TaName FROM(
-                                            SELECT  * FROM dbo.EnterpriseCustomerTabs et
+            string sqlstr = string.Format(@"SELECT * FROM(
+                                            SELECT CAST(ROW_NUMBER() over(order by CONVERT(CHAR(10),ec.ID,120) DESC) AS INTEGER) AS rownumber,
+                                            ec.RealName AS Name,us.Avatar,ec.ID,et.ID AS TabsID  FROM dbo.EnterpriseCustomerTabs et
                                             JOIN dbo.EnterpriseCustomers ec ON et.CustomerID=ec.ID
-											WHERE et.Name=@tabsName AND et.OwnerID=@OwnerID)s)  t WHERE t.rownumber > @starpagesize AND t.rownumber<=@endpagesize");
-            List<UserListModel> data = db.Database.SqlQuery<UserListModel>(sqlstr, parameters).ToList();
+											JOIN dbo.AspNetUsers us ON us.Id=ec.UserID
+											WHERE et.Name=@tname AND et.OwnerID=@OwnerID)  t WHERE t.rownumber > @starpagesize AND t.rownumber<=@endpagesize");
+            List<UserListModel> data = db.Database.SqlQuery<UserListModel>(sqlstr, p).ToList();
             return Json(Comm.ToJsonResult("Success", "成功", data), JsonRequestBehavior.AllowGet);
 
             //var query = from ct in db.EnterpriseCustomerTabs
