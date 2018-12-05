@@ -611,6 +611,7 @@ namespace AiCard.Controllers
         [AllowCrossSiteJson]
         public ActionResult LoginByWeiXin(string code, string state = null, WeChatAccount type = WeChatAccount.AiCardMini)
         {
+
             Func<string, string, ActionResult> error = (content, detail) =>
              {
                  if (type != WeChatAccount.PC)
@@ -674,7 +675,7 @@ namespace AiCard.Controllers
                                             }
                                             user.NickName = userInfo.NickName;
                                             user.Avatar = avart;
-                                           
+
                                         }
                                         var option = new Bll.Users.UserOpenID(user);
                                         option.AddOpenID(config.AppID, result.OpenID);
@@ -707,6 +708,15 @@ namespace AiCard.Controllers
                                             return RedirectToAction("Index", "Tickets");
                                         case "qrcode":
                                             return RedirectToAction("Index", "Tickets", new { mode = "qrcode" });
+                                        case "pagelogin":
+                                            {
+                                                var card = db.Cards.FirstOrDefault(s => s.UserID == user.Id);
+                                                if (card != null)
+                                                {
+                                                    return Redirect($"http://radar.dtoao.com?userID={user.Id}&enterpriseID={card.ID}&cardID={card.ID}");
+                                                }
+                                                return Json(Comm.ToJsonResult("CardNoFound", "名片不存在"), JsonRequestBehavior.AllowGet);
+                                            }
                                         default:
                                             return Redirect(state);
                                     }
@@ -1037,7 +1047,7 @@ namespace AiCard.Controllers
                         UserID = user.Id
                     };
                     db.EnterpriseCustomers.Add(addmodel);
-                    int reruenrow=db.SaveChanges();
+                    int reruenrow = db.SaveChanges();
                     if (reruenrow > 0)
                     {
                         var returndata = new
@@ -1046,7 +1056,8 @@ namespace AiCard.Controllers
                         };
                         return Json(Comm.ToJsonResult("Success", "新增成功", returndata), JsonRequestBehavior.AllowGet);
                     }
-                    else {
+                    else
+                    {
                         return Json(Comm.ToJsonResult("Error", "新增客户失败"));
                     }
                 }
@@ -1069,7 +1080,7 @@ namespace AiCard.Controllers
         public ActionResult VerufucatuibCard(string phonenumber, string verificationcode, string wxcode)
         {
             var vcodemodel = db.VerificationCodes.FirstOrDefault(s => s.To == phonenumber && s.Code == verificationcode);
-            var cardmodel = db.Cards.FirstOrDefault(s=>s.Mobile==phonenumber);
+            var cardmodel = db.Cards.FirstOrDefault(s => s.Mobile == phonenumber);
             DateTime date1 = new DateTime();
             DateTime date2 = vcodemodel.CreateDate;
             TimeSpan timeSpan = date2 - date1;
