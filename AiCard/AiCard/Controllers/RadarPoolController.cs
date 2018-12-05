@@ -542,7 +542,7 @@ namespace AiCard.Controllers
         /// <param name="type"></param>
         /// <returns></returns>
         [AllowCrossSiteJson]
-        public ActionResult GetCustomerActivityTop(Common.Enums.CustomerActiveType type, string userID)
+        public ActionResult GetCustomerActivityTop(int type, string userID)
         {
             try
             {
@@ -922,7 +922,7 @@ namespace AiCard.Controllers
             public string Name { get; set; }
             public string Avatar { get; set; }
             public int Counts { get; set; }
-            public string ID { get; set; }
+            public int ID { get; set; }
         }
         private class CustomerActionModel
         {
