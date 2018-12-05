@@ -138,8 +138,7 @@ namespace AiCard.Controllers
                                    .Take(6)
                                    .ToList();
 
-                var defVideo = "http://image.dtoao.com/trailer.mp4";
-                var defImages = new string[] { "http://image.dtoao.com/201810191936594601.jpg" }.ToList();
+
                 var data = new
                 {
                     card.Name,
@@ -150,12 +149,12 @@ namespace AiCard.Controllers
                     card.Email,
                     card.WeChatCode,
                     card.Remark,
-                    Video = card.Video == null ? defVideo : card.Video,
+                    Video = Url.ContentNullEmpty(card.Video),
                     card.Voice,
-                    VideoThumbnail = card.Video == null ? Comm.ResizeImage(defVideo) : Comm.ResizeImage(card.Video),
+                    VideoThumbnail = string.IsNullOrWhiteSpace(card.Video) ? null : Comm.ResizeImage(card.Video),
                     card.Info,
                     card.Industry,
-                    Images = card.Images.SplitToArray<string>() ?? defImages,
+                    Images = card.Images.SplitToArray<string>() ?? null,
                     PCardID = card.ID,
                     EnterpriseName = card.Enterprise,
                     card.Address,
