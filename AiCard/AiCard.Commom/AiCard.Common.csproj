@@ -143,6 +143,7 @@
     <Compile Include="Interface\IFileUpload.cs" />
     <Compile Include="Interface\IGprs.cs" />
     <Compile Include="Interface\ISms.cs" />
+    <Compile Include="WeChat\IWeChatMessageTemp.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Qiniu\Base64.cs" />
