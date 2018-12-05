@@ -281,7 +281,7 @@ namespace AiCard.Bll
             {
                 NotifyByLog(log, config);
             }
-         
+
         }
         ///消息推送
         public static void NotifyByLog(UserLog log, Common.WeChat.IConfig config)
@@ -326,7 +326,38 @@ namespace AiCard.Bll
                         case UserLogType.CardPersonalShare:
                         case UserLogType.CardPersonalWechat:
                             {
-                                iTempMessage = new Common.WeChat.WeChatMessageTemp.PDefaultNotifyWeChatMessage(fromUser.NickName, $"{fromUser.NickName}{log.Type.GetDisplayName()}", log.CreateDateTime);
+                                string content = null;
+                                switch (log.Type)
+                                {
+                                    case UserLogType.CardPersonalAddressNav:
+                                        content = "复制了您的地址";
+                                        break;
+                                    case UserLogType.CardPersonalEmailCopy:
+                                        content = "复制了您的邮箱";
+                                        break;
+                                    case UserLogType.CardPersonalEnterpriseCopy:
+                                        content = "复制了您的公司";
+                                        break;
+                                    case UserLogType.CardPersonalMobileCall:
+                                        content = "呼叫了您的手机";
+                                        break;
+                                    case UserLogType.CardPersonalLike:
+                                        content = "点赞了您的名片";
+                                        break;
+                                    case UserLogType.CardPersonalPhoneCall:
+                                        content = "呼叫了您的座机";
+                                        break;
+                                    case UserLogType.CardPersonalSave:
+                                        content = "保存了您的名片";
+                                        break;
+                                    case UserLogType.CardPersonalShare:
+                                        content = "分享了您的名片";
+                                        break;
+                                    case UserLogType.CardPersonalWechat:
+                                        content = "复制了您的微信号";
+                                        break;
+                                }
+                                iTempMessage = new Common.WeChat.WeChatMessageTemp.PDefaultNotifyWeChatMessage(fromUser.NickName, content, log.CreateDateTime);
                                 wechat.SendMessage(openID, form.FormID, null, iTempMessage);
                             }
                             break;

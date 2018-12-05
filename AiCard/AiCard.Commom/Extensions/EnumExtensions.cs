@@ -18,7 +18,7 @@ namespace AiCard
         {
             return ((DisplayAttribute)(enumValue.GetType()
                             .GetMember(enumValue.ToString())
-                            .First()?
+                            .FirstOrDefault()?
                             .GetCustomAttributes(typeof(DisplayAttribute), false)[0])
                             ).Name ?? enumValue.ToString();
         }
