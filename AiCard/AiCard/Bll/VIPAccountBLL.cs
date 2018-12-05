@@ -120,18 +120,19 @@ namespace AiCard.Bll
                                 result.retCode = ReqResultCode.success;
                                 result.retMsg = "计算佣金成功";
                             }
+                            var vUser = db.Users.FirstOrDefault(s => s.Id == vUserID);
                             switch (logType)
                             {
                                 case Common.Enums.VipAmountLogType.NewCard:
-                                    WeChatNofity(parentUser.UserID, parentProfitAmount, $"注册了名片得到了{parentProfitAmount}元奖励");
+                                    WeChatNofity(parentUser.UserID, parentProfitAmount, $"{vUser.NickName}注册了名片得到了{parentProfitAmount}元奖励");
                                     break;
                                 case Common.Enums.VipAmountLogType.NewChild2nd:
-                                    WeChatNofity(parentUser.UserID, parentProfitAmount, $"成为了您的一级会员得到了{parentProfitAmount}元奖励");
+                                    WeChatNofity(parentUser.UserID, parentProfitAmount, $"{vUser.NickName}成为了您的一级会员得到了{parentProfitAmount}元奖励");
                                     break;
                                 case Common.Enums.VipAmountLogType.NewChild3rd:
                                     if (grandfatherUser.UserID != null)
                                     {
-                                        WeChatNofity(grandfatherUser.UserID, GrandfatheredProfitAmount, $"成为了您的二级会员得到了{GrandfatheredProfitAmount}元奖励");
+                                        WeChatNofity(grandfatherUser.UserID, GrandfatheredProfitAmount, $"{vUser.NickName}成为了您的二级会员得到了{GrandfatheredProfitAmount}元奖励");
                                     }
                                     break;
                                 default:

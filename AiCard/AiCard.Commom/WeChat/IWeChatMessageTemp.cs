@@ -23,7 +23,7 @@ namespace AiCard.Common.WeChat.WeChatMessageTemp
         {
             data = new
             {
-                keyword1 = new { value = amount },
+                keyword1 = new { value = (int)(amount * 100) },
                 keyword2 = new { value = remark },
                 keyword3 = new { value = dateTime.ToString("yyyy-MM-dd HH:mm:ss") }
             };
