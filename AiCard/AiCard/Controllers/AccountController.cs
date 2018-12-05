@@ -1074,13 +1074,27 @@ namespace AiCard.Controllers
         }
 
 
-
+        /// <summary>
+        /// 名片激活
+        /// </summary>
+        /// <param name="phonenumber">手机号</param>
+        /// <param name="verificationcode">短信验证码</param>
+        /// <param name="wxcode">微信接口获得的code</param>
+        /// <param name="cardid">名片id</param>
+        /// <returns></returns>
         [HttpPost]
         [AllowCrossSiteJson]
-        public ActionResult VerufucatuibCard(string phonenumber, string verificationcode, string wxcode)
+        public ActionResult VerufucatuibCard(string phonenumber, string verificationcode, string wxcode,int cardid)
         {
             var vcodemodel = db.VerificationCodes.FirstOrDefault(s => s.To == phonenumber && s.Code == verificationcode);
-            var cardmodel = db.Cards.FirstOrDefault(s => s.Mobile == phonenumber);
+            Card cardmodel = new Card();
+            if (cardid <= 0 )
+            {
+                cardmodel = db.Cards.FirstOrDefault(s => s.Mobile == phonenumber);
+            }
+            else {
+                cardmodel = db.Cards.FirstOrDefault(s => s.ID == cardid);
+            }
             DateTime date1 = new DateTime();
             DateTime date2 = vcodemodel.CreateDate;
             TimeSpan timeSpan = date2 - date1;
