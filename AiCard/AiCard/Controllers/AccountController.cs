@@ -1089,7 +1089,7 @@ namespace AiCard.Controllers
         [AllowCrossSiteJson]
         public ActionResult VerufucatuibCard(string phonenumber, string verificationcode, string wxcode,int cardid)
         {
-            var vcodemodel = db.VerificationCodes.FirstOrDefault(s => s.To == phonenumber && s.Code == verificationcode);
+            var vcodemodel = db.VerificationCodes.FirstOrDefault(s => s.To == phonenumber.Trim() && s.Code == verificationcode);
             Card cardmodel = new Card();
             if (cardid <= 0 )
             {
