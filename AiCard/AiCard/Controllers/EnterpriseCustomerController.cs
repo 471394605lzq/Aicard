@@ -192,6 +192,7 @@ namespace AiCard.Controllers
 
             //return Json(Comm.ToJsonResultForPagedList(paged, paged), JsonRequestBehavior.AllowGet);
             List<CustTabCountModel> data = db.Database.SqlQuery<CustTabCountModel>(sqlstr, parameters).ToList();
+
             return Json(Comm.ToJsonResult("Success", "成功", data), JsonRequestBehavior.AllowGet);
         }
         private class CustTabCountModel {

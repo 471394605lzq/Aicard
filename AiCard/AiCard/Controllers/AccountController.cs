@@ -1098,7 +1098,7 @@ namespace AiCard.Controllers
             else {
                 cardmodel = db.Cards.FirstOrDefault(s => s.ID == cardid);
             }
-
+             
             //验证手机短信验证码是否正确
             if (vcodemodel == null || vcodemodel.Code != verificationcode)
             {
