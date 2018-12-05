@@ -79,6 +79,13 @@ namespace AiCard.Bll
                 ///验证
                 switch (log.Type)
                 {
+                    case UserLogType.FollowUp:
+                        {
+                            var a = db.EnterpriseCustomers.FirstOrDefault(s => s.ID == log.RelationID);
+                            log.TargetEnterpriseID = a.EnterpriseID;
+                            log.TargetUserID = a.UserID;
+                        }
+                        break;
                     case UserLogType.ArticleLike:
                     case UserLogType.ArticleComment:
                     case UserLogType.ArticleRead:
