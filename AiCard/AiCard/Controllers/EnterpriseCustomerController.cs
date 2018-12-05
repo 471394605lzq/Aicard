@@ -127,7 +127,7 @@ namespace AiCard.Controllers
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [AllowCrossSiteJson]
-        public ActionResult GetEnterpriseCustomerListByTabs(int? tabsID, int page = 1, int pageSize = 20)
+        public ActionResult GetEnterpriseCustomerListByTabs(string tabsName, int page = 1, int pageSize = 20)
         {
             var query = from ct in db.EnterpriseCustomerTabs
                         from cus in db.EnterpriseCustomers
@@ -142,9 +142,9 @@ namespace AiCard.Controllers
                         };
 
             //根据标签匹配
-            if (tabsID != null)
+            if (!string.IsNullOrWhiteSpace(tabsName))
             {
-                query = query.Where(s => s.TabsID == tabsID);
+                query = query.Where(s => s.Name == tabsName);
             }
             var paged = query.OrderBy(s => s.ID).ToPagedList(page, pageSize);
             return Json(Comm.ToJsonResultForPagedList(paged, paged), JsonRequestBehavior.AllowGet);
