@@ -273,10 +273,12 @@ namespace AiCard.Controllers
                         var start = date.Date.AddDays(-(int)date.DayOfWeek);
                         var end = start.AddDays(7);
                         //重新排名
-                        var sql = $@"SET TotalWeekAmountRank = varank.[Rank],TotalWeekAmount = varank.Amount
+                        var sql = $@"
+                            UPDATE dbo.Vips
+                            SET TotalWeekAmountRank = varank.[Rank] ,TotalWeekAmount = varank.Amount
                             FROM
                             dbo.Vips join
-                            (SELECT DENSE_RANK() OVER (ORDER BY Amount) AS [Rank],UserID,va.Amount
+                            (SELECT DENSE_RANK() OVER (ORDER BY Amount DESC) AS [Rank],UserID,va.Amount
                             FROM
                             (SELECT UserID,SUM(Amount) Amount FROM dbo.VipAmountLogs 
                             WHERE Amount>0 AND CreateDateTime>=@start AND CreateDateTime<@end
@@ -296,10 +298,10 @@ namespace AiCard.Controllers
                         var end = start.AddMonths(1);
                         //重新排名
                         var sql = $@"UPDATE dbo.Vips
-                            SET TotalMonthAmountRank = varank.[Rank],TotalMonthAmount = varank.Amount
+                            SET TotalMonthAmountRank = varank.[Rank] ,TotalMonthAmount = varank.Amount
                             FROM
                             dbo.Vips join
-                            (SELECT DENSE_RANK() OVER (ORDER BY Amount) AS [Rank],UserID,va.Amount
+                            (SELECT DENSE_RANK() OVER (ORDER BY Amount DESC) AS [Rank],UserID,va.Amount
                             FROM
                             (SELECT UserID,SUM(Amount) Amount FROM dbo.VipAmountLogs 
                             WHERE Amount>0 AND CreateDateTime>=@start AND CreateDateTime<@end
