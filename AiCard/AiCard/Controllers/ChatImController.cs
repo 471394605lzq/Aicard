@@ -73,13 +73,11 @@ namespace AiCard.Controllers
         /// <param name="custuserid"></param>
         /// <param name="ownerusercardid"></param>
         /// <returns></returns>
-        private  RunterResult AddUserCustomer(string custuserid, int ownerusercardid)
+        private RunterResult AddUserCustomer(string custuserid, int ownerusercardid)
         {
             var from = db.Users.FirstOrDefault(s => s.Id == custuserid);
-            if (from == null)
-            {
-                return new RunterResult { IsSuccess = false, Message = "用户不存在" };
-            }
+            //根据客户对应的userid获取企业客户信息
+            var cust = db.EnterpriseCustomers.FirstOrDefault(s=>s.UserID==custuserid);
             var to = (from u in db.Users
                       from c in db.Cards
                       where u.Id == c.UserID && c.ID == ownerusercardid
@@ -88,26 +86,53 @@ namespace AiCard.Controllers
             {
                 return new RunterResult { IsSuccess = false, Message = "名片不存在" };
             }
-            //保存企业客户信息
-            EnterpriseCustomer ecust = new EnterpriseCustomer();
-            ecust.UserID = custuserid;
-            ecust.EnterpriseID = from.EnterpriseID;
-            ecust.RealName = from.NickName;
-            ecust.Mobile = from.PhoneNumber;
-            db.EnterpriseCustomers.Add(ecust);
-            int addcustrow = db.SaveChanges();
-            if (addcustrow > 0)
+            if (from == null)
             {
-                //保存企业名片用户下的客户信息
-                EnterpriseUserCustomer euscust = new EnterpriseUserCustomer();
-                euscust.CustomerID = ecust.ID;
-                euscust.OwnerID = to.Id;
-                euscust.State = Common.Enums.EnterpriseUserCustomerState.NoFllow;
-                euscust.Source = Common.Enums.EnterpriseUserCustomerSource.CardList;
-                db.EnterpriseUserCustomer.Add(euscust);
-                db.SaveChanges();
+                return new RunterResult { IsSuccess = false, Message = "用户不存在" };
             }
-            return null;
+            else
+            {
+                //如果不存在企业客户则新增
+                if (cust == null)
+                {
+                    //保存企业客户信息
+                    EnterpriseCustomer ecust = new EnterpriseCustomer();
+                    ecust.UserID = custuserid;
+                    ecust.EnterpriseID = from.EnterpriseID;
+                    ecust.RealName = from.NickName;
+                    ecust.Mobile = from.PhoneNumber;
+                    db.EnterpriseCustomers.Add(ecust);
+                    int resultrow = db.SaveChanges();
+                    if (resultrow > 0)
+                    {
+                        //保存企业名片用户下的客户信息
+                        EnterpriseUserCustomer euscust = new EnterpriseUserCustomer();
+                        euscust.CustomerID = ecust.ID;
+                        euscust.OwnerID = to.Id;
+                        euscust.State = Common.Enums.EnterpriseUserCustomerState.NoFllow;
+                        euscust.Source = Common.Enums.EnterpriseUserCustomerSource.CardList;
+                        db.EnterpriseUserCustomer.Add(euscust);
+                        db.SaveChanges();
+                    }
+                }
+                else
+                {
+                    //如果存在就检测归宿人客户是否存在
+                    var us = db.EnterpriseUserCustomer.FirstOrDefault(s => s.OwnerID == to.Id && s.CustomerID == cust.ID);
+                    if (us == null)
+                    {
+                        //保存企业名片用户下的客户信息
+                        EnterpriseUserCustomer euscust = new EnterpriseUserCustomer();
+                        euscust.CustomerID = cust.ID;
+                        euscust.OwnerID = to.Id;
+                        euscust.State = Common.Enums.EnterpriseUserCustomerState.NoFllow;
+                        euscust.Source = Common.Enums.EnterpriseUserCustomerSource.CardList;
+                        db.EnterpriseUserCustomer.Add(euscust);
+                        db.SaveChanges();
+                    }
+                }
+            }
+            return new RunterResult { IsSuccess = true, Message = "新增成功" };
         }
         public class RunterResult
         {
