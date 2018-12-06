@@ -22,7 +22,7 @@ namespace AiCard.Controllers
         {
             var query = (from v in db.Vips
                          from c in db.CardPersonals
-                         where c.ID == v.CardID && v.TotalAmountRank > 0
+                         where c.ID == v.CardID
                          select new
                          {
                              v.TotalAmount,
@@ -30,6 +30,8 @@ namespace AiCard.Controllers
                              v.TotalAmountRank,
                              v.TotalMonthAmountRank,
                              v.TotalWeekAmountRank,
+                             v.TotalMonthAmount,
+                             v.TotalWeekAmount,
                              c.Avatar,
                              v.Type,
                              v.UserID
@@ -37,13 +39,13 @@ namespace AiCard.Controllers
             switch (type)
             {
                 case Common.Enums.VipTotalAmountRankType.All:
-                    query = query.OrderBy(s => s.TotalAmountRank);
+                    query = query.Where(s => s.TotalAmountRank > 0).OrderBy(s => s.TotalAmountRank);
                     break;
                 case Common.Enums.VipTotalAmountRankType.Week:
-                    query = query.OrderBy(s => s.TotalWeekAmountRank);
+                    query = query.Where(s => s.TotalWeekAmountRank > 0).OrderBy(s => s.TotalWeekAmountRank);
                     break;
                 case Common.Enums.VipTotalAmountRankType.Month:
-                    query = query.OrderBy(s => s.TotalMonthAmountRank);
+                    query = query.Where(s => s.TotalMonthAmountRank > 0).OrderBy(s => s.TotalMonthAmountRank);
                     break;
                 default:
                     break;
@@ -52,7 +54,7 @@ namespace AiCard.Controllers
 
             var data = paged.Select(s => new
             {
-                Amount = GetRank(type, s.TotalAmount, 0, 0),
+                Amount = GetRank(type, s.TotalAmount, s.TotalWeekAmount, s.TotalMonthAmount),
                 Rank = GetRank(type, s.TotalAmountRank, s.TotalWeekAmountRank, s.TotalMonthAmountRank),
                 s.Avatar,
                 s.Name,
