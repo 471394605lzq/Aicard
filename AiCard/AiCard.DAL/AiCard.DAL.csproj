@@ -249,6 +249,10 @@
     <Compile Include="Migrations\201812041204308_AddWeChatMiniNotifyForm.Designer.cs">
       <DependentUpon>201812041204308_AddWeChatMiniNotifyForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201812060959389_VerificationCodeAddEndDateTime.cs" />
+    <Compile Include="Migrations\201812060959389_VerificationCodeAddEndDateTime.Designer.cs">
+      <DependentUpon>201812060959389_VerificationCodeAddEndDateTime.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ArticleModels.cs" />
     <Compile Include="Models\CardModels.cs" />
@@ -409,6 +413,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201812041204308_AddWeChatMiniNotifyForm.resx">
       <DependentUpon>201812041204308_AddWeChatMiniNotifyForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201812060959389_VerificationCodeAddEndDateTime.resx">
+      <DependentUpon>201812060959389_VerificationCodeAddEndDateTime.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

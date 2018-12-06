@@ -91,7 +91,7 @@ namespace AiCard.Controllers
                             e.Lng,
                             e.Logo,
                             c.WeChatMiniQrCode,
-                            c.Poster
+                            c.Poster,
                         }).FirstOrDefault();
             if (card == null)
             {
@@ -189,7 +189,8 @@ namespace AiCard.Controllers
                     s.HadLike
                 }),
                 WeChatMiniQrCode = card.WeChatMiniQrCode,
-                Poster = Comm.ResizeImage(card.Poster)
+                Poster = Comm.ResizeImage(card.Poster),
+                card.UserID
             };
             try
             {
@@ -459,7 +460,7 @@ namespace AiCard.Controllers
                     var resultdata = new
                     {
                         listdata = data,
-                        mydata = mydata.Where(s=>s.TargetUserID== userID).ToList()
+                        mydata = mydata.Where(s => s.TargetUserID == userID).ToList()
                     };
                     return Json(Comm.ToJsonResult("Success", "成功", resultdata), JsonRequestBehavior.AllowGet);
                 }
@@ -482,7 +483,7 @@ namespace AiCard.Controllers
                     var resultdata = new
                     {
                         listdata = data,
-                        mydata = mydata.Where(s=>s.TargetUserID==userID).ToList()
+                        mydata = mydata.Where(s => s.TargetUserID == userID).ToList()
                     };
 
                     return Json(Comm.ToJsonResult("Success", "成功", resultdata), JsonRequestBehavior.AllowGet);
@@ -548,7 +549,7 @@ namespace AiCard.Controllers
 
         }
 
-        
+
 
         protected override void Dispose(bool disposing)
         {

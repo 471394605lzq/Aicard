@@ -27,7 +27,12 @@ namespace AiCard.DAL.Models
         /// 发送时间
         /// </summary>
         public DateTime CreateDate { get; set; }
-        
+
+        /// <summary>
+        /// 有效时间
+        /// </summary>
+        public DateTime EndDateTime { get; set; }
+
         /// <summary>
         /// 请求发送的IP（部分运营商要求对IP进行控制）
         /// </summary>
