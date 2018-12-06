@@ -166,6 +166,7 @@ namespace AiCard.Controllers
                     model.Code = codenum;
                     model.CreateDate = DateTime.Now;
                     model.To = phonenumber.Replace(" ", "");
+                    model.EndDateTime = DateTime.Now.AddMinutes(30);
                     db.VerificationCodes.Add(model);
                     db.SaveChanges();
                 }
