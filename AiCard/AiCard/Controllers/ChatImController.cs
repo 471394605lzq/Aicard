@@ -47,7 +47,7 @@ namespace AiCard.Controllers
                 Json(Comm.ToJsonResult("Error", ex.Message));
             }
             //新增客户
-            var addcustresult=AddUserCustomer(fromUserID, cardID);
+            //var addcustresult=AddUserCustomer(fromUserID, cardID);
             return Json(Comm.ToJsonResult("Success", "成功", new
             {
                 From = new
