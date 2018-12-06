@@ -300,6 +300,7 @@
     <Compile Include="Controllers\VIPController.cs" />
     <Compile Include="Controllers\CardPersonalController.cs" />
     <Compile Include="Controllers\VipForwardAccountController.cs" />
+    <Compile Include="Controllers\VipForwardController.cs" />
     <Compile Include="Controllers\VIPManageController.cs" />
     <Compile Include="Controllers\WeChatMiniController.cs" />
     <Compile Include="Global.asax.cs">
@@ -981,6 +982,7 @@
     <Folder Include="Views\UserSpeech\" />
     <Folder Include="Views\VipAmountLog\" />
     <Folder Include="Views\VipForwardAccount\" />
+    <Folder Include="Views\VipForward\" />
     <Folder Include="Views\VipHome\" />
     <Folder Include="Views\VIP\" />
     <Folder Include="Views\WeChatMini\" />

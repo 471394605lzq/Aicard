@@ -74,7 +74,7 @@ namespace AiCard.Bll
                 if (alist != null && alist.Count>0) {
                     alist.ForEach(bank => {
                         list.Add(new MBankAccount() {
-                            BankAccountID = bank.ID,
+                            bankAccountID = bank.ID,
                             bankName=bank.Bank,
                             cardNo= bank.ForwardAccount.Substring(bank.ForwardAccount.Length-4)//截取卡号后四位
                         });

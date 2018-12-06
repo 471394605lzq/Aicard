@@ -13,7 +13,7 @@ namespace AiCard.Models.VipForward
         /// <summary>
         /// 提现银行账户ID
         /// </summary>
-        public int BankAccountID { get; set; }
+        public int bankAccountID { get; set; }
 
         /// <summary>
         /// 银行卡号(尾号四位)
