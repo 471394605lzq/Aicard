@@ -46,7 +46,8 @@ namespace AiCard.Controllers
             {
                 Json(Comm.ToJsonResult("Error", ex.Message));
             }
-
+            //新增客户
+            var addcustresult=AddUserCustomer(fromUserID, cardID);
             return Json(Comm.ToJsonResult("Success", "成功", new
             {
                 From = new
@@ -66,7 +67,53 @@ namespace AiCard.Controllers
                 }
             }), JsonRequestBehavior.AllowGet);
         }
-
+        /// <summary>
+        /// 新增名片归属用户下的客户信息
+        /// </summary>
+        /// <param name="custuserid"></param>
+        /// <param name="ownerusercardid"></param>
+        /// <returns></returns>
+        private  RunterResult AddUserCustomer(string custuserid, int ownerusercardid)
+        {
+            var from = db.Users.FirstOrDefault(s => s.Id == custuserid);
+            if (from == null)
+            {
+                return new RunterResult { IsSuccess = false, Message = "用户不存在" };
+            }
+            var to = (from u in db.Users
+                      from c in db.Cards
+                      where u.Id == c.UserID && c.ID == ownerusercardid
+                      select new { u.Id, u.UserName, c.Avatar, NickName = c.Name }).FirstOrDefault();
+            if (to == null)
+            {
+                return new RunterResult { IsSuccess = false, Message = "名片不存在" };
+            }
+            //保存企业客户信息
+            EnterpriseCustomer ecust = new EnterpriseCustomer();
+            ecust.UserID = custuserid;
+            ecust.EnterpriseID = from.EnterpriseID;
+            ecust.RealName = from.NickName;
+            ecust.Mobile = from.PhoneNumber;
+            db.EnterpriseCustomers.Add(ecust);
+            int addcustrow = db.SaveChanges();
+            if (addcustrow > 0)
+            {
+                //保存企业名片用户下的客户信息
+                EnterpriseUserCustomer euscust = new EnterpriseUserCustomer();
+                euscust.CustomerID = ecust.ID;
+                euscust.OwnerID = to.Id;
+                euscust.State = Common.Enums.EnterpriseUserCustomerState.NoFllow;
+                euscust.Source = Common.Enums.EnterpriseUserCustomerSource.CardList;
+                db.EnterpriseUserCustomer.Add(euscust);
+                db.SaveChanges();
+            }
+            return null;
+        }
+        public class RunterResult
+        {
+            public bool IsSuccess { get; set; }
+            public string Message { get; set; }
+        }
         /// <summary>
         /// 名片用户(fromUserID)跟普通用户(ToUserID)聊天用到的用户信息
         /// </summary>

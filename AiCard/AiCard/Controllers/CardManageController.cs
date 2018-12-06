@@ -158,15 +158,15 @@ namespace AiCard.Controllers
                         return this.ToError("错误", "没有该操作权限", Url.Action("Index"));
                     }
                     //用名片用户的手机号创建一个账号,默认密码为手机号
-                    var user = new ApplicationUser { UserName = model.Mobile, RegisterDateTime = DateTime.Now, EnterpriseID = AccontData.EnterpriseID, LastLoginDateTime = DateTime.Now, UserType = UserType.Personal };
-                    var result = await UserManager.CreateAsync(user, model.Mobile);
+                    //var user = new ApplicationUser { UserName = model.Mobile, RegisterDateTime = DateTime.Now, EnterpriseID = AccontData.EnterpriseID, LastLoginDateTime = DateTime.Now, UserType = UserType.Personal };
+                    //var result = await UserManager.CreateAsync(user, model.Mobile);
                     //创建名片账号成功
-                    if (result.Succeeded)
-                    {
+                    //if (result.Succeeded)
+                    //{
                         var card = new Card
                         {
                             Avatar = string.Join(",", model.Avatar.Images),
-                            UserID = user.Id,
+                            //UserID = user.Id,
                             EnterpriseID = AccontData.EnterpriseID,
                             Name = model.Name,
                             Enable = model.Enable,
@@ -189,7 +189,7 @@ namespace AiCard.Controllers
                         enterprise.CardCount--;
                         db.SaveChanges();
                         return RedirectToAction("Index");
-                    }
+                    //}
                 }
             }
             return View(model);
