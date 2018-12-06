@@ -325,6 +325,7 @@
     <Compile Include="Models\UserLogViewModels.cs" />
     <Compile Include="Models\UserManageViewModels.cs" />
     <Compile Include="Models\UserViewModels.cs" />
+    <Compile Include="Models\VipForward\MBankAccount.cs" />
     <Compile Include="Models\VipForward\MReqBankAccount.cs" />
     <Compile Include="Models\VipForward\MReqVipForward.cs" />
     <Compile Include="Models\Vip\MReqVipCardList.cs" />

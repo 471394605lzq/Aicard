@@ -135,6 +135,11 @@ namespace AiCard.Bll
                             return result;
                         }
                         #endregion
+                        int count= db.VipForwardAccounts.Where(p => p.UserID == vUserID).Count();
+                        if (count>=5) {
+                            result.retMsg = "提现银行卡最多只能绑定5张，如需添加新卡，请删除已绑定的银行卡";
+                            return result;
+                        }
                         VipForwardAccount account = new VipForwardAccount()
                         {
                             Bank = model.bankName,
