@@ -1,6 +1,7 @@
 ﻿using AiCard.Bll;
 using AiCard.Commom.Aliyun.BankCard;
 using AiCard.Common;
+using AiCard.Models.VipForward;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,17 +20,15 @@ namespace AiCard.Controllers
             return View();
         }
 
-
         /// <summary>
-        /// 绑定提现银行卡
+        /// 认证提现银行卡
         /// </summary>
         /// <param name="model">银行卡信息</param>
         /// <param name="userID">用户ID</param>
-        /// <param name="validCode">短信验证码</param>
         /// <returns></returns>
         [HttpPost]
         [AllowCrossSiteJson]
-        public ActionResult BindBankAccount(BankCardModel model, string userID, string validCode)
+        public ActionResult CheckBankInfo(BankCardModel model, string userID)
         {
             #region 校验数据
             if (string.IsNullOrWhiteSpace(userID))
@@ -56,15 +55,78 @@ namespace AiCard.Controllers
             {
                 return Json(Comm.ToJsonResult("Error", "预留电话号码不能为空"));
             }
-            if (string.IsNullOrWhiteSpace(validCode))
+            #endregion
+            
+            #region 认证银行卡
+            RequestResult result = bll.CheckBankInfo(model, userID);
+            if (result.retCode == ReqResultCode.success)
             {
-                return Json(Comm.ToJsonResult("Error", "验证码不能为空"));
+                return Json(Comm.ToJsonResult("Success", result.retMsg, result.objectData));
+            }
+            else
+            {
+                return Json(Comm.ToJsonResult("Error", result.retMsg));
             }
             #endregion
-            #region 验证校验码是否正确
+        }
+
+        /// <summary>
+        /// 绑定提现银行卡
+        /// </summary>
+        /// <param name="model">银行卡信息</param>
+        /// <param name="userID">用户ID</param>
+        /// <param name="phoneNumber">用户手机号</param>
+        /// <param name="validCode">短信验证码</param>
+        /// <returns></returns>
+        [HttpPost]
+        [AllowCrossSiteJson]
+        public ActionResult BindBankAccount(MReqBankAccount model, string userID,string phoneNumber, string validCode)
+        {
+            #region 校验数据
+            if (string.IsNullOrWhiteSpace(userID))
+            {
+                return Json(Comm.ToJsonResult("Error", "userID参数不能为空"));
+            }
+            if (model == null)
+            {
+                return Json(Comm.ToJsonResult("Error", "提交的数据不能为空"));
+            }
+            if (string.IsNullOrWhiteSpace(model.idNo))
+            {
+                return Json(Comm.ToJsonResult("Error", "证件号不能为空"));
+            }
+            if (string.IsNullOrWhiteSpace(model.cardNo))
+            {
+                return Json(Comm.ToJsonResult("Error", "银行卡号不能为空"));
+            }
+            if (string.IsNullOrWhiteSpace(model.name))
+            {
+                return Json(Comm.ToJsonResult("Error", "开户名不能为空"));
+            }
+            if (string.IsNullOrWhiteSpace(model.phoneNo))
+            {
+                return Json(Comm.ToJsonResult("Error", "银行预留手机号不能为空"));
+            }
+            if (string.IsNullOrWhiteSpace(model.bankCode))
+            {
+                return Json(Comm.ToJsonResult("Error", "银行编号不能为空"));
+            }
+            if (string.IsNullOrWhiteSpace(model.bankName))
+            {
+                return Json(Comm.ToJsonResult("Error", "银行名称不能为空"));
+            }
+            if (string.IsNullOrWhiteSpace(validCode))
+            {
+                return Json(Comm.ToJsonResult("Error", "手机验证码不能为空"));
+            }
+            if (string.IsNullOrWhiteSpace(phoneNumber))
+            {
+                return Json(Comm.ToJsonResult("Error", "用户手机号不能为空"));
+            }
             #endregion
+
             #region 绑定银行卡
-            RequestResult result = bll.CreateBankAccount(model, userID);
+            RequestResult result = bll.CreateBankAccount(model, userID, phoneNumber, validCode);
             if (result.retCode == ReqResultCode.success)
             {
                 return Json(Comm.ToJsonResult("Success", result.retMsg));
