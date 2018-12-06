@@ -40,23 +40,23 @@ namespace AiCard.Controllers
         // 随机给VIP用户加入收益记录
         public ActionResult AutoCreateVip()
         {
-            var vips = db.Vips.ToList();
-            int amount = 86;
+            var vips = db.Vips.Where(s => s.Type != VipRank.Default && s.Amount == 0).ToList();
+            //int amount = 86;
             foreach (var item in vips)
             {
-                var freeChild = Common.Comm.Random.Next(1, 100);
-                var randomChild2 = Common.Comm.Random.Next(1, freeChild);
-                var randomChild3 = Common.Comm.Random.Next(1, 100);
+                //var freeChild = Common.Comm.Random.Next(1, 100);
+                //var randomChild2 = Common.Comm.Random.Next(1, freeChild);
+                //var randomChild3 = Common.Comm.Random.Next(1, 100);
 
-                item.TotalAmount = freeChild * 3m + randomChild2 * amount * 0.5m + randomChild3 * amount * 0.1m;
-                var take = 50 * Common.Comm.Random.Next(0, (int)(item.TotalAmount % 50));
-                item.Amount = item.TotalAmount - take;
-                item.Code = Common.Comm.Random.Next(100000, 999999).ToString();
-                item.VipChild2ndCount = randomChild2;
-                item.VipChild3rdCount = randomChild3;
-                item.FreeChildCount = freeChild;
-                item.Type = VipRank.Vip99;
-
+                //item.TotalAmount = freeChild * 3m + randomChild2 * amount * 0.5m + randomChild3 * amount * 0.1m;
+                //var take = 50 * Common.Comm.Random.Next(0, (int)(item.TotalAmount % 50));
+                //item.Amount = item.TotalAmount - take;
+                //item.Code = Common.Comm.Random.Next(100000, 999999).ToString();
+                //item.VipChild2ndCount = randomChild2;
+                //item.VipChild3rdCount = randomChild3;
+                //item.FreeChildCount = freeChild;
+                //item.Type = VipRank.Vip99;
+                AutoCreateVipAmountLog(item.UserID);
             }
             db.SaveChanges();
             return Json(vips, JsonRequestBehavior.AllowGet);
