@@ -82,8 +82,8 @@ namespace AiCard.Bll
                 goods_tag = string.Empty,
                 openid = openIDResule.OpenID,
                 out_trade_no = OrderCode,
-                //total_fee = (int)Amount * 100,
-                total_fee = 1,//测试10分订单
+                total_fee = (int)Amount * 100,
+                //total_fee = 1,//测试10分订单
                 trade_type = "JSAPI"
 
             };
