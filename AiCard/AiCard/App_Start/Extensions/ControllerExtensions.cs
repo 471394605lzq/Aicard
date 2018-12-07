@@ -270,10 +270,17 @@ namespace AiCard
             }
         }
 
-        public static FileContentResult Excel(this Controller controller, System.Data.DataTable dt)
+        /// <summary>
+        /// 根据DataTable生成并下载Excel
+        /// </summary>
+        /// <param name="controller"></param>
+        /// <param name="dt">数据集</param>
+        /// <param name="excelName">导出的Excel名称（无需写后缀）</param>
+        /// <returns></returns>
+        public static FileContentResult Excel(this Controller controller, System.Data.DataTable dt,string excelName=null)
         {
             var result = new FileContentResult(ExcelHelper.CreateExcelFromDataTable(dt).ToArray(), "application/ms-excel");
-            controller.Response.AddHeader("Content-Disposition", $"attachment; filename={dt.TableName}.xlsx");
+            controller.Response.AddHeader("Content-Disposition", $"attachment; filename={excelName??dt.TableName}.xlsx");
             return result;
         }
 

@@ -126,6 +126,7 @@
     <Compile Include="CommModels\HtmlHelpModels.cs" />
     <Compile Include="CommModels\Map.cs" />
     <Compile Include="CommModels\Menu.cs" />
+    <Compile Include="ModelConvertHelper.cs" />
     <Compile Include="DrawingPictures.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Extensions\ActionFilterAttributes.cs" />
