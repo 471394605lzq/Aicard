@@ -893,6 +893,6 @@ namespace AiCard.Common
             }
             return str;
         }
-
     }
+
 }
