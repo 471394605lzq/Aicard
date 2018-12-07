@@ -81,7 +81,7 @@ namespace AiCard.Controllers
             var to = (from u in db.Users
                       from c in db.Cards
                       where u.Id == c.UserID && c.ID == ownerusercardid
-                      select new { u.Id, u.UserName, c.Avatar, NickName = c.Name }).FirstOrDefault();
+                      select new { u.Id, u.UserName,c.EnterpriseID, c.Avatar, NickName = c.Name }).FirstOrDefault();
             if (to == null)
             {
                 return new RunterResult { IsSuccess = false, Message = "名片不存在" };
@@ -98,7 +98,7 @@ namespace AiCard.Controllers
                     //保存企业客户信息
                     EnterpriseCustomer ecust = new EnterpriseCustomer();
                     ecust.UserID = custuserid;
-                    ecust.EnterpriseID = from.EnterpriseID;
+                    ecust.EnterpriseID = to.EnterpriseID.Value;
                     ecust.RealName = from.NickName;
                     ecust.Mobile = from.PhoneNumber;
                     ecust.Birthday = null;
