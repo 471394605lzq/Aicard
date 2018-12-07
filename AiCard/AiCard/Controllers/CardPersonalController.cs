@@ -135,7 +135,7 @@ namespace AiCard.Controllers
                                        CreateDateTime = s.Max(x => x.CreateDateTime)
                                    })
                                    .OrderByDescending(s => s.CreateDateTime)
-                                   .Take(6)
+                                   .Take(12)
                                    .ToList();
                 var notifyCount = db.WeChatMiniNotifyForms.Count(s => s.UserID == userID && s.EndDateTime > DateTime.Now);
 

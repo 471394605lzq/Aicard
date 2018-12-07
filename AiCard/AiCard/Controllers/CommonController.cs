@@ -153,6 +153,8 @@ namespace AiCard.Controllers
         /// </summary>
         /// <param name="phonenumber">手机号</param>
         /// <returns></returns>
+        [HttpGet]
+        [AllowCrossSiteJson]
         public ActionResult SendVerificationCodeMsgComm(string phonenumber)
         {
             try

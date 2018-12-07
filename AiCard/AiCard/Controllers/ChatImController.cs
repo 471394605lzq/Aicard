@@ -20,7 +20,7 @@ namespace AiCard.Controllers
         /// <param name="cardID">名片的用户ID</param>
         /// <returns></returns>
         [AllowCrossSiteJson]
-        public ActionResult GetFromAndToByCardID(string fromUserID, int cardID)
+        public ActionResult GetFromAndToByCardID(string fromUserID, int cardID, Common.Enums.EnterpriseUserCustomerSource source = Common.Enums.EnterpriseUserCustomerSource.CardList)
         {
             var from = db.Users.FirstOrDefault(s => s.Id == fromUserID);
             if (from == null)
@@ -47,7 +47,7 @@ namespace AiCard.Controllers
                 Json(Comm.ToJsonResult("Error", ex.Message));
             }
             //新增客户
-            var addcustresult = AddUserCustomer(fromUserID, cardID);
+            var addcustresult = AddUserCustomer(fromUserID, cardID, source);
             return Json(Comm.ToJsonResult("Success", "成功", new
             {
                 From = new
@@ -73,15 +73,15 @@ namespace AiCard.Controllers
         /// <param name="custuserid"></param>
         /// <param name="ownerusercardid"></param>
         /// <returns></returns>
-        private RunterResult AddUserCustomer(string custuserid, int ownerusercardid)
+        private RunterResult AddUserCustomer(string custuserid, int ownerusercardid, Common.Enums.EnterpriseUserCustomerSource source)
         {
             var from = db.Users.FirstOrDefault(s => s.Id == custuserid);
             //根据客户对应的userid获取企业客户信息
-            var cust = db.EnterpriseCustomers.FirstOrDefault(s=>s.UserID==custuserid);
+            var cust = db.EnterpriseCustomers.FirstOrDefault(s => s.UserID == custuserid);
             var to = (from u in db.Users
                       from c in db.Cards
                       where u.Id == c.UserID && c.ID == ownerusercardid
-                      select new { u.Id, u.UserName, c.Avatar, NickName = c.Name }).FirstOrDefault();
+                      select new { u.Id, u.UserName,c.EnterpriseID, c.Avatar, NickName = c.Name }).FirstOrDefault();
             if (to == null)
             {
                 return new RunterResult { IsSuccess = false, Message = "名片不存在" };
@@ -98,9 +98,10 @@ namespace AiCard.Controllers
                     //保存企业客户信息
                     EnterpriseCustomer ecust = new EnterpriseCustomer();
                     ecust.UserID = custuserid;
-                    ecust.EnterpriseID = from.EnterpriseID;
+                    ecust.EnterpriseID = to.EnterpriseID.Value;
                     ecust.RealName = from.NickName;
                     ecust.Mobile = from.PhoneNumber;
+                    ecust.Birthday = null;
                     db.EnterpriseCustomers.Add(ecust);
                     int resultrow = db.SaveChanges();
                     if (resultrow > 0)
@@ -110,7 +111,8 @@ namespace AiCard.Controllers
                         euscust.CustomerID = ecust.ID;
                         euscust.OwnerID = to.Id;
                         euscust.State = Common.Enums.EnterpriseUserCustomerState.NoFllow;
-                        euscust.Source = Common.Enums.EnterpriseUserCustomerSource.CardList;
+                        euscust.Source = source;
+                        euscust.CreateDateTime = DateTime.Now;
                         db.EnterpriseUserCustomer.Add(euscust);
                         db.SaveChanges();
                     }
@@ -126,7 +128,8 @@ namespace AiCard.Controllers
                         euscust.CustomerID = cust.ID;
                         euscust.OwnerID = to.Id;
                         euscust.State = Common.Enums.EnterpriseUserCustomerState.NoFllow;
-                        euscust.Source = Common.Enums.EnterpriseUserCustomerSource.CardList;
+                        euscust.Source = source;
+                        euscust.CreateDateTime = DateTime.Now;
                         db.EnterpriseUserCustomer.Add(euscust);
                         db.SaveChanges();
                     }
