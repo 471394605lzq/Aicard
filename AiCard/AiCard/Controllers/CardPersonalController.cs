@@ -108,7 +108,8 @@ namespace AiCard.Controllers
                         Type = Common.Enums.UserLogType.CardPersonalRead
                     });
                 }
-                card = query.FirstOrDefault();
+                db = new ApplicationDbContext();
+                card = db.CardPersonals.FirstOrDefault(s => s.ID == card.ID);
                 var vip = db.Vips.FirstOrDefault(s => s.CardID == pCardID);
                 var likeCount = db.UserLogs
                     .Count(s => s.Type == Common.Enums.UserLogType.CardPersonalLike
