@@ -1,0 +1,125 @@
+﻿@model IEnumerable<AiCard.Models.VipForwardOrder.MVipForwardOrderList>
+
+@{
+    ViewBag.Title = "提现申请订单";
+    Layout = "~/Views/Shared/_LayoutBackground.cshtml";
+}
+
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav"></ul>
+            <form class="navbar-form navbar-left">
+                <div class="form-group" style="margin-left:20px;">
+                    <input type="text" name="filter" class="form-control" placeholder="搜索" value="@Request["filter"]">
+                </div>
+                <button type="submit" class="btn btn-default">搜索</button>
+            </form>
+            <div class="btn btn-default" style="margin-top:8px;">
+                @Html.ActionLink("导出所有待审核的提现申请", "ExportToExcel")
+            </div>
+        </div>
+    </div>
+</nav>
+
+<table class="table  table-hover table-striped">
+    <tr>
+        @*<th>
+                @Html.DisplayNameFor(model => model.OrderID)
+            </th>*@
+        <th>
+            @Html.DisplayNameFor(model => model.UserName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Phone)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Code)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PayCode)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Type)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ToAccount)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ReceivableAmount)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.State)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Amount)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Remark)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CreateDateTime)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PayDateTime)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PayResult)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            @*<td>
+                    @Html.DisplayFor(modelItem => item.OrderID)
+                </td>*@
+            <td>
+                @Html.DisplayFor(modelItem => item.UserName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Phone)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Code)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PayCode)
+            </td>
+            <td>
+                @item.Type.GetDisplayName()
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ToAccount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReceivableAmount)
+            </td>
+            <td>
+                @item.State.GetDisplayName()
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Amount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Remark)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreateDateTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PayDateTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PayResult)
+            </td>
+            <td>
+                @*@Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })*@
+            </td>
+        </tr>
+    }
+
+</table>

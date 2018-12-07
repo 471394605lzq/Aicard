@@ -182,13 +182,13 @@ namespace AiCard
                     ICell cell = header.CreateCell(h);
                     cell.SetCellValue(cH.CreateRichTextString(dt.Columns[h].ColumnName));
                 }
-                for (int i = 1; i < dt.Rows.Count; i++)
+                for (int i = 0; i < dt.Rows.Count; i++)
                 {
-                    IRow row = sheet.CreateRow(i);
+                    IRow row = sheet.CreateRow(i+1);
                     for (int j = 0; j < dt.Columns.Count; j++)
                     {
                         ICell cell = row.CreateCell(j);
-                        cell.SetCellValue(cH.CreateRichTextString(dt.Rows[i - 1].ItemArray[j].ToString()));
+                        cell.SetCellValue(cH.CreateRichTextString(dt.Rows[i].ItemArray[j].ToString()));
                     }
                 }
                 for (int i = 0; i < dt.Columns.Count; i++)
