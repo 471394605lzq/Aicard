@@ -162,14 +162,18 @@
                     <label style="margin-right:5px;">|</label>@Html.ActionLink("删除", "Delete", new { id = item.ID })
                 }
                 @*<label style="margin-right:5px;">|</label>@Html.ActionLink("生成海报",  "GetPoster", "Card", new { CardID = item.ID },null)*@
-                @*<label style="margin-right:5px;">|</label>@Html.ActionLink("验证码", "GetPoster", "Card", new { CardID = item.ID }, null)
-                <label style="margin-right:5px;">|</label>@Html.ActionLink("激活", "GetPoster", "Card", new { CardID = item.ID }, null)*@
+                <label style="margin-right:5px;">|</label><label id="sendcode" data-id="@item.ID">验证码</label>
+                @*@Html.ActionLink("验证码", "SendValidateCode", "Card", new { CardID = item.ID }, null)*@
+                <label style="margin-right:5px;">|</label><a target="_blank" href="https://radar.dtoao.com/#/Accredit">激活</a>
             </td>
         </tr>
     }
 
 </table>
 @Html.PageList(Model, Url.PageUrl())
+@section Scripts{
+    @Scripts.Render("~/bundles/jqueryui", "~/bundles/cardManage")
+}
 
 
 
