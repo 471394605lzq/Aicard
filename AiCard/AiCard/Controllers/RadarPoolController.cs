@@ -226,7 +226,8 @@ namespace AiCard.Controllers
                         new SqlParameter("@timenumber", SqlDbType.Int),
                         new SqlParameter("@actionstr1", SqlDbType.Int),
                         new SqlParameter("@actionstr2", SqlDbType.Int),
-                        new SqlParameter("@actionstr3", SqlDbType.Int)
+                        new SqlParameter("@actionstr3", SqlDbType.Int),
+                        new SqlParameter("@endtimenumber",SqlDbType.Int)
                     };
                 parameters[0].Value = enterpriseid;
                 parameters[1].Value = userid;
@@ -234,13 +235,14 @@ namespace AiCard.Controllers
                 parameters[3].Value = Common.Enums.UserLogType.ArticleShare;
                 parameters[4].Value = Common.Enums.UserLogType.CardShare;
                 parameters[5].Value = Common.Enums.UserLogType.HomePageShare;
+                parameters[6].Value = timenumber == 1 ? 1 : 0;
                 string sql = @" SELECT COUNT(ID) counts,[Type] AS [action] FROM dbo.UserLogs 
                             WHERE [Type] IN(@actionstr1,@actionstr2,@actionstr3)  
                             AND TargetUserID=@userid AND TargetEnterpriseID=@enterpriseid AND 
                             CreateDateTime BETWEEN dateadd(day, -@timenumber, dateadd(ms, 0, DATEADD(dd, DATEDIFF(dd, 0, getdate()), 0)))
-                            AND dateadd(day, -1, DATEADD(ms, -3, DATEADD(dd, DATEDIFF(dd, -1, getdate()), 0)))
+                            AND dateadd(day, -@endtimenumber, DATEADD(ms, -3, DATEADD(dd, DATEDIFF(dd, -1, getdate()), 0)))
                             GROUP BY [Type]";
-                string sqlstr = string.Format(sql, @"@enterpriseid,@userid,@timenumber,@actionstr1,@actionstr2,@actionstr3");
+                string sqlstr = string.Format(sql, @"@enterpriseid,@userid,@timenumber,@actionstr1,@actionstr2,@actionstr3,@endtimenumber");
                 List<CustomerActionModel> data = db.Database.SqlQuery<CustomerActionModel>(sqlstr, parameters).ToList();
                 var resultdata = data.Select(s => new
                 {
@@ -277,16 +279,18 @@ namespace AiCard.Controllers
                         new SqlParameter("@userid", SqlDbType.NVarChar),
                         new SqlParameter("@timenumber", SqlDbType.Int),
                         new SqlParameter("@actionstr1", SqlDbType.Int),
-                        new SqlParameter("@actionstr2", SqlDbType.Int)
+                        new SqlParameter("@actionstr2", SqlDbType.Int),
+                        new SqlParameter("@endtimenumber",SqlDbType.Int)
                     };
                 parameters[0].Value = enterpriseid;
                 parameters[1].Value = userid;
                 parameters[2].Value = timenumber;
                 parameters[3].Value = Common.Enums.UserLogType.ShareWeChatFriend;
                 parameters[4].Value = Common.Enums.UserLogType.ShareWeChatGroup;
+                parameters[5].Value = timenumber == 1 ? 1 : 0;
                 string sql = @" SELECT DATENAME(HOUR,CreateDateTime) AS hourstr,COUNT(ID) counts FROM dbo.UserLogs WHERE [Type] IN(@actionstr1,@actionstr2) 
                                 AND TargetUserID=@userid AND TargetEnterpriseID=@enterpriseid AND 
-                                CreateDateTime BETWEEN dateadd(day, -@timenumber, dateadd(ms, 0, DATEADD(dd, DATEDIFF(dd, 0, getdate()), 0)))AND dateadd(day, -1, DATEADD(ms, -3, DATEADD(dd, DATEDIFF(dd, -1, getdate()), 0)))
+                                CreateDateTime BETWEEN dateadd(day, -@timenumber, dateadd(ms, 0, DATEADD(dd, DATEDIFF(dd, 0, getdate()), 0)))AND dateadd(day, -@endtimenumber, DATEADD(ms, -3, DATEADD(dd, DATEDIFF(dd, -1, getdate()), 0)))
                                 GROUP BY DATENAME(HOUR,CreateDateTime)";
                 string sqlstr = string.Format(sql, @"@enterpriseid,@userid,@timenumber,@actionstr1,@actionstr2");
                 List<TrendAnalysisModel> data = db.Database.SqlQuery<TrendAnalysisModel>(sqlstr, parameters).ToList();
