@@ -88,7 +88,7 @@ namespace AiCard.Controllers
             }
             catch (Exception ex)
             {
-                return Json(Comm.ToJsonResult("Success", ex.Message), JsonRequestBehavior.AllowGet);
+                return Json(Comm.ToJsonResult("Error", ex.Message), JsonRequestBehavior.AllowGet);
             }
         }
 

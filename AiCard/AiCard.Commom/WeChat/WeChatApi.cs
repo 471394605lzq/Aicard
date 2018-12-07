@@ -455,7 +455,7 @@ namespace AiCard.Common.WeChat
             }
             catch (Exception ex)
             {
-                Comm.WriteLog("JsSign", ex.Message, Enums.DebugLogLevel.Error);
+                Comm.WriteLog("JsSignError", ex.Message, Enums.DebugLogLevel.Error);
                 throw new Exception(ex.Message);
             }
         }
