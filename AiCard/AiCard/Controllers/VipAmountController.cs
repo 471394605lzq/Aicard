@@ -186,12 +186,12 @@ namespace AiCard.Controllers
                         break;
                     case Common.Enums.VipAmountLogType.NewChild2nd:
                         {
-                            content = "成为你的一级用户";
+                            content = "成为你的一级盟友";
                         }
                         break;
                     case Common.Enums.VipAmountLogType.NewChild3rd:
                         {
-                            content = "成为你的二级用户";
+                            content = "成为你的二级盟友";
                         }
                         break;
                     case Common.Enums.VipAmountLogType.Forward:
