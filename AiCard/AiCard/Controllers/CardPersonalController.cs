@@ -108,7 +108,7 @@ namespace AiCard.Controllers
                         Type = Common.Enums.UserLogType.CardPersonalRead
                     });
                 }
-
+                card = query.FirstOrDefault();
                 var vip = db.Vips.FirstOrDefault(s => s.CardID == pCardID);
                 var likeCount = db.UserLogs
                     .Count(s => s.Type == Common.Enums.UserLogType.CardPersonalLike
@@ -116,7 +116,7 @@ namespace AiCard.Controllers
                 var hadLike = db.UserLogs.Any(s => s.RelationID == pCardID
                     && s.Type == Common.Enums.UserLogType.CardPersonalLike
                     && s.UserID == userID);
-                //获取最近访问的6个人头像
+                //获取最近访问的12个人头像
                 var leastUsers = (from l in db.UserLogs
                                   from u in db.Users
                                   where l.Type == Common.Enums.UserLogType.CardPersonalRead
@@ -138,7 +138,6 @@ namespace AiCard.Controllers
                                    .Take(12)
                                    .ToList();
                 var notifyCount = db.WeChatMiniNotifyForms.Count(s => s.UserID == userID && s.EndDateTime > DateTime.Now);
-
                 var data = new
                 {
                     card.Name,
