@@ -95,6 +95,11 @@ namespace AiCard.DAL.Models
         public decimal TotalWeekAmount { get; set; }
 
         /// <summary>
+        /// 冻结资金
+        /// </summary>
+        public decimal FrozenAmount { get; set; }
+
+        /// <summary>
         /// 创建时间
         /// </summary>
         public DateTime CreateDateTime { get; set; }
