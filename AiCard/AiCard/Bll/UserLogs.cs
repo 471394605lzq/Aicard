@@ -266,8 +266,10 @@ namespace AiCard.Bll
                     case UserLogType.CardPersonalRead:
                         {
                             var c = db.CardPersonals.FirstOrDefault(s => s.ID == log.RelationID);
-                            var count = db.UserLogs.Count(s => s.RelationID == log.RelationID
-                                    && s.Type == UserLogType.CardPersonalLike);
+                            var count = db.UserLogs.Where(s => s.RelationID == log.RelationID
+                                    && s.Type == log.Type)
+                                    .GroupBy(s => s.UserID)
+                                    .Count();
                             if (log.Type == UserLogType.CardPersonalLike)
                             {
                                 c.Like = count;

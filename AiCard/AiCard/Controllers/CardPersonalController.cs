@@ -174,7 +174,8 @@ namespace AiCard.Controllers
                     Viewers = leastUsers.Select(s => s.Avatar).ToList(),
                     LikeCount = likeCount,
                     HadLike = hadLike,
-                    NotifyCount = notifyCount
+                    NotifyCount = notifyCount,
+                    ViewCount = card.View
                 };
                 return Json(Comm.ToJsonResult("Success", "成功", data), JsonRequestBehavior.AllowGet);
             }
