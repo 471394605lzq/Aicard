@@ -112,6 +112,7 @@ namespace AiCard.Controllers
                         euscust.OwnerID = to.Id;
                         euscust.State = Common.Enums.EnterpriseUserCustomerState.NoFllow;
                         euscust.Source = source;
+                        euscust.CreateDateTime = DateTime.Now;
                         db.EnterpriseUserCustomer.Add(euscust);
                         db.SaveChanges();
                     }
@@ -128,6 +129,7 @@ namespace AiCard.Controllers
                         euscust.OwnerID = to.Id;
                         euscust.State = Common.Enums.EnterpriseUserCustomerState.NoFllow;
                         euscust.Source = source;
+                        euscust.CreateDateTime = DateTime.Now;
                         db.EnterpriseUserCustomer.Add(euscust);
                         db.SaveChanges();
                     }
