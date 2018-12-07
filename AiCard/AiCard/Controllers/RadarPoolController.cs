@@ -601,11 +601,13 @@ namespace AiCard.Controllers
                 //全部
                 if (type == Common.Enums.RankingsType.All)
                 {
-                    string sqlstr = string.Format(@"SELECT * FROM (SELECT CAST(ROW_NUMBER() over(order by CONVERT(CHAR(10),CreateDateTime,120) DESC) AS INTEGER) AS rownumber,
-                     CASE WHEN CONVERT(CHAR(10),CreateDateTime,120)=CONVERT(CHAR(10),GETDATE(),120) THEN '今天' WHEN CONVERT(CHAR(10),CreateDateTime,120)=CONVERT(CHAR(10),dateadd(day,-1,getdate()),120) 
-                     THEN '昨天' ELSE CONVERT(CHAR(10),CreateDateTime,120) END AS timestr,CONVERT(CHAR(10),CreateDateTime,120) AS datestr
-                     FROM dbo.UserLogs WHERE Type IN(12,40,60,70) AND TargetUserID=@TargetUserID AND TargetEnterpriseID=@TargetEnterpriseID
-                     GROUP BY CONVERT(CHAR(10),CreateDateTime,120)) t WHERE t.rownumber > @starpagesize AND t.rownumber<=@endpagesize");
+                    string sqlstr = string.Format(@"SELECT * FROM (SELECT CAST(ROW_NUMBER() over(order by CONVERT(CHAR(10),UserLogs.CreateDateTime,120) DESC) AS INTEGER) AS rownumber,
+                     CASE WHEN CONVERT(CHAR(10),UserLogs.CreateDateTime,120)=CONVERT(CHAR(10),GETDATE(),120) THEN '今天' WHEN CONVERT(CHAR(10),UserLogs.CreateDateTime,120)=CONVERT(CHAR(10),dateadd(day,-1,getdate()),120) 
+                     THEN '昨天' ELSE CONVERT(CHAR(10),UserLogs.CreateDateTime,120) END AS timestr,CONVERT(CHAR(10),UserLogs.CreateDateTime,120) AS datestr
+                     FROM dbo.UserLogs
+                     INNER JOIN dbo.EnterpriseCustomers ec ON ec.UserID=UserLogs.UserID
+                     INNER JOIN dbo.EnterpriseUserCustomers euc ON euc.CustomerID=ec.ID WHERE Type IN(12,40,60,70) AND TargetUserID=@TargetUserID AND TargetEnterpriseID=@TargetEnterpriseID and euc.OwnerID=@TargetUserID
+                     GROUP BY CONVERT(CHAR(10),UserLogs.CreateDateTime,120)) t WHERE t.rownumber > @starpagesize AND t.rownumber<=@endpagesize");
                     List<NoopsycheFollowModel> data = db.Database.SqlQuery<NoopsycheFollowModel>(sqlstr, parameters).ToList();
                     for (int i = 0; i < data.Count; i++)
                     {
@@ -626,7 +628,7 @@ namespace AiCard.Controllers
                         INNER JOIN dbo.EnterpriseCustomers ec ON ec.UserID=ul.UserID
                         INNER JOIN dbo.AspNetUsers us ON us.Id=ec.UserID
                         INNER JOIN dbo.EnterpriseUserCustomers euc ON euc.CustomerID=ec.ID
-                        WHERE Type IN(12,40,60,70) AND TargetUserID=@TargetUserID AND  TargetEnterpriseID=@TargetEnterpriseID AND
+                        WHERE Type IN(12,40,60,70) AND TargetUserID=@TargetUserID AND  TargetEnterpriseID=@TargetEnterpriseID AND euc.OwnerID=@TargetUserID AND
                         ul.CreateDateTime BETWEEN dateadd(day, -0, dateadd(ms, 0, DATEADD(dd, DATEDIFF(dd, 0, @time), 0))) 
                         AND dateadd(day, -0, DATEADD(ms, -3, DATEADD(dd, DATEDIFF(dd, -1, @time), 0))) AND ul.Total=(SELECT MAX(Total) FROM dbo.UserLogs WHERE UserID=ec.UserID AND 
 						Type IN(12,40,60,70) AND TargetUserID=@TargetUserID AND  TargetEnterpriseID=@TargetEnterpriseID AND
@@ -666,7 +668,7 @@ namespace AiCard.Controllers
                         INNER JOIN dbo.EnterpriseCustomers ec ON ec.UserID=ul.UserID
                         INNER JOIN dbo.AspNetUsers us ON us.Id=ec.UserID
                         INNER JOIN dbo.EnterpriseUserCustomers euc ON euc.CustomerID=ec.ID
-                        WHERE Type IN(12,40,60,70) AND TargetUserID=@TargetUserID AND  TargetEnterpriseID=@TargetEnterpriseID 
+                        WHERE Type IN(12,40,60,70) AND TargetUserID=@TargetUserID AND  TargetEnterpriseID=@TargetEnterpriseID and euc.OwnerID=@TargetUserID
 						 AND ul.Total=(SELECT MAX(Total) FROM dbo.UserLogs WHERE UserID=ec.UserID AND 
 						Type IN(12,40,60,70) AND TargetUserID=@TargetUserID AND  TargetEnterpriseID=@TargetEnterpriseID ) 
 						AND euc.CreateDateTime BETWEEN dateadd(day, -0, dateadd(ms, 0, DATEADD(dd, DATEDIFF(dd, 0, getdate()), 0))) 
