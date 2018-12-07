@@ -20,7 +20,7 @@ namespace AiCard.Controllers
         /// <param name="cardID">名片的用户ID</param>
         /// <returns></returns>
         [AllowCrossSiteJson]
-        public ActionResult GetFromAndToByCardID(string fromUserID, int cardID, Common.Enums.EnterpriseUserCustomerSource source)
+        public ActionResult GetFromAndToByCardID(string fromUserID, int cardID, Common.Enums.EnterpriseUserCustomerSource source = Common.Enums.EnterpriseUserCustomerSource.CardList)
         {
             var from = db.Users.FirstOrDefault(s => s.Id == fromUserID);
             if (from == null)
@@ -77,7 +77,7 @@ namespace AiCard.Controllers
         {
             var from = db.Users.FirstOrDefault(s => s.Id == custuserid);
             //根据客户对应的userid获取企业客户信息
-            var cust = db.EnterpriseCustomers.FirstOrDefault(s=>s.UserID==custuserid);
+            var cust = db.EnterpriseCustomers.FirstOrDefault(s => s.UserID == custuserid);
             var to = (from u in db.Users
                       from c in db.Cards
                       where u.Id == c.UserID && c.ID == ownerusercardid
