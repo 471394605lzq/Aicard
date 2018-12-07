@@ -101,6 +101,7 @@ namespace AiCard.Controllers
                     ecust.EnterpriseID = from.EnterpriseID;
                     ecust.RealName = from.NickName;
                     ecust.Mobile = from.PhoneNumber;
+                    ecust.Birthday = null;
                     db.EnterpriseCustomers.Add(ecust);
                     int resultrow = db.SaveChanges();
                     if (resultrow > 0)
