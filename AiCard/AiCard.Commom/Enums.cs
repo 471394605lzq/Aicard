@@ -454,10 +454,8 @@ namespace AiCard.Common.Enums
     {
         [Display(Name = "二维码")]
         QrCode,
-        [Display(Name = "微信群")]
-        Group,
-        [Display(Name = "微信好友")]
-        Friend,
+        [Display(Name = "分享")]
+        Share,
         [Display(Name = "卡片列表")]
         CardList
     }

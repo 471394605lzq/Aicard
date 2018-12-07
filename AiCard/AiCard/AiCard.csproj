@@ -301,6 +301,7 @@
     <Compile Include="Controllers\CardPersonalController.cs" />
     <Compile Include="Controllers\VipForwardAccountController.cs" />
     <Compile Include="Controllers\VipForwardController.cs" />
+    <Compile Include="Controllers\VipForwardManageController.cs" />
     <Compile Include="Controllers\VIPManageController.cs" />
     <Compile Include="Controllers\WeChatMiniController.cs" />
     <Compile Include="Global.asax.cs">
@@ -329,6 +330,7 @@
     <Compile Include="Models\VipForward\MBankAccount.cs" />
     <Compile Include="Models\VipForward\MReqBankAccount.cs" />
     <Compile Include="Models\VipForward\MReqVipForward.cs" />
+    <Compile Include="Models\VipForwardOrder\MVipForwardOrderList.cs" />
     <Compile Include="Models\Vip\MReqVipCardList.cs" />
     <Compile Include="Models\Vip\MVipAccountDetail.cs" />
     <Compile Include="Models\Vip\MVipCardDetail.cs" />
@@ -833,6 +835,7 @@
     <Content Include="Scripts\TxIm\recentcontact\recent_contact_list_manager.js" />
     <Content Include="Scripts\TxIm\webim.js" />
     <Content Include="Scripts\Views\ArticlesManage.js" />
+    <Content Include="Scripts\Views\cardManage.js" />
     <Content Include="Scripts\Views\Deploy.js" />
     <Content Include="Scripts\Views\homePageModular.js" />
     <Content Include="Scripts\Views\homePageModularIndex.js" />
@@ -961,6 +964,7 @@
     <Content Include="Views\OrderManage\Index.cshtml" />
     <Content Include="Views\Test\TestSendMsg.cshtml" />
     <Content Include="Views\Test\Index.cshtml" />
+    <Content Include="Views\VipForwardManage\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

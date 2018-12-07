@@ -108,7 +108,8 @@ namespace AiCard.Controllers
                         Type = Common.Enums.UserLogType.CardPersonalRead
                     });
                 }
-
+                db = new ApplicationDbContext();
+                card = db.CardPersonals.FirstOrDefault(s => s.ID == card.ID);
                 var vip = db.Vips.FirstOrDefault(s => s.CardID == pCardID);
                 var likeCount = db.UserLogs
                     .Count(s => s.Type == Common.Enums.UserLogType.CardPersonalLike
@@ -116,7 +117,7 @@ namespace AiCard.Controllers
                 var hadLike = db.UserLogs.Any(s => s.RelationID == pCardID
                     && s.Type == Common.Enums.UserLogType.CardPersonalLike
                     && s.UserID == userID);
-                //获取最近访问的6个人头像
+                //获取最近访问的12个人头像
                 var leastUsers = (from l in db.UserLogs
                                   from u in db.Users
                                   where l.Type == Common.Enums.UserLogType.CardPersonalRead
@@ -135,10 +136,9 @@ namespace AiCard.Controllers
                                        CreateDateTime = s.Max(x => x.CreateDateTime)
                                    })
                                    .OrderByDescending(s => s.CreateDateTime)
-                                   .Take(6)
+                                   .Take(12)
                                    .ToList();
                 var notifyCount = db.WeChatMiniNotifyForms.Count(s => s.UserID == userID && s.EndDateTime > DateTime.Now);
-
                 var data = new
                 {
                     card.Name,
@@ -174,7 +174,8 @@ namespace AiCard.Controllers
                     Viewers = leastUsers.Select(s => s.Avatar).ToList(),
                     LikeCount = likeCount,
                     HadLike = hadLike,
-                    NotifyCount = notifyCount
+                    NotifyCount = notifyCount,
+                    ViewCount = card.View
                 };
                 return Json(Comm.ToJsonResult("Success", "成功", data), JsonRequestBehavior.AllowGet);
             }

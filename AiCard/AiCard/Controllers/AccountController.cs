@@ -1160,6 +1160,7 @@ namespace AiCard.Controllers
                             db.SaveChanges();
                             cardmodel.UserID = user.Id;
                             cardmodel.Enable = true;
+                            user.EnterpriseID = cardmodel.EnterpriseID.Value;
                             db.SaveChanges();
                         }
                         else
@@ -1170,6 +1171,7 @@ namespace AiCard.Controllers
                                 user = CreateByWeChat(userInfo);
                                 cardmodel.UserID = user.Id;
                                 cardmodel.Enable = true;
+                                user.EnterpriseID = cardmodel.EnterpriseID.Value;
                                 db.SaveChanges();
                             }
                             catch (Exception)
@@ -1177,6 +1179,7 @@ namespace AiCard.Controllers
                                 user = CreateByWeChat(new Common.WeChat.UserInfoResult { UnionID = unionid });
                                 cardmodel.UserID = user.Id;
                                 cardmodel.Enable = true;
+                                user.EnterpriseID = cardmodel.EnterpriseID.Value;
                                 db.SaveChanges();
                             }
 

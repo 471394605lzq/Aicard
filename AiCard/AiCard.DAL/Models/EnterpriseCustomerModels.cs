@@ -55,7 +55,7 @@ namespace AiCard.DAL.Models
         /// <summary>
         /// 生日
         /// </summary>
-        public DateTime? Birthday { get; set; }
+        public DateTime? Birthday { get; set; } = null;
 
         /// <summary>
         /// 邮件
