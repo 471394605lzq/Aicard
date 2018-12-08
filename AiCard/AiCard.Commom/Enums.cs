@@ -206,7 +206,7 @@ namespace AiCard.Common.Enums
         ArticleLike = 10,
         [Display(Name = "文章评论")]
         ArticleComment = 11,
-        [Display(Name = "文章查看")]
+        [Display(Name = "查看动态")]
         ArticleRead = 12,
         [Display(Name = "文章分享")]//动态分享
         ArticleShare = 13,
@@ -216,7 +216,7 @@ namespace AiCard.Common.Enums
         ProductRead = 30,
         [Display(Name = "商品咨询")]
         ProductCon = 31,
-        [Display(Name = "主页查看")]
+        [Display(Name = "查看官网")]
         HomePageRead = 40,
         [Display(Name = "主页座机")]
         HomePagePhone = 41,
@@ -228,7 +228,7 @@ namespace AiCard.Common.Enums
         HomePageShare = 44,
         [Display(Name = "微信查看")]
         WeChatOpen = 50,
-        [Display(Name = "名片查看")]
+        [Display(Name = "查看名片")]
         CardRead = 60,
         [Display(Name = "转发名片")]//名片分享
         CardShare = 61,
@@ -237,7 +237,7 @@ namespace AiCard.Common.Enums
         [Display(Name = "名片点赞数")]
         CardLike = 63,
 
-        [Display(Name = "商城查看")]
+        [Display(Name = "查看商城")]
         ShopRead = 70,
         [Display(Name = "手机拨打")]
         MobileCall = 80,
