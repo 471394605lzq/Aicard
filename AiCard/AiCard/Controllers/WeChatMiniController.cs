@@ -13,6 +13,10 @@ namespace AiCard.Controllers
         [HttpPost]
         public ActionResult AddForm(string userID, string[] formIDs)
         {
+            if (formIDs.Any(s => s == "the formId is a mock one"))
+            {
+                return Json(Common.Comm.ToJsonResult("FormIDInvalid", "FormID无效"));
+            }
             if (!db.Vips.Any(s => s.UserID == userID))
             {
                 return Json(Common.Comm.ToJsonResult("VipNoFound", "未注册"));
