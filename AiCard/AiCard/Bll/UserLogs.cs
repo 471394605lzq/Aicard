@@ -343,6 +343,8 @@ namespace AiCard.Bll
                 {
                     return;
                 }
+                db.WeChatMiniNotifyForms.Remove(form);
+                db.SaveChanges();
                 Common.WeChat.WeChatMessageTemp.IWeChatMessageTemp iTempMessage;
                 try
                 {
@@ -402,14 +404,15 @@ namespace AiCard.Bll
                         default:
                             break;
                     }
+                  
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    
                 }
                 finally
                 {
-                    db.WeChatMiniNotifyForms.Remove(form);
-                    db.SaveChanges();
+                   
                 }
 
             }

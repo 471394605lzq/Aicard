@@ -23,13 +23,13 @@ namespace AiCard.Controllers
         /// <param name="pageSize">每页数量</param>
         /// <returns>商品列表json集合</returns>
         [AllowCrossSiteJson]
-        public ActionResult GetProductsList(int enterpriseid, string filter, int? kindid,string userID,  int page = 1, int pageSize = 20)
+        public ActionResult GetProductsList(int enterpriseid, string filter, int? kindid, string userID, int page = 1, int pageSize = 20)
         {
             var query = from p in db.Products
                         from e in db.Enterprises
                         from k in db.ProductKinds
                         join up in db.UserProductTops on p.ID equals up.ProductID into upt
-                        from tt in upt.Where(s=>s.UserID==userID).DefaultIfEmpty()
+                        from tt in upt.Where(s => s.UserID == userID).DefaultIfEmpty()
                         where e.ID == enterpriseid
                             && p.EnterpriseID == e.ID
                             && p.KindID == k.ID
@@ -42,8 +42,8 @@ namespace AiCard.Controllers
                             Price = p.Price,
                             p.KindID,
                             KindName = k.Name,
-                            Sort = tt == null ? p.Sort :0,
-                            IsTop=tt==null?"否":"是"
+                            Sort = tt == null ? p.Sort : 0,
+                            IsTop = tt == null ? "否" : "是"
                         };
             //根据搜索框字符匹配
             if (!string.IsNullOrWhiteSpace(filter))
@@ -59,7 +59,7 @@ namespace AiCard.Controllers
             var data = paged.Select(s => new
             {
                 s.ProductID,
-                Image = s.Images.SplitToArray<string>()?[0],
+                Image = Url.ResizeImage(s.Images.SplitToArray<string>()?[0], w: 360, h: 360),
                 s.KindID,
                 s.KindName,
                 s.Name,

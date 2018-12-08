@@ -65,6 +65,7 @@ namespace AiCard.Controllers
         {
             try
             {
+                Comm.WriteLog("GetCardInfo", $"pCardID:{pCardID} userID:{userID}", Common.Enums.DebugLogLevel.Normal);
                 if (string.IsNullOrWhiteSpace(userID))
                 {
                     return Json(Comm.ToJsonResult("Error", "UserID为空"), JsonRequestBehavior.AllowGet);
@@ -177,10 +178,12 @@ namespace AiCard.Controllers
                     NotifyCount = notifyCount,
                     ViewCount = card.View
                 };
+                Comm.WriteLog("GetCardInfo", "181", Common.Enums.DebugLogLevel.Normal);
                 return Json(Comm.ToJsonResult("Success", "成功", data), JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
+                Comm.WriteLog("GetCardInfo", $"{ex.Message}", Common.Enums.DebugLogLevel.Error);
                 return Json(Comm.ToJsonResult("Error", ex.Message), JsonRequestBehavior.AllowGet);
             }
         }
