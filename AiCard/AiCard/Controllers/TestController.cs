@@ -10,6 +10,7 @@ using AiCard.Common.Enums;
 using AiCard.DAL.Models;
 using AiCard.Common;
 using AiCard.Commom.SendMsg;
+using Microsoft.AspNet.Identity.Owin;
 
 namespace AiCard.Controllers
 {
@@ -21,8 +22,14 @@ namespace AiCard.Controllers
 
         public ActionResult Index()
         {
-            var date = DateTime.Now;
-            var d = date.DayOfWeek;
+            var vips = db.CardPersonals.ToList();
+            foreach (var item in vips)
+            {
+                item.View = db.UserLogs.Where(s => s.RelationID == item.ID && s.Type == UserLogType.CardPersonalRead)
+                    .GroupBy(s => s.UserID)
+                    .Count();
+            }
+            db.SaveChanges();
             return Json("1", JsonRequestBehavior.AllowGet);
         }
 
@@ -36,6 +43,34 @@ namespace AiCard.Controllers
             return api.GetWXACodeUnlimit(Common.WeChat.WeChatPagePersonal.CardDetail, p);
         }
 
+        public ActionResult CreateUser()
+        {
+            throw new Exception();
+            var txtUsers = System.IO.File.ReadAllText(Request.MapPath("~/Upload/1231.txt"));
+            var userList = txtUsers.Replace("\r\n", ",").SplitToArray<string>(',');
+            var users = userList.Select(s =>
+            {
+                var item = s.SplitToArray<string>(' ');
+                return new Common.WeChat.UserInfoResult
+                {
+                    NickName = item[0].Trim(),
+                    HeadImgUrl = item[1].Trim(),
+                };
+            });
+
+            var userManange = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+
+            foreach (var item in users)
+            {
+                var user = CreateRandom(item);
+                if (!db.Users.Any(s => s.NickName == user.NickName))
+                {
+                    var result = userManange.CreateAsync(user);
+                }
+
+            }
+            return Json("1", JsonRequestBehavior.AllowGet);
+        }
 
         // 随机给VIP用户加入收益记录
         public ActionResult AutoCreateVip()
@@ -93,7 +128,7 @@ namespace AiCard.Controllers
             }
             var vip1 = users.Take(vip.FreeChildCount).ToList();
             DateTime start = new DateTime(2018, 10, 1);
-            DateTime end = new DateTime(2018, 11, 22);
+            DateTime end = DateTime.Now.Date;
             var sec = ((int)((end - start).TotalSeconds)) / vip1.Count;
 
             var logs = vip1.Select(s =>
@@ -149,24 +184,27 @@ namespace AiCard.Controllers
             {
                 takes.Add(50);
             }
-            for (int i = 0; i < 3; i++)
+            if (takes.Count > 0)
             {
-                var t = takes.Take(Comm.Random.Next(1, takes.Count()));
-                if (t.Count() > 0)
+                for (int i = 0; i < 3; i++)
                 {
-                    logs.Add(new VipAmountLog
+                    var t = takes.Take(Comm.Random.Next(1, takes.Count()));
+                    if (t.Count() > 0)
                     {
-                        Amount = -t.Take(Comm.Random.Next(1, takes.Count())).Sum(),
-                        CreateDateTime = logs.Min(s => s.CreateDateTime).AddDays(Comm.Random.Next(1, (int)(end - start).TotalDays)),
-                        Type = VipAmountLogType.Forward,
-                        UserID = userID,
-                        VipID = vip.ID,
-                    });
-                    takes.RemoveRange(0, t.Count());
-                }
+                        logs.Add(new VipAmountLog
+                        {
+                            Amount = -t.Take(Comm.Random.Next(1, takes.Count())).Sum(),
+                            CreateDateTime = logs.Min(s => s.CreateDateTime).AddDays(Comm.Random.Next(1, (int)(end - start).TotalDays)),
+                            Type = VipAmountLogType.Forward,
+                            UserID = userID,
+                            VipID = vip.ID,
+                        });
+                        takes.RemoveRange(0, t.Count());
+                    }
 
+                }
+                vip.Amount = vip.TotalAmount - logs.Where(s => s.Type == VipAmountLogType.Forward).Sum(s => s.Amount);
             }
-            vip.Amount = vip.TotalAmount - logs.Where(s => s.Type == VipAmountLogType.Forward).Sum(s => s.Amount);
             logs = logs.OrderBy(s => s.CreateDateTime).ToList();
             db.VipAmountLogs.AddRange(logs);
             db.SaveChanges();
@@ -296,47 +334,53 @@ namespace AiCard.Controllers
 
         }
 
-        //public ActionResult DrawingPicture(string id)
-        //{
+        private ApplicationUser CreateRandom(Common.WeChat.UserInfoResult model)
+        {
 
+            string username, nickname, avart, unionId = model.UnionID;
+            var user = db.Users.FirstOrDefault(s => s.WeChatID == unionId);
+            nickname = model.NickName;
 
-        //    FileStream fs2 = new FileStream(System.Web.HttpContext.Current.Request.MapPath("~\\Content\\Images\\qrcode.png"), FileMode.Open, FileAccess.Read);
-        //    Image image2 = Image.FromStream(fs2);
-        //    fs2.Close();
-        //    System.Drawing.Image img2 = DrawingPictures.ResizeImage(image2, new Size(240, 240));
-        //    string qrcodePath = System.Web.HttpContext.Current.Server.MapPath("~\\Content\\Images\\temofile\\") + DateTime.Now.Hour + DateTime.Now.Minute + DateTime.Now.Second + "qrcode.png";
-        //    img2.Save(qrcodePath);
-        //    img2.Dispose();
+            avart = model.HeadImgUrl;
+            if (!string.IsNullOrWhiteSpace(avart))
+            {
+                try
+                {
+                    avart = this.Download(avart);
+                }
+                catch (Exception)
+                {
+                    avart = "~/Content/Images/404/avatar.png";
+                }
+            }
+            unionId = model.UnionID;
 
-        //    FileStream logofs = new FileStream(System.Web.HttpContext.Current.Request.MapPath("~\\Content\\Images\\logo.png"), FileMode.Open, FileAccess.Read);
-        //    Image logoimage = Image.FromStream(logofs);
-        //    logofs.Close();
-        //    System.Drawing.Image logoimages = DrawingPictures.ResizeImage(logoimage, new Size(96, 96));
-        //    string logoPath = System.Web.HttpContext.Current.Server.MapPath("~\\Content\\Images\\temofile\\") + DateTime.Now.Hour + DateTime.Now.Minute + DateTime.Now.Second + "logo.png";
-        //    logoimages.Save(logoPath);
-        //    logoimages.Dispose();
+            #region 把图片传到七牛
+            var path = Server.MapPath(avart);
+            avart = new Common.Qiniu.QinQiuApi().UploadFile(path, true);
+            #endregion
 
-        //    string avatarPath = DrawingPictures.DownloadImg("http://image.dtoao.com/201810220954316919.jpg", "avatar.png", 834, 834);
-        //    DrawingPictureModel m = new DrawingPictureModel();
-        //    m.AvatarPath = avatarPath;
-        //    m.CompanyName = "广东帝推网络股份科技有限公司啊啊啊啊啊";
-        //    m.LogoPath = logoPath;
-        //    m.Position = "CEO";
-        //    m.QrPath = qrcodePath;
-        //    m.Remark = "既然选择了远方，便只顾风雨兼程";
-        //    m.UserName = "吴江";
-        //    m.PosterImageName = "cardid_" + id;
-        //    List<TagModel> listst = new List<TagModel>();
-        //    TagModel tm = new TagModel();
-        //    tm.TagName = "这就是神器啊 155885888";
-        //    tm.TagName = "牛逼的人物啊 155885888";
-        //    tm.TagStyle = "橙色";
-        //    tm.TagStyle = "绿色";
-        //    listst.Add(tm);
+            do
+            {
+                username = $"rm{DateTime.Now:yyyyMMddHHmmss}{Comm.Random.Next(1000, 9999)}";
+            } while (db.Users.Any(s => s.UserName == username));
+            if (string.IsNullOrWhiteSpace(nickname))
+            {
+                nickname = username;
+            }
+            user = new ApplicationUser
+            {
+                WeChatID = unionId,
+                UserName = username,
+                NickName = nickname,
+                Avatar = avart,
+                RegisterDateTime = DateTime.Now,
+                LastLoginDateTime = DateTime.Now,
+                UserType = UserType.Personal
+            };
 
-        //    string returnpath = Comm.MergePosterImage(m);
-        //    return View();
-        //}
+            return user;
+        }
         public ActionResult TestQiniu()
         {
             return View();

@@ -34,20 +34,20 @@ namespace AiCard
         public const string CardManageEdit = "CardManageEdit";
         public const string CardMangeDelete = "CardMangeDelete";
 
-        public const string ProductKindManageRead = "ProductKindManageRead";
-        public const string ProductKindManageCreate = "ProductKindManageCreate";
-        public const string ProductKindManageEdit = "ProductKindManageEdit";
-        public const string ProductKindMangeDelete = "ProductKindMangeDelete";
+        //public const string ProductKindManageRead = "ProductKindManageRead";
+        //public const string ProductKindManageCreate = "ProductKindManageCreate";
+        //public const string ProductKindManageEdit = "ProductKindManageEdit";
+        //public const string ProductKindMangeDelete = "ProductKindMangeDelete";
 
         public const string ProductManageRead = "ProductManageRead";
         public const string ProductManageCreate = "ProductManageCreate";
         public const string ProductManageEdit = "ProductManageEdit";
         public const string ProductMangeDelete = "ProductMangeDelete";
 
-        public const string CustomerTabGroupsManageRead = "CustomerTabGroupsManageRead";
-        public const string CustomerTabGroupsManageCreate = "CustomerTabGroupsManageCreate";
-        public const string CustomerTabGroupsManageEdit = "CustomerTabGroupsManageEdit";
-        public const string CustomerTabGroupsMangeDelete = "CustomerTabGroupsMangeDelete";
+        //public const string CustomerTabGroupsManageRead = "CustomerTabGroupsManageRead";
+        //public const string CustomerTabGroupsManageCreate = "CustomerTabGroupsManageCreate";
+        //public const string CustomerTabGroupsManageEdit = "CustomerTabGroupsManageEdit";
+        //public const string CustomerTabGroupsMangeDelete = "CustomerTabGroupsMangeDelete";
 
         public const string CustomerTabManageRead = "CustomerTabManageRead";
         public const string CustomerTabManageCreate = "CustomerTabManageCreate";

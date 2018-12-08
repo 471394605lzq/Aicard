@@ -159,10 +159,10 @@ namespace AiCard.Bll
             addSystemRole(SysRole.CardManageEdit, "名片权限管理", "名片权限管理编辑");
             addSystemRole(SysRole.CardMangeDelete, "名片权限管理", "名片权限管理删除");
 
-            addSystemRole(SysRole.ProductKindManageRead, "商品分类权限管理", "商品分类权限管理查看");
-            addSystemRole(SysRole.ProductKindManageCreate, "商品分类权限管理", "商品分类权限管理创建");
-            addSystemRole(SysRole.ProductKindManageEdit, "商品分类权限管理", "商品分类权限管理编辑");
-            addSystemRole(SysRole.ProductKindMangeDelete, "商品分类权限管理", "商品分类权限管理删除");
+            //addSystemRole(SysRole.ProductKindManageRead, "商品分类权限管理", "商品分类权限管理查看");
+            //addSystemRole(SysRole.ProductKindManageCreate, "商品分类权限管理", "商品分类权限管理创建");
+            //addSystemRole(SysRole.ProductKindManageEdit, "商品分类权限管理", "商品分类权限管理编辑");
+            //addSystemRole(SysRole.ProductKindMangeDelete, "商品分类权限管理", "商品分类权限管理删除");
 
             addSystemRole(SysRole.ProductManageRead, "商品权限管理", "商品权限管理查看");
             addSystemRole(SysRole.ProductManageCreate, "商品权限管理", "商品权限管理创建");
@@ -170,10 +170,10 @@ namespace AiCard.Bll
             addSystemRole(SysRole.ProductMangeDelete, "商品权限管理", "商品权限管理删除");
 
 
-            addSystemRole(SysRole.CustomerTabGroupsManageRead, "客户标签分组权限管理", "客户标签分组权限管理查看");
-            addSystemRole(SysRole.CustomerTabGroupsManageCreate, "客户标签分组权限管理", "客户标签分组权限管理创建");
-            addSystemRole(SysRole.CustomerTabGroupsManageEdit, "客户标签分组权限管理", "客户标签分组权限管理编辑");
-            addSystemRole(SysRole.CustomerTabGroupsMangeDelete, "客户标签分组权限管理", "客户标签分组权限管理删除");
+            //addSystemRole(SysRole.CustomerTabGroupsManageRead, "客户标签分组权限管理", "客户标签分组权限管理查看");
+            //addSystemRole(SysRole.CustomerTabGroupsManageCreate, "客户标签分组权限管理", "客户标签分组权限管理创建");
+            //addSystemRole(SysRole.CustomerTabGroupsManageEdit, "客户标签分组权限管理", "客户标签分组权限管理编辑");
+            //addSystemRole(SysRole.CustomerTabGroupsMangeDelete, "客户标签分组权限管理", "客户标签分组权限管理删除");
 
 
             addSystemRole(SysRole.CustomerTabManageRead, "客户标签权限管理", "客户标签权限管理查看");

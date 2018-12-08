@@ -72,6 +72,8 @@ namespace AiCard.Controllers
                         select new
                         {
                             v.TotalAmount,
+                            v.TotalWeekAmount,
+                            v.TotalMonthAmount,
                             c.Name,
                             v.TotalAmountRank,
                             v.TotalWeekAmountRank,
@@ -82,7 +84,7 @@ namespace AiCard.Controllers
                         }).FirstOrDefault();
             return Json(Common.Comm.ToJsonResult("Success", "成功", new
             {
-                Amount = GetRank(type, user.TotalAmount, 0, 0),
+                Amount = GetRank(type, user.TotalAmount, user.TotalWeekAmount, user.TotalMonthAmount),
                 Rank = GetRank(type, user.TotalAmountRank, user.TotalWeekAmountRank, user.TotalMonthAmountRank),
                 user.Avatar,
                 user.Name,
@@ -184,12 +186,12 @@ namespace AiCard.Controllers
                         break;
                     case Common.Enums.VipAmountLogType.NewChild2nd:
                         {
-                            content = "成为你的一级用户";
+                            content = "成为你的一级盟友";
                         }
                         break;
                     case Common.Enums.VipAmountLogType.NewChild3rd:
                         {
-                            content = "成为你的二级用户";
+                            content = "成为你的二级盟友";
                         }
                         break;
                     case Common.Enums.VipAmountLogType.Forward:

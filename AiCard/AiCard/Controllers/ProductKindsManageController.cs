@@ -31,13 +31,13 @@ namespace AiCard.Controllers
 
         }
         // GET: ProductKinds
-        [Authorize(Roles = SysRole.ProductKindManageRead + "," + SysRole.EProductKindManageRead)]
+        [Authorize(Roles = SysRole.EProductKindManageRead)]
         public ActionResult Index(string filter, int page = 1)
         {
             Sidebar();
             var m = from ps in db.ProductKinds
                     from e in db.Enterprises
-                    where ps.EnterpriseID==e.ID
+                    where ps.EnterpriseID == e.ID
                     select new ProductKindsViewModels
                     {
                         ID = ps.ID,
@@ -76,7 +76,7 @@ namespace AiCard.Controllers
         }
 
         // GET: ProductKinds/Create
-        [Authorize(Roles = SysRole.ProductKindManageCreate + "," + SysRole.EProductKindManageCreate)]
+        [Authorize(Roles = SysRole.EProductKindManageCreate)]
         public ActionResult Create()
         {
             Sidebar();
@@ -88,7 +88,7 @@ namespace AiCard.Controllers
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = SysRole.ProductKindManageCreate + "," + SysRole.EProductKindManageCreate)]
+        [Authorize(Roles = SysRole.EProductKindManageCreate)]
         public ActionResult Create(ProductKind productKind)
         {
             var tempuser = db.Users.FirstOrDefault(s => s.Id == AccontData.UserID);
@@ -110,7 +110,7 @@ namespace AiCard.Controllers
         }
 
         // GET: ProductKinds/Edit/5
-        [Authorize(Roles = SysRole.ProductKindManageEdit + "," + SysRole.EProductKindManageEdit)]
+        [Authorize(Roles = SysRole.EProductKindManageEdit)]
         public ActionResult Edit(int? id)
         {
             Sidebar();
@@ -141,7 +141,7 @@ namespace AiCard.Controllers
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = SysRole.ProductKindManageEdit + "," + SysRole.EProductKindManageEdit)]
+        [Authorize(Roles = SysRole.EProductKindManageEdit)]
         public ActionResult Edit(ProductKind productKind)
         {
             var temp = db.ProductKinds.FirstOrDefault(s => s.ID == productKind.ID);
@@ -165,7 +165,7 @@ namespace AiCard.Controllers
         }
 
         // GET: ProductKinds/Delete/5
-        [Authorize(Roles = SysRole.ProductKindMangeDelete + "," + SysRole.EProductKindMangeDelete)]
+        [Authorize(Roles = SysRole.EProductKindMangeDelete)]
         public ActionResult Delete(int? id)
         {
             var temp = db.ProductKinds.FirstOrDefault(s => s.ID == id.Value);
@@ -194,7 +194,7 @@ namespace AiCard.Controllers
         // POST: ProductKinds/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = SysRole.ProductKindMangeDelete + "," + SysRole.EProductKindMangeDelete)]
+        [Authorize(Roles = SysRole.EProductKindMangeDelete)]
         public ActionResult DeleteConfirmed(int id)
         {
             var temp = db.ProductKinds.FirstOrDefault(s => s.ID == id);

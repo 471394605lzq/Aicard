@@ -32,7 +32,7 @@ namespace AiCard.Controllers
         }
 
         // GET: CustomerTabGroupsManage
-        [Authorize(Roles = SysRole.CustomerTabGroupsManageRead + "," + SysRole.ECustomerTabGroupsManageRead)]
+        [Authorize(Roles = SysRole.ECustomerTabGroupsManageRead)]
         public ActionResult Index(string filter,int? page=1)
         {
             Sidebar();
@@ -77,7 +77,7 @@ namespace AiCard.Controllers
         }
 
         // GET: CustomerTabGroupsManage/Create
-        [Authorize(Roles = SysRole.CustomerTabGroupsManageCreate + "," + SysRole.ECustomerTabGroupsManageCreate)]
+        [Authorize(Roles = SysRole.ECustomerTabGroupsManageCreate)]
         public ActionResult Create()
         {
             Sidebar();
@@ -89,7 +89,7 @@ namespace AiCard.Controllers
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = SysRole.CustomerTabGroupsManageCreate + "," + SysRole.ECustomerTabGroupsManageCreate)]
+        [Authorize(Roles = SysRole.ECustomerTabGroupsManageCreate)]
         public ActionResult Create(CustomerTabGroup customerTabGroup)
         {
             var tempuser = db.Users.FirstOrDefault(s => s.Id == AccontData.UserID);
@@ -111,7 +111,7 @@ namespace AiCard.Controllers
         }
 
         // GET: CustomerTabGroupsManage/Edit/5
-        [Authorize(Roles = SysRole.CustomerTabGroupsManageEdit + "," + SysRole.ECustomerTabGroupsManageEdit)]
+        [Authorize(Roles = SysRole.ECustomerTabGroupsManageEdit)]
         public ActionResult Edit(int? id)
         {
             var tempuser = db.Users.FirstOrDefault(s => s.Id == AccontData.UserID);
@@ -139,7 +139,7 @@ namespace AiCard.Controllers
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = SysRole.CustomerTabGroupsManageEdit + "," + SysRole.ECustomerTabGroupsManageEdit)]
+        [Authorize(Roles = SysRole.ECustomerTabGroupsManageEdit)]
         public ActionResult Edit(CustomerTabGroup customerTabGroup)
         {
             var tempuser = db.Users.FirstOrDefault(s => s.Id == AccontData.UserID);
@@ -165,7 +165,7 @@ namespace AiCard.Controllers
         }
 
         // GET: CustomerTabGroupsManage/Delete/5
-        [Authorize(Roles = SysRole.CustomerTabGroupsMangeDelete + "," + SysRole.ECustomerTabGroupsMangeDelete)]
+        [Authorize(Roles = SysRole.ECustomerTabGroupsMangeDelete)]
         public ActionResult Delete(int? id)
         {
             var tempuser = db.Users.FirstOrDefault(s => s.Id == AccontData.UserID);
@@ -202,7 +202,7 @@ namespace AiCard.Controllers
         // POST: CustomerTabGroupsManage/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = SysRole.CustomerTabGroupsMangeDelete + "," + SysRole.ECustomerTabGroupsMangeDelete)]
+        [Authorize(Roles = SysRole.ECustomerTabGroupsMangeDelete)]
         public ActionResult DeleteConfirmed(int id)
         {
             var tempuser = db.Users.FirstOrDefault(s => s.Id == AccontData.UserID);
