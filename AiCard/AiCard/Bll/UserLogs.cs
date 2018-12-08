@@ -82,18 +82,24 @@ namespace AiCard.Bll
                     case UserLogType.FollowUp:
                         {
                             var a = db.EnterpriseCustomers.FirstOrDefault(s => s.ID == log.RelationID);
-                            log.TargetEnterpriseID = a.EnterpriseID;
-                            log.TargetUserID = a.UserID;
-                            var b = db.EnterpriseUserCustomer.FirstOrDefault(s => s.OwnerID == log.UserID && s.CustomerID == a.ID);
-                            b.State = Common.Enums.EnterpriseUserCustomerState.Follow;
-                            db.SaveChanges();
+                            if (a.UserID != log.UserID)
+                            {
+                                log.TargetEnterpriseID = a.EnterpriseID;
+                                log.TargetUserID = a.UserID;
+                                var b = db.EnterpriseUserCustomer.FirstOrDefault(s => s.OwnerID == log.UserID && s.CustomerID == a.ID);
+                                b.State = Common.Enums.EnterpriseUserCustomerState.Follow;
+                                db.SaveChanges();
+                            }
                         }
                         break;
                     case UserLogType.AddCustTab:
                         {
                             var a = db.EnterpriseCustomers.FirstOrDefault(s => s.ID == log.RelationID);
-                            log.TargetEnterpriseID = a.EnterpriseID;
-                            log.TargetUserID = a.UserID;
+                            if (a.UserID != log.UserID)
+                            {
+                                log.TargetEnterpriseID = a.EnterpriseID;
+                                log.TargetUserID = a.UserID;
+                            }
                         }
                         break;
                     case UserLogType.ArticleLike:
@@ -106,8 +112,11 @@ namespace AiCard.Bll
                             {
                                 throw new Exception("文章不存在");
                             }
-                            log.TargetEnterpriseID = a.EnterpriseID;
-                            log.TargetUserID = a.UserID;
+                            if (a.UserID != log.UserID)
+                            {
+                                log.TargetEnterpriseID = a.EnterpriseID;
+                                log.TargetUserID = a.UserID;
+                            }
                         }
                         break;
                     case UserLogType.ProductRead:
@@ -141,8 +150,11 @@ namespace AiCard.Bll
                             {
                                 throw new Exception("卡片不存在");
                             }
-                            log.TargetEnterpriseID = c.EnterpriseID;
-                            log.TargetUserID = c.UserID;
+                            if (c.UserID != log.UserID)
+                            {
+                                log.TargetEnterpriseID = c.EnterpriseID;
+                                log.TargetUserID = c.UserID;
+                            }
                         }
                         break;
                     case UserLogType.CardTab:
@@ -159,8 +171,11 @@ namespace AiCard.Bll
                                 throw new Exception("卡片标签不存在");
                             }
                             var c = db.Cards.FirstOrDefault(s => s.ID == t.CardID);
-                            log.TargetEnterpriseID = c.EnterpriseID;
-                            log.TargetUserID = c.UserID;
+                            if (c.UserID != log.UserID)
+                            {
+                                log.TargetEnterpriseID = c.EnterpriseID;
+                                log.TargetUserID = c.UserID;
+                            }
                             break;
                         }
                     case UserLogType.CardPersonalAddressNav:
@@ -179,7 +194,10 @@ namespace AiCard.Bll
                             {
                                 throw new Exception("个人卡片不存在");
                             }
-                            log.TargetUserID = card.UserID;
+                            if (card.UserID != log.UserID)
+                            {
+                                log.TargetUserID = card.UserID;
+                            }
                             break;
                         }
                     default:

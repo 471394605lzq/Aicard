@@ -92,46 +92,50 @@ namespace AiCard.Controllers
             }
             else
             {
-                //如果不存在企业客户则新增
-                if (cust == null)
+                if (!to.Id.Equals(custuserid))
                 {
-                    //保存企业客户信息
-                    EnterpriseCustomer ecust = new EnterpriseCustomer();
-                    ecust.UserID = custuserid;
-                    ecust.EnterpriseID = to.EnterpriseID.Value;
-                    ecust.RealName = from.NickName;
-                    ecust.Mobile = from.PhoneNumber;
-                    ecust.Birthday = null;
-                    db.EnterpriseCustomers.Add(ecust);
-                    int resultrow = db.SaveChanges();
-                    if (resultrow > 0)
+                    //如果不存在企业客户则新增
+                    if (cust == null)
                     {
-                        //保存企业名片用户下的客户信息
-                        EnterpriseUserCustomer euscust = new EnterpriseUserCustomer();
-                        euscust.CustomerID = ecust.ID;
-                        euscust.OwnerID = to.Id;
-                        euscust.State = Common.Enums.EnterpriseUserCustomerState.NoFllow;
-                        euscust.Source = source;
-                        euscust.CreateDateTime = DateTime.Now;
-                        db.EnterpriseUserCustomer.Add(euscust);
-                        db.SaveChanges();
+
+                        //保存企业客户信息
+                        EnterpriseCustomer ecust = new EnterpriseCustomer();
+                        ecust.UserID = custuserid;
+                        ecust.EnterpriseID = to.EnterpriseID.Value;
+                        ecust.RealName = from.NickName;
+                        ecust.Mobile = from.PhoneNumber;
+                        ecust.Birthday = null;
+                        db.EnterpriseCustomers.Add(ecust);
+                        int resultrow = db.SaveChanges();
+                        if (resultrow > 0)
+                        {
+                            //保存企业名片用户下的客户信息
+                            EnterpriseUserCustomer euscust = new EnterpriseUserCustomer();
+                            euscust.CustomerID = ecust.ID;
+                            euscust.OwnerID = to.Id;
+                            euscust.State = Common.Enums.EnterpriseUserCustomerState.NoFllow;
+                            euscust.Source = source;
+                            euscust.CreateDateTime = DateTime.Now;
+                            db.EnterpriseUserCustomer.Add(euscust);
+                            db.SaveChanges();
+                        }
                     }
-                }
-                else
-                {
-                    //如果存在就检测归宿人客户是否存在
-                    var us = db.EnterpriseUserCustomer.FirstOrDefault(s => s.OwnerID == to.Id && s.CustomerID == cust.ID);
-                    if (us == null)
+                    else
                     {
-                        //保存企业名片用户下的客户信息
-                        EnterpriseUserCustomer euscust = new EnterpriseUserCustomer();
-                        euscust.CustomerID = cust.ID;
-                        euscust.OwnerID = to.Id;
-                        euscust.State = Common.Enums.EnterpriseUserCustomerState.NoFllow;
-                        euscust.Source = source;
-                        euscust.CreateDateTime = DateTime.Now;
-                        db.EnterpriseUserCustomer.Add(euscust);
-                        db.SaveChanges();
+                        //如果存在就检测归宿人客户是否存在
+                        var us = db.EnterpriseUserCustomer.FirstOrDefault(s => s.OwnerID == to.Id && s.CustomerID == cust.ID);
+                        if (us == null)
+                        {
+                            //保存企业名片用户下的客户信息
+                            EnterpriseUserCustomer euscust = new EnterpriseUserCustomer();
+                            euscust.CustomerID = cust.ID;
+                            euscust.OwnerID = to.Id;
+                            euscust.State = Common.Enums.EnterpriseUserCustomerState.NoFllow;
+                            euscust.Source = source;
+                            euscust.CreateDateTime = DateTime.Now;
+                            db.EnterpriseUserCustomer.Add(euscust);
+                            db.SaveChanges();
+                        }
                     }
                 }
             }
