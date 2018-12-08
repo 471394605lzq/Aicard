@@ -762,7 +762,6 @@ namespace AiCard.Controllers
                         // 把OpenID存进数据库
                         if (user != null)
                         {
-                            Comm.WriteLog("LoginByWeiXin", $"AppID={config.AppID}&OpenID={result.OpenID}", DebugLogLevel.Normal);
                             var option = new Bll.Users.UserOpenID(user);
                             option.AddOpenID(config.AppID, result.OpenID);
                             db.SaveChanges();
@@ -811,7 +810,7 @@ namespace AiCard.Controllers
                             model.IV,
                             AES = str
                         });
-                        Comm.WriteLog("WeiXin", debug, DebugLogLevel.Normal);
+                        //Comm.WriteLog("WeiXin", debug, DebugLogLevel.Normal);
                         var jUser = JsonConvert.DeserializeObject<JObject>(str);
                         var unionID = jUser["unionId"]?.Value<string>();
                         if (unionID == null)
@@ -1003,7 +1002,7 @@ namespace AiCard.Controllers
                             model.IV,
                             AES = str
                         });
-                        Comm.WriteLog("WeiXin", debug, DebugLogLevel.Normal);
+                        //Comm.WriteLog("WeiXin", debug, DebugLogLevel.Normal);
                         var jUser = JsonConvert.DeserializeObject<JObject>(str);
                         var unionID = jUser["unionId"]?.Value<string>();
                         if (unionID == null)
