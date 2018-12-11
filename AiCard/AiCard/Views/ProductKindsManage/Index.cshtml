@@ -10,7 +10,7 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
                 <li>
-                    @if (User.IsInRole(SysRole.ProductKindManageCreate) || User.IsInRole(SysRole.EProductKindManageCreate))
+                    @if (User.IsInRole(SysRole.EProductKindManageCreate))
                     {
                         <a href="@Url.Action("Create")">新增 <label style="margin-left:15px;">|</label></a>
                     }
@@ -61,11 +61,11 @@
                 @Html.DisplayFor(modelItem => item.Sort)
             </td>
             <td>
-                @if (User.IsInRole(SysRole.ProductKindManageEdit) || User.IsInRole(SysRole.EProductKindManageEdit))
+                @if (User.IsInRole(SysRole.EProductKindManageEdit))
                 {
                     @Html.ActionLink("编辑", "Edit", new { id = item.ID })
                 }
-                @if (User.IsInRole(SysRole.ProductKindMangeDelete) || User.IsInRole(SysRole.EProductKindMangeDelete))
+                @if (User.IsInRole(SysRole.EProductKindMangeDelete))
                 {
                     @Html.ActionLink("删除", "Delete", new { id = item.ID })
                 }
