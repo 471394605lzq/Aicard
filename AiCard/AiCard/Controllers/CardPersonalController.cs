@@ -177,6 +177,7 @@ namespace AiCard.Controllers
                     NotifyCount = notifyCount,
                     ViewCount = card.View
                 };
+               
                 return Json(Comm.ToJsonResult("Success", "成功", data), JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)

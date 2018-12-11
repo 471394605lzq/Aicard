@@ -13,9 +13,13 @@ namespace AiCard.Controllers
         [HttpPost]
         public ActionResult AddForm(string userID, string[] formIDs)
         {
-            if (!db.Vips.Any(s => s.UserID == userID && s.Type != Common.Enums.VipRank.Default))
+            if (formIDs.Any(s => s == "the formId is a mock one"))
             {
-                return Json(Common.Comm.ToJsonResult("VipNoFound", "用户不是盟主"));
+                return Json(Common.Comm.ToJsonResult("FormIDInvalid", "FormID无效"));
+            }
+            if (!db.Vips.Any(s => s.UserID == userID))
+            {
+                return Json(Common.Comm.ToJsonResult("VipNoFound", "未注册"));
             }
             var config = new Common.WeChat.ConfigMiniPersonal();
             var user = db.Users.FirstOrDefault(s => s.Id == userID);

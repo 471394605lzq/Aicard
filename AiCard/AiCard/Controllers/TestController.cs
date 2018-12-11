@@ -22,12 +22,12 @@ namespace AiCard.Controllers
 
         public ActionResult Index()
         {
-            var vips = db.CardPersonals.ToList();
-            foreach (var item in vips)
+            var cards = db.CardPersonals.Where(s => s.ID >= 381 && s.ID <= 420).ToList();
+
+            foreach (var item in cards)
             {
-                item.View = db.UserLogs.Where(s => s.RelationID == item.ID && s.Type == UserLogType.CardPersonalRead)
-                    .GroupBy(s => s.UserID)
-                    .Count();
+                var date = DateTime.Now.AddYears(-Comm.Random.Next(23, 28));
+                item.Birthday = new DateTime(date.Year, Comm.Random.Next(1, 12), Comm.Random.Next(1, 20));
             }
             db.SaveChanges();
             return Json("1", JsonRequestBehavior.AllowGet);
