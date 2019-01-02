@@ -17,7 +17,7 @@ namespace AiCard.Common
             qrCodeEncoder.QRCodeVersion = 4;
             qrCodeEncoder.QRCodeErrorCorrect = ThoughtWorks.QRCode.Codec.QRCodeEncoder.ERROR_CORRECTION.L;
             Bitmap temp = null;
-            Action encode = null;
+            Action encode = null; 
             encode = () =>
             {
 
